@@ -73,6 +73,7 @@ output reg        o_engine_semi_done
 reg [4:0]         current_state , next_state ;
 
 reg               Direct_Broadcast_n ;               // 1 for direct and 0 for broadcast
+reg               Direct_Broadcast_n_internal ;      // sampled version of the above signal every CCC transmission (sampled at first command state)
 
 /////////////////////////// Direct or Broadcat detection  ////////////////////////////////////////
 
@@ -152,7 +153,7 @@ localparam ERROR             = 5'd01100 ;
             PRE_FIRST_CMD_CRC : begin // i'm driving the 2 bits with 2'b01
 
                 if (i_bitcnt_number == 5'd2 && i_tx_mode_done) begin 
-                    next_state = RNW_RESERVED ;
+                    next_state = FIRST_CMD_BYTE ;
                 end 
                 else begin 
                     next_state = PRE_FIRST_CMD_CRC ;
@@ -162,36 +163,50 @@ localparam ERROR             = 5'd01100 ;
 
             end 
 
-            RNW_RESERVED : begin 
+            FIRST_CMD_BYTE : begin  //  always contains RnW + 7 reserved bits 
+
+                Direct_Broadcast_n_internal = Direct_Broadcast_n ; 
 
                 if (i_bitcnt_number == 5'd10 && i_tx_mode_done) begin 
-                    next_state = SEVEN_E ;
+                    next_state = SECOND_CMD_BYTE ;
                 end
                 else begin 
-                    next_state = RNW_RESERVED ;
+                    next_state = FIRST_CMD_BYTE ;
                 end
 
                  // erorr state condition is remaining 
 
             end
 
-            SEVEN_E : begin 
-
-                if (i_bitcnt_number == 5'd117 && i_tx_mode_done) begin 
-                    next_state = PARITY_ADJ ;
-                end
+            SECOND_CMD_BYTE : begin  // contains either 7E or any target address 
+                if (Direct_Broadcast_n_internal) begin 
+                    // tx mode on 7E value
+                    if (i_bitcnt_number == 5'd17 && i_tx_mode_done) begin 
+                        next_state = PARITY_ADJ ;
+                    end
+                    else begin 
+                        next_state = SECOND_CMD_BYTE ;
+                    end
+                    
+                     // erorr state condition is remaining 
+                end 
                 else begin 
-                    next_state = SEVEN_E ;
-                end
-                
-                 // erorr state condition is remaining 
-
+                    // tx mode on target address 
+                    if (i_bitcnt_number == 5'd17 && i_tx_mode_done) begin 
+                        next_state = PARITY_ADJ ;
+                    end
+                    else begin 
+                        next_state = SECOND_CMD_BYTE ;
+                    end
+                    
+                     // erorr state condition is remaining
+                end 
             end
 
             PARITY_ADJ : begin 
 
                 if (i_bitcnt_number == 5'd18 && i_tx_mode_done) begin 
-                    next_state = PARITY ;
+                    next_state = PARITY_CMD ;
                 end
                 else begin 
                     next_state = PARITY_ADJ ;
@@ -201,13 +216,13 @@ localparam ERROR             = 5'd01100 ;
 
             end
 
-            PARITY : begin 
+            PARITY_CMD : begin 
 
                 if (i_bitcnt_number == 5'd20 && i_tx_mode_done ) begin 
                     next_state = PRE_FIRST_DATA ;
                 end
                 else begin 
-                    next_state = PARITY ;
+                    next_state = PARITY_CMD ;
                 end
 
                 // erorr state condition is remaining 
@@ -215,7 +230,8 @@ localparam ERROR             = 5'd01100 ;
             end
 
 
-             PRE_FIRST_DATA : begin  // should be 10 to mean ACK ,    and 11 to be aborted 
+
+            PRE_FIRST_DATA : begin  // should be 10 to mean ACK ,    and 11 to be aborted 
 
                 if (i_bitcnt_number == 5'd2 && i_rx_mode_done && !i_rx_second_pre) begin 
                     next_state = FIRST_DATA_BYTE ;
@@ -246,7 +262,7 @@ localparam ERROR             = 5'd01100 ;
             SECOND_DATA_BYTE : begin   // contains Optional Defining Byte (8'd0 if none is used) , or second data byte
 
                 if (i_bitcnt_number == 5'd18 && i_tx_mode_done) begin   
-                    next_state = PARITY ;
+                    next_state = PARITY_DATA ;
                 end
                 else begin 
                     next_state = SECOND_DATA_BYTE ;
@@ -257,6 +273,37 @@ localparam ERROR             = 5'd01100 ;
             end
 
            
+            PARITY_DATA : begin 
+
+                if      (i_bitcnt_number == 5'd20 && i_tx_mode_done && !Direct_Broadcast_n_internal ) begin // if broadcast
+                    next_state = PRE_DATA ;
+                end
+
+                else if (i_bitcnt_number == 5'd20 && i_tx_mode_done &&  Direct_Broadcast_n_internal ) begin // if Direct
+                    next_state = RESTART_PATTERN ;
+                    Direct_Broadcast_n_internal = 1'b0 ; // resetting the signal after sending broadcast address to transmitt target address in the next command word 
+                end
+
+                else begin 
+                    next_state = PARITY_DATA ;
+                end
+
+                // erorr state condition is remaining 
+
+            end
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             DATA : begin        // repeated data
 
