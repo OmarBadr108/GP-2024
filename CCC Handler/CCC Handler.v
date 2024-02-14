@@ -80,23 +80,23 @@ reg               Direct_Broadcast_n ;               // 1 for direct and 0 for b
 // to determine whether it's a Direct or Broadcast 
     always @(*) begin 
         case (i_config_CCC_value) 
-            8'h80 : i_config_CCC_value = 1'b1 ;   // ENEC
-            8'h81 : i_config_CCC_value = 1'b1 ;   // DISEC
-            8'h89 : i_config_CCC_value = 1'b1 ;   // SETMWL
-            8'h8A : i_config_CCC_value = 1'b1 ;   // SETMRL
-            8'h8B : i_config_CCC_value = 1'b1 ;   // GETMWL
-            8'h8C : i_config_CCC_value = 1'b1 ;   // GETMRL
-            8'h9A : i_config_CCC_value = 1'b1 ;   // RSTACT
-            8'h90 : i_config_CCC_value = 1'b1 ;   // GETSTATUS
+            8'h80 : Direct_Broadcast_n = 1'b1 ;   // ENEC
+            8'h81 : Direct_Broadcast_n = 1'b1 ;   // DISEC
+            8'h89 : Direct_Broadcast_n = 1'b1 ;   // SETMWL
+            8'h8A : Direct_Broadcast_n = 1'b1 ;   // SETMRL
+            8'h8B : Direct_Broadcast_n = 1'b1 ;   // GETMWL
+            8'h8C : Direct_Broadcast_n = 1'b1 ;   // GETMRL
+            8'h9A : Direct_Broadcast_n = 1'b1 ;   // RSTACT
+            8'h90 : Direct_Broadcast_n = 1'b1 ;   // GETSTATUS
 
-            8'h00 : i_config_CCC_value = 1'b0 ;   // ENEC   (broadcast version)
-            8'h01 : i_config_CCC_value = 1'b0 ;   // DISEC  (broadcast version)
-            8'h09 : i_config_CCC_value = 1'b0 ;   // SETMWL (broadcast version)
-            8'h0A : i_config_CCC_value = 1'b0 ;   // SETMRL (broadcast version)
-            8'h2A : i_config_CCC_value = 1'b0 ;   // RSTACT (broadcast version)
+            8'h00 : Direct_Broadcast_n = 1'b0 ;   // ENEC   (broadcast version)
+            8'h01 : Direct_Broadcast_n = 1'b0 ;   // DISEC  (broadcast version)
+            8'h09 : Direct_Broadcast_n = 1'b0 ;   // SETMWL (broadcast version)
+            8'h0A : Direct_Broadcast_n = 1'b0 ;   // SETMRL (broadcast version)
+            8'h2A : Direct_Broadcast_n = 1'b0 ;   // RSTACT (broadcast version)
 
-            8'h1F : i_config_CCC_value = 1'b0 ;    // Dummy CCC value for end procedure
-            default : i_config_CCC_value = 1'b0 ;  // broadcast by default
+            8'h1F : Direct_Broadcast_n = 1'b0 ;    // Dummy CCC value for end procedure
+            default : Direct_Broadcast_n = 1'b0 ;  // broadcast by default
         endcase
     end
 
@@ -215,7 +215,7 @@ localparam ERROR             = 5'd01100 ;
             end
 
 
-             PRE_FIRST_DATA : begin  // should be 10 to mean ACK and 11 to be aborted 
+             PRE_FIRST_DATA : begin  // should be 10 to mean ACK ,    and 11 to be aborted 
 
                 if (i_bitcnt_number == 5'd2 && i_rx_mode_done && !i_rx_second_pre) begin 
                     next_state = FIRST_DATA_BYTE ;
@@ -231,15 +231,38 @@ localparam ERROR             = 5'd01100 ;
 
             FIRST_DATA_BYTE : begin    // contains CCC value or First Data byte
 
+                if (i_bitcnt_number == 5'd10 && i_tx_mode_done) begin   // to be done ... check if ODB is supported or not , and the value and number of them if needed 
+                    next_state = SECOND_DATA_BYTE ;
+                end
+                else begin 
+                    next_state = FIRST_DATA_BYTE ;
+                end
+
+                // erorr state condition is remaining 
+
                 
             end
 
             SECOND_DATA_BYTE : begin   // contains Optional Defining Byte (8'd0 if none is used) , or second data byte
 
+                if (i_bitcnt_number == 5'd18 && i_tx_mode_done) begin   
+                    next_state = PARITY ;
+                end
+                else begin 
+                    next_state = SECOND_DATA_BYTE ;
+                end
+
+                // erorr state condition is remaining
                 
             end
 
            
+
+            DATA : begin        // repeated data
+
+                
+            end
+
 
             PRE_DATA : begin        // should be 11 to mean ACK and 10 to be aborted 
 
