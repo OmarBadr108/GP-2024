@@ -31,9 +31,9 @@
 `default_nettype none
 
 module i3c_engine (
-    input  	wire          i_clk                     ,
-    input  	wire          i_rst_n                   ,
-    input  	wire          i_controller_en           , //from device configuration of Controller/Target role
+    input   wire          i_clk                     ,
+    input   wire          i_rst_n                   ,
+    input   wire          i_controller_en           , //from device configuration of Controller/Target role
     input   wire          i_i3c_i2c_sel             ,
     input   wire          i_sdr_done                ,
     input   wire          i_i2c_done                ,
@@ -62,8 +62,9 @@ module i3c_engine (
 
 
     ///////////////////////hdr//////////////////////////////////
-    input   wire          hdr_en                    ,
-    input   wire          enthdr_done               ,
+    input   wire          i_hdr_en                    ,
+    input   wire          i_enthdr_done               ,
+    input   wire          i_hdrengine_exit          ,
     ////////////////////////////////////////////////////////////
     output  reg           o_sdr_en                  ,
     output  reg           o_i2c_en                  , 
@@ -109,7 +110,7 @@ module i3c_engine (
 
 
 //-------------------------------- states encoding in gray --------------------------------------------
-localparam IDLE     	     = 4'b0000 ; 
+localparam IDLE              = 4'b0000 ; 
 localparam START             = 4'b0001 ;
 localparam SDR_MODE          = 4'b0010 ;
 localparam IBI               = 4'b0011 ;
@@ -121,6 +122,7 @@ localparam CTRL_REQ          = 4'b1010 ;
 localparam DAA               = 4'b0100 ;
 localparam ENTHDR            = 4'b1101 ;
 
+
 //--------------------------------- Mux Selection Parameters -----------------------------------------
 localparam SDR_SEL        = 3'b000 ;
 localparam I2C_SEL        = 3'b001 ;
@@ -130,6 +132,12 @@ localparam HJ_SEL         = 3'b100 ;
 localparam IBI_SEL        = 3'b101 ;
 localparam CRH_SEL        = 3'b110 ;
 localparam ENTHDR_SEL     = 3'b111 ;
+
+
+//--------------------------------- Mode (HDR OR SDR) -----------------------------------------
+localparam SDR_MODE_SEL     = 1'b0 ;
+localparam HDR_MODE_SEL     = 1'b1 ;
+
 
 
 //--------------------------------- internal wires declaration ------------------------------------------
@@ -144,7 +152,7 @@ always @(posedge i_clk or negedge i_rst_n)
   begin: controller_main_fsm
     
     if (!i_rst_n) 
-    	begin
+        begin
             o_sdr_en          <= 1'b0   ;  
             o_i2c_en          <= 1'b0   ;
             o_daa_en          <= 1'b0   ; 
@@ -171,12 +179,12 @@ always @(posedge i_clk or negedge i_rst_n)
 
 
             state             <= IDLE   ;          
-    	end
+        end
 
     else
-    	begin
-    		case(state)
-    		IDLE:
+        begin
+            case(state)
+            IDLE:
                 begin
                     o_sdr_en             <= 1'b0           ;
                     o_i3c_idle_flag      <= 1'b0           ;  
@@ -266,7 +274,7 @@ always @(posedge i_clk or negedge i_rst_n)
                                     1'b1: 
                                     //////////////////////////////ENTHDR///////////////////////////////
                                         begin
-                                           if(hdr_en) //input from outside (configration) >> ENABLES THE ENTHDR BLOCK
+                                           if(i_hdr_en) //input from outside (configration) >> ENABLES THE ENTHDR BLOCK
                                             begin
                                              o_enthdr_en               <= 1'b1       ; //enables enthdr block
                                              o_regf_rd_en_mux_sel      <= ENTHDR_SEL ;
@@ -287,6 +295,7 @@ always @(posedge i_clk or negedge i_rst_n)
                                            else 
                                             begin
                                              o_sdr_en                  <= 1'b1     ;
+                                             o_sda_sel                 <= SDR_MODE_SEL    ; 
                                              o_regf_rd_en_mux_sel      <= SDR_SEL  ;
                                              o_regf_rd_address_mux_sel <= SDR_SEL  ;
                                              o_regf_wr_en_mux_sel      <= SDR_SEL  ;
@@ -383,7 +392,7 @@ always @(posedge i_clk or negedge i_rst_n)
                 end
             
             //////////////---MODES AND FEATURES---//////////////
-    		SDR_MODE:
+            SDR_MODE:
                 begin 
                     o_bit_cnt_en <= 1'b1 ;
                     if (i_sdr_done)
@@ -616,7 +625,7 @@ always @(posedge i_clk or negedge i_rst_n)
                      o_ser_rx_tx_mux_sel      <= IBI_SEL;
 
                     if (i_ibi_payload_en)      
-    		            begin
+                        begin
                           o_sdr_en                  <= 1'b1     ;
                           o_fcnt_no_frms_sel        <=IBI_SEL  ; // to select payload max size 
 
@@ -632,8 +641,8 @@ always @(posedge i_clk or negedge i_rst_n)
                            o_bit_rx_cnt_en_mux_sel   <= SDR_SEL  ;
                            o_fcnt_en_mux_sel         <= SDR_SEL  ;
                            o_scl_idle_mux_sel        <= SDR_SEL  ; 
-    		               state <= SDR_MODE;
-    		            end
+                           state <= SDR_MODE;
+                        end
 
                     else if (i_ibi_done)    
                         begin
@@ -673,39 +682,71 @@ always @(posedge i_clk or negedge i_rst_n)
 
             ENTHDR: 
                 begin
-                    if (enthdr_done)
+                    if (i_enthdr_done)
                         begin
-                            o_hdrengine_en            <= 1'b1 ;                   
+                            o_hdrengine_en            <= 1'b1 ;          
+
+                            o_sda_sel                 <= HDR_MODE_SEL   ; 
+
                             o_regf_rd_en_mux_sel      <= HDR_ENGINE_SEL ;             //(REG File) shared btw HDR & SDR
                             o_regf_rd_address_mux_sel <= HDR_ENGINE_SEL ;             //(REG File) shared btw HDR & SDR
                             o_regf_wr_en_mux_sel      <= HDR_ENGINE_SEL ;             //(REG File) shared btw HDR & SDR
                             o_scl_pp_od_mux_sel       <= HDR_ENGINE_SEL ;             //(SCL GEN) shared btw HDR & SDR
-                            o_tx_en_mux_sel           <= HDR_ENGINE_SEL ;
-                            o_tx_mode_mux_sel         <= HDR_ENGINE_SEL ;
-                            o_rx_en_mux_sel           <= HDR_ENGINE_SEL ;
-                            o_rx_mode_mux_sel         <= HDR_ENGINE_SEL ;
-                            o_bit_cnt_en_mux_sel      <= HDR_ENGINE_SEL ;
-                            o_bit_rx_cnt_en_mux_sel   <= HDR_ENGINE_SEL ;
-                            o_fcnt_en_mux_sel         <= HDR_ENGINE_SEL ;
-                            o_scl_idle_mux_sel        <= HDR_ENGINE_SEL ;
+                           
+
+
+                            //o_tx_en_mux_sel           <= HDR_ENGINE_SEL ;
+                            // o_tx_mode_mux_sel        <= HDR_ENGINE_SEL ;
+                           
+                            //o_rx_en_mux_sel           <= I3C_ENGINE_SEL  ;            //TO Disable sdr rx 
+             
+                            //o_bit_cnt_en_mode_mux_sel <= HDR_ENGINE_SEL ;
+                            //o_bit_cnt_en_mux_sel      <= HDR_ENGINE_SEL ;
+                            //o_bit_rx_cnt_en_mux_sel   <= HDR_ENGINE_SEL ;
+                            //o_fcnt_en_mux_sel         <= HDR_ENGINE_SEL ;
+                            //o_scl_idle_mux_sel        <= HDR_ENGINE_SEL ;
+                            
+
                             state                     <= HDR_ENGINE     ; 
                         end 
-                   /*else if (i_daa_error)
-                    begin
-                        state <= IDLE ; /// will be editted after adding errors 
-                        o_daa_en <= 1'b0 ;
-                    end 
-                   else if (i_daa_done) 
-                        begin
-                            o_daa_en                 <= 1'b0 ;
-                            dynamic_address_assigned <= 1'b1 ;
-                            state                    <= STOP ;
-                        end
-                end*/
 
-            endcase
+                    else
+                        begin
+                            state                     <= ENTHDR         ; 
+                        end 
+                end
+
+
+            HDR_ENGINE:
+               begin
+                 if(i_hdrengine_exit)
+                  begin
+                    o_scl_pp_od_mux_sel           <= I3C_ENGINE_SEL ;
+                    o_tx_en_mux_sel               <= I3C_ENGINE_SEL ;
+                    o_tx_mode_mux_sel             <= I3C_ENGINE_SEL ;
+                    o_scl_idle_mux_sel            <= I3C_ENGINE_SEL ;
+                    o_bits_cnt_regf_rx_tx_sel     <= I3C_ENGINE_SEL  ;  
+                    o_ser_rx_tx_mux_sel           <= I3C_ENGINE_SEL ; 
+                    state                         <= STOP        ; 
+                  end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+               end
+         endcase
             
-    	end
+        end
   end
 
 endmodule
