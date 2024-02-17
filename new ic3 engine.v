@@ -663,7 +663,7 @@ always @(posedge i_clk or negedge i_rst_n)
                 begin
                     if (enthdr_done)
                         begin
-                            o_hdrengine_en            <= 1'b1 ; 
+                            o_hdrengine_en            <= 1'b1 ; // enable signal for the hdr engine
                             o_regf_rd_en_mux_sel      <= HDR_ENGINE_SEL ;
                             o_regf_rd_address_mux_sel <= HDR_ENGINE_SEL ;
                             o_regf_wr_en_mux_sel      <= HDR_ENGINE_SEL ;
