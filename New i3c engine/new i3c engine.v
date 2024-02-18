@@ -26,10 +26,9 @@
   of MIXEL.  This information was prepared for Garduation Project purpose and is for
   use by MIXEL Engineers only.  MIXEL and ASU 2023 GP reserves the right 
   to make changes in the information at any time and without notice.
-//
-//==================================================================================
-////////////////////////////////////////////////////////////////////////////////////
 
+==================================================================================
+//////////////////////////////////////////////////////////////////////////////////*/
 `default_nettype none
 
 module i3c_engine (
