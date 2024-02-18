@@ -37,8 +37,7 @@ module CCC_Handler #(
 ) (
 input wire        i_sys_clk ,
 input wire        i_sys_rst ,
-input wire        i_engine_en ,
-input wire        i_frmcnt_last ,
+input wire        i_engine_en ,                 // depends on CP flag 
 input wire [4:0]  i_bitcnt_number ,
 input wire        i_tx_mode_done ,
 input wire        i_rx_mode_done ,
@@ -46,10 +45,25 @@ input wire        i_rx_second_pre ,
 input wire        i_sclgen_neg_edge ,
 input wire        i_sclgen_pos_edge ,
 input wire        i_sclstall_stall_done ,
-input wire        i_regf_wr_rd_bit ,
-input wire        i_rx_error ,
+input wire        i_rx_error , // sus 
 
-input wire [7:0]  i_config_CCC_value ,    // new by omar badr
+// configuration Ports coming from regf
+input wire        i_regf_RnW ,
+input wire [2:0]  i_regf_CMD_ATTR ,
+input wire [7:0]  i_regf_CMD ,
+input wire [4:0]  i_regf_DEV_INDEX ,
+input wire        i_regf_TOC , 
+input wire        i_regf_WROC , 
+
+// in case of immidiate command descriptor 
+input wire [2:0]  i_regf_DTT , 
+
+// in case of regular command descriptor 
+input wire        i_regf_DBP , 
+input wire        i_regf_SRE , 
+input wire [15:0] i_regf_DATA_LENGTH ,
+
+
 
 output reg        o_sclstall_en ,
 output reg [7:0]  o_sclstall_no_of_cycles ,
@@ -123,6 +137,17 @@ localparam CRC               = 5'd01010 ;
 localparam RESTART_PATTERN   = 5'd01011 ;
 localparam ERROR             = 5'd01100 ;
 
+
+
+wire            Defining_byte ; 
+
+// Defining Byte identification 
+always @(*) begin 
+    if      (!i_regf_CMD_ATTR[0] && i_regf_DBP)       Defining_byte = 1'b1 ; // regular 
+    else if (i_regf_CMD_ATTR[0] && i_regf_DTT[2])     Defining_byte = 1'b1 ; // immediate
+    else                                              Defining_byte = 1'b0 ;
+
+end 
 ///////////////////////////////// state memory //////////////////////////////////////////////
     always @(posedge i_sys_clk or negedge i_sys_rst) begin
         if (!i_sys_rst) begin
@@ -232,9 +257,10 @@ localparam ERROR             = 5'd01100 ;
 
 
             PRE_FIRST_DATA : begin  // should be 10 to mean ACK ,    and 11 to be aborted 
-
+                // tx mode on 1 
+                // enable rx and check the target's response
                 if (i_bitcnt_number == 5'd2 && i_rx_mode_done && !i_rx_second_pre) begin 
-                    next_state = FIRST_DATA_BYTE ;
+                    next_state = CCC_BYTE ;
                 end
                 else if (i_bitcnt_number == 5'd2 && i_rx_mode_done && i_rx_second_pre) begin 
                     next_state = ERROR ;
@@ -245,13 +271,16 @@ localparam ERROR             = 5'd01100 ;
             end
 
 
-            FIRST_DATA_BYTE : begin    // contains CCC value or First Data byte
+            CCC_BYTE : begin    // contains CCC value
 
-                if (i_bitcnt_number == 5'd10 && i_tx_mode_done) begin   // to be done ... check if ODB is supported or not , and the value and number of them if needed 
-                    next_state = SECOND_DATA_BYTE ;
+                if (i_bitcnt_number == 5'd10 && i_tx_mode_done && Defining_byte) begin   // if a defining byte exists
+                    next_state = DEFINING_BYTE ;
+                end
+                else if (i_bitcnt_number == 5'd10 && i_tx_mode_done && !Defining_byte) begin   
+                    next_state = FIRST_DATA_BYTE ;
                 end
                 else begin 
-                    next_state = FIRST_DATA_BYTE ;
+                    next_state = CCC_BYTE ;
                 end
 
                 // erorr state condition is remaining 
@@ -259,7 +288,91 @@ localparam ERROR             = 5'd01100 ;
                 
             end
 
-            SECOND_DATA_BYTE : begin   // contains Optional Defining Byte (8'd0 if none is used) , or second data byte
+
+            DEFINING_BYTE : begin    // contains definaing byte if exist
+
+                if (i_bitcnt_number == 5'd18 && i_tx_mode_done) begin   
+                    next_state = PARITY_CCC_DEF ;
+                end
+                else begin 
+                    next_state = DEFINING_BYTE ;
+                end
+
+                // erorr state condition is remaining 
+
+                
+            end
+
+            PARITY_CCC_DEF : begin // parity state for CCC and Def byte
+
+                if  (i_bitcnt_number == 5'd20 && i_tx_mode_done && !Direct_Broadcast_n_internal ) begin // if broadcast
+                    next_state = PRE_DATA ;
+                end
+
+                else if (i_bitcnt_number == 5'd20 && i_tx_mode_done &&  Direct_Broadcast_n_internal ) begin // if Direct
+                    next_state = RESTART_PATTERN ;
+                    Direct_Broadcast_n_internal = 1'b0 ; // resetting the signal after sending broadcast address to transmitt target address in the next command word 
+                end
+
+                else begin 
+                    next_state = PARITY_CCC_DEF ;
+                end
+
+                // erorr state condition is remaining 
+
+            end
+
+            PARITY_DATA : begin // parity state for repeated data (not CCC and Def byte)
+
+                if  (i_bitcnt_number == 5'd20 && i_tx_mode_done && last_byte) begin 
+                    next_state = CRC ;
+                end
+
+                else if (i_bitcnt_number == 5'd20 && i_tx_mode_done && !last_byte) begin 
+                    next_state = PRE_DATA ;
+                end
+
+                else begin 
+                    next_state = PARITY_DATA ;
+                end
+
+                // erorr state condition is remaining 
+
+            end
+
+
+
+            PRE_DATA : begin        // should be 11 to mean ACK and 10 to be aborted 
+                // tx mode on 1 
+                // enable rx and check the target's response
+                if (i_bitcnt_number == 5'd2 && i_rx_mode_done && i_rx_second_pre) begin 
+                    next_state = FIRST_DATA_BYTE ;
+                end
+                else if (i_bitcnt_number == 5'd2 && i_rx_mode_done && !i_rx_second_pre) begin 
+                    next_state = ERROR ;
+                end
+                else begin
+                    next_state = PRE_DATA ;
+                end
+                
+            end
+
+
+            FIRST_DATA_BYTE : begin    // contains first repeated data byte
+
+                if (i_bitcnt_number == 5'd10 && i_tx_mode_done) begin  
+                    next_state = SECOND_DATA_BYTE ;
+                end
+                else begin 
+                    next_state = FIRST_DATA_BYTE ;
+                end
+
+                // erorr state condition is remaining 
+     
+            end
+
+
+            SECOND_DATA_BYTE : begin   // contains second repeated data byte
 
                 if (i_bitcnt_number == 5'd18 && i_tx_mode_done) begin   
                     next_state = PARITY_DATA ;
@@ -273,24 +386,7 @@ localparam ERROR             = 5'd01100 ;
             end
 
            
-            PARITY_DATA : begin 
-
-                if      (i_bitcnt_number == 5'd20 && i_tx_mode_done && !Direct_Broadcast_n_internal ) begin // if broadcast
-                    next_state = PRE_DATA ;
-                end
-
-                else if (i_bitcnt_number == 5'd20 && i_tx_mode_done &&  Direct_Broadcast_n_internal ) begin // if Direct
-                    next_state = RESTART_PATTERN ;
-                    Direct_Broadcast_n_internal = 1'b0 ; // resetting the signal after sending broadcast address to transmitt target address in the next command word 
-                end
-
-                else begin 
-                    next_state = PARITY_DATA ;
-                end
-
-                // erorr state condition is remaining 
-
-            end
+           
 
 
 
@@ -303,18 +399,6 @@ localparam ERROR             = 5'd01100 ;
 
 
 
-
-
-            DATA : begin        // repeated data
-
-                
-            end
-
-
-            PRE_DATA : begin        // should be 11 to mean ACK and 10 to be aborted 
-
-                
-            end
 
 
 
@@ -339,3 +423,6 @@ localparam ERROR             = 5'd01100 ;
         endcase
     end
 endmodule 
+
+
+// remmeber to handle last frame logic and the case that the payload is odd number of bytes
