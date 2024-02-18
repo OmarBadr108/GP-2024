@@ -683,7 +683,7 @@ always @(posedge i_clk or negedge i_rst_n)
 
             ENTHDR: 
                 begin
-                    if (i_enthdr_done)
+                    if (i_enthdr_done && i_scl_neg_edge)
                         begin
                             o_hdrengine_en            <= 1'b1 ;          
 
