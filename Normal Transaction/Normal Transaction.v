@@ -3,83 +3,83 @@ input        i_sys_clk,
 input        i_sys_rst,
 input        i_engine_en,
 input        i_frmcnt_last,
-input        i_bitcnt_done,
 input        i_tx_mode_done,
+input        i_tx_parity_data,
 input        i_rx_mode_done,
-input        i_rx_second_pre,
-input        i_sclgen_pos_edge,
-input        i_sclgen_neg_edge,
-input        i_sclstall_stall_done,  // NO NEED TILL NOW
+input        i_rx_pre,
 input        i_regf_wr_rd_bit,
 input        i_rx_error,
+input        i_toc,
 
-
-output reg       o_sclstall_en,         // NO NEED TILL NOW
-output reg       o_sclstall_no_of_cycles, // NO NEED TILL NOW
 output reg       o_tx_en,
 output reg [3:0] o_tx_mode,
 output reg       o_rx_en,
 output reg [3:0] o_rx_mode,
-output reg       o_bitcnt_en,
 output reg       o_frmcnt_en,
-output reg       o_bitcnt_err_rst,
-output reg       o_sdahand_pp_od,
 output reg       o_regf_wr_en,
 output reg       o_regf_rd_en,
 output reg [4:0] o_regf_addr,
-output reg       o_engine_done
+output reg       o_engine_abort,  
+output reg       o_engine_done,
+output reg [1:0] o_error_type  
 );
 
+
+// types of error  
+localparam [1:0]  frame_error = 'b00,
+                  parity_error = 'b01,
+                  NACK = 'b10,
+                  CRC_error = 'b11;
+                  
+                  
 // tx modes needed  
-localparam [2:0]  tx_idle = 'b000,
-                  Reserved_preamble = 'b000,
-                  special_preamble_tx = 'b001,
-                  one_preamble = 'b010,
-                  zero_preamble = 'b1000,
-                  Serializing_First_byte = 'b101,
-                  Serializing_Second_byte = 'b100,
-                  Calculating_Parity ='b0101,
-                  token_CRC = 'b110,
-                  stall = 'b111;
-				  
-				  
+localparam [3:0]  tx_idle = 'b000,
+                  Reserved_preamble = 'b001,
+                  special_preamble_tx = 'b010,
+                  one_preamble = 'b011,
+                  zero_preamble = 'b100,
+				          Serializing_byte = 'b101,
+                  Calculating_Parity ='b110,
+                  token_CRC = 'b111,
+                  Restart_Pattern = 'b1000,
+                  Exit_Pattern = 'b1001;
+                  
+				  			  
  // rx modes neede 
-localparam [2:0]     rx_idle = 'b000,
-                     preamble = 'b000,
-                     special_preamble_rx = 'b001, //for recieving 01
-                     Deserializing_First_byte = 'b010,
-                     Deserializing_Second_byte = 'b011, 
-                     Check_token = 'b100,
-                     Check_Parity_value = 'b101,
-                     CRC_received = 'b110,
-                     Error = 'b111;
+localparam [3:0]     rx_idle = 'b0000,
+                     preamble = 'b0001,
+                     special_preamble_rx = 'b0010, 
+                     Deserializing_byte = 'b0011,
+                     Deserializing_dummy_byte = 'b0100, 
+                     Check_token = 'b0101,
+                     Check_Parity_value = 'b0110,
+                     CRC_received = 'b0111,
+                     Error = 'b1000;
 
 // fsm states
-localparam [3:0]    idle = 'b0000,
+localparam [4:0]    idle = 'b0000,
                     first_stage_command_Pre = 'b0001,
                     command_word = 'b0010,
 					          address = 'b0011,               // broadcast or dierecet 
-					          parity = 'b0101,
-					          sec_stage_first_data_pre = 'b0110,             // sent by controller
-					          ack_waiting = 'b0111,
-					          first_data_byte = 'b0100,
+					          parity = 'b0100,
+					          sec_stage_first_data_pre = 'b0101,             // sent by controller
+					          ack_waiting = 'b0110,
+					          first_data_byte = 'b0111,
 					          second_data_byte = 'b1000,
-					          dummy_data_byte = 'b1001,            // in case of sending or recieving only 8 bits
-					          third_stage_first_data_pre = 'b1010,             // send by target or controller
-					          abort_bit = 'b1011,                      //   aborting by controller or target             
-					          fourth_stage_crc_pre = 'b1100,
+					          third_stage_first_data_pre = 'b1001,             // send by target or controller
+					          abort_bit = 'b1010,                      //   aborting by controller or target             
+					          fourth_stage_crc_first_pre = 'b1011,
+					          fourth_stage_crc_second_pre = 'b1100,
 					          token_crc_bits = 'b1101,                 // 4 bits
 					          crc_value_bits = 'b1110,                  // 5 bits 
-					          error = 'b1111;
-					
-					
-
-                     
+					          error = 'b1111,
+					          restart = 'b10000,
+					          exit = 'b10001;
+					          			
+                  
 reg    [1:0]         current_state,
                      next_state ;
-					 
-					 
-					 
+					 					 
 always @(posedge i_sys_clk or negedge i_sys_rst)
  begin
   if(!i_sys_rst)
@@ -96,26 +96,22 @@ always @(posedge i_sys_clk or negedge i_sys_rst)
 always @(*)
  begin
    
-  o_sdahand_pp_od = 'b1 ;  // default pp 
   o_tx_en = 'b0 ; 
   o_rx_en = 'b0 ;
 	o_rx_mode = rx_idle ;
-  o_bitcnt_en = 'b1 ;
-  o_frmcnt_en = 'b1 ;
+  o_frmcnt_en = 'b0 ;
   o_regf_wr_en = 'b0 ;
   o_regf_rd_en = 'b0 ;
   o_engine_done = 'b0 ;
-  o_bitcnt_err_rst = 'b0 ;
-	o_regf_addr = 'b0; //ay 7aga talama m4 h3ml serializing mn regf
+	o_regf_addr = 'b0;
+	o_engine_abort = 'b0;
   
   
   case(current_state)
   
   idle : begin 
           
-		  o_bitcnt_en = 'b0;
-		  o_frmcnt_en = 'b0 ;
-		  o_tx_mode = tx_idle ; 
+		  o_tx_mode = tx_idle ;
 
 		  end
 		  
@@ -123,7 +119,7 @@ always @(*)
   first_stage_command_Pre :  begin
            
 		   o_tx_en = 'b1 ;
-		   o_tx_mode = first_stage_command_Pre ;
+		   o_tx_mode = special_preamble_tx ;
    
 		   end 
            		   
@@ -131,8 +127,8 @@ always @(*)
   command_word	: begin 
     
 		  o_tx_en = 'b1;
-		  o_tx_mode = Serializing_First_byte ; //????? ??? ??? ??? ????? ??????? ??? ????? ???? ?????? ?????
-		  o_regf_addr = ;// undetermined yet0 
+		  o_tx_mode = Serializing_byte ; 
+		  o_regf_addr = 0; 
 		  o_regf_rd_en = 'b1 ;
 		  
             end 
@@ -141,18 +137,30 @@ always @(*)
   address : begin 
     
       o_tx_en = 'b1;
-		  o_tx_mode = Serializing_Second_byte ;
-		  o_regf_addr = // undetermined yet0 
-		  o_regf_rd_en = 'b1 ;
+		  o_tx_mode = Serializing_byte ;
+		  o_regf_addr = 0; 
+		  o_regf_rd_en = 'b1 ; 
 		  
 		  end
     
   
   parity        : begin
     
-      o_tx_en = 'b1;
-		  o_tx_mode = Calculating_Parity ;
-
+        if (!i_regf_wr_rd_bit)
+         begin
+          o_tx_en = 'b1;
+          o_tx_mode = Calculating_Parity;
+         end
+        else
+         begin
+          o_rx_en = 'b1;
+          o_rx_mode = Check_Parity_value;
+          if (i_rx_error)
+            o_error_type = parity_error;
+          else
+            o_error_type = 0; 
+         end
+		  
              end 
 			 
   
@@ -160,14 +168,18 @@ always @(*)
    
       o_tx_en = 'b1;
       o_tx_mode = one_preamble ;
-  
+
              end 
 			 
   
-  ack_waiting        : begin
+  ack_waiting : begin
     
-      o_rx_en = 'b1 ;
-	    o_rx_mode = preamble ;
+        o_rx_en = 'b1 ;
+	      o_rx_mode = preamble ;
+	      if (i_rx_error)
+         o_error_type = NACK;
+        else
+         o_error_type = 0;
 
              end 
 
@@ -177,16 +189,16 @@ always @(*)
     if (!i_regf_wr_rd_bit)
       begin
        o_tx_en = 'b1;
-       o_tx_mode = Serializing_First_byte;
-  		   o_regf_addr = // undetermined yet0 
+       o_tx_mode = Serializing_byte;
+  		   o_regf_addr = 0; // undetermined yet0 
 		   o_regf_rd_en = 'b1 ;
       end
        
      else
       begin
        o_rx_en = 'b1 ;
-	     o_rx_mode = Deserializing_First_byte ;
-	     o_regf_addr = // undetermined yet0 
+	     o_rx_mode = Deserializing_byte ;
+	     o_regf_addr = 0; // undetermined yet0 
 		   o_regf_wr_en = 'b1 ;
 	    end 
 
@@ -194,30 +206,25 @@ always @(*)
              
              
   second_data_byte        : begin
-    
-    if (!i_regf_wr_rd_bit)
+
+   if (!i_regf_wr_rd_bit)
       begin
        o_tx_en = 'b1;
-       o_tx_mode = Serializing_First_byte;
-  		   o_regf_addr = // undetermined yet0 
+       o_tx_mode = Serializing_byte;
+  		   o_regf_addr = 0;// undetermined yet0 
 		   o_regf_rd_en = 'b1 ;
       end
        
      else
       begin
        o_rx_en = 'b1 ;
-	     o_rx_mode = Deserializing_First_byte ;
-	     o_regf_addr = // undetermined yet0 
-		   o_regf_wt_en = 'b1 ;
-	    end  
-			 
-  
-  dummy_data_byte   : begin
+	     o_rx_mode = Deserializing_byte ;
+	     o_regf_addr = 0;// undetermined yet0 
+		   o_regf_wr_en = 'b1 ;
+	    end 
+	    
+	 end
 
-
-
-             end 
-			 
 
   third_stage_first_data_pre    : begin
     
@@ -239,53 +246,101 @@ always @(*)
     
        if (i_regf_wr_rd_bit)
          begin
-          if (!i_frmcnt_last)
+           
+          if (!i_frmcnt_last)  
             begin
               o_tx_en = 'b1;
-              o_tx_mode = one_preamble;
+              o_tx_mode = one_preamble; 
             end
           else
             begin
               o_tx_en = 'b1;
               o_tx_mode = zero_preamble;
             end
+            
+          end
+          
+        else
+         begin
+          o_rx_en = 'b1;
+          o_rx_mode = preamble;
+		  
+		  if(!i_rx_pre)  
+		  o_engine_abort = 'b1;
+		  else 
+		  o_engine_abort = 'b0;
+
+         end
+
+             end 
+
+
+  fourth_stage_crc_first_pre     : begin
+    
+    if (i_regf_wr_rd_bit)
+         begin
+          o_tx_en = 'b1;
+          o_tx_mode = zero_preamble;
+         end
         else
          begin
           o_rx_en = 'b1;
           o_rx_mode = preamble;
          end
 
-
-
-             end 
-
-
-  fourth_stage_crc_pre     : begin
+             end
+             
+             
+ fourth_stage_crc_second_pre     : begin
     
-    if (!i_regf_wr_rd_bit)
+    if (i_regf_wr_rd_bit)
          begin
           o_tx_en = 'b1;
-          o_tx_mode = special_preamble;
+          o_tx_mode = one_preamble;
          end
         else
          begin
           o_rx_en = 'b1;
-          o_rx_mode = special_preamble;
+          o_rx_mode = preamble;
          end
 
-             end 
+             end  
              
    
    token_crc_bits        : begin
 
-
+    if (!i_regf_wr_rd_bit)
+         begin
+          o_tx_en = 'b1;
+          o_tx_mode = token_CRC;
+         end
+        else
+         begin
+          o_rx_en = 'b1;
+          o_rx_mode = Check_token;
+         end
 
              end 			 
 
 	
    crc_value_bits   : begin
 
-
+    if (!i_regf_wr_rd_bit)
+         begin
+          o_tx_en = 'b1;
+          o_tx_mode =  CRC_received ;
+         end
+        else
+         begin
+           
+          o_rx_en = 'b1;
+          o_rx_mode = CRC_received;
+          if (i_rx_error)
+            o_error_type = CRC_error;
+          else
+            o_error_type = 0;
+            
+         end
 
              end 
 			 
@@ -296,6 +351,25 @@ always @(*)
           o_rx_mode = Error;
 
              end
+             
+ 
+   restart   : begin
+     
+          o_tx_en = 'b1;
+          o_tx_mode = Restart_Pattern;
+          o_engine_done = 'b1;
+
+             end
+             
+             
+   exit   : begin
+     
+          o_tx_en = 'b1;
+          o_tx_mode = Exit_Pattern;
+          o_engine_done = 'b1;
+
+             end            
+             
       endcase
     end
     
@@ -338,8 +412,10 @@ always @(*)
 		          
 		      address	: begin 
 		        
-		        if (i_tx_mode_done)
+		        if (i_tx_mode_done) begin
 		          next_state = parity ;
+				  
+				  end
 		        else
 		          next_state = address ;
 		          
@@ -348,10 +424,43 @@ always @(*)
             
 		      parity	: begin 
 		        
-		        if (i_tx_mode_done)
-		          next_state = parity ;
-		        else
-		          next_state = sec_stage_first_data_pre ;
+		        if (i_rx_mode_done | i_tx_mode_done)
+		          begin
+				
+				        if (i_tx_parity_data)	
+				          begin		 
+				   
+				           if (!i_regf_wr_rd_bit)
+				             begin
+				      
+				               if(!i_frmcnt_last)
+		                     next_state = third_stage_first_data_pre ;
+				               else 
+				                 next_state = fourth_stage_crc_first_pre ;
+					   
+					 end
+				       
+				    
+				  else begin
+				  
+				  if (i_rx_error) 
+				    next_state = error;
+				  else 
+				    next_state = third_stage_first_data_pre;
+					
+					end
+				      
+				    end
+				      
+				
+				else 
+				  next_state =  sec_stage_first_data_pre ;
+				  
+				 end
+				  
+				 
+		  else
+		    next_state = parity ;
 		          
             end
             
@@ -359,9 +468,10 @@ always @(*)
  		      sec_stage_first_data_pre	: begin 
 		        
 		        if (i_tx_mode_done)
-		          next_state = sec_stage_first_data_pre ;
+		           next_state = ack_waiting ;
+				  
 		        else
-		          next_state = ack_waiting ;
+		         next_state = sec_stage_first_data_pre ;
 		          
             end
             
@@ -369,36 +479,204 @@ always @(*)
   		       ack_waiting	: begin 
 		        
 		        if (i_rx_mode_done)
+				
+				if (!i_rx_error)      
 		          next_state = first_data_byte ;
+				else 
+                  next_state = error ;				
 		        else
 		          next_state = ack_waiting ;
 		          
             end 
             
             
-  		       first_data_byte	: begin 
+ 		  first_data_byte	: begin 
 		        
-		        if (i_rx_mode_done)
-		          next_state = second_data_byte ;
-		        else
+		        if (i_rx_mode_done | i_tx_mode_done)
+		
+				      next_state = second_data_byte ;
+
+			   else
 		          next_state = first_data_byte ;
 		          
             end
             
-           second_data_byte	: begin 
+            
+     second_data_byte	: begin 
 		        
-		        if (i_rx_mode_done)
-		          next_state = second_data_byte ;
-		        else
+		        if (i_rx_mode_done | i_tx_mode_done)
+				next_state = parity;
+				else 				
 		          next_state = second_data_byte ;
 		          
-            end  
+            end
+
        
-       
+			third_stage_first_data_pre : begin 
+			  
+			
+				if (i_rx_mode_done | i_tx_mode_done)
+				  begin
+				    
+				   if(i_regf_wr_rd_bit)
+				     begin
+				       
+				         if (i_rx_pre)
+		               next_state = abort_bit ; 
+		             else
+                   next_state = fourth_stage_crc_second_pre ;
+                   
+             end
+                 
+             
+            else
+              next_state = abort_bit ;
+             
+             end
+              
+		     else
+		       next_state = third_stage_first_data_pre ;
+		       
+		     end
+			
+			
+			abort_bit : begin
+			 if(i_rx_mode_done | i_tx_mode_done)
+			   begin
+			
+			  		if (!i_regf_wr_rd_bit)
+				    begin
+				      
+				     if(i_rx_pre)
+		           next_state = first_data_byte ;
+				     else
+				      begin 
+				        
+				       if (i_toc)
+				        next_state = restart ;
+				       else
+				        next_state = exit ;
+				        
+				      end
+				       
+				    end
+				       
+				    
+				  else
+				    begin
+				      
+				     if(i_frmcnt_last) 
+				       
+		          begin 
+				        
+				       if (i_toc)
+				        next_state = restart ;
+				       else
+				        next_state = exit ;
+				        
+				      end
+		           
+				     else 
+				       next_state = first_data_byte ;
+				      
+				    end 
+				    
+			end
+				    
+				 else
+				   next_state = abort_bit ;
+				   
+		end
+
+			
+			
+			fourth_stage_crc_first_pre : begin 
+			  
+			    if (i_rx_mode_done | i_tx_mode_done)
+		          next_state = fourth_stage_crc_second_pre ;  
+		        else
+		          next_state = fourth_stage_crc_first_pre ;
+				  
+			end
+			
+			
+			fourth_stage_crc_second_pre : begin 
+			  
+			    if (i_rx_mode_done | i_tx_mode_done)
+		          next_state = token_crc_bits ;  
+		        else
+		          next_state = fourth_stage_crc_second_pre ;
+				  
+			end
+				  
+				  
+			token_crc_bits : begin 
+				if (i_rx_mode_done | i_tx_mode_done)
+		          next_state = crc_value_bits ;  
+		        else
+		          next_state =  token_crc_bits ;
+				  
+			end
+			
+			crc_value_bits : begin 
+			  
+			 if (i_rx_mode_done | i_tx_mode_done)
+			   
+		       			begin 
+				        
+				       if (i_toc)
+				        next_state = restart ;
+				       else
+				        next_state = exit ;
+				        
+				      end 
+		       
+		   else
+		       next_state = crc_value_bits ;	  
+				  
+			end
+			
+			
+			error : begin 
+			 
+			 if (i_rx_mode_done)
+			   
+		       		 begin 
+				        
+				       if (i_toc)
+				        next_state = restart ;
+				       else
+				        next_state = exit ;
+				        
+				      end
+		         
+		   else
+		       next_state = error ;	
+			
+			end
+			
+			
+			restart :  begin
+		      		        
+		        if (i_tx_mode_done)
+		          next_state = first_stage_command_Pre ;
+		        else
+		          next_state = restart ;
+		          
+		  end 
+		  
+		  
+			exit :  begin
+		      		        
+		        if (i_tx_mode_done)
+		          next_state = idle ;
+		        else
+		          next_state = exit ;
+		          
+		  end 
+				  
      endcase
    end
        
-       
 
-             
 endmodule
