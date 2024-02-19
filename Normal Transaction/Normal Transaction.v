@@ -19,6 +19,8 @@ output reg       o_frmcnt_en,
 output reg       o_regf_wr_en,
 output reg       o_regf_rd_en,
 output reg [4:0] o_regf_addr,
+output reg [3:0] o_sclstall_no_of_cycles,
+output reg       o_sclstall_en,
 output reg       o_engine_abort,  
 output reg       o_engine_done,
 output reg [1:0] o_error_type  
@@ -31,6 +33,11 @@ localparam [1:0]  frame_error = 'b00,
                   NACK = 'b10,
                   CRC_error = 'b11;
                   
+                  
+// timing specification   
+localparam [3:0]  restart_stalling = 'd8,
+                  exit_stalling = 'd11;
+     
                   
 // tx modes needed  
 localparam [3:0]  tx_idle = 'b000,
@@ -105,6 +112,8 @@ always @(*)
   o_engine_done = 'b0 ;
 	o_regf_addr = 'b0;
 	o_engine_abort = 'b0;
+	o_sclstall_en = 'b0;
+	o_sclstall_no_of_cycles = 'b0;
   
   
   case(current_state)
@@ -358,7 +367,9 @@ always @(*)
           o_tx_en = 'b1;
           o_tx_mode = Restart_Pattern;
           o_engine_done = 'b1;
-
+          o_sclstall_no_of_cycles = restart_stalling;
+          o_sclstall_en = 'b1;
+          
              end
              
              
@@ -367,7 +378,9 @@ always @(*)
           o_tx_en = 'b1;
           o_tx_mode = Exit_Pattern;
           o_engine_done = 'b1;
-
+          o_sclstall_no_of_cycles = exit_stalling;
+          o_sclstall_en = 'b1;
+          
              end            
              
       endcase
@@ -569,7 +582,7 @@ always @(*)
 				       
 		          begin 
 				        
-				       if (i_toc)
+				       if (!i_toc)
 				        next_state = restart ;
 				       else
 				        next_state = exit ;
@@ -624,7 +637,7 @@ always @(*)
 			   
 		       			begin 
 				        
-				       if (i_toc)
+				       if (!i_toc)
 				        next_state = restart ;
 				       else
 				        next_state = exit ;
@@ -643,7 +656,7 @@ always @(*)
 			   
 		       		 begin 
 				        
-				       if (i_toc)
+				       if (!i_toc)
 				        next_state = restart ;
 				       else
 				        next_state = exit ;
