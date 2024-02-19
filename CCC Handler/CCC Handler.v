@@ -402,24 +402,59 @@ end
 
 
 
-            CRC : begin // this state can handle the rest of the CRC word 
+            CRC : begin // this state can handle the rest of the CRC word (2 + 4 + 5 + 1)
                 first_time = 1'b0 ;
+                if (i_bitcnt_number < 5'd2)
+                // tx mode on preamble 01  
+
+                if (i_bitcnt_number == 5'd2 && i_tx_mode_done) begin 
+                   // tx mode on C token  
+                end
+                else if (i_bitcnt_number == 5'd6 && i_tx_mode_done) begin 
+                    // tx mode on 5-bits CRC checksum 
+                end 
+                else if (i_bitcnt_number == 5'd11 && i_tx_mode_done) begin 
+                    // tx mode is stalled at 1 (preparing for restart or exit pattern)
+                end 
+                else if (i_bitcnt_number == 5'd12 && i_tx_mode_done) begin 
+                    // finish a command discriptor
+                    o_engine_done = 1'b1 ;
+
+                    if (i_regf_TOC) begin 
+                        next_state = EXIT_PATTERN ;
+                    end 
+                    else begin 
+                        next_state = RESTART_PATTERN ;
+                    end
+                end
+                else begin 
+                    next_state = CRC ;
+                end 
+
                 
             end
 
             RESTART_PATTERN : begin 
                 // access timer and staller and tx to perform restart pattern 
                 if (i_sclstall_stall_done && i_tx_mode_done) begin 
-                    next_state = PRE_CMD ;
-
+                    next_state = IDLE ;
                 end  
+                else begin 
+                    next_state = RESTART_PATTERN ;
+                end
             end 
 
 
 
 
             EXIT_PATTERN : begin 
-
+                // access timer and staller and tx to perform exit pattern 
+                if (i_sclstall_stall_done && i_tx_mode_done) begin 
+                    next_state = IDLE ;
+                end  
+                else begin 
+                    next_state = EXIT_PATTERN ;
+                end
             end
 
 
