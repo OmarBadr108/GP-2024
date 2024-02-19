@@ -37,7 +37,7 @@ module hdr_engine (
     input   wire            i_hdr_mode_done                       ,
     input   wire            i_TOC                                 , //term of completion if 0 restart/ 1 exit needed for exit
     input   wire            i_CP                                  , // Cmnd present=1 if CCC 0 for Normal Transcation
-    //input   wire  [3:0]     i_TID                               , //Transaction id for each CCC
+    //input   wire  [3:0]     i_TID                                 , //Transaction id for each CCC
     input   wire  [2:0]     i_MODE                                ,
     //to_blocks
     output  reg             o_i3cengine_hdrengine_done            ,
@@ -50,7 +50,7 @@ module hdr_engine (
 
     );
 
-//--------------------------------- main -------------------------------------------------
+//--------------------------------- main ------------------------------------------------
 
 always @(posedge i_sys_clk or negedge i_sys_clk or negedge i_sys_rst_n ) 
   begin: hdr_engine_fsm
