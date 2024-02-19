@@ -123,6 +123,7 @@ module i3c_controller_top (
     wire                 i3c_scl_idle                ;
     wire      [2:0]      scl_idle_mux_sel            ;
     wire                 sdr_scl_idle_mux_out        ;
+    wire                 enthdr_pp_od                ; //for enthdr
 
 /////////////////////  reg_file wires   ////////////////////////////
     wire                 i3c_regf_rd_en              ;
@@ -300,8 +301,9 @@ module i3c_controller_top (
    wire                  enthdr_tx_mode              ;  
    wire                  enthdr_rx_en                ;  
    wire                  enthdr_rx_mode              ;
+   wire                  enthdr_bit_cnt_en           ;
    wire                  ser_hdr_data                ;
-
+   
 assign o_sdr_rx_valid = regf_wr_en_mux_out ;
 
 i3c_engine u_i3c_engine (
@@ -727,8 +729,9 @@ enthdr u_enthdr (
             .i_i3cengine_en                 (enthdr_en)               ,
             .i_tx_mode_done                 (ser_mode_done)           ,
             .i_rx_ack_nack                  (ser_nack_ack)            ,
-  
-
+    
+            .o_bit_cnt_en                   (enthdr_bit_cnt_en)       ,
+            .o_pp_od                        (enthdr_pp_od)            ,
             .o_regf_rd_en                   (enthdr_regf_rd_en)       ,
             .o_regf_addr                    (enthdr_regf_addr)        ,
             .o_tx_en                        (enthdr_tx_en)            ,
@@ -753,7 +756,7 @@ gen_mux #(10,3) regf_rd_address_mux (
             .data_out (regf_rd_address_mux_out) );
 
 gen_mux #(1,3) regf_wr_en_mux (
-            .data_in  ({ crh_regf_wr_en , ibi_regf_wr_en , 1'b0 , daa_regf_wr_en , i3c_rx_valid , i2c_rx_valid , sdr_rx_valid}),
+            .data_in  ({ 1'b0, crh_regf_wr_en , ibi_regf_wr_en , 1'b0 , daa_regf_wr_en , i3c_rx_valid , i2c_rx_valid , sdr_rx_valid}),
             .ctrl_sel (regf_wr_en_mux_sel)  ,
             .data_out (regf_wr_en_mux_out) );
 
@@ -763,13 +766,13 @@ gen_mux #(8,1) regf_wr_data_mux (
             .data_out (regf_wr_data_mux_out) );
 
 gen_mux #(1,3) scl_pp_od_mux (
-            .data_in  ({ crh_pp_od , ibi_pp_od , hj_pp_od , daa_pp_od ,i3c_pp_od , i2c_pp_od , sdr_pp_od}),
+            .data_in  ({ enthdr_pp_od, crh_pp_od , ibi_pp_od , hj_pp_od , daa_pp_od ,i3c_pp_od , i2c_pp_od , sdr_pp_od}),
             .ctrl_sel (scl_pp_od_mux_sel)  ,
             .data_out (scl_pp_od_mux_out) );
 
 ///// to be removed /////
 gen_mux #(1,3) scl_idle_mux (
-            .data_in  ({ crh_scl_idle ,1'b0 ,1'b0 , 1'b0 , i3c_scl_idle , 1'b0 , sdr_ctrl_scl_idle}),
+            .data_in  ({ 1'b0, crh_scl_idle ,1'b0 ,1'b0 , 1'b0 , i3c_scl_idle , 1'b0 , sdr_ctrl_scl_idle}),
             .ctrl_sel (scl_idle_mux_sel)      ,
             .data_out (sdr_scl_idle_mux_out) );
 
@@ -794,18 +797,18 @@ gen_mux #(3,3) rx_mode_mux (
             .data_out (rx_mode_mux_out) );
 
 gen_mux #(1,3) bit_cnt_en_mux (
-            .data_in  ({ crh_cnt_en , ibi_cnt_en , hj_bit_cnt_en , daa_bits_cnt_en , i3c_bit_cnt_en , i2c_bit_cnt_en , sdr_bit_cnt_en}),
+            .data_in  ({enthdr_bit_cnt_en, crh_cnt_en , ibi_cnt_en , hj_bit_cnt_en , daa_bits_cnt_en , i3c_bit_cnt_en , i2c_bit_cnt_en , sdr_bit_cnt_en}),
             .ctrl_sel (bit_cnt_en_mux_sel)  ,
             .data_out (bit_cnt_en_mux_out) );
 
 
 gen_mux #(1,3) bit_rx_cnt_en_mux (
-            .data_in  ({ crh_rx_cnt_en, 1'b0 , 1'b0 , daa_rx_cnt_en , 1'b0 , i2c_bit_rx_cnt_en , sdr_bit_rx_cnt_en}),
+            .data_in  ({ 1'b0, crh_rx_cnt_en, 1'b0 , 1'b0 , daa_rx_cnt_en , 1'b0 , i2c_bit_rx_cnt_en , sdr_bit_rx_cnt_en}),
             .ctrl_sel (bit_rx_cnt_en_mux_sel)  ,
             .data_out (bit_rx_cnt_en_mux_out) );
 
 gen_mux #(1,3) fcnt_en_mux (
-            .data_in  ({crh_fcnt_en , 1'b0 , 1'b0 , daa_fcnt_en , 1'b0 , i2c_fcnt_en , sdr_fcnt_en}),
+            .data_in  ({1'b0, crh_fcnt_en , 1'b0 , 1'b0 , daa_fcnt_en , 1'b0 , i2c_fcnt_en , sdr_fcnt_en}),
             .ctrl_sel (fcnt_en_mux_sel)  ,
             .data_out (fcnt_en_mux_out) );
 

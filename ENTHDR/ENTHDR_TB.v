@@ -1,37 +1,4 @@
 `timescale 1us / 1ps
-
-/*//////////////////////////////////////////////////////////////////////////////////
-==================================================================================
- MIXEL GP 2024 LIBRARY
- Copyright (c) 2023 Mixel, Inc.  All Rights Reserved.
- CONFIDENTIAL AND PROPRIETARY SOFTWARE/DATA OF MIXEL and ASU 2024 GP, INC.
-
- Authors: Omar Maghraby, Laila Tamer 
- 
- Revision:   
-
- Version : 1.0
-
- Create Date: 
- Design Name:  
- Module Name:  
-
-==================================================================================
-
-  STATEMENT OF USE
-
-  This information contains confidential and proprietary information of MIXEL.
-  No part of this information may be reproduced, transmitted, transcribed,
-  stored in a retrieval system, or translated into any human or computer
-  language, in any form or by any means, electronic, mechanical, magnetic,
-  optical, chemical, manual, or otherwise, without the prior written permission
-  of MIXEL.  This information was prepared for Garduation Project purpose and is for
-  use by MIXEL Engineers only.  MIXEL and ASU 2023 GP reserves the right 
-  to make changes in the information at any time and without notice.
-
-==================================================================================
-//////////////////////////////////////////////////////////////////////////////////*/
-
 `default_nettype none
 module ENTHDR_tb();
 
@@ -43,9 +10,70 @@ module ENTHDR_tb();
    
     // Design Inputs           
     reg          i_i3c_i2c_sel_tb ;
-    wire         sda_tb                 ;            
+    reg          i_hdr_en_tb;
+    wire         sda_tb                 ;
+
    
     // Design Output
     wire         o_sdr_rx_valid_tb     ;
     wire         o_ctrl_done_tb        ;
-    wire         scl_tb                ; 
+    wire         scl_tb                ;
+
+
+
+ i3c_controller_top i3c_top_dut (  
+                    .i_sdr_clk          (i_sdr_clk_tb)        ,
+                    .i_sdr_rst_n        (i_sdr_rst_n_tb)      ,
+                    .i_i3c_i2c_sel      (i_i3c_i2c_sel_tb)    ,
+                    .i_controller_en    (i_controller_en_tb)  ,
+                    .scl                (scl_tb)              ,
+                    .sda                (sda_tb)              ,
+                    .i_hdr_en           (i_hdr_en_tb)         ,
+                    .o_sdr_rx_valid     (o_sdr_rx_valid_tb)   ,
+                    .o_ctrl_done        (o_ctrl_done_tb)       );
+ 
+
+ always #20 i_sdr_clk_tb = ~i_sdr_clk_tb;
+ 
+
+
+
+ initial 
+ begin
+  i_sdr_clk_tb=0; 
+   sda_drive =1'bz;
+        i_sdr_clk_tb = 1'b0;
+       
+
+    
+    // Generate the reset
+        i_sdr_rst_n_tb = 1'b1;
+        #20
+        i_sdr_rst_n_tb = 1'b0;
+        #20
+        i_sdr_rst_n_tb = 1'b1;
+     
+     // INPUTS 
+        i_controller_en_tb = 1'b1 ;
+        i_i3c_i2c_sel_tb   = 1'b1;
+        i_hdr_en_tb        = 1'b1;
+
+
+
+
+
+
+
+ end 
+
+
+
+
+
+
+
+
+
+
+endmodule
+`default_nettype wire 

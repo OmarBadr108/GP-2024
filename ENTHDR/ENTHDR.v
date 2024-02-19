@@ -37,7 +37,8 @@ module enthdr (
   input   wire             i_tx_mode_done  ,
   input   wire             i_rx_ack_nack   ,
   
-
+  output  wire             o_pp_od         , 
+  output  reg              o_bit_cnt_en    ,   
   output  reg              o_regf_rd_en    ,
   output  reg     [9:0]    o_regf_addr     ,
   output  reg              o_tx_en         ,
@@ -56,11 +57,16 @@ module enthdr (
  //----------------States Encoding----------------//
  localparam IDLE         = 3'b000 ;
  localparam BROADCAST    = 3'b001 ;
- localparam ACK          = 3'b010 ;
- localparam ENTHDR_DDR   = 3'b011 ;
- localparam PARITY       = 3'b100 ; 
+ localparam ACK          = 3'b011 ;
+ localparam ENTHDR_DDR   = 3'b010 ;
+ localparam PARITY       = 3'b110 ; 
  
  
+
+ assign o_pp_od = 1'b0  ; 
+
+
+
  //----------------ENTHDR0 CCC FSM----------------//
  always@(posedge i_clk or negedge i_rst_n)
    begin
@@ -74,6 +80,7 @@ module enthdr (
          o_tx_mode           <= 3'b0;
          o_rx_mode           <= 3'b0;
          o_regf_addr         <= 10'b0;
+         o_bit_cnt_en        <= 1'b0;
        end
      else 
        begin
@@ -84,17 +91,11 @@ module enthdr (
          o_tx_mode           <= 3'b0;
          o_rx_mode           <= 3'b0;
          o_regf_addr         <= 10'b0;
+         o_bit_cnt_en        <= 1'b0;
+        
         case(state)
            IDLE:         
              begin
-               o_regf_rd_en        <= 1'b0;
-               o_tx_en             <= 1'b0;
-               o_rx_en             <= 1'b0;
-               o_i3cengine_done    <= 1'b0;
-               o_tx_mode           <= 3'b0;
-               o_rx_mode           <= 3'b0;
-               o_regf_addr         <= 10'b0;
- 
                if (i_i3cengine_en)
                    begin
                      state         <= BROADCAST;
@@ -105,7 +106,7 @@ module enthdr (
                      o_regf_addr   <= 10'b0000101110; // 9'd46 >> broadcast address in reg file ('h7E+w)
                      o_tx_en       <= 1'b1;
                      o_tx_mode     <= 3'b001;         // serializing state in TX
- 
+                     o_bit_cnt_en  <= 1'b1;
                    end
                else 
                    begin
@@ -126,6 +127,7 @@ module enthdr (
                 o_rx_en    <= 1'b1;
                 o_tx_en    <= 1'b0;
                 o_rx_mode  <= 3'b000;  // ACK mode in rx   
+                o_bit_cnt_en  <= 1'b0;
                end
              else 
                begin
@@ -143,7 +145,8 @@ module enthdr (
                  o_regf_rd_en        <= 1'b1;  
                  o_daa_regf_addr     <= 'd50;  //*** DDR Mode value added in the regfile but needs to be rechecked  
                  o_daa_tx_mode       <= 3'b001;
-                 o_daa_tx_en         <= 1'b1;                
+                 o_daa_tx_en         <= 1'b1;
+                  o_bit_cnt_en       <= 1'b1;                
                end
              else 
                begin
@@ -160,6 +163,7 @@ module enthdr (
                  state         <= PARITY;  // next state is parity to send the T bit
                  o_tx_en       <= 1'b1;
                  o_tx_mode     <= 3'b011;
+                 o_bit_cnt_en  <= 1'b1;
                end
              else
                begin
@@ -174,11 +178,13 @@ module enthdr (
                begin
                  o_i3cengine_done <= 1'b1;
                  state            <= IDLE;
+                 o_bit_cnt_en     <= 1'b0;
                end
               else
                begin
                  o_i3cengine_done <= 1'b0;
                  state            <= PARITY;
+                 o_bit_cnt_en     <= 1'b1;
                end
              end
 
@@ -193,10 +199,6 @@ module enthdr (
              o_regf_addr         <= 10'b0;
              state               <= IDLE;
             end
-
-
-
-
          endcase
        end
    

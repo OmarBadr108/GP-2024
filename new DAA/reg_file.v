@@ -136,7 +136,7 @@ assign o_regf_hj_support  = reg_array[409][0]   ;
  				for (I=5; I < 46 ; I = I +1) // SDR RX Data bytes
 	 			reg_array[I] <= 'b0 ;
 
-           for (J=50; J < 381 ; J = J +1) // UNUSED
+           for (J=51; J < 381 ; J = J +1) // UNUSED
                 reg_array[J] <= 'b0 ;
 
  				reg_array[46]  <= 'b11111100 ; // 7'h7E broadcast address with rnw = 0 *write*

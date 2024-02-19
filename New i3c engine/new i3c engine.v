@@ -106,14 +106,14 @@ module i3c_engine (
     
     ///////////////////////hdr//////////////////////////////////
     output  reg          o_enthdr_en                   ,
-    output  reg          o_mode_sda_sel                ,    
+    output  reg          o_mode_sda_sel                   
 
-    output  reg          o_mode_sda_sel                ,
+   /*
     output  reg          o_mode_bit_cnt_en_mux_sel     ,
     output  reg          o_mode_regf_rd_en_mux_sel     ,
     output  reg          o_mode_regf_rd_address_mux_sel,
     output  reg          o_mode_regf_wr_en_mux_sel     ,
-    output  reg          o_mode_regf_wr_data_mux_sel   ,          
+    output  reg          o_mode_regf_wr_data_mux_sel   ,*/          
    
 );
 
@@ -168,8 +168,8 @@ always @(posedge i_clk or negedge i_rst_n)
             o_hj_en           <= 1'b0   ;
             o_crh_en          <= 1'b0   ;
             o_hj_ccc          <= 1'b0   ;
-            o_ibi_en          <= 1'b0 ;
-            o_crh_en          <= 1'b0 ;
+            o_ibi_en          <= 1'b0   ;
+            o_crh_en          <= 1'b0   ;
             o_tx_en           <= 1'b0   ; 
             o_tx_mode         <= 3'b000 ; 
             o_pp_od           <= 1'b0   ;   
@@ -178,7 +178,7 @@ always @(posedge i_clk or negedge i_rst_n)
             o_bit_cnt_en      <= 1'b0   ;
             o_regf_rd_en      <= 1'b0   ;
             o_i3c_idle_flag   <= 1'b0   ; 
-            o_crh_stop_is_sent <= 1'b0 ;
+            o_crh_stop_is_sent <= 1'b0  ;
 
             /////////////       internal wires      ///////////////////
 
@@ -192,7 +192,7 @@ always @(posedge i_clk or negedge i_rst_n)
 
     else
         begin
-        o_hdrengine_en            <= 1'b0 ;
+             o_hdrengine_en            <= 1'b0 ;
             case(state)
             IDLE:
                 begin
@@ -211,7 +211,7 @@ always @(posedge i_clk or negedge i_rst_n)
                     o_scl_idle_mux_sel   <= I3C_ENGINE_SEL ;
                     o_bit_cnt_en_mux_sel <= I3C_ENGINE_SEL ; 
                     o_fcnt_no_frms_sel   <= I3C_ENGINE_SEL ; 
-                    o_ser_rx_tx_mux_sel  <= I3C_ENGINE_SEL                 ;
+                    o_ser_rx_tx_mux_sel  <= I3C_ENGINE_SEL ;
                     o_crh_stop_is_sent <= 1'b0 ;
 
                     if (i_controller_en)
@@ -736,7 +736,7 @@ always @(posedge i_clk or negedge i_rst_n)
                 end
 
 
-            HDR_ENGINE:
+            /*HDR_ENGINE:
                begin
                  if(i_hdrengine_exit)
                   begin
@@ -772,7 +772,7 @@ always @(posedge i_clk or negedge i_rst_n)
 
 
 
-               end
+               end*/
          endcase
             
         end
