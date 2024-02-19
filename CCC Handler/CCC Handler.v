@@ -48,7 +48,7 @@ input wire        i_sclstall_stall_done ,
 input wire        i_rx_error , // sus 
 
 // configuration Ports coming from regf
-input wire        i_regf_RnW ,
+input wire        i_regf_RnW ,          
 input wire [2:0]  i_regf_CMD_ATTR ,
 input wire [7:0]  i_regf_CMD ,
 input wire [4:0]  i_regf_DEV_INDEX ,
@@ -94,7 +94,7 @@ reg               Direct_Broadcast_n_internal ;      // sampled version of the a
 // we have 13 required CCC to support at ground level 
 // to determine whether it's a Direct or Broadcast 
     always @(*) begin 
-        case (i_config_CCC_value) 
+        case (i_regf_CMD) 
             8'h80 : Direct_Broadcast_n = 1'b1 ;   // ENEC
             8'h81 : Direct_Broadcast_n = 1'b1 ;   // DISEC
             8'h89 : Direct_Broadcast_n = 1'b1 ;   // SETMWL
@@ -143,12 +143,12 @@ wire            Defining_byte ;
 
 // Defining Byte identification 
 always @(*) begin 
-    if      (!i_regf_CMD_ATTR[0] && i_regf_DBP)       Defining_byte = 1'b1 ; // regular 
-    else if (i_regf_CMD_ATTR[0] && i_regf_DTT[2])     Defining_byte = 1'b1 ; // immediate
-    else                                              Defining_byte = 1'b0 ;
+    if      (!i_regf_CMD_ATTR[0] && i_regf_DBP)                                                      Defining_byte = 1'b1 ; // regular 
+    else if (i_regf_CMD_ATTR[0] && ( i_regf_DTT == 3'd5 |  i_regf_DTT == 3'd6 | i_regf_DTT == 3'd7)  Defining_byte = 1'b1 ; // immediate      
+    else                                                                                             Defining_byte = 1'b0 ;
 
 end 
-///////////////////////////////// state memory //////////////////////////////////////////////
+//////////////////////////////////////////// state memory /////////////////////////////////////////////////
     always @(posedge i_sys_clk or negedge i_sys_rst) begin
         if (!i_sys_rst) begin
             current_state <= IDLE ;
@@ -163,9 +163,9 @@ end
         case (current_state)
 
             IDLE : begin  // aw arbitration if needed  
-
+                first_time = 1'b1 ; // flag to help to differentiate between the direct and broadcast with assistance of Direct_Braodcast_n flag 
                 if (i_engine_en) begin 
-                    next_state = PRE_FIRST_CMD_CRC ;
+                    next_state = PRE_CMD ;
                 end
                 else begin 
                     next_state = IDLE ;
@@ -175,13 +175,13 @@ end
 
             end 
 
-            PRE_FIRST_CMD_CRC : begin // i'm driving the 2 bits with 2'b01
+            PRE_CMD : begin // i'm driving the 2 bits with 2'b01
 
                 if (i_bitcnt_number == 5'd2 && i_tx_mode_done) begin 
                     next_state = FIRST_CMD_BYTE ;
                 end 
                 else begin 
-                    next_state = PRE_FIRST_CMD_CRC ;
+                    next_state = PRE_CMD ;
                 end
 
                  // erorr state condition is remaining 
@@ -190,10 +190,11 @@ end
 
             FIRST_CMD_BYTE : begin  //  always contains RnW + 7 reserved bits 
 
-                Direct_Broadcast_n_internal = Direct_Broadcast_n ; 
+            
 
                 if (i_bitcnt_number == 5'd10 && i_tx_mode_done) begin 
                     next_state = SECOND_CMD_BYTE ;
+                    
                 end
                 else begin 
                     next_state = FIRST_CMD_BYTE ;
@@ -204,7 +205,7 @@ end
             end
 
             SECOND_CMD_BYTE : begin  // contains either 7E or any target address 
-                if (Direct_Broadcast_n_internal) begin 
+                if (Direct_Broadcast_n && first_time) begin 
                     // tx mode on 7E value
                     if (i_bitcnt_number == 5'd17 && i_tx_mode_done) begin 
                         next_state = PARITY_ADJ ;
@@ -256,7 +257,7 @@ end
 
 
 
-            PRE_FIRST_DATA : begin  // should be 10 to mean ACK ,    and 11 to be aborted 
+            PRE_FIRST_DATA : begin  // should be 10 to mean ACK ,    and 11 is NACK
                 // tx mode on 1 
                 // enable rx and check the target's response
                 if (i_bitcnt_number == 5'd2 && i_rx_mode_done && !i_rx_second_pre) begin 
@@ -277,7 +278,7 @@ end
                     next_state = DEFINING_BYTE ;
                 end
                 else if (i_bitcnt_number == 5'd10 && i_tx_mode_done && !Defining_byte) begin   
-                    next_state = FIRST_DATA_BYTE ;
+                    next_state = ZEROS ; 
                 end
                 else begin 
                     next_state = CCC_BYTE ;
@@ -292,7 +293,7 @@ end
             DEFINING_BYTE : begin    // contains definaing byte if exist
 
                 if (i_bitcnt_number == 5'd18 && i_tx_mode_done) begin   
-                    next_state = PARITY_CCC_DEF ;
+                    next_state = PARITY_DATA ;
                 end
                 else begin 
                     next_state = DEFINING_BYTE ;
@@ -303,33 +304,30 @@ end
                 
             end
 
-            PARITY_CCC_DEF : begin // parity state for CCC and Def byte
+            ZEROS : begin    // transmit 8 zeros usen in case of absence of Def byte or odd number of data byte is requested
 
-                if  (i_bitcnt_number == 5'd20 && i_tx_mode_done && !Direct_Broadcast_n_internal ) begin // if broadcast
-                    next_state = PRE_DATA ;
+                if (i_bitcnt_number == 5'd18 && i_tx_mode_done) begin   
+                    next_state = PARITY_DATA ;
                 end
-
-                else if (i_bitcnt_number == 5'd20 && i_tx_mode_done &&  Direct_Broadcast_n_internal ) begin // if Direct
-                    next_state = RESTART_PATTERN ;
-                    Direct_Broadcast_n_internal = 1'b0 ; // resetting the signal after sending broadcast address to transmitt target address in the next command word 
-                end
-
                 else begin 
-                    next_state = PARITY_CCC_DEF ;
+                    next_state = ZEROS ;
                 end
 
                 // erorr state condition is remaining 
 
+                
             end
 
-            PARITY_DATA : begin // parity state for repeated data (not CCC and Def byte)
+            PARITY_DATA : begin // parity state any Data word
 
-                if  (i_bitcnt_number == 5'd20 && i_tx_mode_done && last_byte) begin 
-                    next_state = CRC ;
-                end
+                if  (i_bitcnt_number == 5'd20 && i_tx_mode_done) begin // if broadcast
 
-                else if (i_bitcnt_number == 5'd20 && i_tx_mode_done && !last_byte) begin 
-                    next_state = PRE_DATA ;
+                    if (last_byte || (Direct_Broadcast_n & first_time)) begin  // crc state only in case of Direct or in case of last data 
+                        next_state = CRC ;
+                    end 
+                    else begin 
+                        next_state = PRE_DATA ; // not last byte then continue sending repeated data 
+                    end 
                 end
 
                 else begin 
@@ -341,8 +339,7 @@ end
             end
 
 
-
-            PRE_DATA : begin        // should be 11 to mean ACK and 10 to be aborted 
+            PRE_DATA : begin        //  11  means ok continue , and 10 to be aborted 
                 // tx mode on 1 
                 // enable rx and check the target's response
                 if (i_bitcnt_number == 5'd2 && i_rx_mode_done && i_rx_second_pre) begin 
@@ -406,17 +403,33 @@ end
 
 
             CRC : begin // this state can handle the rest of the CRC word 
-
+                first_time = 1'b0 ;
                 
             end
 
             RESTART_PATTERN : begin 
+                // access timer and staller and tx to perform restart pattern 
+                if (i_sclstall_stall_done && i_tx_mode_done) begin 
+                    next_state = PRE_CMD ;
 
+                end  
             end 
+
+
+
+
+            EXIT_PATTERN : begin 
+
+            end
+
+
+
 
             ERROR : begin 
 
             end 
+
+
 
 
 
@@ -425,4 +438,3 @@ end
 endmodule 
 
 
-// remmeber to handle last frame logic and the case that the payload is odd number of bytes
