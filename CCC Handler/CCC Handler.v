@@ -78,10 +78,10 @@ output reg        o_sdahand_pp_od    ,
 output reg        o_regf_wr_en       ,
 output reg        o_regf_rd_en       ,
 output reg [7:0]  o_regf_addr        ,
-output reg        o_engine_done      
-
-
-);
+output reg        o_engine_done      ,
+output reg [7:0]  o_txrx_addr_ccc    ,         // new 
+output reg        o_engine_odd                 // new
+);   
 
 
 
@@ -92,7 +92,8 @@ reg               Direct_Broadcast_n_internal ;      // sampled version of the a
 reg [6:0]         target_addres ;
 wire              Defining_byte ; 
 wire              first_time ;
-
+integer           regular_counter ;
+integer           immediate_counter ; 
 
 
 
@@ -147,45 +148,46 @@ localparam second_preamble_rx = 3'd0 ;
 always@(*) begin
     case (i_regf_DEV_INDEX)                     // 32 possible targets can present on bus
         5'd0 : target_addres = 7'd8  ;
-        5'd0 : target_addres = 7'd9  ;
-        5'd0 : target_addres = 7'd10 ;
-        5'd0 : target_addres = 7'd11 ;
+        5'd1 : target_addres = 7'd9  ;
+        5'd2 : target_addres = 7'd10 ;
+        5'd3 : target_addres = 7'd11 ;
 
-        5'd0 : target_addres = 7'd12 ;
-        5'd0 : target_addres = 7'd13 ;
-        5'd0 : target_addres = 7'd14 ;
-        5'd0 : target_addres = 7'd15 ;
+        5'd4 : target_addres = 7'd12 ;
+        5'd5 : target_addres = 7'd13 ;
+        5'd6 : target_addres = 7'd14 ;
+        5'd7 : target_addres = 7'd15 ;
 
-        5'd0 : target_addres = 7'd16 ;
-        5'd0 : target_addres = 7'd17 ;
-        5'd0 : target_addres = 7'd18 ;
-        5'd0 : target_addres = 7'd19 ;
+        5'd8 : target_addres = 7'd16 ;
+        5'd9 : target_addres = 7'd17 ;
+        5'd10: target_addres = 7'd18 ;
+        5'd11: target_addres = 7'd19 ;
 
-        5'd0 : target_addres = 7'd20 ;
-        5'd0 : target_addres = 7'd21 ;
-        5'd0 : target_addres = 7'd22 ;
-        5'd0 : target_addres = 7'd23 ;
+        5'd12: target_addres = 7'd20 ;
+        5'd13: target_addres = 7'd21 ;
+        5'd14: target_addres = 7'd22 ;
+        5'd15: target_addres = 7'd23 ;
 
-        5'd0 : target_addres = 7'd24 ;
-        5'd0 : target_addres = 7'd25 ;
-        5'd0 : target_addres = 7'd26 ;
-        5'd0 : target_addres = 7'd27 ;
+        5'd16: target_addres = 7'd24 ;
+        5'd17: target_addres = 7'd25 ;
+        5'd18: target_addres = 7'd26 ;
+        5'd19: target_addres = 7'd27 ;
 
-        5'd0 : target_addres = 7'd28 ;
-        5'd0 : target_addres = 7'd29 ;
-        5'd0 : target_addres = 7'd30 ;
-        5'd0 : target_addres = 7'd31 ;
+        5'd20: target_addres = 7'd28 ;
+        5'd21: target_addres = 7'd29 ;
+        5'd22: target_addres = 7'd30 ;
+        5'd23: target_addres = 7'd31 ;
 
-        5'd0 : target_addres = 7'd32 ;
-        5'd0 : target_addres = 7'd33 ;
-        5'd0 : target_addres = 7'd34 ;
-        5'd0 : target_addres = 7'd35 ;
+        5'd24: target_addres = 7'd32 ;
+        5'd25: target_addres = 7'd33 ;
+        5'd26: target_addres = 7'd34 ;
+        5'd27: target_addres = 7'd35 ;
 
-        5'd0 : target_addres = 7'd36 ;
-        5'd0 : target_addres = 7'd37 ;
-        5'd0 : target_addres = 7'd38 ;
-        5'd0 : target_addres = 7'd39 ;
+        5'd28: target_addres = 7'd36 ;
+        5'd29: target_addres = 7'd37 ;
+        5'd30: target_addres = 7'd38 ;
+        5'd31: target_addres = 7'd39 ;
     endcase
+
 end  
 
 /////////////////////////// Direct or Broadcat detection  ////////////////////////////////////////
@@ -258,7 +260,8 @@ end
             IDLE : begin                                        // aw arbitration if needed  
                 first_time  = 1'b1 ;                             // flag to help to differentiate between the direct and broadcast with assistance of Direct_Braodcast_n flag 
                 o_bitcnt_en = 1'b0 ;
-
+                regular_counter = 'd4 ;
+                immediate_counter = 'd ;
                 if (i_engine_en) begin 
                     next_state = PRE_CMD ;
                 end
@@ -319,7 +322,7 @@ end
                 o_tx_en   = 1'b1 ; 
                 if (Direct_Broadcast_n && first_time) begin 
 
-                    o_tx_mode = seven_E ;
+                    o_tx_mode = seven_e ;
 
                     if (i_bitcnt_number == 5'd18 && i_tx_mode_done) begin 
                         next_state = PARITY_CMD ;
@@ -331,9 +334,8 @@ end
                      // erorr state condition is remaining 
                 end 
                 else begin 
-                    o_regf_addr  =  ;                              /////////////// this is a fixed location in the regfile 
-                    o_regf_rd_en = 1'b1 ;
-                    o_tx_mode    = Serializing_address ;
+                    o_tx_mode          = Serializing_address ;
+                    o_txrx_target_addr = target_addres ;
 
                     if (i_bitcnt_number == 5'd18 && i_tx_mode_done) begin 
                         next_state = PARITY_CMD ;
@@ -345,22 +347,7 @@ end
                      // erorr state condition is remaining
                 end 
             end
-/*
-            PARITY_ADJ : begin 
-                o_tx_en   = 1'b1 ; 
-                o_tx_mode = parity_adj ;
 
-                if (i_bitcnt_number == 5'd18 && i_tx_mode_done) begin 
-                    next_state = PARITY_CMD ;
-                end
-                else begin 
-                    next_state = PARITY_ADJ ;
-                end
-
-                 // erorr state condition is remaining 
-
-            end
-*/
             PARITY_CMD : begin 
                 o_tx_en   = 1'b1 ; 
                 o_tx_mode = parity_calc ;
@@ -376,8 +363,6 @@ end
 
             end
 
-
-
             PRE_FIRST_DATA : begin  // should be 10 to mean ACK ,    and 11 is NACK
                 
                 if (i_bitcnt_number == 5'd1 && i_tx_mode_done) begin 
@@ -392,7 +377,7 @@ end
                 // enable rx and check the target's response
                 if (i_bitcnt_number == 5'd2 && i_rx_mode_done && !i_rx_second_pre) begin 
                     next_state = CCC_BYTE ;
-                    //o_tx_en    = 1'b1 ;
+                    //o_tx_en    = 1'b1 ;   
                     //o_rx_en    = 1'b0 ;
                 end
                 else if (i_bitcnt_number == 5'd2 && i_rx_mode_done && i_rx_second_pre) begin 
@@ -403,13 +388,11 @@ end
                 end
             end
 
-
             CCC_BYTE : begin    // contains CCC value
 
                 o_tx_en      = 1'b1 ;
                 o_tx_mode    = serializing_byte ;
-                o_regf_rd_en = 1'b1 ;
-                o_regf_addr  = ccc_value_address ;
+                o_txrx_addr_ccc = i_regf_CMD ;
 
                 if (i_bitcnt_number == 5'd10 && i_tx_mode_done && Defining_byte) begin   // if a defining byte exists
                     next_state = DEFINING_BYTE ;
@@ -426,10 +409,11 @@ end
                 
             end
 
-
             DEFINING_BYTE : begin    // contains definaing byte if exist
-                o_tx_en   = 1'b1 ;
-                o_tx_mode = serializing_byte ; 
+                o_tx_en      = 1'b1 ;
+                o_tx_mode    = serializing_byte ; 
+                o_regf_rd_en = 1'b1 ;
+                o_regf_addr  = first_location + 2 ;                 // third location
 
                 if (i_bitcnt_number == 5'd18 && i_tx_mode_done) begin   
                     next_state = PARITY_DATA ;
@@ -438,25 +422,27 @@ end
                     next_state = DEFINING_BYTE ;
                 end
 
-                // erorr state condition is remaining 
-
-                
+                // erorr state condition is remaining   
             end
-/*
-            ZEROS : begin    // transmit 8 zeros usen in case of absence of Def byte or odd number of data byte is requested
+
+            ZEROS : begin                               // eight zeros fixed at regfile (e.g location 999)
+                o_tx_en      = 1'b1 ;
+                o_tx_mode    = serializing_byte ; 
+                o_regf_rd_en = 1'b1 ;
+                o_regf_addr  = first_location - 1  ;
 
                 if (i_bitcnt_number == 5'd18 && i_tx_mode_done) begin   
                     next_state = PARITY_DATA ;
+
                 end
                 else begin 
                     next_state = ZEROS ;
                 end
 
-                // erorr state condition is remaining 
-
-                
+                // erorr state condition is remaining   
             end
-*/
+
+
             PARITY_DATA : begin // parity state any Data word
 
                 if  (i_bitcnt_number == 5'd20 && i_tx_mode_done) begin // if broadcast
@@ -479,10 +465,23 @@ end
 
 
             PRE_DATA : begin        //  11  means ok continue , and 10 to be aborted 
-                // tx mode on 1 
+                
+                if (i_bitcnt_number == 5'd1 && i_tx_mode_done) begin 
+                    o_tx_en   = 1'b0 ;
+                    o_rx_en   = 1'b1 ;
+                    o_rx_mode = second_preamble_rx ;
+                end 
+                else begin 
+                    o_tx_en   = 1'b1 ; 
+                    o_tx_mode = one ;
+                end 
+
+
                 // enable rx and check the target's response
                 if (i_bitcnt_number == 5'd2 && i_rx_mode_done && i_rx_second_pre) begin 
                     next_state = FIRST_DATA_BYTE ;
+                    //o_tx_en    = 1'b1 ;   
+                    //o_rx_en    = 1'b0 ;
                 end
                 else if (i_bitcnt_number == 5'd2 && i_rx_mode_done && !i_rx_second_pre) begin 
                     next_state = ERROR ;
@@ -495,9 +494,28 @@ end
 
 
             FIRST_DATA_BYTE : begin    // contains first repeated data byte
+                o_tx_en      = 1'b1 ;
+                o_regf_rd_en = 1'b1 ;
+                if (!i_regf_CMD_ATTR[0]) begin              // if regular command discriptor  
+                    o_tx_mode    = serializing_byte ;
+                    o_regf_addr  = first_location + regular_counter ; // regular counter starts with value 4 to point to the fifth location .. reset in CRC or restart
+                end 
+                else begin // if immediate
+                    if (Defining_byte) begin 
+                        o_regf_addr = first_location + immediate_counter ; // still takes the third location 
+                        o_tx_mode   = serializing_sec_byte_only ;          // as first byte in the third location will contain the Defining Byte
+                    end 
+                    else begin 
+                        o_regf_addr = first_location + immediate_counter ; // 
+                        o_tx_mode   = serializing_byte ; 
+                    end 
+                end 
 
-                if (i_bitcnt_number == 5'd10 && i_tx_mode_done) begin  
-                    next_state = SECOND_DATA_BYTE ;
+                if (i_bitcnt_number == 5'd10 && i_tx_mode_done && last_byte) begin  // to handle odd number of bytes in both regular and immediate
+                    next_state = ZEROS ;        
+                end
+                else if (i_bitcnt_number == 5'd10 && i_tx_mode_done && !last_byte) begin  
+                    next_state = SECOND_DATA_BYTE ; 
                 end
                 else begin 
                     next_state = FIRST_DATA_BYTE ;
@@ -512,6 +530,11 @@ end
 
                 if (i_bitcnt_number == 5'd18 && i_tx_mode_done) begin   
                     next_state = PARITY_DATA ;
+                    regular_counter = regular_counter + 1 ;
+                    if (i_regf_DTT == 3'd3 || i_regf_DTT == 3'd4 || i_regf_DTT == 3'd7) begin 
+                        immediate_counter = immediate_counter + 1 ;
+                    end 
+
                 end
                 else begin 
                     next_state = SECOND_DATA_BYTE ;
