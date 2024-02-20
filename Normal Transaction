@@ -44,8 +44,7 @@ localparam [3:0]  restart_stalling = 'd8,
 // tx modes needed  
 localparam [3:0]  tx_idle = 'b000,                
                   special_preamble_tx = 'b001, //01
-                  one_preamble = 'b010,   // send 1 in pp or od 
-                  zero_preamble = 'b011,  // send zero
+                  one_preamble = 'b010,   
 				  Serializing_byte = 'b100, 
                   Calculating_Parity ='b101,
 				  CRC_value = 'b0111,
