@@ -126,9 +126,7 @@ localparam [3:0]
                 seven_e             = 4'd4  ,  // 7'b 111_1110
                 serializing_address = 4'd5  ,  // serializing 7 bits 
                 serializing_byte    = 4'd6  ,  // serializing 8 bits 
-                parity_adj          = 4'd7  ,
                 parity_calc         = 4'd8  ,
-                
                 token_CRC           = 4'd10 ,  // 4'hC
                 restart_pattern     = 4'd11 , 
                 exit_pattern        = 4'd12 ;
@@ -323,8 +321,8 @@ end
 
                     o_tx_mode = seven_E ;
 
-                    if (i_bitcnt_number == 5'd17 && i_tx_mode_done) begin 
-                        next_state = PARITY_ADJ ;
+                    if (i_bitcnt_number == 5'd18 && i_tx_mode_done) begin 
+                        next_state = PARITY_CMD ;
                     end
                     else begin 
                         next_state = SECOND_CMD_BYTE ;
@@ -337,8 +335,8 @@ end
                     o_regf_rd_en = 1'b1 ;
                     o_tx_mode    = Serializing_address ;
 
-                    if (i_bitcnt_number == 5'd17 && i_tx_mode_done) begin 
-                        next_state = PARITY_ADJ ;
+                    if (i_bitcnt_number == 5'd18 && i_tx_mode_done) begin 
+                        next_state = PARITY_CMD ;
                     end
                     else begin 
                         next_state = SECOND_CMD_BYTE ;
@@ -347,7 +345,7 @@ end
                      // erorr state condition is remaining
                 end 
             end
-
+/*
             PARITY_ADJ : begin 
                 o_tx_en   = 1'b1 ; 
                 o_tx_mode = parity_adj ;
@@ -362,7 +360,7 @@ end
                  // erorr state condition is remaining 
 
             end
-
+*/
             PARITY_CMD : begin 
                 o_tx_en   = 1'b1 ; 
                 o_tx_mode = parity_calc ;
