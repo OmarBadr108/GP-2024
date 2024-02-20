@@ -30,11 +30,7 @@
 ==================================================================================
 //////////////////////////////////////////////////////////////////////////////////*/
 
-module CCC_Handler #(
-
-
-
-) (
+module CCC_Handler (
 input wire        i_sys_clk ,
 input wire        i_sys_rst ,
 input wire        i_engine_en ,                 // depends on CP flag 
@@ -46,7 +42,7 @@ input wire        i_sclgen_neg_edge ,
 input wire        i_sclgen_pos_edge ,
 input wire        i_sclstall_stall_done ,
 input wire        i_rx_error , // sus 
-
+input wire        i_frmcnt_last_frame ,
 // configuration Ports coming from regf
 input wire        i_regf_RnW ,          
 input wire [2:0]  i_regf_CMD_ATTR ,
@@ -86,14 +82,14 @@ output reg        o_engine_odd                 // new
 
 
 // internal signals 
-reg [4:0]         current_state , next_state ;
-reg               Direct_Broadcast_n ;               // 1 for direct and 0 for broadcast
-reg               Direct_Broadcast_n_internal ;      // sampled version of the above signal every CCC transmission (sampled at first command state)
-reg [6:0]         target_addres ;
-wire              Defining_byte ; 
-wire              first_time ;
-integer           regular_counter ;
-integer           immediate_counter ; 
+reg [4:0] current_state , next_state ;
+reg       Direct_Broadcast_n ;               // 1 for direct and 0 for broadcast
+reg       Direct_Broadcast_n_internal ;      // sampled version of the above signal every CCC transmission (sampled at first command state)
+reg [6:0] target_addres ;
+reg       Defining_byte ; 
+reg       first_time ;
+integer   regular_counter ;
+integer   immediate_counter ; 
 
 
 
@@ -102,48 +98,58 @@ integer           immediate_counter ;
 // localparam to prevent overriding the states from outside the design
 // as states encoding should never be modified from outside (while instatiation)
 // after revision i will convert the coding style to grey
-localparam IDLE              = 5'd00000 ;
-localparam PRE_FIRST_CMD_CRC = 5'd00001 ;
-localparam RNW_RESERVED      = 5'd00010 ;
-localparam SEVEN_E           = 5'd00011 ;
+localparam [4:0] IDLE             = 5'b00000 ;
+localparam [4:0] PRE_CMD          = 5'b00001 ;
+localparam [4:0] FIRST_CMD_BYTE   = 5'b00010 ;
+localparam [4:0] SECOND_CMD_BYTE  = 5'b00011 ;
 
-localparam PARITY_ADJ        = 5'd00100 ;
-localparam PARITY_ADJ        = 5'd00101 ;
-localparam FIRST_DATA_BYTE   = 5'd00110 ;
-localparam SECOND_DATA_BYTE  = 5'd00111 ;
+localparam [4:0] PARITY_CMD       = 5'b00100 ;
+localparam [4:0] PRE_FIRST_DATA   = 5'b00101 ;
+localparam [4:0] CCC_BYTE         = 5'b00110 ;
+localparam [4:0] DEFINING_BYTE    = 5'b00111 ;
 
-localparam PRE_FIRST_DATA    = 5'd01000 ;
-localparam PRE_DATA          = 5'd01001 ;
-localparam CRC               = 5'd01010 ;
-localparam RESTART_PATTERN   = 5'd01011 ;
-localparam ERROR             = 5'd01100 ;
+localparam [4:0] ZEROS            = 5'b01000 ;
+localparam [4:0] PARITY_DATA      = 5'b01001 ;
+localparam [4:0] PRE_DATA         = 5'b01010 ;
+localparam [4:0] FIRST_DATA_BYTE  = 5'b01011 ;
+
+localparam [4:0] SECOND_DATA_BYTE = 5'b01100 ;
+localparam [4:0] CRC              = 5'b01101 ;
+localparam [4:0] RESTART_PATTERN  = 5'b01110 ;
+localparam [4:0] EXIT_PATTERN     = 5'b01111 ;
+
+localparam [4:0] ERROR            = 5'b10000 ;
+
+
+
 
 // tx modes parameters 
 localparam [3:0]  
-                zero                = 4'd0  ,  // 0 
-                one                 = 4'd1  ,  // 1 
-                special_preamble    = 4'd2  ,  // 01 of cmd word 
-                seven_zeros         = 4'd3  ,  // 7'b 0000_000
-                seven_e             = 4'd4  ,  // 7'b 111_1110
-                serializing_address = 4'd5  ,  // serializing 7 bits 
-                serializing_byte    = 4'd6  ,  // serializing 8 bits 
-                parity_calc         = 4'd8  ,
-                token_CRC           = 4'd10 ,  // 4'hC
-                restart_pattern     = 4'd11 , 
-                exit_pattern        = 4'd12 ;
+                zero                      = 4'd0  ,  // 0 
+                one                       = 4'd1  ,  // 1 
+                special_preamble          = 4'd2  ,  // 01 of cmd word 
+                seven_zeros               = 4'd3  ,  // 7'b 0000_000
+                seven_e                   = 4'd4  ,  // 7'b 111_1110
+                serializing_address       = 4'd5  ,  // serializing 7 bits 
+                serializing_byte          = 4'd6  ,  // serializing 8 bits 
+                parity_calc               = 4'd7  ,
+                c_token_CRC               = 4'd8 ,  // 4'hC
+                value_CRC                 = 4'd9 ,  // 5 bit value
+                restart_pattern           = 4'd10 , 
+                exit_pattern              = 4'd11 ,
+                serializing_sec_byte_only = 4'd12 ;
 
-// regile parameters 
-localparam [:0] first_data_byte_address = ;
-localparam [:0] ccc_value_address = ;
 
+// regfile parameters 
+localparam first_location = 'd1000 ;
 
 // rx parameters 
 localparam second_preamble_rx = 3'd0 ;
 
-
-
-
-/////////////////////////// decoding the device address (DAT entry 3al daya2 :) )///////////////////////////////////////
+// SCL staller parameters 
+localparam [3:0] restart_pattern_stall = 4'b1111 ;
+localparam [3:0] exit_pattern_stall    = 4'b1110 ;
+/////////////////////////// decoding the device address (DAT entry 3al daya2 :) ) ///////////////////////////////////////
 
 always@(*) begin
     case (i_regf_DEV_INDEX)                     // 32 possible targets can present on bus
@@ -190,7 +196,7 @@ always@(*) begin
 
 end  
 
-/////////////////////////// Direct or Broadcat detection  ////////////////////////////////////////
+//////////////////////////////////////// Direct or Broadcat detection  ///////////////////////////////////////////////
 
 // we have 13 required CCC to support at ground level 
 // to determine whether it's a Direct or Broadcast 
@@ -218,12 +224,14 @@ end
 
  
 // Defining Byte identification 
-always @(*) begin 
-    if      (!i_regf_CMD_ATTR[0] && i_regf_DBP)                                                      Defining_byte = 1'b1 ; // regular 
-    else if (i_regf_CMD_ATTR[0] && ( i_regf_DTT == 3'd5 |  i_regf_DTT == 3'd6 | i_regf_DTT == 3'd7)  Defining_byte = 1'b1 ; // immediate      
-    else                                                                                             Defining_byte = 1'b0 ;
-
-end 
+    always @(*) begin 
+        if      (!i_regf_CMD_ATTR[0] && i_regf_DBP)                                                         
+            Defining_byte = 1'b1;  // regular 
+        else if ( i_regf_CMD_ATTR[0] && ( i_regf_DTT == 3'd5 ||  i_regf_DTT == 3'd6 || i_regf_DTT == 3'd7))  
+            Defining_byte = 1'b1 ; // immediate      
+        else                                                                                                
+            Defining_byte = 1'b0 ;
+    end 
 //////////////////////////////////////////// state memory /////////////////////////////////////////////////
     always @(posedge i_sys_clk or negedge i_sys_rst) begin
         if (!i_sys_rst) begin
@@ -233,6 +241,7 @@ end
             current_state <= next_state ;
         end
     end
+
 
 ///////////////////////////////// next state and output logic //////////////////////////////////////////////
     always@(*)begin
@@ -260,8 +269,8 @@ end
             IDLE : begin                                        // aw arbitration if needed  
                 first_time  = 1'b1 ;                             // flag to help to differentiate between the direct and broadcast with assistance of Direct_Braodcast_n flag 
                 o_bitcnt_en = 1'b0 ;
-                regular_counter = 'd4 ;
-                immediate_counter = 'd ;
+                regular_counter   = 'd4 ;    // data starts from fifth location
+                immediate_counter = 'd2 ;    // data starts from third location
                 if (i_engine_en) begin 
                     next_state = PRE_CMD ;
                 end
@@ -334,8 +343,8 @@ end
                      // erorr state condition is remaining 
                 end 
                 else begin 
-                    o_tx_mode          = Serializing_address ;
-                    o_txrx_target_addr = target_addres ;
+                    o_tx_mode       = serializing_address ;
+                    o_txrx_addr_ccc = target_addres ;
 
                     if (i_bitcnt_number == 5'd18 && i_tx_mode_done) begin 
                         next_state = PARITY_CMD ;
@@ -447,7 +456,7 @@ end
 
                 if  (i_bitcnt_number == 5'd20 && i_tx_mode_done) begin // if broadcast
 
-                    if (last_byte || (Direct_Broadcast_n & first_time)) begin  // crc state only in case of Direct or in case of last data 
+                    if (i_frmcnt_last_frame || (Direct_Broadcast_n & first_time)) begin  // crc state only in case of Direct or in case of last data 
                         next_state = CRC ;
                     end 
                     else begin 
@@ -511,10 +520,11 @@ end
                     end 
                 end 
 
-                if (i_bitcnt_number == 5'd10 && i_tx_mode_done && last_byte) begin  // to handle odd number of bytes in both regular and immediate
-                    next_state = ZEROS ;        
+                if (i_bitcnt_number == 5'd10 && i_tx_mode_done && i_frmcnt_last_frame) begin  // to handle odd number of bytes in both regular and immediate
+                    next_state   = ZEROS ; 
+                    o_engine_odd = 1'b1 ;       
                 end
-                else if (i_bitcnt_number == 5'd10 && i_tx_mode_done && !last_byte) begin  
+                else if (i_bitcnt_number == 5'd10 && i_tx_mode_done && !i_frmcnt_last_frame) begin  
                     next_state = SECOND_DATA_BYTE ; 
                 end
                 else begin 
@@ -531,8 +541,8 @@ end
                 if (i_bitcnt_number == 5'd18 && i_tx_mode_done) begin   
                     next_state = PARITY_DATA ;
                     regular_counter = regular_counter + 1 ;
-                    if (i_regf_DTT == 3'd3 || i_regf_DTT == 3'd4 || i_regf_DTT == 3'd7) begin 
-                        immediate_counter = immediate_counter + 1 ;
+                    if (i_regf_DTT == 3'd3 || i_regf_DTT == 3'd4 || i_regf_DTT == 3'd7) begin  
+                        immediate_counter <= immediate_counter + 1 ;                             // intended latch 
                     end 
 
                 end
@@ -549,18 +559,23 @@ end
                 first_time = 1'b0 ;
                 if (i_bitcnt_number < 5'd2)
                 // tx mode on preamble 01  
+                o_tx_en   = 1'b1 ;
+                o_tx_mode = special_preamble ;
 
                 if (i_bitcnt_number == 5'd2 && i_tx_mode_done) begin 
-                   // tx mode on C token  
+                    o_tx_mode = c_token_CRC ;  
                 end
                 else if (i_bitcnt_number == 5'd6 && i_tx_mode_done) begin 
-                    // tx mode on 5-bits CRC checksum 
+                    // tx mode on 5-bits CRC checksum
+                    o_tx_mode = value_CRC ;  
                 end 
                 else if (i_bitcnt_number == 5'd11 && i_tx_mode_done) begin 
                     // tx mode is stalled at 1 (preparing for restart or exit pattern)
+                    o_tx_mode = one ; 
                 end 
                 else if (i_bitcnt_number == 5'd12 && i_tx_mode_done) begin 
                     // finish a command discriptor
+                    o_tx_mode = one ;
                     o_engine_done = 1'b1 ;
 
                     if (i_regf_TOC) begin 
@@ -579,6 +594,11 @@ end
 
             RESTART_PATTERN : begin 
                 // access timer and staller and tx to perform restart pattern 
+                o_tx_en         = 1'b1 ;
+                o_tx_mode       = restart_pattern ;
+                o_sclstall_en   = 1'b1 ;
+                o_sclstall_code = restart_pattern_stall ;
+
                 if (i_sclstall_stall_done && i_tx_mode_done) begin 
                     next_state = IDLE ;
                 end  
@@ -592,6 +612,11 @@ end
 
             EXIT_PATTERN : begin 
                 // access timer and staller and tx to perform exit pattern 
+                o_tx_en         = 1'b1 ;
+                o_tx_mode       = exit_pattern ;
+                o_sclstall_en   = 1'b1 ;
+                o_sclstall_code = exit_pattern_stall ;
+
                 if (i_sclstall_stall_done && i_tx_mode_done) begin 
                     next_state = IDLE ;
                 end  
@@ -602,11 +627,11 @@ end
 
 
 
-
-            ERROR : begin 
+/*  
+            ERROR : begin                   // to be done
 
             end 
-
+*/
 
 
 
