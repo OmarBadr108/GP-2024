@@ -36,12 +36,14 @@ module ENTHDR_tb();
  always #20 i_sdr_clk_tb = ~i_sdr_clk_tb;
  
 
+    reg               sda_drive             ;  // locally driven value
 
+    assign sda_tb   = sda_drive ;
 
  initial 
  begin
-  i_sdr_clk_tb=0; 
-   sda_drive =1'bz;
+        i_sdr_clk_tb=0; 
+        sda_drive =1'bz;
         i_sdr_clk_tb = 1'b0;
        
 
@@ -60,9 +62,9 @@ module ENTHDR_tb();
 
 
 
+   #80100
 
-
-
+   $stop ;
 
  end 
 
