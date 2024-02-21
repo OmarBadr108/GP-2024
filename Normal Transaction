@@ -16,6 +16,8 @@ output reg [3:0] o_tx_mode,
 output reg       o_rx_en,
 output reg [3:0] o_rx_mode,
 output reg       o_frmcnt_en,
+output reg       o_bitcnt_en, // added
+output reg       o_bitcnt_rst, // rst the counter due to error 
 output reg       o_sdahand_pp_od,
 output reg       o_regf_wr_en,
 output reg       o_regf_rd_en,
@@ -43,16 +45,16 @@ localparam [3:0]  restart_stalling = 'd8,
 // tx modes needed  
 localparam [3:0]  Serializing_command_word = 'b000,
                   Serializing_address = 'b1010,              
-                  special_preamble_tx = 'b001, //01
+                  special_preamble_tx = 'b001,  //01
                   one_preamble = 'b010,   // send 1 in pp or od 
                   zero_preamble = 'b011,  // send zero
-				          Serializing_byte = 'b100, 
-                  Calculating_Parity ='b101,
-				          CRC_value = 'b0111,
+				  Serializing_byte = 'b100, 
+                  Calculating_Parity_Command ='b101,
+				  Calculating_Parity_Data ='b101,
+				  CRC_value = 'b0111,
                   token_CRC = 'b111,
                   Restart_Pattern = 'b1000,
                   Exit_Pattern = 'b1001;
-
 
  // rx modes needed 
 localparam [3:0]     special_preamble_rx = 'b0010, 
@@ -116,13 +118,16 @@ always @(*)
 	o_sclstall_en = 'b0;
 	o_sclstall_no_of_cycles = 'b0;
 	o_sdahand_pp_od = 'b1;
+	o_bitcnt_en = 'b1; //
+	o_bitcnt_rst = 'b0;
 
 
   case(current_state)
 
   idle : begin 
 
-		   o_tx_en = 'b0 ; 
+		   o_tx_en = 'b0 ;
+           o_bitcnt_en = 'b0;		   
 
 		  end
 
@@ -131,6 +136,7 @@ always @(*)
 
 		   o_tx_en = 'b1 ;
 		   o_tx_mode = special_preamble_tx ;
+		   
 
 		   end 
 
@@ -156,7 +162,12 @@ always @(*)
         if (!i_regf_wr_rd_bit)
          begin
           o_tx_en = 'b1;
-          o_tx_mode = Calculating_Parity;
+		  
+		  if (i_tx_parity_data)
+          o_tx_mode = Calculating_Parity_Data;
+		  else 
+		  o_tx_mode = Calculating_Parity_Command;
+	  
          end
         else
          begin
@@ -287,7 +298,7 @@ always @(*)
 
 fourth_stage_crc_first_pre     : begin
     
-    if (i_regf_wr_rd_bit)
+    if (!i_regf_wr_rd_bit)
          begin
           o_tx_en = 'b1;
           o_tx_mode = zero_preamble;
@@ -303,7 +314,7 @@ fourth_stage_crc_first_pre     : begin
              
  fourth_stage_crc_second_pre     : begin
     
-    if (i_regf_wr_rd_bit)
+    if (!i_regf_wr_rd_bit)
          begin
           o_tx_en = 'b1;
           o_tx_mode = one_preamble;
@@ -361,6 +372,8 @@ fourth_stage_crc_first_pre     : begin
 
           o_rx_en = 'b1;
           o_rx_mode = Error;
+		  o_bitcnt_rst = 'b1 ;//added
+		  
 
              end
 
@@ -372,6 +385,7 @@ fourth_stage_crc_first_pre     : begin
           o_engine_done = 'b1;
           o_sclstall_no_of_cycles = restart_stalling;
           o_sclstall_en = 'b1;
+		  o_bitcnt_rst = 'b1 ; //added
 
              end
 
@@ -383,6 +397,7 @@ fourth_stage_crc_first_pre     : begin
           o_engine_done = 'b1;
           o_sclstall_no_of_cycles = exit_stalling;
           o_sclstall_en = 'b1;
+		  o_bitcnt_rst = 'b1 ; //added
 
              end            
 
