@@ -193,7 +193,7 @@ always @(posedge i_clk or negedge i_rst_n)
 
     else
         begin
-             o_mode_sda_sel            <= SDR_MODE_SEL 
+             o_mode_sda_sel            <= SDR_MODE_SEL; 
              o_hdrengine_en            <= 1'b0 ;
             case(state)
             IDLE:
@@ -783,4 +783,5 @@ always @(posedge i_clk or negedge i_rst_n)
 endmodule
 
 `default_nettype wire
+
 

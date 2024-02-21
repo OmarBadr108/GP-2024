@@ -379,8 +379,8 @@ i3c_engine u_i3c_engine (
             .o_controller_done            (o_ctrl_done)          ,
             ////////////////////////HDR///////////////////////////////
             .o_enthdr_en (enthdr_en),
-            .o_mode_sda_sel  (sda_sel),
-            .o_hdrengine_en (1'b1)                                       );
+            .o_mode_sda_sel  (sda_sel)
+                                                );
 
 
 sdr_mode u_sdr_mode (
@@ -730,7 +730,7 @@ enthdr u_enthdr (
             .i_i3cengine_en                 (enthdr_en)               ,
             .i_tx_mode_done                 (ser_mode_done)           ,
             .i_rx_ack_nack                  (ser_nack_ack)            ,
-    
+            .i_scl_daa_neg_edge              (scl_neg_edge)           ,
             .o_bit_cnt_en                   (enthdr_bit_cnt_en)       ,
             .o_pp_od                        (enthdr_pp_od)            ,
             .o_regf_rd_en                   (enthdr_regf_rd_en)       ,
@@ -851,4 +851,5 @@ gen_mux #(1,1) sda_handling_mode_mux (
 
 endmodule
 `default_nettype wire
+
 

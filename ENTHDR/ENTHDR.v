@@ -36,7 +36,7 @@ module enthdr (
   input   wire             i_i3cengine_en  ,
   input   wire             i_tx_mode_done  ,
   input   wire             i_rx_ack_nack   ,
-  
+  input   wire             i_scl_daa_neg_edge,
   output  wire             o_pp_od         , 
   output  reg              o_bit_cnt_en    ,   
   output  reg              o_regf_rd_en    ,
@@ -121,7 +121,7 @@ module enthdr (
            BROADCAST:  
             begin
              
-             if (i_tx_mode_done)  // ****(scl neg edge condition check)
+             if (i_tx_mode_done && i_scl_daa_neg_edge )  // ****(scl neg edge condition check)
                begin
                 state      <= ACK;
                 o_rx_en    <= 1'b1;
@@ -131,7 +131,15 @@ module enthdr (
                end
              else 
                begin
-                state <= BROADCAST; 
+                 state <= BROADCAST; 
+                 o_rx_en       <= 1'b1;   // rx block enable
+                 o_rx_mode     <= 3'b010; // arbitration state   
+                 
+                 o_regf_rd_en  <= 1'b1;
+                 o_regf_addr   <= 10'b0000101110; // 9'd46 >> broadcast address in reg file ('h7E+w)
+                 o_tx_en       <= 1'b1;
+                 o_tx_mode     <= 3'b001;         // serializing state in TX
+                 o_bit_cnt_en  <= 1'b1;
                end
             end
  
