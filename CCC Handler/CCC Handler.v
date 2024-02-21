@@ -38,15 +38,14 @@ input wire [4:0]  i_bitcnt_number ,
 input wire        i_tx_mode_done ,
 input wire        i_rx_mode_done ,
 input wire        i_rx_second_pre ,
-input wire        i_sclgen_neg_edge ,
-input wire        i_sclgen_pos_edge ,
 input wire        i_sclstall_stall_done ,
 input wire        i_rx_error , // sus 
 input wire        i_frmcnt_last_frame ,
+
 // configuration Ports coming from regf
 input wire        i_regf_RnW ,          
 input wire [2:0]  i_regf_CMD_ATTR ,
-input wire [7:0]  i_regf_CMD ,
+input wire [7:0]  i_regf_CMD ,          // CCC value 
 input wire [4:0]  i_regf_DEV_INDEX ,
 input wire        i_regf_TOC , 
 input wire        i_regf_WROC , 
@@ -57,7 +56,7 @@ input wire [2:0]  i_regf_DTT ,
 // in case of regular command descriptor 
 input wire        i_regf_DBP , 
 input wire        i_regf_SRE , 
-input wire [15:0] i_regf_DATA_LENGTH ,
+input wire [15:0] i_regf_DATA_LENGTH , // will be removed 
 
 
 
@@ -68,12 +67,12 @@ output reg [3:0]  o_tx_mode          ,
 output reg        o_rx_en            ,
 output reg [2:0]  o_rx_mode          ,
 output reg        o_bitcnt_en        ,
-output reg        o_bitcnt_err_rst   ,
+output reg        o_bitcnt_err_rst   , // ???
 output reg        o_frmcnt_en        ,
 output reg        o_sdahand_pp_od    ,
 output reg        o_regf_wr_en       ,
 output reg        o_regf_rd_en       ,
-output reg [7:0]  o_regf_addr        ,
+output reg [7:0]  o_regf_addr        , // depends on the depth of the regfile
 output reg        o_engine_done      ,
 output reg [7:0]  o_txrx_addr_ccc    ,         // new 
 output reg        o_engine_odd                 // new
@@ -84,7 +83,6 @@ output reg        o_engine_odd                 // new
 // internal signals 
 reg [4:0] current_state , next_state ;
 reg       Direct_Broadcast_n ;               // 1 for direct and 0 for broadcast
-reg       Direct_Broadcast_n_internal ;      // sampled version of the above signal every CCC transmission (sampled at first command state)
 reg [6:0] target_addres ;
 reg       Defining_byte ; 
 reg       first_time ;
@@ -232,7 +230,9 @@ end
         else                                                                                                
             Defining_byte = 1'b0 ;
     end 
-//////////////////////////////////////////// state memory /////////////////////////////////////////////////
+
+
+////////////////////////////////////////// state memory /////////////////////////////////////////////////
     always @(posedge i_sys_clk or negedge i_sys_rst) begin
         if (!i_sys_rst) begin
             current_state <= IDLE ;
@@ -361,7 +361,7 @@ end
                 o_tx_en   = 1'b1 ; 
                 o_tx_mode = parity_calc ;
 
-                if (i_bitcnt_number == 5'd20 && i_tx_mode_done) begin 
+                if (i_bitcnt_number == 5'd0 && i_tx_mode_done) begin 
                     next_state = PRE_FIRST_DATA ;
                 end
                 else begin 
@@ -378,6 +378,7 @@ end
                     o_tx_en   = 1'b0 ;
                     o_rx_en   = 1'b1 ;
                     o_rx_mode = second_preamble_rx ;
+                    o_sdahand_pp_od = 1'b0 ;             // open drain 
                 end 
                 else begin 
                     o_tx_en   = 1'b1 ; 
@@ -454,7 +455,7 @@ end
 
             PARITY_DATA : begin // parity state any Data word
 
-                if  (i_bitcnt_number == 5'd20 && i_tx_mode_done) begin // if broadcast
+                if  (i_bitcnt_number == 5'd0 && i_tx_mode_done) begin // if broadcast
 
                     if (i_frmcnt_last_frame || (Direct_Broadcast_n & first_time)) begin  // crc state only in case of Direct or in case of last data 
                         next_state = CRC ;
@@ -479,6 +480,7 @@ end
                     o_tx_en   = 1'b0 ;
                     o_rx_en   = 1'b1 ;
                     o_rx_mode = second_preamble_rx ;
+                    o_sdahand_pp_od = 1'b0 ;             // open drain 
                 end 
                 else begin 
                     o_tx_en   = 1'b1 ; 
@@ -549,9 +551,7 @@ end
                 else begin 
                     next_state = SECOND_DATA_BYTE ;
                 end
-
-                // erorr state condition is remaining
-                
+                // erorr state condition is remaining     
             end
 
 

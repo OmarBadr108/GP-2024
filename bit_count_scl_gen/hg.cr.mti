@@ -1,0 +1,15 @@
+C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/bit_count_scl_gen/bit_cnt_scl_gen_tb.sv {1 {vlog -work work -vopt -sv -stats=none C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/bit_count_scl_gen/bit_cnt_scl_gen_tb.sv
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module scl_generation_bits_counter_tb
+
+Top level modules:
+	scl_generation_bits_counter_tb
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/bit_count_scl_gen/scl_generation.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/bit_count_scl_gen/scl_generation.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module scl_generation
+
+Top level modules:
+	scl_generation
+
+} {} {}}

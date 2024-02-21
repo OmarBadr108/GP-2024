@@ -1,0 +1,68 @@
+m255
+K4
+z2
+!s99 nomlopt
+!s11f vlog 2021.1 2021.01, Jan 19 2021
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler
+T_opt
+!s110 1708522357
+V4OCL7_NOH]`o==jKUo=eT1
+04 17 4 work scl_generation_tb fast 0
+=1-3c2c30a457d5-65d5fb75-108-46f8
+!s124 OEM100
+o-quiet -auto_acc_if_foreign -work work +acc
+Z0 tCvgOpt 0
+n@_opt
+OL;O;2021.1;73
+vscl_generation
+Z1 !s110 1708522338
+!i10b 1
+!s100 `Y0Fd4C>ZTJlnmoNMj0Xh0
+IMTcNN_ecKf;WQTf>LCn;Y0
+Z2 dC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/scl generation
+w1708522074
+8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/scl generation/scl_generation.v
+FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/scl generation/scl_generation.v
+!i122 1
+L0 34 134
+Z3 VDg1SIo80bB@j0V0VzS_@n1
+Z4 OL;L;2021.1;73
+r1
+!s85 0
+31
+Z5 !s108 1708522338.000000
+!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/scl generation/scl_generation.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/scl generation/scl_generation.v|
+!i113 0
+o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R0
+vscl_generation_tb
+DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+R1
+!i10b 1
+!s100 QE;c9X8j=2]ZYhzR`e2W10
+I=V<O4YJ29eB[5BY4>PU7C2
+S1
+R2
+w1708522136
+8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/scl generation/scl_gen_tb.sv
+FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/scl generation/scl_gen_tb.sv
+!i122 0
+L0 1 58
+R3
+R4
+r1
+!s85 0
+31
+R5
+!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/scl generation/scl_gen_tb.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/scl generation/scl_gen_tb.sv|
+!i113 0
+o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R0

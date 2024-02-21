@@ -1,0 +1,94 @@
+m255
+K4
+z2
+Z0 !s99 nomlopt
+R0
+R0
+R0
+R0
+!s11f vlog 2021.1 2021.01, Jan 19 2021
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/scl generation
+T_opt
+!s110 1708538537
+VmSd9eP5fGN:l7ed4J?C0i3
+04 30 4 work scl_generation_bits_counter_tb fast 0
+=5-3c2c30a457d5-65d63aa9-24d-539c
+!s124 OEM100
+o-quiet -auto_acc_if_foreign -work work +acc
+Z1 tCvgOpt 0
+n@_opt
+OL;O;2021.1;73
+vbits_counter
+!s110 1708538532
+!i10b 1
+!s100 ?@5G@kM2R07O]naSJD[X42
+I1nJ]n_eSkO;Obj9CMCdnH2
+Z2 dC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/bit_count_scl_gen
+w1708538527
+8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/bit_count_scl_gen/bits_counter.v
+FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/bit_count_scl_gen/bits_counter.v
+!i122 16
+L0 3 55
+Z3 VDg1SIo80bB@j0V0VzS_@n1
+Z4 OL;L;2021.1;73
+r1
+!s85 0
+31
+!s108 1708538532.000000
+!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/bit_count_scl_gen/bits_counter.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/bit_count_scl_gen/bits_counter.v|
+!i113 0
+Z5 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1
+vscl_generation
+!s110 1708538399
+!i10b 1
+!s100 `Y0Fd4C>ZTJlnmoNMj0Xh0
+I?BkAMN6I:ElQhhI2PGI]U1
+R2
+w1708522074
+8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/bit_count_scl_gen/scl_generation.v
+FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/bit_count_scl_gen/scl_generation.v
+!i122 15
+L0 34 134
+R3
+R4
+r1
+!s85 0
+31
+Z6 !s108 1708538398.000000
+!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/bit_count_scl_gen/scl_generation.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/bit_count_scl_gen/scl_generation.v|
+!i113 0
+R5
+R1
+vscl_generation_bits_counter_tb
+DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+!s110 1708538398
+!i10b 1
+!s100 TW0^Q><ciaXLPdX5RkX]N0
+IkOemC5VgKhE`VMAN??;]J2
+S1
+R2
+w1708537954
+8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/bit_count_scl_gen/bit_cnt_scl_gen_tb.sv
+FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/bit_count_scl_gen/bit_cnt_scl_gen_tb.sv
+!i122 13
+L0 1 77
+R3
+R4
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/bit_count_scl_gen/bit_cnt_scl_gen_tb.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/bit_count_scl_gen/bit_cnt_scl_gen_tb.sv|
+!i113 0
+o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1
