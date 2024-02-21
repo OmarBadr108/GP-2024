@@ -56,18 +56,18 @@ input wire [2:0]  i_regf_DTT ,
 // in case of regular command descriptor 
 input wire        i_regf_DBP , 
 input wire        i_regf_SRE , 
-input wire [15:0] i_regf_DATA_LENGTH , // will be removed 
+//input wire [15:0] i_regf_DATA_LENGTH , // will be removed 
 
 
 
 output reg        o_sclstall_en      ,
-output reg [7:0]  o_sclstall_code    ,
+output reg [3:0]  o_sclstall_code    ,
 output reg        o_tx_en            ,
 output reg [3:0]  o_tx_mode          ,
 output reg        o_rx_en            ,
 output reg [2:0]  o_rx_mode          ,
 output reg        o_bitcnt_en        ,
-output reg        o_bitcnt_err_rst   , // ???
+//output reg        o_bitcnt_err_rst   , // ???
 output reg        o_frmcnt_en        ,
 output reg        o_sdahand_pp_od    ,
 output reg        o_regf_wr_en       ,
@@ -255,7 +255,7 @@ end
     o_rx_en            = 1'b0 ; 
     o_rx_mode          = 3'b0 ; 
     o_bitcnt_en        = 1'b1 ; // enabled in all states except for idle state
-    o_bitcnt_err_rst   = 1'b0 ; 
+    //o_bitcnt_err_rst   = 1'b0 ; 
     o_frmcnt_en        = 1'b0 ; 
     o_sdahand_pp_od    = 1'b1 ; // 1 means PP
     o_regf_wr_en       = 1'b0 ;
