@@ -215,30 +215,30 @@ module i3c_controller_top (
 ///////////////////////// CRH wires ////////////////////////////////
    wire                  hj_crh_en                   ;
    wire                  crh_en                      ;
-   wire            		    crh_done                    ;
-   wire      			         crh_ncr_win                 ;
-   wire    			           crh_ncr_take_control        ;
-   wire    			           crh_pp_od                   ;
-   wire  			             crh_cnt_en                  ;
-   wire   			            crh_rx_cnt_en               ;
-   wire    			           crh_fcnt_en                 ;
-   wire    	  [7:0]		    crh_CRHDLY					 ;
-   wire    	  [7:0]		    crh_getstatus_data		     ;
-   wire    	  [7:0]		    crh_CRCAP2					 ;
-   wire    	  [7:0]		    crh_PRECR					 ;
-   wire    	  [7:0]		    crh_tgts_count			     ;
+   wire                     crh_done                    ;
+   wire                          crh_ncr_win                 ;
+   wire                        crh_ncr_take_control        ;
+   wire                        crh_pp_od                   ;
+   wire                          crh_cnt_en                  ;
+   wire                         crh_rx_cnt_en               ;
+   wire                        crh_fcnt_en                 ;
+   wire       [7:0]         crh_CRHDLY                   ;
+   wire       [7:0]         crh_getstatus_data           ;
+   wire       [7:0]         crh_CRCAP2                   ;
+   wire       [7:0]         crh_PRECR                    ;
+   wire       [7:0]         crh_tgts_count               ;
    wire       [7:0]      crh_cfg_reg;
-   wire 				             crh_sda_low				 ;
+   wire                              crh_sda_low                 ;
    wire                  crh_rx_pp_mode_done         ;
-   wire                  crh_start_detected			 ;
-   wire                  crh_tx_en					 ;
-   wire       [2:0]      crh_tx_mode				 ;
-   wire                  crh_rx_en					 ;
-   wire       [2:0]      crh_rx_mode				 ;
-   wire                  crh_regf_wr_en				 ;
-   wire                  crh_regf_rd_en				 ;
-   wire       [9:0]      crh_regf_addr				 ;
-   wire                  crh_timer_set				 ;
+   wire                  crh_start_detected          ;
+   wire                  crh_tx_en                   ;
+   wire       [2:0]      crh_tx_mode                 ;
+   wire                  crh_rx_en                   ;
+   wire       [2:0]      crh_rx_mode                 ;
+   wire                  crh_regf_wr_en              ;
+   wire                  crh_regf_rd_en              ;
+   wire       [9:0]      crh_regf_addr               ;
+   wire                  crh_timer_set               ;
    wire                  crh_scl_idle      ;
    wire                  crh_send_stop     ;
    wire                  crh_stop_is_sent  ;
@@ -296,11 +296,11 @@ module i3c_controller_top (
    wire                  enthdr_done                 ;
    wire                  hdrengine_exit              ;
    wire                  enthdr_regf_rd_en           ;
-   wire                  enthdr_regf_addr            ;
+   wire       [9:0]      enthdr_regf_addr            ;
    wire                  enthdr_tx_en                ;
-   wire                  enthdr_tx_mode              ;  
+   wire       [2:0]      enthdr_tx_mode              ;  
    wire                  enthdr_rx_en                ;  
-   wire                  enthdr_rx_mode              ;
+   wire       [2:0]      enthdr_rx_mode              ;
    wire                  enthdr_bit_cnt_en           ;
    wire                  ser_hdr_data                ;
    
@@ -378,8 +378,9 @@ i3c_engine u_i3c_engine (
             .o_scl_stall_cycles_sel    (scl_stall_cycles_sel)    ,
             .o_controller_done            (o_ctrl_done)          ,
             ////////////////////////HDR///////////////////////////////
-            .o_enthdr_en (enthdr_en)
-            .o_mode_sda_sel  (sda_sel)                                       );
+            .o_enthdr_en (enthdr_en),
+            .o_mode_sda_sel  (sda_sel),
+            .o_hdrengine_en (1'b1)                                       );
 
 
 sdr_mode u_sdr_mode (
@@ -705,11 +706,11 @@ reg_file u_reg_file (
             .o_ser_rx_tx                  (ser_rx_tx)                ,
             .o_regf_num_frames            (fcnt_no_frms)             ,
             .o_crh_CRHDLY                 (crh_CRHDLY)               ,
-	          .o_crh_getstatus_data         (crh_getstatus_data)       ,
-	          .o_crh_CRCAP2                 (crh_CRCAP2)               ,
-	          .o_crh_PRECR                  (crh_PRECR)              	 ,
-	          .o_crh_cfg_reg                (crh_cfg_reg)              ,
-	          .o_crh_tgts_count             (crh_tgts_count)           ,
+              .o_crh_getstatus_data         (crh_getstatus_data)       ,
+              .o_crh_CRCAP2                 (crh_CRCAP2)               ,
+              .o_crh_PRECR                  (crh_PRECR)                  ,
+              .o_crh_cfg_reg                (crh_cfg_reg)              ,
+              .o_crh_tgts_count             (crh_tgts_count)           ,
             .o_regf_ibi_cfg                (regf_ibi_cfg)   ,
              .o_regf_ibi_payload_size_reg  (ibi_payload_size_reg)   ,
              .o_i_ibi_tgt_address          (ibi_tgt_address) ,
@@ -850,3 +851,4 @@ gen_mux #(1,1) sda_handling_mode_mux (
 
 endmodule
 `default_nettype wire
+

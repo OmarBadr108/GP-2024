@@ -115,7 +115,7 @@ module enthdr (
                    end
                end
  
-             end
+             
  
  
            BROADCAST:  
@@ -143,9 +143,9 @@ module enthdr (
                begin
                  state               <= ENTHDR_DDR;
                  o_regf_rd_en        <= 1'b1;  
-                 o_daa_regf_addr     <= 'd50;  //*** DDR Mode value added in the regfile but needs to be rechecked  
-                 o_daa_tx_mode       <= 3'b001;
-                 o_daa_tx_en         <= 1'b1;
+                 o_regf_addr         <= 'd50;  //*** DDR Mode value added in the regfile but needs to be rechecked  
+                 o_tx_mode           <= 3'b001;
+                 o_tx_en             <= 1'b1;
                   o_bit_cnt_en       <= 1'b1;                
                end
              else 

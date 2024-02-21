@@ -106,8 +106,9 @@ module i3c_engine (
     
     ///////////////////////hdr//////////////////////////////////
     output  reg          o_enthdr_en                   ,
-    output  reg          o_mode_sda_sel                   
-
+    output  reg          o_mode_sda_sel                ,
+    output  reg          o_hdrengine_en                 
+                                 
    /*
     output  reg          o_mode_bit_cnt_en_mux_sel     ,
     output  reg          o_mode_regf_rd_en_mux_sel     ,
@@ -130,7 +131,7 @@ localparam HOT_JOIN          = 4'b1110 ;
 localparam CTRL_REQ          = 4'b1010 ;
 localparam DAA               = 4'b0100 ;
 localparam ENTHDR            = 4'b1101 ;
-
+localparam HDR_ENGINE        = 4'b0101 ;
 
 //--------------------------------- Mux Selection Parameters -----------------------------------------
 localparam SDR_SEL        = 3'b000 ;
@@ -192,6 +193,7 @@ always @(posedge i_clk or negedge i_rst_n)
 
     else
         begin
+             o_mode_sda_sel            <= SDR_MODE_SEL 
              o_hdrengine_en            <= 1'b0 ;
             case(state)
             IDLE:
@@ -700,11 +702,11 @@ always @(posedge i_clk or negedge i_rst_n)
                             //////////////// Selectors of muxes that are shared between SDR and HDR to choose the required mode///////
                             
                             o_mode_sda_sel                 <= HDR_MODE_SEL   ; 
-                            o_mode_bit_cnt_en_mux_sel      <= HDR_MODE_SEL   ;
-                            o_mode_regf_rd_en_mux_sel      <= HDR_MODE_SEL   ;
-                            o_mode_regf_rd_address_mux_sel <= HDR_MODE_SEL   ;
-                            o_mode_regf_wr_en_mux_sel      <= HDR_MODE_SEL   ;
-                            o_mode_regf_wr_data_mux_sel    <= HDR_MODE_SEL   ;
+                            //o_mode_bit_cnt_en_mux_sel      <= HDR_MODE_SEL   ;
+                           // o_mode_regf_rd_en_mux_sel      <= HDR_MODE_SEL   ;
+                           // o_mode_regf_rd_address_mux_sel <= HDR_MODE_SEL   ;
+                           // o_mode_regf_wr_en_mux_sel      <= HDR_MODE_SEL   ;
+                           // o_mode_regf_wr_data_mux_sel    <= HDR_MODE_SEL   ;
 
 
                             //o_regf_rd_en_mux_sel      <= HDR_ENGINE_SEL ;             //(REG File) shared btw HDR & SDR
@@ -781,3 +783,4 @@ always @(posedge i_clk or negedge i_rst_n)
 endmodule
 
 `default_nettype wire
+
