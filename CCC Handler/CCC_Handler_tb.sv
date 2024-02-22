@@ -35,16 +35,16 @@ module CCC_Handler_tb ();
 
 
 
-	reg  	   i_regf_RnW_tb ,i_regf_TOC_tb , i_regf_WROC_tb , i_regf_DBP_tb , i_regf_SRE_tb ;
-	reg  [2:0] i_regf_CMD_ATTR_tb ;
-	reg  [7:0] i_regf_CMD_tb ;
-	reg  [4:0] i_regf_DEV_INDEX_tb ;
-	reg  [2:0] i_regf_DTT_tb ;
-	wire  	   o_regf_wr_en_tb , o_regf_rd_en_tb ;
-	wire [7:0] o_regf_addr_tb ; 	 	 	// this may be changed 
-	wire  	   o_engine_done_tb ;
-	wire [7:0] o_txrx_addr_ccc_tb ;
-	wire   	   o_engine_odd_tb ;
+	reg  	    i_regf_RnW_tb ,i_regf_TOC_tb , i_regf_WROC_tb , i_regf_DBP_tb , i_regf_SRE_tb ;
+	reg  [2:0]  i_regf_CMD_ATTR_tb ;
+	reg  [7:0]  i_regf_CMD_tb ;
+	reg  [4:0]  i_regf_DEV_INDEX_tb ;
+	reg  [2:0]  i_regf_DTT_tb ;
+	wire  	    o_regf_wr_en_tb , o_regf_rd_en_tb ;
+	wire [15:0] o_regf_addr_tb ; 	 	 	// this may be changed 
+	wire  	    o_engine_done_tb ;
+	wire [7:0]  o_txrx_addr_ccc_tb ;
+	wire   	    o_engine_odd_tb ;
 
 	// related to scl staller 
 	wire 	   o_sclstall_en_tb ;
@@ -173,7 +173,7 @@ module CCC_Handler_tb ();
 
 		i_tx_mode_done_tb = 1'b1 ;
 
-
+		#(500 * CLK_PERIOD) i_sclstall_stall_done_tb = 1'b1 ;
 
 		#(5000*CLK_PERIOD);
 		$stop ;
