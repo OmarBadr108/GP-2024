@@ -66,6 +66,7 @@ module controller_tx (
     localparam Hold_Zero      = 3'b100 ;
     localparam CTRL_NACK      = 3'b101 ;
     localparam REPEATED_START = 3'b110 ;
+    //localparam EXIT_PATTERN   = 3'b ;
 
 
 
@@ -162,14 +163,15 @@ reg last_bit_flag ;
                               o_ser_pp_mode_done <= 1'b0 ;
                               o_ser_to_parity_transition <= 1'b0;
                               o_ser_sda_low <= 1'b0 ;
-                             /* if (i_ser_count_done)
+                             if (i_ser_count_done)
                                 o_ser_mode_done <= 1'b1;
                               else
-                                o_ser_mode_done <= 1'b0;*/ //unused-wrong implementation
+                                o_ser_mode_done <= 1'b0;
+                                 //unused-wrong implementation
                               if (!i_ser_scl)
                                 begin
                                   o_ser_s_data    <= ~^i_ser_regf_data ;
-                                  o_ser_mode_done    <= 1'b1 ;
+                                  //o_ser_mode_done    <= 1'b1 ;
                                 end
 
                               //for push-pull
@@ -257,6 +259,11 @@ reg last_bit_flag ;
               Hold_Zero    : begin
                               o_ser_s_data    <= 1'b0 ;
                              end
+                             
+                             
+              EXIT_PATTERN : begin
+                             end
+              
             endcase
           end
         else
@@ -271,3 +278,4 @@ reg last_bit_flag ;
 
 endmodule
 `default_nettype wire
+
