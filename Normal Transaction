@@ -557,7 +557,7 @@ fourth_stage_crc_first_pre     : begin
 				    begin
 				      
 				     if(i_rx_pre)
-		           next_state = first_data_byte ;
+		           next_state = data ;
 				     else
 				      begin 
 				        
