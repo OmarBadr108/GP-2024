@@ -20,4 +20,11 @@ QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
 Top level modules:
 	bits_counter
 
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler_tb.sv} {1 {vlog -work work -vopt -sv -stats=none {C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler_tb.sv}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module CCC_Handler_tb
+
+Top level modules:
+	CCC_Handler_tb
+
 } {} {}}

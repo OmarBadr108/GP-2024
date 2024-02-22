@@ -139,13 +139,13 @@ module CCC_Handler_tb ();
 		i_scl_gen_stall_tb     = 1'b0 ;
 		i_sdr_ctrl_scl_idle_tb = 1'b0 ;
 		i_timer_cas_tb 	 	   = 1'b0 ;
-		i_sdr_scl_gen_pp_od_tb = 1'b1 ;
-		i_bitcnt_en_tb   	   = 1'b1 ; 
+		//i_sdr_scl_gen_pp_od_tb = 1'b1 ;
+		 
 		/////////////////////////////// CCC Handler //////////////////////////////
 		i_frmcnt_last_frame_tb = 1'b0 ;
 		i_sclstall_stall_done_tb = 1'b0 ;
 		i_tx_mode_done_tb = 1'b0 ;
-		i_rx_mode_done_tb = 1'b0 ;  // important
+		i_rx_mode_done_tb = 1'b1 ;  // important
 		i_rx_second_pre_tb = 1'b0 ;  // important
 		i_rx_error_tb = 1'b0 ;
 

@@ -29,7 +29,7 @@ localparam [3:0]  Serializing_command_word = 'b000,
                   one_preamble = 'b010,   // send 1 in pp or od 
                   zero_preamble = 'b011,  // send zero
 				  Serializing_byte = 'b100, 
-                  Calculating_Parity_command ='b101,
+                  Calculating_Parity_Command ='b101,
 				  Calculating_Parity_Data ='b101,
 				  CRC_value = 'b0111,
                   token_CRC = 'b111,
@@ -119,11 +119,14 @@ reg [7:0] address ;
 			else
             o_ddrccc_mode_done <= 'b0;
 			
+			o_ddrccc_parity_data <= 0;
+			
+
 			end
 			
 			
 			
-		Calculating_Parity_command : begin 
+		Calculating_Parity_Command : begin 
 		par[0] <= (address[0]^address[2]^address[4]^address[6]);
 		par[1] <= (address[1]^address[3]^address[5]^address[7]); // must be equal one
 		   if (i_sclgen_scl_neg_edge or i_sclgen_scl_pos_edge)
@@ -136,14 +139,41 @@ reg [7:0] address ;
 			else
             o_ddrccc_mode_done <= 'b0;
 			
+			o_ddrccc_parity_data <= 1;
+
+			
 			end
+			
+
  
 		
 		
-		one_preamble 
+		one_preamble : begin 
+		     
+			o_sdahnd_serial_data <= 'b1;
+			
+			if (i_bitcnt_bit_count == 'd1 or i_bitcnt_bit_count == 'd2 )
+			o_ddrccc_mode_done <= 'b1;
+			else
+            o_ddrccc_mode_done <= 'b0;
+			
+			end
 		
 		
-		zero_preamble
+				
+		zero_preamble : begin 
+		   
+		   if (i_sclgen_scl_neg_edge or i_sclgen_scl_pos_edge)
+			o_sdahnd_serial_data <= 'b0;
+			else 
+			o_sdahnd_serial_data <= 'b1;			
+			
+			if (i_bitcnt_bit_count == 'd1 or i_bitcnt_bit_count == 'd2 )
+			o_ddrccc_mode_done <= 'b1;
+			else
+            o_ddrccc_mode_done <= 'b0;
+			
+			end
 				  
 				  
 		Serializing_byte 
@@ -158,7 +188,7 @@ reg [7:0] address ;
 		token_CRC 
                  
 		
-		Restart_Pattern
+		Restart_Pattern   
 		
 		
 		Exit_Pattern 
