@@ -8,16 +8,16 @@ input [4:0]  i_bitcnt_bit_count,
 input [3:0]  i_ddrccc_tx_mode,
 input [15:0] i_regf_tx_parallel_data,
 input [6:0]  i_ddrccc_address, // special from ddr or ccc   
-input [4:0]  i_crc_crc_value
+input [4:0]  i_crc_crc_value,
 input        i_crc_crc_valid,
 input        i_regf_wr_rd_bit,
 
 
-output        o_sdahnd_serial_data,
-output        o_ddrccc_mode_done,
-output [15:0] o_crc_parallel_data,
-output        o_ddrccc_parity_data,
-output        o_crc_en
+output reg        o_sdahnd_serial_data,
+output reg        o_ddrccc_mode_done,
+output reg [15:0] o_crc_parallel_data,
+output reg        o_ddrccc_parity_data,
+output reg        o_crc_en
 );
 
 
@@ -48,12 +48,13 @@ reg [1:0] par;
 reg [7:0] command_word ;
 reg [7:0] address ;
 reg [3:0] token = 4'b1100;
-reg [15:0] D = i_regf_tx_parallel_data;
-reg [15:0] A = i_regf_tx_parallel_data;
+wire [15:0] D ;
+wire [15:0] A ;
 
- 
- 
- 
+assign D = i_regf_tx_parallel_data;
+assign A = {i_regf_wr_rd_bit,7'b0,i_ddrccc_address,parity_adj};
+
+
  always @ (posedge i_sys_clk or negedge i_sys_rst)
 	begin 
 	
@@ -75,7 +76,7 @@ reg [15:0] A = i_regf_tx_parallel_data;
 		
 		special_preamble_tx :begin 
 		  
-			if (i_sclgen_scl_neg_edge or i_sclgen_scl_pos_edge)
+			if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 			  o_sdahnd_serial_data <= special_preamble['d1 - i_bitcnt_bit_count]; //////
 			
 			if (i_bitcnt_bit_count == 'd2 )
@@ -87,7 +88,7 @@ reg [15:0] A = i_regf_tx_parallel_data;
 		Serializing_command_word : begin  ////////3ayez adomo ya mo5 m3 el address
 			
 			command_word <= {i_regf_wr_rd_bit,seven_zeros};  //
-            if (i_sclgen_scl_neg_edge or i_sclgen_scl_pos_edge)
+            if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 			o_sdahnd_serial_data <= command_word[i_bitcnt_bit_count-'d3];
 			else 
 			o_sdahnd_serial_data <= 'b1;
@@ -105,7 +106,7 @@ reg [15:0] A = i_regf_tx_parallel_data;
 		   parity_adj <=  (1 ^ (i_ddrccc_address[1]^i_ddrccc_address[3]^i_ddrccc_address[5]^i_regf_wr_rd_bit) );
        address <= {i_ddrccc_address,parity_adj};
        
-      if (i_sclgen_scl_neg_edge or i_sclgen_scl_pos_edge)
+      if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 			  o_sdahnd_serial_data <= command_word[i_bitcnt_bit_count-'d11];
 			else 
 			  o_sdahnd_serial_data <= 'b1;
@@ -139,7 +140,7 @@ reg [15:0] A = i_regf_tx_parallel_data;
 		    end
 		    
 		    
-		  if (i_sclgen_scl_neg_edge or i_sclgen_scl_pos_edge)
+		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 		     o_sdahnd_serial_data <= par['d19 - i_bitcnt_bit_count];
 			
 			if (i_bitcnt_bit_count == 'd19 )
@@ -153,7 +154,7 @@ reg [15:0] A = i_regf_tx_parallel_data;
 		     
 			o_sdahnd_serial_data <= 'b1;
 			
-			if (i_bitcnt_bit_count == 'd1 or i_bitcnt_bit_count == 'd2 )
+			if (i_bitcnt_bit_count == 'd1 || i_bitcnt_bit_count == 'd2 )
 			   o_ddrccc_mode_done <= 'b1;
 			
 			end
@@ -162,10 +163,10 @@ reg [15:0] A = i_regf_tx_parallel_data;
 				
 		zero_preamble : begin 
 		   
-		  if (i_sclgen_scl_neg_edge or i_sclgen_scl_pos_edge)
+		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 			  o_sdahnd_serial_data <= 'b0;		
 			
-			if (i_bitcnt_bit_count == 'd1 or i_bitcnt_bit_count == 'd2 )
+			if (i_bitcnt_bit_count == 'd1 || i_bitcnt_bit_count == 'd2 )
 			  o_ddrccc_mode_done <= 'b1;
 			
 			end
@@ -174,12 +175,11 @@ reg [15:0] A = i_regf_tx_parallel_data;
 				  
 		Serializing_byte : begin
 
-		    to_be_serialized <= i_regf_tx_parallel_data ;
 		    o_crc_en <= 1;
 		    o_crc_parallel_data <= i_regf_tx_parallel_data; //3ayez anasak m3 fatma 
 		      
-		    if (i_sclgen_scl_neg_edge or i_sclgen_scl_pos_edge)
-		       o_sdahnd_serial_data <= to_be_serialized[ 'd17 - i_bitcnt_bit_count];
+		    if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
+		       o_sdahnd_serial_data <= D[ 'd17 - i_bitcnt_bit_count];
 		       
 		    if (i_bitcnt_bit_count == 'd17 )
 			     o_ddrccc_mode_done <= 'b1;
@@ -190,7 +190,7 @@ reg [15:0] A = i_regf_tx_parallel_data;
 				  				  		  
 		token_CRC :	 begin
 		  
-		  if (i_sclgen_scl_neg_edge or i_sclgen_scl_pos_edge)
+		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 		    o_sdahnd_serial_data <= token['d3 - i_bitcnt_bit_count] ;
 		    
 		  if (i_bitcnt_bit_count == 'd4 )
@@ -203,7 +203,7 @@ reg [15:0] A = i_regf_tx_parallel_data;
 		 
 		CRC_value :  begin
 		  
-		  if (i_sclgen_scl_neg_edge or i_sclgen_scl_pos_edge)
+		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 		    o_sdahnd_serial_data <= i_crc_crc_value['d3 - i_bitcnt_bit_count] ;
 		    
 		  if (i_bitcnt_bit_count == 'd9 )
@@ -214,14 +214,16 @@ reg [15:0] A = i_regf_tx_parallel_data;
             
                  
 		
-		Restart_Pattern:  
+		Restart_Pattern:  begin
+		  end
 		
 		
-		Exit_Pattern:
-		
+		Exit_Pattern: begin
+		  end
 		
 		
 		endcase
+		end
 		end
 	
 	
@@ -230,3 +232,5 @@ reg [15:0] A = i_regf_tx_parallel_data;
 	
 	
 	endmodule
+	
+
