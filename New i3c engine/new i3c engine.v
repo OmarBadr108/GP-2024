@@ -195,6 +195,7 @@ always @(posedge i_clk or negedge i_rst_n)
         begin
              o_mode_sda_sel            <= SDR_MODE_SEL; 
              o_hdrengine_en            <= 1'b0 ;
+             o_enthdr_en               <= 1'b0 ;
             case(state)
             IDLE:
                 begin
@@ -730,10 +731,16 @@ always @(posedge i_clk or negedge i_rst_n)
 
                             state                     <= HDR_ENGINE     ; 
                         end 
+                        
+                      else if (i_enthdr_error_detected) //signal not added yet in design or instantiation
+                        begin
+                          state                       <= STOP;
+                        end
 
                     else
                         begin
-                            state                     <= ENTHDR         ; 
+                            state                     <= ENTHDR         ;
+                             
                         end 
                 end
 

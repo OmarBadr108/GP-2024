@@ -48,10 +48,9 @@ localparam [3:0]  Serializing_command_word = 'b000,
                   special_preamble_tx = 'b001,  //01
                   one_preamble = 'b010,   // send 1 in pp or od 
                   zero_preamble = 'b011,  // send zero
-				  Serializing_byte = 'b100, 
-                  Calculating_Parity_Command ='b101,
-				  Calculating_Parity_Data ='b101,
-				  CRC_value = 'b0111,
+				          Serializing_byte = 'b100, 
+				          Calculating_Parity ='b101,  //////////////////////////////////////////////
+				          CRC_value = 'b0111,
                   token_CRC = 'b111,
                   Restart_Pattern = 'b1000,
                   Exit_Pattern = 'b1001;
@@ -75,8 +74,7 @@ localparam [4:0]    idle = 'b0000,
 					          parity = 'b0100,
 					          sec_stage_first_data_pre = 'b0101,             // sent by controller
 					          ack_waiting = 'b0110,
-					          first_data_byte = 'b0111,
-					          second_data_byte = 'b1000,
+					          data = 'b0111, ////////////////////////////////////////////////////////////////////////
 					          third_stage_first_data_pre = 'b1001,             // send by target or controller
 					          abort_bit = 'b1010,                      //   aborting by controller or target             
 					          fourth_stage_crc_first_pre = 'b1011,
@@ -157,17 +155,14 @@ always @(*)
 		  end
 
 
-  parity        : begin
+  parity  : begin
 
         if (!i_regf_wr_rd_bit)
          begin
+           
           o_tx_en = 'b1;
-		  
-		  if (i_tx_parity_data)
-          o_tx_mode = Calculating_Parity_Data;
-		  else 
-		  o_tx_mode = Calculating_Parity_Command;
-	  
+          o_tx_mode = Calculating_Parity; ////////////////////////////////////
+
          end
         else
          begin
@@ -204,7 +199,7 @@ always @(*)
              end 
 
 
-  first_data_byte : begin
+  data : begin ////////////////////////////
 
     if (!i_regf_wr_rd_bit)
       begin
@@ -223,27 +218,6 @@ always @(*)
 	    end 
 
              end
-
-
-  second_data_byte        : begin
-
-   if (!i_regf_wr_rd_bit)
-      begin
-       o_tx_en = 'b1;
-       o_tx_mode = Serializing_byte;
-  		   o_regf_addr = 0;// undetermined yet0 
-		   o_regf_rd_en = 'b1 ;
-      end
-
-     else
-      begin
-       o_rx_en = 'b1 ;
-	     o_rx_mode = Deserializing_byte ;
-	     o_regf_addr = 0;// undetermined yet0 
-		   o_regf_wr_en = 'b1 ;
-	    end 
-
-	 end
 
 
   third_stage_first_data_pre    : begin
@@ -524,7 +498,7 @@ fourth_stage_crc_first_pre     : begin
 		          begin
 				
 				       if (!i_rx_error)      
-		             next_state = first_data_byte ;
+		             next_state = data ; ///////////////////////
 				    else 
                  next_state = error ;
                  
@@ -536,24 +510,13 @@ fourth_stage_crc_first_pre     : begin
             end 
 
 
- 		first_data_byte	: begin 
+ 		data	: begin /////////////////////
 
 		        if (i_rx_mode_done | i_tx_mode_done)
-				      next_state = second_data_byte ;
+				      next_state = third_stage_first_data_pre ;
 
 			      else
-		          next_state = first_data_byte ;
-
-            end
-
-
-     second_data_byte	: begin 
-
-		       if (i_rx_mode_done | i_tx_mode_done) 
-				      next_state = parity;
-				      
-				   else 				
-		          next_state = second_data_byte ;
+		          next_state = data ;
 
             end
 
@@ -594,7 +557,7 @@ fourth_stage_crc_first_pre     : begin
 				    begin
 				      
 				     if(i_rx_pre)
-		           next_state = first_data_byte ;
+		           next_state = data ;
 				     else
 				      begin 
 				        
@@ -623,7 +586,7 @@ fourth_stage_crc_first_pre     : begin
 				      end
 		           
 				     else 
-				       next_state = first_data_byte ;
+				       next_state = data ; /////////////////
 				      
 				    end 
 				    
