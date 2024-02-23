@@ -19,17 +19,19 @@ module CCC_Handler_tb ();
 
 	////////////////////////// bits counter //////////////////////////////// 
 	reg  	   i_bitcnt_en_tb ;
-	wire [4:0] o_cnt_bit_count_tb ;
-
+	wire [5:0] o_cnt_bit_count_tb ;
+	wire  	   o_bitcnt_err_rst_tb ;
 	/////////////////////////// CCC Handler /////////////////////////////
 	reg        i_engine_en_tb , i_frmcnt_last_frame_tb ,i_sclstall_stall_done_tb  ;
 	// related to tx
 	reg 	   i_tx_mode_done_tb ,o_tx_en_tb ;
 	reg  [3:0] o_tx_mode_tb ;
  	// related to rx
-	reg 	   i_rx_mode_done_tb ,i_rx_second_pre_tb ,i_rx_error_tb ,o_rx_en_tb ;
+	reg 	   i_rx_mode_done_tb ,i_rx_second_pre_tb ,i_rx_first_pre_tb,i_rx_error_tb ,o_rx_en_tb ;
 	reg  [2:0] o_rx_mode_tb ;
 	// related to regfile (configuration)
+
+
 
 
 
@@ -45,7 +47,7 @@ module CCC_Handler_tb ();
 	wire  	    o_engine_done_tb ;
 	wire [7:0]  o_txrx_addr_ccc_tb ;
 	wire   	    o_engine_odd_tb ;
-
+	wire [3:0]  o_regf_ERR_STATUS_tb ;
 	// related to scl staller 
 	wire 	   o_sclstall_en_tb ;
 	wire [3:0] o_sclstall_code_tb ;
@@ -70,6 +72,7 @@ module CCC_Handler_tb ();
 		.i_tx_mode_done 		(i_tx_mode_done_tb),
 		.i_rx_mode_done 		(i_rx_mode_done_tb),
 		.i_rx_second_pre 		(i_rx_second_pre_tb),
+		.i_rx_first_pre 	 	(i_rx_first_pre_tb),
 		.i_sclstall_stall_done  (i_sclstall_stall_done_tb),
 		.i_rx_error 	 	    (i_rx_error_tb),
 		.i_frmcnt_last_frame 	(i_frmcnt_last_frame_tb),
@@ -94,7 +97,7 @@ module CCC_Handler_tb ();
 		.o_rx_en(o_rx_en_tb),
 		.o_rx_mode(o_rx_mode_tb),
 		.o_bitcnt_en(i_bitcnt_en_tb),
-		//.o_bitcnt_err_rst(),
+		.o_bitcnt_err_rst(o_bitcnt_err_rst_tb),
 		.o_frmcnt_en(o_frmcnt_en_tb),
 		.o_sdahand_pp_od(i_sdr_scl_gen_pp_od_tb),
 
@@ -104,8 +107,8 @@ module CCC_Handler_tb ();
 		.o_regf_addr(o_regf_addr_tb),
 		.o_engine_done(o_engine_done_tb),
 		.o_txrx_addr_ccc(o_txrx_addr_ccc_tb),
-		.o_engine_odd(o_engine_odd_tb)
-
+		.o_engine_odd(o_engine_odd_tb),
+		.o_regf_ERR_STATUS(o_regf_ERR_STATUS_tb)
 		);
 
 
@@ -128,6 +131,7 @@ module CCC_Handler_tb ();
 		.i_bitcnt_en     (i_bitcnt_en_tb),
 		.i_scl_pos_edge  (scl_pos_edge_tb),
 		.i_scl_neg_edge  (scl_neg_edge_tb),
+		.i_cccnt_err_rst(o_bitcnt_err_rst_tb),
 		.o_cnt_bit_count (o_cnt_bit_count_tb)
 		
 	);
@@ -147,6 +151,7 @@ module CCC_Handler_tb ();
 		i_tx_mode_done_tb = 1'b0 ;
 		i_rx_mode_done_tb = 1'b1 ;  // important
 		i_rx_second_pre_tb = 1'b0 ;  // important
+		i_rx_first_pre_tb = 1'b1 ; 	 // in case of read operation
 		i_rx_error_tb = 1'b0 ;
 
 		// configuration 
@@ -160,6 +165,7 @@ module CCC_Handler_tb ();
 		i_regf_DEV_INDEX_tb = 5'd0 ;
 		i_regf_DTT_tb = 3'd2 ; 	 	 	// only 2 payload without defining byte 
 
+		i_sclstall_stall_done_tb = 1'b1 ;
 		i_engine_en_tb = 1'b0 ;
 
 
@@ -173,7 +179,25 @@ module CCC_Handler_tb ();
 
 		i_tx_mode_done_tb = 1'b1 ;
 
-		#(500 * CLK_PERIOD) i_sclstall_stall_done_tb = 1'b1 ;
+		#(500 * CLK_PERIOD);
+
+
+		// test case 2 put TOC = 1 check exit pattern state
+		i_regf_TOC_tb = 1'b1 ; 	 	 	// not the last command discriptor
+		#(500 * CLK_PERIOD)  ;
+
+
+
+		// test case 3 Broadcast
+		i_frmcnt_last_frame_tb = 1'b1 ;
+		i_regf_TOC_tb = 1'b0 ;
+		#(500 * CLK_PERIOD)  ;
+
+		// test case 3 Broadcast
+		i_frmcnt_last_frame_tb = 1'b1 ;
+		i_regf_TOC_tb = 1'b1 ;
+		
+
 
 		#(5000*CLK_PERIOD);
 		$stop ;
