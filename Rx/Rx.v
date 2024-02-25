@@ -52,16 +52,16 @@ output  reg               o_crc_en
 
 );
 
+
 ///////////rx modes///////////
 
-localparam [3:0]  
-                     PREAMBLE            = 4'b0000  , 
-                     NACK_BIT            = 4'b0001  ,        
-                     Deserializing_byte  = 'b0011 ,                   
-                     Check_token         = 'b0101 ,
-                     Check_Parity_value  = 'b0110 ,
-                     Check_CRC_value     = 'b0111 ,
-                     Error               = 'b1000 ;
+localparam [3:0]     FIRST_PREAMBLE            = 4'b0000  , 
+                     SECOND_PREAMBLE            = 4'b0001  ,        
+                     DESERIALIZING_BYTE  = 4'b0011  ,                   
+                     CHECK_TOKEN         = 4'b0101  ,
+                     CHECK_PAR_VALUE  = 4'b0110  ,
+                     CHECK_CRC_VALUE     = 4'b0111  ,
+                     ERROR               = 4'b1000  ;
 
 
 
@@ -71,6 +71,4 @@ localparam [3:0]
 
 
 
-
-  );
 endmodule

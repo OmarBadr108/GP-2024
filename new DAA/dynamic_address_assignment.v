@@ -325,7 +325,7 @@ always @(posedge i_daa_clk or negedge i_daa_rst_n)
                         end
                     PARITY:
                         begin  
-                                                                         o_daa_rx_mode           <= 2'b10;  // 2024 : rx must stay in arbitration mode in every single transmitting case                                                 
+                         o_daa_rx_mode           <= 2'b10;  // 2024 : rx must stay in arbitration mode in every single transmitting case                                                 
                           if (i_scl_daa_neg_edge )
                             begin
                                 if(ccc_to_par)
