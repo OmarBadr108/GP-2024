@@ -70,20 +70,20 @@ localparam [3:0]     special_preamble_rx = 'b0010,
 localparam [4:0]    idle = 'b0000,
                     first_stage_command_Pre = 'b0001,
                     command_word = 'b0010,
-					          address = 'b0011,               // broadcast or dierecet 
-					          parity = 'b0100,
-					          sec_stage_first_data_pre = 'b0101,             // sent by controller
-					          ack_waiting = 'b0110,
-					          data = 'b0111, ////////////////////////////////////////////////////////////////////////
-					          third_stage_first_data_pre = 'b1001,             // send by target or controller
-					          abort_bit = 'b1010,                      //   aborting by controller or target             
-					          fourth_stage_crc_first_pre = 'b1011,
-					          fourth_stage_crc_second_pre = 'b1100,
-					          token_crc_bits = 'b1101,                 // 4 bits
-					          crc_value_bits = 'b1110,                  // 5 bits 
-					          error = 'b1111,
-					          restart = 'b10000,
-					          exit = 'b10001;
+					address = 'b0011,               // broadcast or dierecet 
+					parity = 'b0100,
+					sec_stage_first_data_pre = 'b0101,             // sent by controller
+					ack_waiting = 'b0110,
+					data = 'b0111, ////////////////////////////////////////////////////////////////////////
+					third_stage_first_data_pre = 'b1001,             // send by target or controller
+					abort_bit = 'b1010,                      //   aborting by controller or target             
+					fourth_stage_crc_first_pre = 'b1011,
+					fourth_stage_crc_second_pre = 'b1100,
+					token_crc_bits = 'b1101,                 // 4 bits
+					crc_value_bits = 'b1110,                  // 5 bits 
+					error = 'b1111,
+					restart = 'b10000,
+					exit = 'b10001;
 
 
 reg    [1:0]         current_state,
@@ -111,13 +111,13 @@ always @(*)
   o_regf_wr_en = 'b0 ;
   o_regf_rd_en = 'b0 ;
   o_engine_done = 'b0 ;
-	o_regf_addr = 'b0;
-	o_regf_abort = 'b0;
-	o_sclstall_en = 'b0;
-	o_sclstall_no_of_cycles = 'b0;
-	o_sdahand_pp_od = 'b1;
-	o_bitcnt_en = 'b1; //
-	o_bitcnt_rst = 'b0;
+  o_regf_addr = 'b0;
+  o_regf_abort = 'b0;
+  o_sclstall_en = 'b0;
+  o_sclstall_no_of_cycles = 'b0;
+  o_sdahand_pp_od = 'b1;
+  o_bitcnt_en = 'b1; //
+  o_bitcnt_rst = 'b0;
 
 
   case(current_state)

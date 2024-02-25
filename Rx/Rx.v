@@ -29,3 +29,38 @@
 
 ==================================================================================
 //////////////////////////////////////////////////////////////////////////////////*/
+
+module RX (
+
+input                     i_sys_clk,
+input                     i_sys_rst,
+input                     i_sclgen_scl,
+input                     i_sclgen_scl_pos_edge,
+input                     i_sclgen_scl_neg_edge,
+input                     i_ddrccc_rx_en,
+input                     i_sdahnd_rx_sda,
+input                     i_bitcnt_rx_bit_count,
+input                     i_ddrccc_rx_mode,
+
+input                     i_crc_value,
+input                     i_crc_valid,
+
+output                    o_regfcrc_rx_data_out,
+output                    o_ddrccc_rx_mode_done,
+output                    o_ddrccc_second_pre,
+output                    o_ddrccc_error,
+output                    o_crc_en,
+
+
+
+
+
+
+
+
+
+
+
+
+  );
+endmodule
