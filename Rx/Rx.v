@@ -46,24 +46,88 @@ input                     i_crc_valid,
 
 output  reg  [7:0]        o_regfcrc_rx_data_out,
 output  reg               o_ddrccc_rx_mode_done,
-output  reg               o_ddrccc_second_pre,
+output  reg               o_ddrccc_pre,
 output  reg               o_ddrccc_error,
 output  reg               o_crc_en                 
 
 );
+wire des_edge; 
+assign des_edge = i_sclgen_scl_pos_edge || i_sclgen_scl_neg_edge;
+/////////////////////////////////rx modes/////////////////////////////////
 
 
-///////////rx modes///////////
-
-localparam [3:0]     FIRST_PREAMBLE            = 4'b0000  , 
-                     SECOND_PREAMBLE            = 4'b0001  ,        
+localparam [3:0]     
+                    
+                     FIRST_PREAMBLE      = 4'b0000  , 
+                     SECOND_PREAMBLE     = 4'b0001  ,        
                      DESERIALIZING_BYTE  = 4'b0011  ,                   
                      CHECK_TOKEN         = 4'b0101  ,
-                     CHECK_PAR_VALUE  = 4'b0110  ,
+                     CHECK_PAR_VALUE     = 4'b0110  ,
                      CHECK_CRC_VALUE     = 4'b0111  ,
                      ERROR               = 4'b1000  ;
 
+always @(posedge i_sys_clk or negedge i_sys_rst) begin
+  if (!i_sys_rst) begin
 
+    o_regfcrc_rx_data_out <= 8'd0;  
+    o_ddrccc_rx_mode_done <= 1'b0;
+    o_ddrccc_pre          <= 1'b0;
+    o_ddrccc_error        <= 1'b0;
+    o_crc_en              <= 1'b0;   
+    
+  end
+
+  else if (i_ddrccc_rx_en) begin
+
+  case(i_ddrccc_rx_mode) 
+
+    FIRST_PREAMBLE :begin
+                     if (des_edge)
+                      begin
+                       o_ddrccc_pre <= i_sdahnd_rx_sda;
+                       o_ddrccc_rx_mode_done <= 1'b1;
+                      end
+                      
+ 
+                      else 
+                       begin
+                        o_ddrccc_rx_mode_done <= 1'b0;
+                       end
+                    end
+ 
+    SECOND_PREAMBLE :begin
+                     if (des_edge)
+                      begin
+                       o_ddrccc_pre <= i_sdahnd_rx_sda;
+                       o_ddrccc_rx_mode_done <= 1'b1;
+                      end
+                      
+ 
+                      else 
+                       begin
+                        o_ddrccc_rx_mode_done <= 1'b0;
+                       end
+                    end
+ 
+ 
+ 
+    DESERIALIZING_BYTE :
+ 
+    CHECK_TOKEN :   
+ 
+    CHECK_PAR_VALUE : 
+ 
+ 
+    CHECK_CRC_VALUE :
+ 
+ 
+ 
+    ERROR :            
+
+
+   
+   endcase
+end
 
 
 

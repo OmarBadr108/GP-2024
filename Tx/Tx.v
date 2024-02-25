@@ -71,10 +71,10 @@ assign P1_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 	
 		if(~i_sys_rst) begin 
 		    o_sdahnd_serial_data<= 1;
-        o_ddrccc_mode_done<= 0;
-        o_crc_parallel_data<= 0;
-        o_ddrccc_parity_data<= 0;
-        o_crc_en<= 0;
+            o_ddrccc_mode_done<= 0;
+            o_crc_parallel_data<= 0;
+            o_ddrccc_parity_data<= 0;
+            o_crc_en<= 0;
 		    counter <= 0;
 		    reset_counter_flag <= 0;
 		    value <= 0;
