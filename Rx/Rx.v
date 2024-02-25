@@ -39,19 +39,29 @@ input                     i_sclgen_scl_pos_edge,
 input                     i_sclgen_scl_neg_edge,
 input                     i_ddrccc_rx_en,
 input                     i_sdahnd_rx_sda,
-input                     i_bitcnt_rx_bit_count,
-input                     i_ddrccc_rx_mode,
-
+input     [4:0]           i_bitcnt_rx_bit_count,
+input     [2:0]           i_ddrccc_rx_mode,
 input                     i_crc_value,
 input                     i_crc_valid,
 
-output                    o_regfcrc_rx_data_out,
+output    [7:0]           o_regfcrc_rx_data_out,
 output                    o_ddrccc_rx_mode_done,
 output                    o_ddrccc_second_pre,
 output                    o_ddrccc_error,
-output                    o_crc_en,
+output                    o_crc_en                 
 
+);
 
+///////////rx modes///////////
+
+localparam [3:0]  
+                     PREAMBLE            = 4'b0000  , 
+                     NACK_BIT            = 4'b0001  ,        
+                     Deserializing_byte  = 'b0011 ,                   
+                     Check_token         = 'b0101 ,
+                     Check_Parity_value  = 'b0110 ,
+                     Check_CRC_value     = 'b0111 ,
+                     Error               = 'b1000 ;
 
 
 
