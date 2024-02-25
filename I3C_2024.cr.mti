@@ -1,0 +1,287 @@
+{D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/Normal Transaction/Normal Transaction.v} {0 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/Normal Transaction/Normal Transaction.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module ddr_mode
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/Normal Transaction/Normal Transaction.v(135): near ";": syntax error, unexpected ';'
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/Normal Transaction/Normal Transaction.v(146): near "=": syntax error, unexpected '=', expecting ++ or --
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/Normal Transaction/Normal Transaction.v(182): near "=": syntax error, unexpected '=', expecting ++ or --
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/Normal Transaction/Normal Transaction.v(190): near "=": syntax error, unexpected '=', expecting ++ or --
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/Normal Transaction/Normal Transaction.v(203): near "=": syntax error, unexpected '=', expecting ++ or --
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/Normal Transaction/Normal Transaction.v(211): (vlog-2730) Undefined variable: 'o_regf_wt_en'.
+
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/Normal Transaction/Normal Transaction.v(211): near "=": syntax error, unexpected '=', expecting ++ or --
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/Normal Transaction/Normal Transaction.v(215): near ":": Syntax error. Statement labels are only allowed in SystemVerilog.
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/Normal Transaction/Normal Transaction.v(229): near "else": syntax error, unexpected else
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/Normal Transaction/Normal Transaction.v(235): near "end": syntax error, unexpected end
+
+} {4.0 10.0 11.0 15.0} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/New i3c engine/new i3c engine.v} {0 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/New i3c engine/new i3c engine.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module i3c_engine
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/New i3c engine/new i3c engine.v(111): 'o_mode_sda_sel' already declared in this scope (i3c_engine) with a conflicting net type.
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/New i3c engine/new i3c engine.v(111): 'o_mode_sda_sel' already declared in this scope (i3c_engine).
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/New i3c engine/new i3c engine.v(111): Verilog Compiler exiting
+
+} {4.0 7.0} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/i2c_legacy_mode.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/i2c_legacy_mode.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module i2c_legacy_mode
+
+Top level modules:
+	i2c_legacy_mode
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v} {0 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module CCC_Handler
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(97): (vlog-2730) Undefined variable: 'i_config_CCC_value'.
+
+** Warning: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(124): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+
+** Warning: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(125): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+
+** Warning: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(126): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+
+** Warning: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(127): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+
+** Warning: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(129): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+
+** Warning: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(130): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(130): 'PARITY_ADJ' already declared in this scope.
+** Warning: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(131): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+
+** Warning: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(132): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+
+** Warning: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(134): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+
+** Warning: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(135): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+
+** Warning: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(136): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+
+** Warning: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(137): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+
+** Warning: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(138): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(181): (vlog-2730) Undefined variable: 'FIRST_CMD_BYTE'.
+
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(196): (vlog-2730) Undefined variable: 'SECOND_CMD_BYTE'.
+
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(234): (vlog-2730) Undefined variable: 'PARITY_CMD'.
+
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(263): (vlog-2730) Undefined variable: 'CCC_BYTE'.
+
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(277): (vlog-2730) Undefined variable: 'DEFINING_BYTE'.
+
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(295): (vlog-2730) Undefined variable: 'PARITY_CCC_DEF'.
+
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(325): (vlog-2730) Undefined variable: 'PARITY_DATA'.
+
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/CCC Handler/CCC Handler.v(327): (vlog-2730) Undefined variable: 'last_byte'.
+
+
+} {4.0 5.0 18.0 19.0 33.0 34.0 35.0 36.0 37.0 38.0 39.0 40.0 41.0 42.0 43.0 44.0 45.0 46.0 47.0 48.0} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/ENTHDR/ENTHDR_TB.v} {0 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/ENTHDR/ENTHDR_TB.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module ENTHDR_tb
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/ENTHDR/ENTHDR_TB.v(33): near "EOF": syntax error, unexpected end of source code
+
+} {4.0 5.0} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/controller_TX.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/controller_TX.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module controller_tx
+
+Top level modules:
+	controller_tx
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/scl_staller.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/scl_staller.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module scl_staller
+
+Top level modules:
+	scl_staller
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/main_ctrl_unit.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/main_ctrl_unit.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module main_ctrl_unit
+
+Top level modules:
+	main_ctrl_unit
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/clk_divider.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/clk_divider.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module clk_divider
+
+Top level modules:
+	clk_divider
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/top_for_hj_test.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/top_for_hj_test.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module top_for_hj_test
+
+Top level modules:
+	top_for_hj_test
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/mux.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/mux.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module gen_mux
+
+Top level modules:
+	gen_mux
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/hot_join.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/hot_join.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module hot_join
+
+Top level modules:
+	hot_join
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/tri_state_buf.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/tri_state_buf.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module tri_state_buf
+
+Top level modules:
+	tri_state_buf
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/timings.v} {0 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/timings.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/timings.v(20): (vlog-2155) Global declarations are illegal in Verilog 2001 syntax.
+
+
+} {3.0 4.0} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/daa_tb.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/daa_tb.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module daa_tb
+
+Top level modules:
+	daa_tb
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/top_for_crh_test.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/top_for_crh_test.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module top_for_crh_test
+
+Top level modules:
+	top_for_crh_test
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/open_drain_behav_model.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/open_drain_behav_model.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module open_drain_behav_model
+
+Top level modules:
+	open_drain_behav_model
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/IBI.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/IBI.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module IBI
+
+Top level modules:
+	IBI
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/i3c_timer_fsm.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/i3c_timer_fsm.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module i3c_timer_fsm
+
+Top level modules:
+	i3c_timer_fsm
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/i3c_engine.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/i3c_engine.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module i3c_engine
+
+Top level modules:
+	i3c_engine
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/i3c top/i3c top.v} {0 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/i3c top/i3c top.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module i3c_controller_top
+** Error: D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/i3c top/i3c top.v(380): near ".": syntax error, unexpected '.', expecting ')'
+
+} {4.0 5.0} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/scl_generation.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/scl_generation.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module scl_generation
+
+Top level modules:
+	scl_generation
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/tri_state_buf_n.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/tri_state_buf_n.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module tri_state_buf_n
+
+Top level modules:
+	tri_state_buf_n
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/controller_crh.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/controller_crh.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module controller_crh
+
+Top level modules:
+	controller_crh
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/push_pull_behav_model.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/push_pull_behav_model.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module push_pull_behav_model
+
+Top level modules:
+	push_pull_behav_model
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/i3c_top.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/i3c_top.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module i3c_controller_top
+
+Top level modules:
+	i3c_controller_top
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/bits_counter.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/bits_counter.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module bits_counter
+
+Top level modules:
+	bits_counter
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/frame_counter.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/frame_counter.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module frame_counter
+
+Top level modules:
+	frame_counter
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/dynamic_address_assignment.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/dynamic_address_assignment.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module dynamic_address_assignment
+
+Top level modules:
+	dynamic_address_assignment
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/ENTHDR/ENTHDR.v} {0 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/ENTHDR/ENTHDR.v}
+** Warning: (14) Failed to open "D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/I3C_2024.mpf" specified by the MODELSIM environment variable.
+
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+** Error: (vlog-19) Failed to access library 'work' at "work".
+
+No such file or directory. (errno = ENOENT)
+
+} {5.0 6.0} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/gen_mux.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/gen_mux.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module gen_mux
+
+Top level modules:
+	gen_mux
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/Rx/Rx.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/Rx/Rx.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/sda_handling.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/sda_handling.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module sda_handling
+
+Top level modules:
+	sda_handling
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/sdr_mode.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/sdr_mode.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module sdr_mode
+
+Top level modules:
+	sdr_mode
+
+} {} {}} {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/controller_RX.v} {1 {vlog -work work {D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/new DAA/controller_RX.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module controller_rx
+
+Top level modules:
+	controller_rx
+
+} {} {}}
