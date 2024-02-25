@@ -6,7 +6,7 @@ input        i_sclgen_scl_pos_edge,
 input        i_sclgen_scl_neg_edge,
 input [3:0]  i_ddrccc_tx_mode,
 input [7:0]  i_regf_tx_parallel_data,
-input [7:0]  i_ddrccc_address, // special from ddr or ccc   
+input [7:0]  i_ddrccc_special_data, // special from ddr or ccc (address or ccc value)  
 input [4:0]  i_crc_crc_value,
 
 output reg        o_sdahnd_serial_data,
@@ -24,7 +24,7 @@ localparam [3:0]  Serializing_address = 'b1010,   //done
                   zero_preamble = 'b011,  // done
 				          Serializing_byte = 'b100, //done
 				          serializing_zeros = 'b1100 , //done
-				          CCC_value = 'b1101 ,
+				          CCC_value = 'b1101 , //done
 				          Calculating_Parity = 'b101,
 				          CRC_value = 'b110,  //done
                   token_CRC = 'b111, //done
@@ -37,8 +37,13 @@ reg [3:0] token = 4'b1100;
 
 /***internal signals****/
 wire parity_adj;
-wire [7:0] A ; //CMD_Word_Second_Byte
+wire [7:0] A; //CMD_Word_Second_Byte
+wire P1, P0; //parity bits to be serialized
+wire P1_cmdword, P2_cmdword; //parity bits of cmdword
+wire P1_data, P2_data; //parity bits of data
+wire [1:0] P;
 reg [7:0] D1, D2; //first_and_second_Data_Bytes
+
 
 /***helpful flags****/
 integer counter;
@@ -46,12 +51,19 @@ integer value;
 integer N;
 reg reset_counter_flag;
 reg rd_wr_flag;
-reg [1:0] par;
+reg parity_flag;
 reg first_byte_full;
 
 
-assign A = {i_ddrccc_address[6:0],parity_adj}; 
-assign parity_adj = (!( rd_wr_flag ^ (^7'b0) ^ (^i_ddrccc_address) ) );
+assign A = {i_ddrccc_special_data[6:0],parity_adj} ; 
+assign parity_adj = (!( rd_wr_flag ^ (^7'b0) ^ (^i_ddrccc_special_data) ) ) ;
+assign P1 = (parity_flag)? P1_data : P1_cmdword ; 
+assign P2 = (parity_flag)? P2_data : P2_cmdword ;
+assign P = {P1,P0} ;
+assign P1_cmdword = rd_wr_flag ^ A[7] ^ A[5] ^ A[3] ^ A[1] ;
+assign P2_cmdword = A[6] ^ A[4] ^ A[2] ^ A[0] ^ 1 ;
+assign P1_data = D1[7] ^ D1[5] ^ D1[3] ^ D1[1] ^ D2[7] ^ D2[5] ^ D2[3] ^ D2[1] ;
+assign P1_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^ 1 ; 
 
 
  always @ (posedge i_sys_clk or negedge i_sys_rst)
@@ -59,13 +71,15 @@ assign parity_adj = (!( rd_wr_flag ^ (^7'b0) ^ (^i_ddrccc_address) ) );
 	
 		if(~i_sys_rst) begin 
 		    o_sdahnd_serial_data<= 1;
-        o_ddrccc_mode_done<= 0;
-        o_crc_parallel_data<= 0;
-        o_ddrccc_parity_data<= 0;
-        o_crc_en<= 0;
+            o_ddrccc_mode_done<= 0;
+            o_crc_parallel_data<= 0;
+            o_ddrccc_parity_data<= 0;
+            o_crc_en<= 0;
 		    counter <= 0;
 		    reset_counter_flag <= 0;
 		    value <= 0;
+		    parity_flag <= 0;
+		    first_byte_full <= 0; 
 		end 
 		
 		else if (i_ddrccc_tx_en) begin
@@ -74,7 +88,7 @@ assign parity_adj = (!( rd_wr_flag ^ (^7'b0) ^ (^i_ddrccc_address) ) );
 		
 		case (i_ddrccc_tx_mode)
 		  
-		  ///////////////
+		  ///////////////////////
 		  
 		serializing_zeros : begin
 		  
@@ -180,6 +194,41 @@ assign parity_adj = (!( rd_wr_flag ^ (^7'b0) ^ (^i_ddrccc_address) ) );
 		 end	
 		 ////////////////////////////////////
 		 
+		 CCC_value :  begin
+		  
+		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
+		   begin    
+		    if ( (counter == value) & (!reset_counter_flag) )
+		      begin
+           counter <= 'd0;
+           reset_counter_flag <= 1;
+           o_sdahnd_serial_data <= i_ddrccc_special_data['d7] ;
+           end
+          
+			  else
+			    begin
+			    counter <= counter + 1;
+			    o_sdahnd_serial_data <= i_ddrccc_special_data['d6 - counter] ;
+			    end
+			 end
+			 
+	 else if ( counter == 'd7 )
+			begin
+			 o_ddrccc_mode_done <= 'b1;
+			 reset_counter_flag <= 0;
+			 value <= 7;
+			 parity_flag <= 1;
+			 if (!first_byte_full)
+			   begin
+			    D1 <= i_ddrccc_special_data;
+			    first_byte_full <= 1;
+			   end
+			 else
+			    D2 <= i_ddrccc_special_data;
+			    first_byte_full <= 0;
+		  end
+			 
+	 end	
 		
 		 ///////////////////////////////////
 		  
@@ -206,6 +255,7 @@ assign parity_adj = (!( rd_wr_flag ^ (^7'b0) ^ (^i_ddrccc_address) ) );
 			 o_ddrccc_mode_done <= 'b1;
 			 reset_counter_flag <= 0;
 			 value <= 7;
+			 parity_flag <= 1;
 			 if (!first_byte_full)
 			   begin
 			    D1 <= i_regf_tx_parallel_data;
@@ -213,6 +263,7 @@ assign parity_adj = (!( rd_wr_flag ^ (^7'b0) ^ (^i_ddrccc_address) ) );
 			   end
 			 else
 			    D2 <= i_regf_tx_parallel_data;
+			    first_byte_full <= 0;
 		  end
 			 
 	 end	
@@ -246,6 +297,38 @@ assign parity_adj = (!( rd_wr_flag ^ (^7'b0) ^ (^i_ddrccc_address) ) );
 			 end
 			 
 		 end	
+		 
+		 /////////////////////////////////
+		 
+		 
+		 Calculating_Parity : begin
+		   
+		   if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
+		    begin
+		      
+		     if ( (counter == value) & (!reset_counter_flag))
+		     begin
+          counter <= 'd0;
+          reset_counter_flag <= 1;
+          o_sdahnd_serial_data <= P[1];
+         end
+			  else
+			    begin
+			    counter <= counter + 1;
+			    o_sdahnd_serial_data <= P[(0 - counter)];
+			    end
+			    
+			 end
+			 
+			else if ( counter == 1 )
+			  begin
+			 o_ddrccc_mode_done <= 'b1;
+			 reset_counter_flag <= 0;
+			 value <= 1;
+			 end
+
+		 end	  
+		 
 		 
 		 /////////////////////////////////
 				  				  		  
