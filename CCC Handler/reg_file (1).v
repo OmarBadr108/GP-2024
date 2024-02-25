@@ -30,7 +30,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 `default_nettype none
 
-module reg_file #(parameter WIDTH = 16 , DEPTH = 2**16 , ADDR = 16 )
+module reg_file #(parameter WIDTH = 8 , DEPTH = 2**16 , ADDR = 16 )
 
 	( input  wire			     i_regf_clk  		  ,   // clock , connected to the 50mhz clock , input from controller
 	  input  wire			     i_regf_rst_n	     ,  	// active low reset , input from controller

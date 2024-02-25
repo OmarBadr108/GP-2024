@@ -297,8 +297,8 @@ end
             IDLE : begin                     // aw arbitration if needed  
                 first_time        = 1'b1 ;   // flag to help to differentiate between the direct and broadcast with assistance of Direct_Braodcast_n flag 
                 o_bitcnt_en       = 1'b0 ;
-                regular_counter   = 'd4  ;   // data starts from fifth location
-                immediate_counter = 'd2  ;   // data starts from third location
+                regular_counter   = 'd8  ;   // data starts from ninth location
+                immediate_counter = 'd4  ;   // data starts from forth location
                 o_engine_odd      = 1'b0 ;
                 controller_abort  = 1'b0 ;
 
@@ -524,6 +524,7 @@ end
 
             PARITY_DATA : begin // parity state any Data word
                 o_tx_en   = 1'b1 ;
+                o_tx_mode = parity_calc ;
                 if  (i_bitcnt_number == 5'd0 && i_tx_mode_done) begin // if broadcast
 
                     if (i_frmcnt_last_frame || (Direct_Broadcast_n & first_time)) begin  // crc state only in case of Direct or in case of last data 
@@ -615,19 +616,27 @@ end
 
 
             FIRST_DATA_BYTE : begin    // contains first repeated data byte
+                if (i_regf_RnW) begin 
+
+                end 
+                else begin 
+
+                end 
+
                 o_tx_en      = 1'b1 ;
                 o_regf_rd_en = 1'b1 ;
                 if (!i_regf_CMD_ATTR[0]) begin              // if regular command discriptor  
                     o_tx_mode    = serializing_first_byte ;
-                    o_regf_addr  = first_location + regular_counter ; // regular counter starts with value 4 to point to the fifth location .. reset in CRC or restart
+                    o_regf_addr  = first_location + regular_counter ; // regular counter starts with value 4 to point to the fifth location 
                 end 
                 else begin // if immediate
                     if (Defining_byte) begin 
-                        o_regf_addr = first_location + immediate_counter ; // still takes the third location 
-                        o_tx_mode   = serializing_sec_byte ;          // as first byte in the third location will contain the Defining Byte
+                        o_regf_addr = first_location + immediate_counter + 1'b1 ; // for 8 bit width Regfile .. point to fifth location
+
+                        o_tx_mode   = serializing_first_byte ;          // as first byte in the third location will contain the Defining Byte
                     end 
                     else begin 
-                        o_regf_addr = first_location + immediate_counter ; // 
+                        o_regf_addr = first_location + immediate_counter ;        // for 8 bit width Regfile .. point to fourth location
                         o_tx_mode   = serializing_first_byte ; 
                     end 
                 end 
@@ -638,6 +647,8 @@ end
                 end
                 else if (i_bitcnt_number == 5'd10 && i_tx_mode_done && !i_frmcnt_last_frame) begin  
                     next_state = SECOND_DATA_BYTE ; 
+                    immediate_counter = immediate_counter + 1 ;
+                    regular_counter   = regular_counter   + 1 ;
                 end
                 else begin 
                     next_state = FIRST_DATA_BYTE ;
@@ -652,13 +663,18 @@ end
                 o_tx_en      = 1'b1 ;
                 o_regf_rd_en = 1'b1 ;
                 o_tx_mode    = serializing_sec_byte ;
-
+                if (!i_regf_CMD_ATTR[0]) begin              // if regular command discriptor  
+                    o_regf_addr  = first_location + regular_counter ; 
+                end
+                else begin 
+                    o_regf_addr  = first_location + immediate_counter ; 
+                end 
                 if (i_bitcnt_number == 5'd18 && i_tx_mode_done) begin   
                     next_state = PARITY_DATA ;
-                    regular_counter = regular_counter + 1 ;
-                    if (i_regf_DTT == 3'd3 || i_regf_DTT == 3'd4 || i_regf_DTT == 3'd7) begin  
-                        immediate_counter <= immediate_counter + 1 ;                             // intended latch 
-                    end 
+                    // no need to put conditions , immediated and regular can't happen together
+                    immediate_counter = immediate_counter + 1 ;
+                    regular_counter   = regular_counter   + 1 ;
+
 
                 end
                 else begin 
