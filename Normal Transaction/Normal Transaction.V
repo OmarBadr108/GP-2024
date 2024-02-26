@@ -235,15 +235,15 @@ always @(*)
 
      else
       begin
-       o_rx_en = 'b1 ;
-	     o_rx_mode = Deserializing_byte ;
+           o_rx_en = 'b1 ;
+	       o_rx_mode = Deserializing_byte ;
 		   o_regf_wr_en = 'b1 ;
 	    end 
 		
 		
 		
  if (i_tx_mode_done | i_rx_mode_done)    // for increasing address to be ready 
-  o_regf_addr = o_regf_addr + 'd1;
+  o_regf_addr = o_regf_addr + 'd1;       /// reserved addr should be considered
   else
    o_regf_addr = o_regf_addr + 'd0;
 
