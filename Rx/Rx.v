@@ -40,7 +40,7 @@ input                     i_sclgen_scl_neg_edge,
 input                     i_ddrccc_rx_en,
 input                     i_sdahnd_rx_sda,
 input     [4:0]           i_bitcnt_rx_bit_count,
-input     [2:0]           i_ddrccc_rx_mode,
+input     [3:0]           i_ddrccc_rx_mode,
 input                     i_crc_value,
 input                     i_crc_valid,
 
@@ -85,10 +85,15 @@ reg [3:0] token_value_temp;
 reg [1:0] parity_value_temp;
 reg [4:0] CRC_value_temp;
 wire [1:0] parity_value_calc;
+
+
 //////////////////////////////parity calc////////////////////////////////////
 
  assign parity_value_calc[1] =  data_paritychecker[15]^data_paritychecker[13]^data_paritychecker[11]^data_paritychecker[9]^data_paritychecker[7]^data_paritychecker[5]^data_paritychecker[3]^data_paritychecker[1] ;     
  assign parity_value_calc[0] =  data_paritychecker[14]^data_paritychecker[12]^data_paritychecker[10]^data_paritychecker[8]^data_paritychecker[6]^data_paritychecker[4]^data_paritychecker[2]^data_paritychecker[0]^1'b1 ; 
+
+
+
 /////////////////////////////////////////////////////////////////////////////
 always @(posedge i_sys_clk or negedge i_sys_rst) 
  begin
