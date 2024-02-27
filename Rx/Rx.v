@@ -108,6 +108,9 @@ always @(posedge i_sys_clk or negedge i_sys_rst)
 
    else if(count==0)
     count<=count_value;
+   else begin
+     count<=count;
+   end
   end
  end
 
@@ -171,7 +174,7 @@ begin
     o_crc_en              <= 1'b0;   
     
     count_en              <= 1'b0;
-    //count_value           <= 3'b0;
+    //count_value         <= 3'b0;
    end
 
 
@@ -193,23 +196,25 @@ begin
                           begin
                            o_ddrccc_pre          <= i_sdahnd_rx_sda;
                            //o_ddrccc_rx_mode_done <= 1'b1;
-                           rx_mode_done_flag <= 1'b1;
-                           byte_num<=1'b0;
-
+                           rx_mode_done_flag     <= 1'b1;
+                           byte_num              <=1'b0;
+                           o_regfcrc_rx_data_out_temp[count] <= i_sdahnd_rx_sda;
                           end
                         end
     
-/*    DESERIALIZING_BYTE :begin
+     DESERIALIZING_BYTE :begin
                          count_value <=3'd7;
-                         count_en<=1'b1;
+                         count_en    <=1'b1;
                          o_ddrccc_pre <= 'bz;
                          //rx_mode_done_flag <= 1'b0;
+                         o_ddrccc_rx_mode_done <= 1'b0;
+                         //o_regfcrc_rx_data_out_temp[count] <= i_sdahnd_rx_sda;
                          if (SCL_edges)
-                          begin  
+                          
                             o_regfcrc_rx_data_out_temp[count] <= i_sdahnd_rx_sda;
                             //count_en<=1'b1;
 
-                            if(count==0 )
+                         else if(count==0 )
                              begin
                              byte_num<=1;
                              o_regfcrc_rx_data_out<=o_regfcrc_rx_data_out_temp;
@@ -220,19 +225,20 @@ begin
 
                             else 
                              o_ddrccc_rx_mode_done <= 1'b0;
+
                              //rx_mode_done_flag <= 1'b0;
-                          end
+                         
 
                         end
-*/
-    DESERIALIZING_BYTE :begin
-                         count_value <=3'd7;
-                         count_en<=1'b1;
-                         o_ddrccc_pre <= 'bz;
-                         //rx_mode_done_flag <= 1'b0;
-                         o_ddrccc_rx_mode_done <= 1'b0;
+
+    /*DESERIALIZING_BYTE :begin
+                    
                          if (SCL_edges)
                           begin  
+                            
+
+
+
                             o_regfcrc_rx_data_out_temp[count] <= i_sdahnd_rx_sda;
 
                           end
@@ -252,7 +258,7 @@ begin
                              o_ddrccc_rx_mode_done <= 1'b0;
                              //rx_mode_done_flag <= 1'b0;
                           
-                        end
+                        end*/
 
 
 
