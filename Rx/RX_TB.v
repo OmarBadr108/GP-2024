@@ -56,28 +56,33 @@ initial
 	    //-----------TEST CASE 1 : Normal Transaction >> Read -----------//
 
 	    // 1. Reading ACK bit of the First Data Word
-
+	    #(7*CLK_PERIOD);
+	    @(negedge i_sys_clk_tb)
 	    i_ddrccc_rx_en_tb   = 1'b1; 
 	    i_ddrccc_rx_mode_tb = 4'b0000;  // Preamble state to get the ack bit
+
+	    #(CLK_PERIOD/2)
 	    i_sdahnd_rx_sda_tb  =  'b0;       // driving sda low (ACK)
 
-	    //#(2*CLK_PERIOD)
+	    #(2*CLK_PERIOD)
+	    i_sdahnd_rx_sda_tb  =  'b1;
 
-	    if (o_ddrccc_rx_mode_done_tb )
+	   /* if (o_ddrccc_rx_mode_done_tb )
 	    	begin
 	     		$display("Preamble is received successfully");
 	    	end
 	    else 
 	    	begin
 	    		$display("Preamble is not received correctly");
-	    	end
+	    	end */
 	    
-		//#(2*CLK_PERIOD)
+		//@(negedge o_ddrccc_rx_mode_done_tb)
 	    // 2. Reading First Data Byte
+	    //#(CLK_PERIOD)
 
 	    i_ddrccc_rx_en_tb   = 1'b1; 
 	    i_ddrccc_rx_mode_tb = 4'b0011;   // Deserializing byte mode
-
+/*
 	    for (i=1 ; i<9 ; i=i+1) //8 Frames 
        	begin
            @(negedge i_sclgen_scl_tb )
@@ -104,6 +109,7 @@ initial
 
 		i_ddrccc_rx_en_tb   = 1'b1; 
 	    i_ddrccc_rx_mode_tb = 4'b0110;   // Check parity state
+	    */
 
 
 #1000

@@ -140,8 +140,6 @@ always@(posedge i_sys_clk or negedge i_sys_rst)
       begin
          o_ddrccc_rx_mode_done <= 1'b1;
       end 
-    else
-      o_ddrccc_rx_mode_done <= 1'b0;
   end
 
 
@@ -173,7 +171,6 @@ begin
     count_en              <= 1'b0;
     count_value           <= 3'b0;
     byte_num              <=1'b0;
-    rx_mode_done_flag     <= 1'b0;
    case(i_ddrccc_rx_mode) 
 
     PREAMBLE :          begin
