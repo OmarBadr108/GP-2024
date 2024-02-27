@@ -139,10 +139,22 @@ always@(posedge i_sys_clk or negedge i_sys_rst)
     else if (rx_mode_done_flag) 
       begin
          o_ddrccc_rx_mode_done <= 1'b1;
+
+         ////fabraka
+             count_en              <= 1'b1;
+             count_value           <=3'd7;
       end 
     else
+    begin
       o_ddrccc_rx_mode_done <= 1'b0;
+      count_en              <= 1'b0;
+      count_value           <=3'd7;
+      end
   end
+
+
+
+
 
 
 
@@ -153,26 +165,26 @@ begin
    begin
 
     o_regfcrc_rx_data_out <= 8'd0;  
-    //o_ddrccc_rx_mode_done <= 1'b0;
+    o_ddrccc_rx_mode_done <= 1'b0;
     o_ddrccc_pre          <= 1'bz; //should be editted
     o_ddrccc_error        <= 1'b0;
     o_crc_en              <= 1'b0;   
     
     count_en              <= 1'b0;
-    count_value           <= 3'b0;
+    //count_value           <= 3'b0;
    end
 
 
   else if (i_ddrccc_rx_en) 
    begin
     o_regfcrc_rx_data_out <= 8'd0;  
-    o_ddrccc_rx_mode_done <= 1'b0;
-    o_ddrccc_pre          <= 1'bz;   //should be editted
+    //o_ddrccc_rx_mode_done <= 1'b0;
+    //o_ddrccc_pre          <= 1'bz;   //should be editted
     o_ddrccc_error        <= 1'b0;
     o_crc_en              <= 1'b0; 
     count_en              <= 1'b0;
-    count_value           <= 3'b0;
-    byte_num              <=1'b0;
+    //count_value           <= 3'b0;
+    byte_num              <= 1'b0;
     rx_mode_done_flag     <= 1'b0;
    case(i_ddrccc_rx_mode) 
 
@@ -183,28 +195,63 @@ begin
                            //o_ddrccc_rx_mode_done <= 1'b1;
                            rx_mode_done_flag <= 1'b1;
                            byte_num<=1'b0;
+
                           end
                         end
     
-    DESERIALIZING_BYTE :begin
-                         count_value<=3'd7;
+/*    DESERIALIZING_BYTE :begin
+                         count_value <=3'd7;
                          count_en<=1'b1;
-                         
+                         o_ddrccc_pre <= 'bz;
+                         //rx_mode_done_flag <= 1'b0;
                          if (SCL_edges)
                           begin  
                             o_regfcrc_rx_data_out_temp[count] <= i_sdahnd_rx_sda;
-                           
-                            if(count==0)
+                            //count_en<=1'b1;
+
+                            if(count==0 )
                              begin
                              byte_num<=1;
                              o_regfcrc_rx_data_out<=o_regfcrc_rx_data_out_temp;
                              o_ddrccc_rx_mode_done <= 1'b1;
+                             //rx_mode_done_flag <= 1'b1;
                              count_en<=1'b0;
                              end 
+
                             else 
                              o_ddrccc_rx_mode_done <= 1'b0;
+                             //rx_mode_done_flag <= 1'b0;
                           end
 
+                        end
+*/
+    DESERIALIZING_BYTE :begin
+                         count_value <=3'd7;
+                         count_en<=1'b1;
+                         o_ddrccc_pre <= 'bz;
+                         //rx_mode_done_flag <= 1'b0;
+                         o_ddrccc_rx_mode_done <= 1'b0;
+                         if (SCL_edges)
+                          begin  
+                            o_regfcrc_rx_data_out_temp[count] <= i_sdahnd_rx_sda;
+
+                          end
+                          
+                          if(count_done)
+                          begin
+                             //count_en<=1'b1;
+
+                             byte_num<=1;
+                             o_regfcrc_rx_data_out<=o_regfcrc_rx_data_out_temp;
+                             o_ddrccc_rx_mode_done <= 1'b1;
+                             //rx_mode_done_flag <= 1'b1;
+                             count_en<=1'b0;
+                            end
+
+                            else 
+                             o_ddrccc_rx_mode_done <= 1'b0;
+                             //rx_mode_done_flag <= 1'b0;
+                          
                         end
 
 
@@ -295,7 +342,7 @@ begin
                  o_ddrccc_error        <= 1'b0;
                  o_crc_en              <= 1'b0; 
                  count_en              <= 1'b0;
-                 count_value           <= 3'b0;
+                 //count_value           <= 3'b0;
                  byte_num              <=1'b0 ;        
                  end
 

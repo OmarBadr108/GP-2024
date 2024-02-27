@@ -64,43 +64,48 @@ initial
 	    #(CLK_PERIOD/2)
 	    i_sdahnd_rx_sda_tb  =  'b0;       // driving sda low (ACK)
 
-	    #(2*CLK_PERIOD)
-	    i_sdahnd_rx_sda_tb  =  'b1;
 
-	   /* if (o_ddrccc_rx_mode_done_tb )
+	    // checking done flag and changing to the new mode
+
+	    #(30)
+
+
+	    if (o_ddrccc_rx_mode_done_tb )
 	    	begin
 	     		$display("Preamble is received successfully");
 	    	end
 	    else 
 	    	begin
 	    		$display("Preamble is not received correctly");
-	    	end */
-	    
-		//@(negedge o_ddrccc_rx_mode_done_tb)
+	    	end 
+    
+		//@(negedge i_sys_clk_tb)
 	    // 2. Reading First Data Byte
 	    //#(CLK_PERIOD)
 
 	    i_ddrccc_rx_en_tb   = 1'b1; 
 	    i_ddrccc_rx_mode_tb = 4'b0011;   // Deserializing byte mode
-/*
-	    for (i=1 ; i<9 ; i=i+1) //8 Frames 
+       #10
+	    i_sdahnd_rx_sda_tb = DATA[0] ;
+
+	    for (i=2 ; i<9 ; i=i+1) //8 bits 
        	begin
-           @(negedge i_sclgen_scl_tb )
-              #10 i_sdahnd_rx_sda_tb = DATA[i-1] ;  
+           @(negedge i_sclgen_scl_tb or posedge i_sclgen_scl_tb )
+              #20 i_sdahnd_rx_sda_tb = DATA[i-1] ;  
         end
-        i_sdahnd_rx_sda_tb = 'bz;
+        //i_sdahnd_rx_sda_tb = 'bz;
 
-
-
+/*
+		@(negedge o_ddrccc_rx_mode_done_tb)
         // 3. Reading Second Data Byte
 
 	    i_ddrccc_rx_en_tb   = 1'b1; 
 	    i_ddrccc_rx_mode_tb = 4'b0011;   // Deserializing byte mode
-
+	
 	    for (i=1 ; i<9 ; i=i+1) //8 Frames 
        	begin
            @(negedge i_sclgen_scl_tb )
-              #10 i_sdahnd_rx_sda_tb = DATA2[i-1] ;  
+              #20 i_sdahnd_rx_sda_tb = DATA2[i-1] ;  
         end
         i_sdahnd_rx_sda_tb = 'bz;
 
