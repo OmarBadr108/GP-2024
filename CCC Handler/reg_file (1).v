@@ -30,7 +30,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 `default_nettype none
 
-module reg_file #(parameter WIDTH = 8 , DEPTH = 2**16 , ADDR = 16 )
+module reg_file #(parameter WIDTH = 8 , DEPTH = 2**12 , ADDR = 12 )
 
 	( input  wire			     i_regf_clk  		  ,   // clock , connected to the 50mhz clock , input from controller
 	  input  wire			     i_regf_rst_n	     ,  	// active low reset , input from controller
@@ -90,6 +90,29 @@ localparam EVENT_DISABLE_BYTE_ADDRESS=10'd392; //Disable Target Events Command B
  localparam TGTS_COUNT_REG_FILE = 9'd35 ;
  localparam GETSTATUS_MSB_ADDR_REG_FILE = 9'd408 ;
  localparam DISEC_DATA_ADDR_REG_FILE  =  9'd406   ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////// 2024 parameters //////////////////////////////////////////
+ localparam first_location 		 	  = 'd1000 ; // 2024
+
+
+
 //--------------------------------- ----------------------------------- ------------------------------------------	
 	
 
@@ -227,6 +250,38 @@ assign o_regf_hj_support  = reg_array[409][0]   ;
  		  end
 
  	end
+
+///////////////////////////////////////// 2024 ////////////////////////////////////////////////////////
+
+assign reg_array[firs]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 endmodule

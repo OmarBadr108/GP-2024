@@ -1,0 +1,91 @@
+m255
+K4
+z2
+!s99 nomlopt
+!s11f vlog 2021.1 2021.01, Jan 19 2021
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler
+T_opt
+!s110 1709047725
+V^EimBii_EFlP?GL9145322
+04 5 4 work tx_tb fast 0
+=1-3c2c30a457d5-65ddffac-361-4d88
+!s124 OEM100
+o-quiet -auto_acc_if_foreign -work work
+Z1 tCvgOpt 0
+n@_opt
+OL;O;2021.1;73
+R0
+vscl_generation
+Z2 !s110 1709047803
+!i10b 1
+!s100 `Y0Fd4C>ZTJlnmoNMj0Xh0
+I_^A`njM?`<@5l3;na1;8Z3
+Z3 dC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Tx
+w1708522074
+8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Tx/scl_generation.v
+FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Tx/scl_generation.v
+!i122 5
+L0 34 134
+Z4 VDg1SIo80bB@j0V0VzS_@n1
+Z5 OL;L;2021.1;73
+r1
+!s85 0
+31
+Z6 !s108 1709047803.000000
+!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Tx/scl_generation.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Tx/scl_generation.v|
+!i113 0
+Z7 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1
+vtx
+R2
+!i10b 1
+!s100 ZUn3Z5SR=SO25zfkb^3AC0
+II`K6Kg<0lzK>z_W3F=<2d1
+R3
+w1709047424
+8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Tx/Tx.v
+FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Tx/Tx.v
+!i122 4
+L0 1 422
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Tx/Tx.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Tx/Tx.v|
+!i113 0
+R7
+R1
+vtx_tb
+DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+R2
+!i10b 1
+!s100 HbIeZM70XO1jBW1d^EPnB2
+Il60]B:dffPAQ@=9RPDD@l3
+S1
+R3
+w1709047652
+8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Tx/tb_sv.sv
+FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Tx/tb_sv.sv
+!i122 3
+L0 1 173
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Tx/tb_sv.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Tx/tb_sv.sv|
+!i113 0
+o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1
