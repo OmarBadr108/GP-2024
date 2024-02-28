@@ -67,7 +67,7 @@ initial
 
 	    // checking done flag and changing to the new mode
 
-	    //#(30)
+	    #(CLK_PERIOD)
 
 
 	    if (o_ddrccc_rx_mode_done_tb )
@@ -82,10 +82,10 @@ initial
 		//@(negedge i_sys_clk_tb)
 	    // 2. Reading First Data Byte
 	    //#(CLK_PERIOD)
- @(posedge o_ddrccc_rx_mode_done_tb)
+ @(negedge o_ddrccc_rx_mode_done_tb)
 	    i_ddrccc_rx_en_tb   = 1'b1; 
 	    i_ddrccc_rx_mode_tb = 4'b0011;   // Deserializing byte mode
-       #10
+       
 	    i_sdahnd_rx_sda_tb = DATA[0] ;
 
 	    for (i=2 ; i<9 ; i=i+1) //8 bits 

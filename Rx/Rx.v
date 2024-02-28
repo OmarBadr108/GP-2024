@@ -67,8 +67,8 @@ localparam [3:0]
                      DESERIALIZING_BYTE  = 4'b0011  ,                   
                      CHECK_TOKEN         = 4'b0101  ,
                      CHECK_PAR_VALUE     = 4'b0110  ,
-                     CHECK_CRC_VALUE     = 4'b0111  ,
-                     ERROR               = 4'b1000  ;
+                     CHECK_CRC_VALUE     = 4'b0111  ;
+                     
 
 
 
@@ -96,6 +96,7 @@ reg rx_mode_done_flag;
 
 
 /////////////////////////////////////////////////////////////////////////////
+/*
 always @(posedge i_sys_clk or negedge i_sys_rst) 
  begin
   if (!i_sys_rst) 
@@ -113,9 +114,9 @@ always @(posedge i_sys_clk or negedge i_sys_rst)
    end
   end
  end
+*/
 
-
-assign count_done = (count==0)? 1'b1:1'b0 ;
+assign count_done = (count==7)? 1'b1:1'b0 ;
 
 
 always @(*)  
@@ -124,14 +125,14 @@ begin
     data_paritychecker[15:8] = o_regfcrc_rx_data_out_temp;
    else if ((byte_num == 1) &&  (count_done))
     data_paritychecker[7 :0]  = o_regfcrc_rx_data_out_temp;
-   else
-   data_paritychecker = 0; ////////////////////////////to be revisit 
+   //else
+   //data_paritychecker = 0; ////////////////////////////to be revisit 
 
 
 end
 
 ///-------------------------Delaying the rx mode done signal by one cycle for synchronization-----------------///
-always@(posedge i_sys_clk or negedge i_sys_rst)
+/*always@(posedge i_sys_clk or negedge i_sys_rst)
   begin
 
     if(!i_sys_rst)
@@ -144,17 +145,17 @@ always@(posedge i_sys_clk or negedge i_sys_rst)
          o_ddrccc_rx_mode_done <= 1'b1;
 
          ////fabraka
-             count_en              <= 1'b1;
-             count_value           <=3'd7;
+             //count_en              <= 1'b1;
+             //count_value           <=3'd7;
       end 
     else
     begin
       o_ddrccc_rx_mode_done <= 1'b0;
-      count_en              <= 1'b0;
-      count_value           <=3'd7;
+      //count_en              <= 1'b0;
+      //count_value           <=3'd7;
       end
   end
-
+*/
 
 
 
@@ -172,8 +173,8 @@ begin
     o_ddrccc_pre          <= 1'bz; //should be editted
     o_ddrccc_error        <= 1'b0;
     o_crc_en              <= 1'b0;   
-    
-    count_en              <= 1'b0;
+    count                 <= 'b0;
+    byte_num              <= 1'b0;
     //count_value         <= 3'b0;
    end
 
@@ -181,13 +182,13 @@ begin
   else if (i_ddrccc_rx_en) 
    begin
     o_regfcrc_rx_data_out <= 8'd0;  
-    //o_ddrccc_rx_mode_done <= 1'b0;
+    o_ddrccc_rx_mode_done <= 1'b0;
     //o_ddrccc_pre          <= 1'bz;   //should be editted
     o_ddrccc_error        <= 1'b0;
     o_crc_en              <= 1'b0; 
-    count_en              <= 1'b0;
+    //count             <= 'b0;
     //count_value           <= 3'b0;
-    byte_num              <= 1'b0;
+    //byte_num              <= 1'b0;
     rx_mode_done_flag     <= 1'b0;
    case(i_ddrccc_rx_mode) 
 
@@ -195,20 +196,22 @@ begin
                          if (SCL_edges)
                           begin
                            o_ddrccc_pre          <= i_sdahnd_rx_sda;
-                           //o_ddrccc_rx_mode_done <= 1'b1;
-                           rx_mode_done_flag     <= 1'b1;
-                           byte_num              <=1'b0;
-                           o_regfcrc_rx_data_out_temp[count] <= i_sdahnd_rx_sda;
+                           o_ddrccc_rx_mode_done <= 1'b1;
+                           //rx_mode_done_flag     <= 1'b1;
+                           byte_num              <= 1'b0;
+                           count                  <= 'b0;
                           end
                         end
     
-     DESERIALIZING_BYTE :begin
+  /*   DESERIALIZING_BYTE :begin
                          count_value <=3'd7;
                          count_en    <=1'b1;
                          o_ddrccc_pre <= 'bz;
                          //rx_mode_done_flag <= 1'b0;
                          o_ddrccc_rx_mode_done <= 1'b0;
                          //o_regfcrc_rx_data_out_temp[count] <= i_sdahnd_rx_sda;
+
+
                          if (SCL_edges)
                           
                             o_regfcrc_rx_data_out_temp[count] <= i_sdahnd_rx_sda;
@@ -223,13 +226,52 @@ begin
                              count_en<=1'b0;
                              end 
 
-                            else 
+                          else 
                              o_ddrccc_rx_mode_done <= 1'b0;
 
                              //rx_mode_done_flag <= 1'b0;
                          
 
                         end
+*/
+
+      DESERIALIZING_BYTE: begin
+                            
+                            o_ddrccc_rx_mode_done <= 1'b0;
+                            //o_regfcrc_rx_data_out_temp[7] <= i_sdahnd_rx_sda;
+                            o_ddrccc_pre <= 'bz;
+
+                            if(SCL_edges)
+                              begin
+                                //o_regfcrc_rx_data_out_temp <= {i_sdahnd_rx_sda,o_regfcrc_rx_data_out_temp[7:1]};
+                                o_regfcrc_rx_data_out_temp['d7 - count] <= i_sdahnd_rx_sda;
+
+                                if(count == 'd7)
+                                begin
+                                  o_ddrccc_rx_mode_done <= 1'b1;
+                                end
+                                else 
+                                  begin
+                                  o_ddrccc_rx_mode_done <= 1'b0;
+                                  end 
+                              end
+
+                            else 
+                              begin
+                              count <= count + 1; 
+                              o_ddrccc_rx_mode_done <= 1'b0;
+                              if(count == 'd7)
+                                begin
+                                  count <= 'b0; 
+                                  o_regfcrc_rx_data_out <= o_regfcrc_rx_data_out_temp;
+                                  byte_num <= 'b1;
+                                end
+
+                              
+                              end
+
+
+                          end
 
     /*DESERIALIZING_BYTE :begin
                     
@@ -266,77 +308,88 @@ begin
 
 
     CHECK_TOKEN :       begin
-                         count_value<=3'd3;
-                         count_en<=1'b1;
-                         
+                         //count <= 'b0;
+                         o_ddrccc_rx_mode_done <= 1'b0;
+
                          if(SCL_edges)
                           begin
-                           token_value_temp[count] <= i_sdahnd_rx_sda;
-                           if(count==0)
-                            begin
-                             o_ddrccc_rx_mode_done <= 1'b1;
-                             count_en<=1'b0;
-                             if(token_value_temp!= 4'hC)
-                               o_ddrccc_error<=1'b1;
-                              else
-                               o_ddrccc_error<=1'b0;
-                            end 
+                            token_value_temp['d3 - count] <= i_sdahnd_rx_sda;
+
+                            if(count == 'd3)
+                              begin
+                                o_ddrccc_rx_mode_done <= 1'b1;
+                                count <= 'b0; 
+
+                                if(token_value_temp != 4'hC)
+                                  o_ddrccc_error<=1'b1;
+                                else
+                                  o_ddrccc_error<=1'b0;
+
+                              end 
                           
-                           else 
-                             o_ddrccc_rx_mode_done <= 1'b0;
                           end
+
+                          else 
+                             count <= count + 1'b1;
+                          
                         end 
  
     CHECK_PAR_VALUE :    begin
-                         count_value<=3'd2;
-                         count_en<=1'b1;
-                         
+                         count <= 'b0;
+                         o_ddrccc_rx_mode_done <= 1'b0;
+
                          if(SCL_edges)
                           begin
-                           parity_value_temp[count] <= i_sdahnd_rx_sda;
-                           if(count==0)
-                            begin
-                             o_ddrccc_rx_mode_done <= 1'b1;
-                             count_en<=1'b0;
-                            
-                             if(parity_value_calc != parity_value_temp)
-                               o_ddrccc_error<=1'b1;
-                              else
-                               o_ddrccc_error<=1'b0;
-                            end 
-                          
-                           else 
-                             o_ddrccc_rx_mode_done <= 1'b0;
-                             
+                           parity_value_temp['d1 - count] <= i_sdahnd_rx_sda;
+
+                              if(count == 'd1)
+                                begin
+                                  o_ddrccc_rx_mode_done <= 1'b1;
+                                  count <= 'b0; 
+                                  if(parity_value_calc != parity_value_temp)
+                                    o_ddrccc_error<=1'b1;
+                                  else
+                                    o_ddrccc_error<=1'b0;
+                                end 
                           end
+                          
+                          else 
+                            begin
+                              count <= count + 1'b1;
+                              //o_ddrccc_rx_mode_done <= 1'b0; 
+                            end
                         end 
  
  
     CHECK_CRC_VALUE :   begin
-                         count_value<=3'd5;
-                         count_en<=1'b1;
+
+                         //count <= 'b0;
                          o_crc_en<=1'b1;
+
                          if(SCL_edges)
-                          begin
-                           CRC_value_temp[count] <= i_sdahnd_rx_sda;
-                           
-                           if(count==0)
                             begin
-                             o_ddrccc_rx_mode_done <= 1'b1;
-                             count_en<=1'b0;
-                      
-                             if(i_crc_valid)
+                              CRC_value_temp['d5 - count] <= i_sdahnd_rx_sda;
+                           
+                              if(count == 'd5)
                                 begin
-                                 if(CRC_value_temp!= i_crc_value)
-                                   o_ddrccc_error<=1'b1;
-                                 else
-                                   o_ddrccc_error<=1'b0;
-                                end
-                            end 
-                           else 
-                             o_ddrccc_rx_mode_done <= 1'b0;   
+                                  o_ddrccc_rx_mode_done <= 1'b1;
+                            
+                                  if(i_crc_valid)
+                                    begin
+                                      if(CRC_value_temp!= i_crc_value)
+                                        o_ddrccc_error<=1'b1;
+                                      else
+                                        o_ddrccc_error<=1'b0;
+                                    end
+                                  end 
                           end
-                        end 
+                          
+                          else 
+                           begin
+                             count <= count + 1'b1;   
+                           end
+                         
+                        end
  
  
  
@@ -349,7 +402,7 @@ begin
                  o_crc_en              <= 1'b0; 
                  count_en              <= 1'b0;
                  //count_value           <= 3'b0;
-                 byte_num              <=1'b0 ;        
+                 //byte_num              <=1'b0 ;        
                  end
 
    
