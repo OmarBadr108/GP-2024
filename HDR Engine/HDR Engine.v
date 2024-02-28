@@ -49,10 +49,15 @@ module hdr_engine (
     //output  reg   [15:0]    o_DATA_LENGTH                         
 
     );
+/////////////parameters////////////
+localparam  IDLE          = 2'b00;
+localparam  CCC           = 2'b01;
+localparam  HDR_MODE      = 2'b10;
 
+reg current_state, next_state;
 //--------------------------------- main ------------------------------------------------
 
-always @(posedge i_sys_clk or negedge i_sys_clk or negedge i_sys_rst_n ) 
+always @(posedge i_sys_clk or negedge i_sys_rst_n ) 
   begin: hdr_engine_fsm
     if (!i_sys_rst_n) 
         begin
@@ -63,12 +68,46 @@ always @(posedge i_sys_clk or negedge i_sys_clk or negedge i_sys_rst_n )
             //o_TID                           <= 4'b0   ;
             //o_ERR_STATUS                    <= 8'b0   ;
             //o_DATA_LENGTH                   <= 16'b0  ;
-
-            //state                           <= IDLE;
+            current_state                   <= IDLE;
         end
 
-    else
-        begin
+    else if (i_i3cengine_hdrengine_en)
+      begin
+        current_state <= next_state;
+        case (current_state)
+          IDLE : begin
+              if(i_CP) begin
+                  o_ccc_en        <= 1'b1 ;
+                  next_state      <= CCC;
+                  end
+          end
+          CCC : begin
+            if((i_TOC && i_ccc_done)||(i_MODE != 'd6)) begin
+                  o_ccc_en    <= 1'b0 ;
+                  o_i3cengine_hdrengine_done      <= 1'b1 ;
+                  if(!i_CP)
+                    ///go to special address 900 instead of 1000 to handle end proccedure of dummy value
+                    next_state <= CCC;
+                  else
+                    next_state <= 
+                      end
+            else
+                  o_i3cengine_hdrengine_done      <= 1'b0 ;
+
+          end
+
+
+        
+        endcase
+      end
+
+        
+end 
+endmodule
+
+
+
+/*begin
             if (i_i3cengine_hdrengine_en) 
             begin
                 if(i_CP) begin
@@ -105,6 +144,4 @@ always @(posedge i_sys_clk or negedge i_sys_clk or negedge i_sys_rst_n )
                 end
 
             
-        end
-end 
-endmodule
+        end*/
