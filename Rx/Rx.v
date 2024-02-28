@@ -48,8 +48,8 @@ output  reg  [7:0]        o_regfcrc_rx_data_out,
 output  reg               o_ddrccc_rx_mode_done,
 output  reg               o_ddrccc_pre,
 output  reg               o_ddrccc_error,
-output  reg               o_crc_en                 
-
+output  reg               o_crc_en,                 
+output  reg               o_crc_data_valid
 );
 
 
@@ -147,6 +147,7 @@ begin
     o_crc_en              <= 1'b0;   
     count                 <= 'b0;
     byte_num              <= 1'b0;
+    o_crc_data_valid      <=  'b0;
    end
 
 
@@ -176,7 +177,8 @@ begin
                             
                             o_ddrccc_rx_mode_done <= 1'b0;
                             o_ddrccc_pre <= 'bz;
-
+                            o_crc_data_valid <= 'b0;
+                            o_crc_en         <=  1'b1;
                             if(SCL_edges)
                               begin
                                 o_regfcrc_rx_data_out_temp['d7 - count] <= i_sdahnd_rx_sda;
@@ -199,6 +201,7 @@ begin
                                 begin
                                   count <= 'b0; 
                                   o_regfcrc_rx_data_out <= o_regfcrc_rx_data_out_temp;
+                                  o_crc_data_valid <= 1'b1;
                                   byte_num <= 'b1;
                                 end
 

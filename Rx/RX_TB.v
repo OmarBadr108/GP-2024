@@ -18,7 +18,7 @@ wire                o_ddrccc_rx_mode_done_tb	;
 wire                o_ddrccc_pre_tb				;
 wire                o_ddrccc_error_tb			;
 wire                o_crc_en_tb        		;         
-
+wire 					  o_crc_data_valid_tb      ; 
 
 
 parameter CLK_PERIOD  = 20;
@@ -232,7 +232,8 @@ RX U0 (
 	.o_ddrccc_rx_mode_done		(o_ddrccc_rx_mode_done_tb)	,
 	.o_ddrccc_pre				(o_ddrccc_pre_tb)			,
 	.o_ddrccc_error				(o_ddrccc_error_tb)			,
-	.o_crc_en					(o_crc_en_tb)                 
+	.o_crc_en					(o_crc_en_tb)       ,
+	.o_crc_data_valid       (o_crc_data_valid_tb)          
 
 );
 
