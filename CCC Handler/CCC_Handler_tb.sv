@@ -11,7 +11,7 @@ module CCC_Handler_tb ();
 // 1-signal declaration 
 	
 	// common signals 
-	reg        i_sys_clk_tb = 0 , i_rst_n_tb  ;
+	reg        i_sys_clk_tb = 1 , i_rst_n_tb  ;
 
 	///////////////////////// scl generation ///////////////////////////////
 	reg 	   i_scl_gen_stall_tb , i_sdr_ctrl_scl_idle_tb , i_timer_cas_tb , i_sdr_scl_gen_pp_od_tb ;
@@ -27,7 +27,7 @@ module CCC_Handler_tb ();
 	reg 	   i_tx_mode_done_tb ,o_tx_en_tb ;
 	reg  [3:0] o_tx_mode_tb ;
  	// related to rx
-	reg 	   i_rx_mode_done_tb ,i_rx_second_pre_tb ,i_rx_first_pre_tb,i_rx_error_tb ,o_rx_en_tb ;
+	reg 	   i_rx_mode_done_tb ,i_rx_pre_tb ,i_rx_error_tb ,o_rx_en_tb ;
 	reg  [2:0] o_rx_mode_tb ;
 	// related to regfile (configuration)
 
@@ -61,6 +61,8 @@ module CCC_Handler_tb ();
 	parameter CLK_PERIOD = 20 ; 	 	 	 
 	always #(CLK_PERIOD/2) i_sys_clk_tb = ~i_sys_clk_tb ;
 
+	// scl ddr clk = 25 Mhz
+	parameter DDR_CLK_PERIOD = 40 ;
 
 // 3-DUT instatiation 
 
@@ -71,8 +73,8 @@ module CCC_Handler_tb ();
 		.i_bitcnt_number		(o_cnt_bit_count_tb),
 		.i_tx_mode_done 		(i_tx_mode_done_tb),
 		.i_rx_mode_done 		(i_rx_mode_done_tb),
-		.i_rx_second_pre 		(i_rx_second_pre_tb),
-		.i_rx_first_pre 	 	(i_rx_first_pre_tb),
+		.i_rx_pre 				(i_rx_pre_tb),
+		//.i_rx_first_pre 	 	(i_rx_first_pre_tb),
 		.i_sclstall_stall_done  (i_sclstall_stall_done_tb),
 		.i_rx_error 	 	    (i_rx_error_tb),
 		.i_frmcnt_last_frame 	(i_frmcnt_last_frame_tb),
@@ -131,75 +133,224 @@ module CCC_Handler_tb ();
 		.i_bitcnt_en     (i_bitcnt_en_tb),
 		.i_scl_pos_edge  (scl_pos_edge_tb),
 		.i_scl_neg_edge  (scl_neg_edge_tb),
-		.i_cccnt_err_rst(o_bitcnt_err_rst_tb),
+		.i_cccnt_err_rst (o_bitcnt_err_rst_tb),
 		.o_cnt_bit_count (o_cnt_bit_count_tb)
 		
 	);
+/*
+		wire [15:0]	i_regf_DATA_LEN_tb ;
+		wire    	i_fcnt_no_frms_tb ;
+		wire 	 	i_fcnt_en_tb ;
+		wire  	 	o_fcnt_last_frame_tb ;
+		
 
+
+		frame_counter DUT3 (
+		.i_fcnt_no_frms (i_fcnt_no_frms_tb),
+		.i_fcnt_clk (i_sys_clk_tb),
+		.i_fcnt_rst_n (i_rst_n_tb),
+		.i_fcnt_en (o_frmcnt_en_tb),
+		.i_regf_CMD_ATTR (i_regf_CMD_ATTR_tb),
+		.i_regf_DATA_LEN (i_regf_DATA_LEN_tb),
+		.i_regf_DTT (i_regf_DTT_tb),
+		.i_cnt_bit_count (o_cnt_bit_count_tb),
+
+		.o_fcnt_last_frame (o_fcnt_last_frame_tb),
+		.o_cccnt_last_frame (i_frmcnt_last_frame_tb)
+
+	);
+*/
 // 4-initial block 
+/* IMPORTANT NOTES :
+		1- (General) when driving input to the block which is considered as output of other block u must drive it at posedge not at negdge .
+		2- (specifically for our system) : to predict the time to set the tx mode done u count like that >>
+				(no. of SCL_DDR clk cycle - 1) + 1 sys clk  
+
+*/
 	initial begin 
 		// time zero 
-		i_rst_n_tb    = 1'b1 ; // not asserted 
+		i_rst_n_tb    		   = 1'b1 ; // not asserted 
 		i_scl_gen_stall_tb     = 1'b0 ;
 		i_sdr_ctrl_scl_idle_tb = 1'b0 ;
 		i_timer_cas_tb 	 	   = 1'b0 ;
 		//i_sdr_scl_gen_pp_od_tb = 1'b1 ;
 		 
 		/////////////////////////////// CCC Handler //////////////////////////////
-		i_frmcnt_last_frame_tb = 1'b0 ;
+		i_frmcnt_last_frame_tb 	 = 1'b0 ;
 		i_sclstall_stall_done_tb = 1'b0 ;
-		i_tx_mode_done_tb = 1'b0 ;
-		i_rx_mode_done_tb = 1'b1 ;  // important
-		i_rx_second_pre_tb = 1'b0 ;  // important
-		i_rx_first_pre_tb = 1'b1 ; 	 // in case of read operation
-		i_rx_error_tb = 1'b0 ;
+		i_tx_mode_done_tb 	 	 = 1'b0 ;
+		i_rx_mode_done_tb 	 	 = 1'b0 ;  // important
+		i_rx_pre_tb 	 	     = 1'b0 ;  // important
+		i_rx_error_tb 	 	     = 1'b0 ;
 
 		// configuration 
-		i_regf_RnW_tb = 1'b0 ;  	 	// write 
-		i_regf_TOC_tb = 1'b0 ; 	 	 	// not the last command discriptor
-		i_regf_WROC_tb = 1'b0 ; 	 	// response status is not required 
-		i_regf_DBP_tb = 1'b0 ; 	 	 	// defining byte is not present 
-		i_regf_SRE_tb = 1'b0 ; 	 		// short read is not considered as error 
-		i_regf_CMD_ATTR_tb = 3'd0 ; 	// 0 regular  , 1 immediate 
-		i_regf_CMD_tb = 8'h89 ;	 	 	//  ccc value set max write length (Direct)
-		i_regf_DEV_INDEX_tb = 5'd0 ;
-		i_regf_DTT_tb = 3'd2 ; 	 	 	// only 2 payload without defining byte 
+		i_regf_RnW_tb 		= 1'b0 ;  	 	// write 
+		i_regf_TOC_tb 		= 1'b0 ; 	 	 	// not the last command discriptor
+		i_regf_WROC_tb 		= 1'b0 ; 	 	// response status is not required 
+		i_regf_DBP_tb 		= 1'b0 ; 	 	 	// defining byte is not present 
+		i_regf_SRE_tb 		= 1'b0 ; 	 		// short read is not considered as error 
+		i_regf_CMD_ATTR_tb  = 3'd0 ; 	// 0 regular  , 1 immediate 
+		i_regf_DTT_tb 		= 3'd2 ; 	 	 	// only 2 payload without defining byte 
 
-		i_sclstall_stall_done_tb = 1'b1 ;
-		i_engine_en_tb = 1'b0 ;
+		i_sclstall_stall_done_tb = 1'b0 ;
+		i_engine_en_tb 			 = 1'b0 ;
 
 
-		#(3*CLK_PERIOD);
-		i_rst_n_tb    = 1'b0 ; // asserted
+		
+		system_reset();
 
-		#(3*CLK_PERIOD);
-		i_rst_n_tb     = 1'b1 ; // not asserted
 		// first things first 
+		@(posedge i_sys_clk_tb)
 		i_engine_en_tb = 1'b1 ;
-
-		i_tx_mode_done_tb = 1'b1 ;
-
-		#(500 * CLK_PERIOD);
-
-
-		// test case 2 put TOC = 1 check exit pattern state
-		i_regf_TOC_tb = 1'b1 ; 	 	 	// not the last command discriptor
-		#(500 * CLK_PERIOD)  ;
-
-
-
-		// test case 3 Broadcast
-		i_frmcnt_last_frame_tb = 1'b1 ;
-		i_regf_TOC_tb = 1'b0 ;
-		#(500 * CLK_PERIOD)  ;
-
-		// test case 3 Broadcast
-		i_frmcnt_last_frame_tb = 1'b1 ;
-		i_regf_TOC_tb = 1'b1 ;
 		
 
 
-		#(5000*CLK_PERIOD);
+		/* first test case  : braodcast sequence
+							  regular 
+							  no defining byte 
+							  even number of bytes
+
+		*/
+		// configuration 
+		i_regf_CMD_tb 	 	= 8'h01 ;	 	 	//  broadcast
+		//i_regf_RnW_tb 		= 1'b0 ;  	 	// write 
+		i_regf_TOC_tb 		= 1'b0 ; 	 	 	// not the last command discriptor
+		i_regf_WROC_tb 		= 1'b0 ; 	 		// response status is not required 
+		i_regf_DBP_tb 		= 1'b0 ; 	 	 	// defining byte is not present 
+		i_regf_SRE_tb 		= 1'b0 ; 	 		// short read is not considered as error 
+		i_regf_CMD_ATTR_tb  = 3'd0 ; 		    // 0 regular  , 1 immediate 
+		//i_regf_DTT_tb 		= 3'd2 ; 	 	// only 2 payload without defining byte 
+		
+		i_sclstall_stall_done_tb = 1'b0 ;
+
+		// special preamble 
+		DDR_clk_wait(2);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// Rnw 1 bit = 0.5 DDr
+
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 reserved bits == 6.5 DDR clk cycles
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 addres + 1 p.a == 7.5 DDR clk cycles
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 first preamble 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 second preamble 
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		i_rx_pre_tb	 	  = 1'b0 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		DDR_clk_not_pulse(i_rx_pre_tb);
+
+
+		// 8 CCC value 
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 8 ZEROS 
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		i_frmcnt_last_frame_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		system_clk_pulse(i_frmcnt_last_frame_tb) ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+		DDR_clk_wait(50);
+
 		$stop ;
 	end
+
+
+
+
+
+	task system_reset ;
+		begin 
+			@(negedge i_sys_clk_tb)
+			i_rst_n_tb = 1'b0 ;
+			#(CLK_PERIOD) i_rst_n_tb = 1'b1 ;
+		end 
+	endtask
+
+	task system_clk_pulse (inout logic pulse_signal) ;
+		begin 
+			//pulse_signal = 1'b1 ;
+			#(CLK_PERIOD) pulse_signal = 1'b0 ;
+		end 
+	endtask
+
+	task DDR_clk_pulse (inout logic pulse_signal );
+		begin 
+			//pulse_signal = 1'b1 ;
+			#(DDR_CLK_PERIOD) pulse_signal = 1'b0 ;
+		end 
+	endtask
+
+	task DDR_clk_wait (input logic [15:0] no_of_cycles);
+		begin 
+			repeat(no_of_cycles) begin
+				#(DDR_CLK_PERIOD);
+			end
+		end 
+	endtask
+
+	task sys_clk_wait (input logic [15:0] no_of_cycles);
+		begin 
+			repeat(no_of_cycles) begin
+				#(CLK_PERIOD);
+			end
+		end 
+	endtask
+
+	task DDR_clk_not_pulse (inout logic not_pulse_signal);
+		begin 
+			#(DDR_CLK_PERIOD) not_pulse_signal = 1'b1 ;
+		end 
+	endtask
+
 endmodule 
