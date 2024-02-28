@@ -157,7 +157,7 @@ begin
     //o_ddrccc_pre          <= 1'bz;   //should be editted
     o_ddrccc_error        <= 1'b0;
     o_crc_en              <= 1'b0; 
-    rx_mode_done_flag     <= 1'b0;
+    //rx_mode_done_flag     <= 1'b0;
    case(i_ddrccc_rx_mode) 
 
     PREAMBLE :          begin
@@ -238,7 +238,7 @@ begin
                         end 
  
     CHECK_PAR_VALUE :    begin
-                         count <= 'b0;
+                         //count <= 'b0;
                          o_ddrccc_rx_mode_done <= 1'b0;
 
                          if(SCL_edges)
