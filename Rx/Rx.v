@@ -165,14 +165,20 @@ begin
    case(i_ddrccc_rx_mode) 
 
     PREAMBLE :          begin
+                          count                  <= 'b0;
                          if (SCL_edges)
                           begin
-                           o_ddrccc_pre          <= i_sdahnd_rx_sda;
-                           o_ddrccc_rx_mode_done <= 1'b1;
+                           //o_ddrccc_pre          <= i_sdahnd_rx_sda;
+                           //o_ddrccc_rx_mode_done <= 1'b1;
                            //rx_mode_done_flag     <= 1'b1;
                            byte_num              <= 1'b0;
                            count                  <= 'b0;
                           end
+                          else 
+                          begin
+                            o_ddrccc_rx_mode_done <= 1'b1;
+                            o_ddrccc_pre          <= i_sdahnd_rx_sda;
+                            end
                         end
 
 
@@ -182,30 +188,33 @@ begin
                             o_ddrccc_pre <= 'bz;
                             o_crc_data_valid <= 'b0;
                             o_crc_en         <=  1'b1;
+
                             if(SCL_edges)
                               begin
                                 o_regfcrc_rx_data_out_temp['d7 - count] <= i_sdahnd_rx_sda;
-
+/*
                                 if(count == 'd7)
                                 begin
-                                  o_ddrccc_rx_mode_done <= 1'b1;
+                                  o_ddrccc_rx_mode_done <= 1'b1;   
                                 end
                                 else 
                                   begin
                                   o_ddrccc_rx_mode_done <= 1'b0;
-                                  end 
-                              end
+                                  end */
+                              end 
 
                             else 
                               begin
                               count <= count + 1; 
                               o_ddrccc_rx_mode_done <= 1'b0;
+
                               if(count == 'd7)
                                 begin
                                   count <= 'b0; 
                                   o_regfcrc_rx_data_out <= o_regfcrc_rx_data_out_temp;
                                   o_crc_data_valid <= 1'b1;
                                   byte_num <= 'b1;
+                                  o_ddrccc_rx_mode_done <= 1'b1;
                                 end
 
                               
@@ -283,7 +292,8 @@ begin
                               if(count == 'd5)
                                 begin
                                   o_ddrccc_rx_mode_done <= 1'b1;
-                            
+                                  count <= 'b0;
+
                                   if(i_crc_valid)
                                     begin
                                       if(CRC_value_temp!= i_crc_value)
