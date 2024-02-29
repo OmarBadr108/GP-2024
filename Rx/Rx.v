@@ -246,6 +246,7 @@ begin
     CHECK_PAR_VALUE :    begin
                          //count <= 'b0;
                          o_ddrccc_rx_mode_done <= 1'b0;
+                         o_ddrccc_error <= 1'b0;
 
                          if(SCL_edges)
                           begin
