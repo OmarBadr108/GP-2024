@@ -159,7 +159,10 @@ begin
     o_ddrccc_error        <= 1'b0;
     o_crc_en              <= 1'b0; 
     //rx_mode_done_flag     <= 1'b0;
+<<<<<<< Updated upstream
     o_crc_data_valid      <= 1'b0;
+=======
+>>>>>>> Stashed changes
    case(i_ddrccc_rx_mode) 
 
     PREAMBLE :          begin
