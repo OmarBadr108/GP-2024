@@ -44,10 +44,6 @@ module hdr_engine (
     output  reg             o_ddrmode_en                          ,
     output  reg             o_ccc_en                              ,
     output  reg   [7:0]     o_regf_addr_special
-    //config
-    //output  reg   [3:0]     o_TID                                 ,
-    //output  reg   [7:0]     o_ERR_STATUS                          ,
-    //output  reg   [15:0]    o_DATA_LENGTH                         
 
     );
 /////////////parameters////////////
