@@ -37,7 +37,6 @@ module hdr_engine (
     input   wire            i_ddr_mode_done                       ,
     input   wire            i_TOC                                 , //term of completion if 0 restart/ 1 exit needed for exit
     input   wire            i_CP                                  , // Cmnd present=1 if CCC 0 for Normal Transcation
-    //input   wire  [3:0]     i_TID                                 , //Transaction id for each CCC
     input   wire  [2:0]     i_MODE                                ,
     //to_blocks
     output  reg             o_i3cengine_hdrengine_done            ,
@@ -83,10 +82,14 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
               end
           end
           CCC : begin
-            if((i_TOC && i_ccc_done)||(i_MODE != 'd6)) begin
+            if((i_TOC && i_ccc_done)||(i_MODE != 'd6)) begin //toc=1 means end the ddrmode
                   o_ccc_en    <= 1'b0 ;
+                  //ccc_done <= 1'b1 ;
+                  o_i3cengine_hdrengine_done      <= 1'b1 ;
+            end
+            else if ((!i_TOC && i_ccc_done)&&(i_MODE == 'd6)) begin
                   ccc_done <= 1'b1 ;
-
+                  o_ccc_en   <= 1'b0 ;
                   if(!i_CP) 
                   begin
                     ccc_done <= 1'b0 ;
@@ -109,6 +112,14 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
             if ((i_TOC && i_ddr_mode_done)||(i_MODE != 'd6)) begin
               o_ddrmode_en    <= 1'b0 ;
               o_i3cengine_hdrengine_done      <= 1'b1 ;
+              if(i_CP) begin
+                o_ccc_en   <= 1'b1 ;
+                next_state <= CCC ;
+              end
+              else begin
+                o_ddrmode_en <= 1'b1 ;
+                next_state   <= DDR_MODE ;
+              end
             end
             else
               begin
