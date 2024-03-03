@@ -18,11 +18,11 @@ wire                o_ddrccc_rx_mode_done_tb	;
 wire                o_ddrccc_pre_tb				;
 wire                o_ddrccc_error_tb			;
 wire                o_crc_en_tb        		;         
-
+wire 					  o_crc_data_valid_tb      ; 
 
 
 parameter CLK_PERIOD  = 20;
-integer i;
+integer i; 
 
 // Internal Wires
 wire    			    i_sclgen_scl_tb         	;
@@ -34,9 +34,10 @@ reg					i_scl_gen_stall_tb          ;
 reg 					i_sdr_ctrl_scl_idle_tb		;
 reg 					i_timer_cas_tb				;
 
-wire [7:0] DATA 		= 'b10101101;
-wire [7:0] DATA2 		= 'b11001010;
-
+wire [7:0] DATA 				= 'b10100001;
+wire [7:0] DATA2 				= 'b11010100;
+wire [3:0] TOKEN     		= 'b0011;
+wire [4:0] CRC_VALUE 		= 'b10101;
 // Clock Generation
  always #(CLK_PERIOD/2) i_sys_clk_tb  = ~ i_sys_clk_tb ;
 
@@ -53,21 +54,25 @@ initial
 	    reset();
 
 
-	    //-----------TEST CASE 1 : Normal Transaction >> Read -----------//
+	    //--------------------------------------TEST CASE 1 : Normal Transaction >> Read ----------------------------------//
 
-	    // 1. Reading ACK bit of the First Data Word
+
+
+	    /////////////// 1. Reading ACK bit of the First Data Word /////////////////////
+
 	    #(7*CLK_PERIOD);
-	    @(negedge i_sys_clk_tb)
+
+	    @(posedge i_sys_clk_tb)
+
 	    i_ddrccc_rx_en_tb   = 1'b1; 
 	    i_ddrccc_rx_mode_tb = 4'b0000;  // Preamble state to get the ack bit
 
-	    #(CLK_PERIOD/2)
+
 	    i_sdahnd_rx_sda_tb  =  'b0;       // driving sda low (ACK)
 
 
-	    // checking done flag and changing to the new mode
 
-	    //#(10)
+	    /*#(2*CLK_PERIOD)
 
 
 	    if (o_ddrccc_rx_mode_done_tb )
@@ -78,43 +83,102 @@ initial
 	    	begin
 	    		$display("Preamble is not received correctly");
 	    	end 
-    
-		//@(negedge i_sys_clk_tb)
-	    // 2. Reading First Data Byte
-	    //#(CLK_PERIOD)
- @(negedge o_ddrccc_rx_mode_done_tb)
+    */
+		
+	    ///////////// 2. Reading First Data Byte ///////////////////////////////////////
+
+ 		@(negedge o_ddrccc_rx_mode_done_tb)
 	    i_ddrccc_rx_en_tb   = 1'b1; 
 	    i_ddrccc_rx_mode_tb = 4'b0011;   // Deserializing byte mode
-       
+      
+      //#(CLK_PERIOD) 
 	    i_sdahnd_rx_sda_tb = DATA[0] ;
 
 	    for (i=2 ; i<9 ; i=i+1) //8 bits 
        	begin
-           @(negedge i_sclgen_scl_tb or posedge i_sclgen_scl_tb )
-              #20 i_sdahnd_rx_sda_tb = DATA[i-1] ;  
+              #(2*CLK_PERIOD) i_sdahnd_rx_sda_tb = DATA[i-1] ;  
         end
-        //i_sdahnd_rx_sda_tb = 'bz;
 
-/*
+
+        ////////////// 3. Reading Second Data Byte //////////////////////////////////
+
 		@(negedge o_ddrccc_rx_mode_done_tb)
-        // 3. Reading Second Data Byte
-
 	    i_ddrccc_rx_en_tb   = 1'b1; 
 	    i_ddrccc_rx_mode_tb = 4'b0011;   // Deserializing byte mode
 	
-	    for (i=1 ; i<9 ; i=i+1) //8 Frames 
+
+	    //#(CLK_PERIOD) 
+	    i_sdahnd_rx_sda_tb = DATA2[0] ;
+
+	    for (i=2 ; i<9 ; i=i+1) //8 bits 
        	begin
-           @(negedge i_sclgen_scl_tb )
-              #20 i_sdahnd_rx_sda_tb = DATA2[i-1] ;  
+          // @(negedge i_sclgen_scl_tb or posedge i_sclgen_scl_tb)
+              #(2*CLK_PERIOD) i_sdahnd_rx_sda_tb = DATA2[i-1] ;  
         end
-        i_sdahnd_rx_sda_tb = 'bz;
+        
 
 
-        // 4. Checking parity
+        ///////////////////////// 4. Checking parity ///////////////////////////////
 
+      @(negedge o_ddrccc_rx_mode_done_tb)
 		i_ddrccc_rx_en_tb   = 1'b1; 
 	    i_ddrccc_rx_mode_tb = 4'b0110;   // Check parity state
-	    */
+	    
+	    //#(CLK_PERIOD)
+	    i_sdahnd_rx_sda_tb = 1'b0; 
+
+	    #(2*CLK_PERIOD)
+	    i_sdahnd_rx_sda_tb = 1'b1;
+
+
+
+	    //////////////////////// 5. Checking CRC //////////////////////////////
+
+	    //------- --5.1 CRC PREAMBLE----------//
+
+	    @(negedge o_ddrccc_rx_mode_done_tb)
+	    i_ddrccc_rx_en_tb   = 1'b1; 
+	    i_ddrccc_rx_mode_tb = 4'b0000;   //preamble
+       
+       //#(CLK_PERIOD)
+	    i_sdahnd_rx_sda_tb = 1'b0; 
+
+	    @(negedge o_ddrccc_rx_mode_done_tb)
+	    i_sdahnd_rx_sda_tb = 1'b1;
+	    i_ddrccc_rx_mode_tb = 4'b0000;   
+	    //----------- 5.2 CHECK TOKEN---------//
+
+	    @(negedge o_ddrccc_rx_mode_done_tb)
+	    i_ddrccc_rx_en_tb   = 1'b1; 
+	    i_ddrccc_rx_mode_tb = 4'b0101;   //token state
+
+	    //#(CLK_PERIOD) 
+	    i_sdahnd_rx_sda_tb = TOKEN[0] ;
+
+	    for (i=2 ; i<5 ; i=i+1) //3 bits 
+       	begin
+         //  @(negedge i_sclgen_scl_tb or posedge i_sclgen_scl_tb)
+              #(2*CLK_PERIOD) i_sdahnd_rx_sda_tb = TOKEN[i-1] ;  
+        end
+
+	    //---------- 5.3 CHECK CRC------------//
+
+	    @(negedge o_ddrccc_rx_mode_done_tb)
+	    i_ddrccc_rx_en_tb   = 1'b1; 
+	    i_ddrccc_rx_mode_tb = 4'b0111;   // CRC state
+
+	    //#(CLK_PERIOD) 
+	    i_sdahnd_rx_sda_tb = CRC_VALUE[0] ;
+
+	    for (i=2 ; i<7 ; i=i+1)  
+       	begin
+           @(negedge i_sclgen_scl_tb or posedge i_sclgen_scl_tb)
+              #(2*CLK_PERIOD) i_sdahnd_rx_sda_tb = CRC_VALUE[i-1] ;  
+        end
+
+
+        #(7*CLK_PERIOD)
+        i_ddrccc_rx_en_tb   = 1'b0;
 
 
 #1000
@@ -128,14 +192,8 @@ task initialize;
 	begin
 		i_sys_clk_tb 				= 1'b0;
 		i_sys_rst_tb 				= 1'b1;
-		//i_sclgen_scl_tb             = 1'b0;
-		//i_sclgen_scl_pos_edge_tb    = 1'b0;
-		//i_sclgen_scl_neg_edge_tb    = 1'b0;
 		i_ddrccc_rx_en_tb 			= 1'b0;
 		i_sdahnd_rx_sda_tb          = 'bz;
-		//i_bitcnt_rx_bit_count_tb    = 'b0;
-		//i_ddrccc_rx_mode_tb			=1'b0;
-		//i_crc_value_tb				=1'b0;
 		i_crc_valid_tb				=1'b0;
 		i_scl_gen_stall_tb      = 1'b0;
 		i_sdr_ctrl_scl_idle_tb =1'b0;
@@ -152,7 +210,6 @@ task reset;
 		# (CLK_PERIOD)
 		i_sys_rst_tb 				= 1'b1; // de-activated
 
-		//# (CLK_PERIOD);
 	end	
 	endtask
 
@@ -175,7 +232,8 @@ RX U0 (
 	.o_ddrccc_rx_mode_done		(o_ddrccc_rx_mode_done_tb)	,
 	.o_ddrccc_pre				(o_ddrccc_pre_tb)			,
 	.o_ddrccc_error				(o_ddrccc_error_tb)			,
-	.o_crc_en					(o_crc_en_tb)                 
+	.o_crc_en					(o_crc_en_tb)       ,
+	.o_crc_data_valid       (o_crc_data_valid_tb)          
 
 );
 
