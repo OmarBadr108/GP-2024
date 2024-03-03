@@ -214,9 +214,136 @@ module CCC_Handler_tb ();
 		// configuration 
 		i_regf_CMD_tb 	 	= 8'h01 ;	 	 	//  broadcast
 		//i_regf_RnW_tb 		= 1'b0 ;  	 	// write 
+		i_regf_TOC_tb 		= 1'b0 ; 	 	 	// not the last command discriptor both tested 
+		i_regf_WROC_tb 		= 1'b0 ; 	 		// response status is not required 
+		i_regf_DBP_tb 		= 1'b1 ; 	 	 	// defining byte is not present 
+		i_regf_SRE_tb 		= 1'b0 ; 	 		// short read is not considered as error 
+		i_regf_CMD_ATTR_tb  = 3'd0 ; 		    // 0 regular  , 1 immediate 
+		//i_regf_DTT_tb 		= 3'd2 ; 	 	// only 2 payload without defining byte 
+		
+		i_sclstall_stall_done_tb = 1'b0 ;
+
+		// special preamble 
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// Rnw 1 bit = 0.5 DDr
+
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 reserved bits == 6.5 DDR clk cycles
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 addres + 1 p.a == 7.5 DDR clk cycles
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 first preamble 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 second preamble 
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		i_rx_pre_tb	 	  = 1'b0 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		DDR_clk_not_pulse(i_rx_pre_tb);
+
+
+		// 8 CCC value 
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 8 ZEROS 
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		i_frmcnt_last_frame_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
+
+		// crc prea
+		DDR_clk_wait(1); 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// C token 
+		DDR_clk_wait(3);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// checksum
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// restart pattern 
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_sclstall_stall_done_tb = 1'b1 ;
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		DDR_clk_pulse(i_sclstall_stall_done_tb) ;
+
+
+		@(posedge i_sys_clk_tb)
+		i_engine_en_tb = 1'b0 ;
+		i_frmcnt_last_frame_tb = 1'b0 ;
+		// finish 
+		DDR_clk_wait(50);
+		i_frmcnt_last_frame_tb = 1'b0 ;
+
+		////////////////////////////////////////////////////////////// PASSED /////////////////////////////////////////////////////////////////
+
+
+
+
+		// test case 2 Broadcast with regular and even number of data bytes (4 bytes) 
+
+		// first things first 
+		@(posedge i_sys_clk_tb)
+		i_engine_en_tb = 1'b1 ;
+		
+		/* second test case  : braodcast sequence
+							   regular  
+							   even number of bytes
+		*/
+		// configuration 
+		i_regf_CMD_tb 	 	= 8'h01 ;	 	 	//  broadcast
+		//i_regf_RnW_tb 		= 1'b0 ;  	 	// write 
 		i_regf_TOC_tb 		= 1'b0 ; 	 	 	// not the last command discriptor
 		i_regf_WROC_tb 		= 1'b0 ; 	 		// response status is not required 
-		i_regf_DBP_tb 		= 1'b0 ; 	 	 	// defining byte is not present 
+		i_regf_DBP_tb 		= 1'b1 ; 	 	 	// defining byte is not present 
 		i_regf_SRE_tb 		= 1'b0 ; 	 		// short read is not considered as error 
 		i_regf_CMD_ATTR_tb  = 3'd0 ; 		    // 0 regular  , 1 immediate 
 		//i_regf_DTT_tb 		= 3'd2 ; 	 	// only 2 payload without defining byte 
@@ -284,9 +411,1506 @@ module CCC_Handler_tb ();
 		DDR_clk_wait(1);
 		sys_clk_wait(1);
 		i_tx_mode_done_tb = 1'b1 ;
+		i_frmcnt_last_frame_tb = 1'b0 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
+
+
+		//////////// repeatd data first 2 bytes /////////////////
+
+		// 1 first preamble 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 second preamble 
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		i_rx_pre_tb	 	  = 1'b1 ; 	 	// ack
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		DDR_clk_not_pulse(i_rx_pre_tb);
+
+
+		// 8 FIRST DATA BYTE 
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 8 SECOND DATA BYTE 
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
+
+		/////////////////////////////////////////////////////////
+
+		/////////////// repeatd data 2 bytes ////////////////////
+
+		// 1 first preamble 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 second preamble 
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		i_rx_pre_tb	 	  = 1'b1 ; 	 	// ack
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		DDR_clk_not_pulse(i_rx_pre_tb);
+
+
+		// 8 FIRST DATA BYTE 
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 8 SECOND DATA BYTE 
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
 		i_frmcnt_last_frame_tb = 1'b1 ;
 		system_clk_pulse(i_tx_mode_done_tb) ;
-		system_clk_pulse(i_frmcnt_last_frame_tb) ;
+		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
+
+		/////////////////////////////////////////////////////////
+
+
+		// crc prea
+		DDR_clk_wait(1); 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// C token 
+		DDR_clk_wait(3);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// checksum
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// restart pattern 
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_sclstall_stall_done_tb = 1'b1 ;
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		DDR_clk_pulse(i_sclstall_stall_done_tb) ;
+		i_frmcnt_last_frame_tb = 1'b0 ;
+
+		@(posedge i_sys_clk_tb)
+		i_engine_en_tb = 1'b0 ;
+		// finish 
+
+
+		////////////////////////////////////////////////////////////// PASSED /////////////////////////////////////////////////////////////////
+		DDR_clk_wait(49);
+		sys_clk_wait(1);
+		// test case 3 Broadcast with regular and odd number of data bytes (3 bytes) 
+
+		// first things first 
+		@(posedge i_sys_clk_tb)
+		i_engine_en_tb = 1'b1 ;
+		
+		/* second test case  : braodcast sequence
+							   regular  
+							   even number of bytes
+		*/
+		// configuration 
+		i_regf_CMD_tb 	 	= 8'h01 ;	 	 	//  broadcast
+		//i_regf_RnW_tb 		= 1'b0 ;  	 	// write 
+		i_regf_TOC_tb 		= 1'b0 ; 	 	 	// not the last command discriptor
+		i_regf_WROC_tb 		= 1'b0 ; 	 		// response status is not required 
+		i_regf_DBP_tb 		= 1'b1 ; 	 	 	// defining byte is not present 
+		i_regf_SRE_tb 		= 1'b0 ; 	 		// short read is not considered as error 
+		i_regf_CMD_ATTR_tb  = 3'd0 ; 		    // 0 regular  , 1 immediate 
+		//i_regf_DTT_tb 		= 3'd2 ; 	 	// only 2 payload without defining byte 
+		
+		i_sclstall_stall_done_tb = 1'b0 ;
+
+		// special preamble 
+		DDR_clk_wait(2);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// Rnw 1 bit = 0.5 DDr
+
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 reserved bits == 6.5 DDR clk cycles
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 addres + 1 p.a == 7.5 DDR clk cycles
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 first preamble 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 second preamble 
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		i_rx_pre_tb	 	  = 1'b0 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		DDR_clk_not_pulse(i_rx_pre_tb);
+
+
+		// 8 CCC value 
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 8 ZEROS 
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		i_frmcnt_last_frame_tb = 1'b0 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
+
+
+		//////////// repeatd data first 2 bytes /////////////////
+
+		// 1 first preamble 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 second preamble 
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		i_rx_pre_tb	 	  = 1'b1 ; 	 	// ack
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		DDR_clk_not_pulse(i_rx_pre_tb);
+
+
+		// 8 FIRST DATA BYTE 
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 8 SECOND DATA BYTE 
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
+
+		/////////////////////////////////////////////////////////
+
+		/////////////// repeatd data 2 bytes ////////////////////
+
+		// 1 first preamble 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 second preamble 
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		i_rx_pre_tb	 	  = 1'b1 ; 	 	// ack
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		DDR_clk_not_pulse(i_rx_pre_tb);
+
+
+		// 8 FIRST DATA BYTE 
+
+
+
+		i_frmcnt_last_frame_tb = 1'b1 ;
+
+
+
+
+
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 8 SECOND DATA BYTE 
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		i_frmcnt_last_frame_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
+
+		/////////////////////////////////////////////////////////
+
+
+		// crc prea
+		DDR_clk_wait(1); 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// C token 
+		DDR_clk_wait(3);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// checksum
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// restart pattern 
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_sclstall_stall_done_tb = 1'b1 ;
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		DDR_clk_pulse(i_sclstall_stall_done_tb) ;
+
+
+		@(posedge i_sys_clk_tb)
+		i_engine_en_tb = 1'b0 ;
+		i_frmcnt_last_frame_tb = 1'b0 ;
+		// finish 
+
+
+		
+		////////////////////////////////////////////////////////////// PASSED /////////////////////////////////////////////////////////////////
+		DDR_clk_wait(49);
+		sys_clk_wait(1);
+		// test case 4 Direct with regular and odd number of data bytes (3 bytes) 
+
+		// first things first 
+		@(posedge i_sys_clk_tb)
+		i_engine_en_tb = 1'b1 ;
+		
+		/* second test case  : braodcast sequence
+							   regular  
+							   even number of bytes
+		*/
+		// configuration 
+		i_regf_CMD_tb 	 	= 8'h90 ;	 	 	// Direct
+		i_regf_RnW_tb 		= 1'b0 ;  	 	    // write 
+		i_regf_DEV_INDEX_tb = 5'd6 ;			// 7th target 
+		i_regf_TOC_tb 		= 1'b0 ; 	 	 	// not the last command discriptor
+		i_regf_WROC_tb 		= 1'b0 ; 	 		// response status is not required 
+		i_regf_DBP_tb 		= 1'b1 ; 	 	 	// defining byte is not present 
+		i_regf_SRE_tb 		= 1'b0 ; 	 		// short read is not considered as error 
+		i_regf_CMD_ATTR_tb  = 3'd0 ; 		    // 0 regular  , 1 immediate 
+		//i_regf_DTT_tb 		= 3'd2 ; 	 	// only 2 payload without defining byte 
+		
+		i_sclstall_stall_done_tb = 1'b0 ;
+
+		// special preamble 
+		DDR_clk_wait(2);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// Rnw 1 bit = 0.5 DDr
+
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 reserved bits == 6.5 DDR clk cycles
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 addres + 1 p.a == 7.5 DDR clk cycles
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 first preamble 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 second preamble 
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		i_rx_pre_tb	 	  = 1'b0 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		DDR_clk_not_pulse(i_rx_pre_tb);
+
+
+		// 8 CCC value 
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 8 ZEROS 
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		i_frmcnt_last_frame_tb = 1'b0 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
+
+		/////////////// CRC ////////////////////
+
+		// crc prea
+		DDR_clk_wait(1); 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// C token 
+		DDR_clk_wait(3);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// checksum
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// restart pattern 
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_sclstall_stall_done_tb = 1'b1 ;
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		DDR_clk_pulse(i_sclstall_stall_done_tb) ;
+
+
+
+		//////////////////////////// second comand word //////////////////////////
+
+
+		// special preamble 
+		DDR_clk_wait(2);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// Rnw 1 bit = 0.5 DDr
+
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 reserved bits == 6.5 DDR clk cycles
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 addres + 1 p.a == 7.5 DDR clk cycles
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+//
+
+
+		//////////// repeatd data first 2 bytes /////////////////
+
+		// 1 first preamble 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 second preamble 
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		i_rx_pre_tb	 	  = 1'b0 ; 	 	// ack
+		i_rx_error_tb 	  = 1'b0 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		DDR_clk_not_pulse(i_rx_pre_tb);
+
+
+		// 8 FIRST DATA BYTE 
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 8 SECOND DATA BYTE 
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
+
+		/////////////////////////////////////////////////////////
+
+		
+
+		
+
+
+		////////////////////////////////   repeated data  //////////////////////////////
+		// 1 first preamble 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 second preamble 
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		i_rx_pre_tb	 	  = 1'b1 ; 	 	// ack
+		i_rx_error_tb 	  = 1'b0 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		DDR_clk_not_pulse(i_rx_pre_tb);
+
+
+		// 8 FIRST DATA BYTE 
+
+
+
+		i_frmcnt_last_frame_tb = 1'b1 ;
+
+
+
+
+
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 8 SECOND DATA BYTE 
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		i_frmcnt_last_frame_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
+
+		//////////////////// CRC ////////////////////////////
+
+
+		// crc prea
+		DDR_clk_wait(1); 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// C token 
+		DDR_clk_wait(3);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// checksum
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// restart pattern 
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_sclstall_stall_done_tb = 1'b1 ;
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		DDR_clk_pulse(i_sclstall_stall_done_tb) ;
+
+
+		@(posedge i_sys_clk_tb)
+		i_engine_en_tb = 1'b0 ;
+		i_frmcnt_last_frame_tb = 1'b0 ;
+		// finish 
+
+
+		//DDR_clk_wait(50);
+
+		////////////////////////////////////////////////////////////// PASSED /////////////////////////////////////////////////////////////////
+
+
+		DDR_clk_wait(49);
+		sys_clk_wait(1);
+		// test case 5 Direct with regular and even number of data bytes (4 bytes) 
+
+		// first things first 
+		@(posedge i_sys_clk_tb)
+		i_engine_en_tb = 1'b1 ;
+		
+		/* second test case  : Direct sequence
+							   regular  
+							   even number of bytes
+		*/
+		// configuration 
+		i_regf_CMD_tb 	 	= 8'h90 ;	 	 	// Direct
+		i_regf_RnW_tb 		= 1'b0 ;  	 	    // write 
+		i_regf_DEV_INDEX_tb = 5'd6 ;			// 7th target 
+		i_regf_TOC_tb 		= 1'b0 ; 	 	 	// not the last command discriptor
+		i_regf_WROC_tb 		= 1'b0 ; 	 		// response status is not required 
+		i_regf_DBP_tb 		= 1'b1 ; 	 	 	// defining byte is not present 
+		i_regf_SRE_tb 		= 1'b0 ; 	 		// short read is not considered as error 
+		i_regf_CMD_ATTR_tb  = 3'd0 ; 		    // 0 regular  , 1 immediate 
+		//i_regf_DTT_tb 		= 3'd2 ; 	 	// only 2 payload without defining byte 
+		
+		i_sclstall_stall_done_tb = 1'b0 ;
+
+		// special preamble 
+		DDR_clk_wait(2);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// Rnw 1 bit = 0.5 DDr
+
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 reserved bits == 6.5 DDR clk cycles
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 addres + 1 p.a == 7.5 DDR clk cycles
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 first preamble 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 second preamble 
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		i_rx_pre_tb	 	  = 1'b0 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		DDR_clk_not_pulse(i_rx_pre_tb);
+
+
+		// 8 CCC value 
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 8 ZEROS 
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		i_frmcnt_last_frame_tb = 1'b0 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
+
+		/////////////// CRC ////////////////////
+
+		// crc prea
+		DDR_clk_wait(1); 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// C token 
+		DDR_clk_wait(3);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// checksum
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// restart pattern 
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_sclstall_stall_done_tb = 1'b1 ;
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		DDR_clk_pulse(i_sclstall_stall_done_tb) ;
+
+
+
+		//////////////////////////// second comand word //////////////////////////
+
+
+		// special preamble 
+		DDR_clk_wait(2);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// Rnw 1 bit = 0.5 DDr
+
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 reserved bits == 6.5 DDR clk cycles
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 addres + 1 p.a == 7.5 DDR clk cycles
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+//
+
+
+		//////////// repeatd data first 2 bytes /////////////////
+
+		// 1 first preamble 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 second preamble 
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		i_rx_pre_tb	 	  = 1'b0 ; 	 	// ack
+		i_rx_error_tb 	  = 1'b0 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		DDR_clk_not_pulse(i_rx_pre_tb);
+
+
+		// 8 FIRST DATA BYTE 
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 8 SECOND DATA BYTE 
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
+
+		/////////////////////////////////////////////////////////
+
+		
+
+		
+
+
+		////////////////////////////////   repeated data  //////////////////////////////
+		// 1 first preamble 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 second preamble 
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		i_rx_pre_tb	 	  = 1'b1 ; 	 	// ack
+		i_rx_error_tb 	  = 1'b0 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		DDR_clk_not_pulse(i_rx_pre_tb);
+
+
+		// 8 FIRST DATA BYTE 
+
+
+
+		i_frmcnt_last_frame_tb = 1'b0 ;
+
+
+
+
+
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 8 SECOND DATA BYTE 
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		i_frmcnt_last_frame_tb = 1'b0 ;
+
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		i_frmcnt_last_frame_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
+
+		//////////////////// CRC ////////////////////////////
+
+
+		// crc prea
+		DDR_clk_wait(1); 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// C token 
+		DDR_clk_wait(3);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// checksum
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// restart pattern 
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_sclstall_stall_done_tb = 1'b1 ;
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		DDR_clk_pulse(i_sclstall_stall_done_tb) ;
+
+
+		@(posedge i_sys_clk_tb)
+		i_engine_en_tb = 1'b0 ;
+		i_frmcnt_last_frame_tb = 1'b0 ;
+
+
+		DDR_clk_wait(49);
+		sys_clk_wait(1);
+		////////////////////////////////////////////////////// PASSED /////////////////////////////////////////////////////////////
+		// test case 6 Direct with immediate and no defining no data bytes (DTT = 0) 
+
+		// first things first 
+		@(posedge i_sys_clk_tb)
+		i_engine_en_tb = 1'b1 ;
+		
+		
+		// configuration 
+		i_regf_CMD_tb 	 	= 8'h90 ;	 	 	// Direct
+		i_regf_RnW_tb 		= 1'b0 ;  	 	    // write 
+		i_regf_DEV_INDEX_tb = 5'd6 ;			// 7th target 
+		i_regf_TOC_tb 		= 1'b0 ; 	 	 	// not the last command discriptor
+		i_regf_WROC_tb 		= 1'b0 ; 	 		// response status is not required 
+		//i_regf_DBP_tb 		= 1'b1 ; 	 	 	// defining byte is not present 
+		i_regf_SRE_tb 		= 1'b0 ; 	 		// short read is not considered as error 
+		i_regf_CMD_ATTR_tb  = 3'd1 ; 		    // 0 regular  , 1 immediate 
+		i_regf_DTT_tb 		= 3'd0 ; 	 	// only 2 payload without defining byte 
+		
+		i_sclstall_stall_done_tb = 1'b0 ;
+
+		// special preamble 
+		DDR_clk_wait(2);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// Rnw 1 bit = 0.5 DDr
+
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 reserved bits == 6.5 DDR clk cycles
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 addres + 1 p.a == 7.5 DDR clk cycles
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 first preamble 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 second preamble 
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		i_rx_pre_tb	 	  = 1'b0 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		DDR_clk_not_pulse(i_rx_pre_tb);
+
+
+		// 8 CCC value 
+		DDR_clk_wait(6);
+		i_frmcnt_last_frame_tb = 1'b1 ;
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 8 ZEROS 
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		i_frmcnt_last_frame_tb = 1'b0 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
+
+		/////////////// CRC ////////////////////
+
+		// crc prea
+		DDR_clk_wait(1); 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// C token 
+		DDR_clk_wait(3);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// checksum
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// restart pattern 
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_sclstall_stall_done_tb = 1'b1 ;
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		DDR_clk_pulse(i_sclstall_stall_done_tb) ;
+
+
+/*
+		//////////////////////////// second comand word //////////////////////////
+
+
+		// special preamble 
+		DDR_clk_wait(2);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// Rnw 1 bit = 0.5 DDr
+
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 reserved bits == 6.5 DDR clk cycles
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 addres + 1 p.a == 7.5 DDR clk cycles
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+//
+
+
+		//////////// repeatd data first 2 bytes /////////////////
+
+		// 1 first preamble 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 second preamble 
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		i_rx_pre_tb	 	  = 1'b0 ; 	 	// ack
+		i_rx_error_tb 	  = 1'b0 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		DDR_clk_not_pulse(i_rx_pre_tb);
+
+
+		// 8 FIRST DATA BYTE 
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 8 SECOND DATA BYTE 
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
+
+		/////////////////////////////////////////////////////////
+
+		
+
+		
+
+
+		////////////////////////////////   repeated data  //////////////////////////////
+		// 1 first preamble 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 second preamble 
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		i_rx_pre_tb	 	  = 1'b1 ; 	 	// ack
+		i_rx_error_tb 	  = 1'b0 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		DDR_clk_not_pulse(i_rx_pre_tb);
+
+
+		// 8 FIRST DATA BYTE 
+
+
+
+		i_frmcnt_last_frame_tb = 1'b0 ;
+
+
+
+
+
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 8 SECOND DATA BYTE 
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		i_frmcnt_last_frame_tb = 1'b0 ;
+
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		i_frmcnt_last_frame_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
+
+		//////////////////// CRC ////////////////////////////
+
+
+		// crc prea
+		DDR_clk_wait(1); 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// C token 
+		DDR_clk_wait(3);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// checksum
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// restart pattern 
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_sclstall_stall_done_tb = 1'b1 ;
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		DDR_clk_pulse(i_sclstall_stall_done_tb) ;
+*/
+
+		@(posedge i_sys_clk_tb)
+		i_engine_en_tb = 1'b0 ;
+		i_frmcnt_last_frame_tb = 1'b0 ;
+
+		DDR_clk_wait(49);
+		sys_clk_wait(1);
+
+		///////////////////////////////////////////////////// PASSED /////////////////////////////////////////////////////////////////
+		// test case 7 Direct with regular and even number of data bytes (4 bytes) 
+
+		// first things first 
+		@(posedge i_sys_clk_tb)
+		i_engine_en_tb = 1'b1 ;
+		
+		
+		// configuration 
+		i_regf_CMD_tb 	 	= 8'h90 ;	 	 	// Direct
+		i_regf_RnW_tb 		= 1'b1 ;  	 	    // read 
+		i_regf_DEV_INDEX_tb = 5'd6 ;			// 7th target 
+		i_regf_TOC_tb 		= 1'b0 ; 	 	 	// not the last command discriptor
+		i_regf_WROC_tb 		= 1'b0 ; 	 		// response status is not required 
+		i_regf_DBP_tb 		= 1'b1 ; 	 	 	// defining byte is not present 
+		i_regf_SRE_tb 		= 1'b0 ; 	 		// short read is not considered as error 
+		i_regf_CMD_ATTR_tb  = 3'd0 ; 		    // 0 regular  , 1 immediate 
+		//i_regf_DTT_tb 		= 3'd2 ; 	 	// only 2 payload without defining byte 
+		
+		i_sclstall_stall_done_tb = 1'b0 ;
+
+		// special preamble 
+		DDR_clk_wait(2);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// Rnw 1 bit = 0.5 DDr
+
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 reserved bits == 6.5 DDR clk cycles
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 addres + 1 p.a == 7.5 DDR clk cycles
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 first preamble 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 second preamble 
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		i_rx_pre_tb	 	  = 1'b0 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		DDR_clk_not_pulse(i_rx_pre_tb);
+
+
+		// 8 CCC value 
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 8 ZEROS 
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		i_frmcnt_last_frame_tb = 1'b0 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
+
+		/////////////// CRC ////////////////////
+
+		// crc prea
+		DDR_clk_wait(1); 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// C token 
+		DDR_clk_wait(3);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// checksum
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// restart pattern 
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_sclstall_stall_done_tb = 1'b1 ;
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		DDR_clk_pulse(i_sclstall_stall_done_tb) ;
+
+
+
+		//////////////////////////// second comand word //////////////////////////
+
+
+		// special preamble 
+		DDR_clk_wait(2);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// Rnw 1 bit = 0.5 DDr
+
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 reserved bits == 6.5 DDR clk cycles
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 7 addres + 1 p.a == 7.5 DDR clk cycles
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+//
+
+
+		//////////// repeatd data first 2 bytes /////////////////
+
+		// 1 first preamble 
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+
+
+		// 1 second preamble 
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		i_rx_pre_tb	 	  = 1'b0 ; 	 	// ack
+		i_rx_error_tb 	  = 1'b0 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		DDR_clk_not_pulse(i_rx_pre_tb);
+
+
+		// 8 FIRST DATA BYTE 
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+
+
+		// 8 SECOND DATA BYTE 
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
+
+		/////////////////////////////////////////////////////////
+
+		
+
+		
+
+
+		////////////////////////////////   repeated data  //////////////////////////////
+		// 1 first preamble 
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		i_rx_pre_tb = 1'b1 ;
+		i_rx_error_tb = 1'b0 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		//DDR_clk_not_pulse(i_rx_pre_tb);
+
+		// 1 second preamble 
+		$display($time);
+
+		sys_clk_wait(1);
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		//DDR_clk_not_pulse(i_rx_pre_tb);
+		i_rx_pre_tb = 1'b0 ;
+
+		// 8 FIRST DATA BYTE 
+
+
+
+		i_frmcnt_last_frame_tb = 1'b0 ;
+
+
+
+
+
+		DDR_clk_wait(6);
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+
+
+		// 8 SECOND DATA BYTE 
+		DDR_clk_wait(7);
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		i_frmcnt_last_frame_tb = 1'b0 ;
+
+
+		// 2 parity == 1.5 DDR clk cycles
+		DDR_clk_wait(1);
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		i_frmcnt_last_frame_tb = 1'b0 ; 						/////////////////// deh lw7dha test case (abort by target vs matched length of data)
+		system_clk_pulse(i_rx_mode_done_tb) ;
+		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
+
+		//////////////////// CRC ////////////////////////////
+
+/*
+		// crc prea
+		DDR_clk_wait(1); 
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+
+*/
+
+		///// crc preamble /////
+		sys_clk_wait(1);
+		i_rx_pre_tb = 1'b1 ;
+		i_rx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+
+		sys_clk_wait(1);
+		i_rx_pre_tb = 1'b0 ;
+		i_rx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+
+
+
+
+
+
+
+		///////////////////////
+
+
+		// C token 
+		DDR_clk_wait(3);
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+
+		// checksum
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_rx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_rx_mode_done_tb) ;
+
+		// restart pattern 
+		DDR_clk_wait(5);
+		sys_clk_wait(1);
+		i_sclstall_stall_done_tb = 1'b1 ;
+		i_tx_mode_done_tb = 1'b1 ;
+		system_clk_pulse(i_tx_mode_done_tb) ;
+		DDR_clk_pulse(i_sclstall_stall_done_tb) ;
+
+
+		@(posedge i_sys_clk_tb)
+		i_engine_en_tb = 1'b0 ;
+		i_frmcnt_last_frame_tb = 1'b0 ;
+
+
+		DDR_clk_wait(49);
+		sys_clk_wait(1);
+
+		// finish 
+		//DDR_clk_wait(50);
 
 
 
@@ -300,8 +1924,58 @@ module CCC_Handler_tb ();
 
 
 
-		DDR_clk_wait(50);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
 		$stop ;
 	end
 
