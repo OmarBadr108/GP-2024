@@ -22,7 +22,7 @@ wire 					  o_crc_data_valid_tb      ;
 
 
 parameter CLK_PERIOD  = 20;
-integer i;
+integer i; 
 
 // Internal Wires
 wire    			    i_sclgen_scl_tb         	;
@@ -112,7 +112,7 @@ initial
 
 	    for (i=2 ; i<9 ; i=i+1) //8 bits 
        	begin
-           @(negedge i_sclgen_scl_tb or posedge i_sclgen_scl_tb)
+          // @(negedge i_sclgen_scl_tb or posedge i_sclgen_scl_tb)
               #(2*CLK_PERIOD) i_sdahnd_rx_sda_tb = DATA2[i-1] ;  
         end
         
@@ -143,9 +143,9 @@ initial
        //#(CLK_PERIOD)
 	    i_sdahnd_rx_sda_tb = 1'b0; 
 
-	    #(2*CLK_PERIOD)
+	    @(negedge o_ddrccc_rx_mode_done_tb)
 	    i_sdahnd_rx_sda_tb = 1'b1;
-
+	    i_ddrccc_rx_mode_tb = 4'b0000;   
 	    //----------- 5.2 CHECK TOKEN---------//
 
 	    @(negedge o_ddrccc_rx_mode_done_tb)
@@ -157,7 +157,7 @@ initial
 
 	    for (i=2 ; i<5 ; i=i+1) //3 bits 
        	begin
-           @(negedge i_sclgen_scl_tb or posedge i_sclgen_scl_tb)
+         //  @(negedge i_sclgen_scl_tb or posedge i_sclgen_scl_tb)
               #(2*CLK_PERIOD) i_sdahnd_rx_sda_tb = TOKEN[i-1] ;  
         end
 

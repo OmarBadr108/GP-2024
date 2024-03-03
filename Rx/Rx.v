@@ -148,6 +148,7 @@ begin
     count                 <= 'b0;
     byte_num              <= 1'b0;
     o_crc_data_valid      <=  'b0;
+   // parity_value_temp     <= 1'b0;
    end
 
 
@@ -159,19 +160,19 @@ begin
     o_ddrccc_error        <= 1'b0;
     o_crc_en              <= 1'b0; 
     //rx_mode_done_flag     <= 1'b0;
-
+   // parity_value_temp     <= 1'b0;
     o_crc_data_valid      <= 1'b0;
 
    case(i_ddrccc_rx_mode) 
 
     PREAMBLE :          begin
-                          count                  <= 'b0;
+                          count                   <= 'b0;
                          if (SCL_edges)
                           begin
                            //o_ddrccc_pre          <= i_sdahnd_rx_sda;
                            //o_ddrccc_rx_mode_done <= 1'b1;
                            //rx_mode_done_flag     <= 1'b1;
-                           byte_num              <= 1'b0;
+                           byte_num               <= 1'b0;
                            count                  <= 'b0;
                           end
                           else 
@@ -188,39 +189,31 @@ begin
                             o_ddrccc_pre <= 'bz;
                             o_crc_data_valid <= 'b0;
                             o_crc_en         <=  1'b1;
-
+                            
                             if(SCL_edges)
-                              begin
-                                o_regfcrc_rx_data_out_temp['d7 - count] <= i_sdahnd_rx_sda;
-/*
+                               begin
+                          
+                                count <= count + 1; 
                                 if(count == 'd7)
                                 begin
-                                  o_ddrccc_rx_mode_done <= 1'b1;   
+                                  count <= 'b0;
+                                  o_crc_data_valid <= 1'b1;
+                                  o_regfcrc_rx_data_out <= o_regfcrc_rx_data_out_temp;
+                                  byte_num <= 'b1;
                                 end
-                                else 
-                                  begin
-                                  o_ddrccc_rx_mode_done <= 1'b0;
-                                  end */
-                              end 
+                               end
 
                             else 
-                              begin
-                              count <= count + 1; 
+                             begin
                               o_ddrccc_rx_mode_done <= 1'b0;
-
-                              if(count == 'd7)
-                                begin
-                                  count <= 'b0; 
-                                  o_regfcrc_rx_data_out <= o_regfcrc_rx_data_out_temp;
-                                  o_crc_data_valid <= 1'b1;
-                                  byte_num <= 'b1;
+                              o_regfcrc_rx_data_out_temp['d7 - count] <= i_sdahnd_rx_sda;
+                              if(count == 'd7)                    
+                               begin
+                                  
                                   o_ddrccc_rx_mode_done <= 1'b1;
                                 end
 
-                              
-                              end
-
-
+                            end
                           end
 
 
@@ -231,31 +224,63 @@ begin
 
                          if(SCL_edges)
                           begin
-                            token_value_temp['d3 - count] <= i_sdahnd_rx_sda;
-
+                            count <= count + 1'b1;
+                            
                             if(count == 'd3)
                               begin
-                                o_ddrccc_rx_mode_done <= 1'b1;
+                               
                                 count <= 'b0; 
 
-                                if(token_value_temp != 4'hC)
+                               if(token_value_temp != 4'hC)
                                   o_ddrccc_error<=1'b1;
                                 else
                                   o_ddrccc_error<=1'b0;
+                                  
 
                               end 
                           
                           end
 
                           else 
-                             count <= count + 1'b1;
-                          
+                          begin
+                              token_value_temp['d3 - count] <= i_sdahnd_rx_sda;
+                              if(count == 'd3)
+                                o_ddrccc_rx_mode_done <= 1'b1;
+                            
+                          end
                         end 
  
-    CHECK_PAR_VALUE :    begin
+    CHECK_PAR_VALUE :    /*  begin
                          //count <= 'b0;
                          o_ddrccc_rx_mode_done <= 1'b0;
-                         o_ddrccc_error <= 1'b0;
+                         parity_value_temp['d1 - count] <= i_sdahnd_rx_sda;
+                         if(SCL_edges)
+                          begin
+                           parity_value_temp['d1 - count] <= i_sdahnd_rx_sda;                       
+                          end
+                         else if(count == 'd1)
+                                begin
+                                  count<=0;
+                                  o_ddrccc_rx_mode_done <= 1'b1;
+                                  //count <= 'b0; 
+                                  if(parity_value_calc != parity_value_temp)
+                                    o_ddrccc_error<=1'b1;
+                                  else
+                                    o_ddrccc_error<=1'b0;
+                                end 
+                         
+
+                          else 
+                            begin
+                             count <= count + 1'b1;
+
+                              
+                              //o_ddrccc_rx_mode_done <= 1'b0; 
+                            end
+                        end*/
+                        begin
+                         //count <= 'b0;
+                         o_ddrccc_rx_mode_done <= 1'b0;
 
                          if(SCL_edges)
                           begin
@@ -275,9 +300,11 @@ begin
                           else 
                             begin
                               count <= count + 1'b1;
+                               parity_value_temp['d1 - count] <= i_sdahnd_rx_sda;
                               //o_ddrccc_rx_mode_done <= 1'b0; 
                             end
                         end 
+ 
  
  
     CHECK_CRC_VALUE :   begin
@@ -286,27 +313,28 @@ begin
                          o_crc_en<=1'b1;
 
                          if(SCL_edges)
-                            begin
-                              CRC_value_temp['d5 - count] <= i_sdahnd_rx_sda;
-                           
-                              if(count == 'd5)
+                           begin
+                              count <= count + 1'b1;   
+                              
+                              if(count == 'd4)
                                 begin
-                                  o_ddrccc_rx_mode_done <= 1'b1;
-                                  count <= 'b0;
-
-                                  if(i_crc_valid)
-                                    begin
-                                      if(CRC_value_temp!= i_crc_value)
-                                        o_ddrccc_error<=1'b1;
-                                      else
-                                        o_ddrccc_error<=1'b0;
-                                    end
-                                  end 
-                          end
+                                 count <= 'b0;
+                                 if(i_crc_valid)
+                                 begin
+                                  if(CRC_value_temp!= i_crc_value)
+                                     o_ddrccc_error<=1'b1;
+                                  else
+                                     o_ddrccc_error<=1'b0;
+                                 end
+                                 end 
+                           end
                           
                           else 
                            begin
-                             count <= count + 1'b1;   
+                           CRC_value_temp['d4 - count] <= i_sdahnd_rx_sda;
+                           if(count == 'd4)
+                                  o_ddrccc_rx_mode_done <= 1'b1;
+                           
                            end
                          
                         end
