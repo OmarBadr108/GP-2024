@@ -37,25 +37,31 @@ module crc_variable_input (
     input wire [7:0] i_parallel_data,
     input wire i_input_valid, //which is connected to mode done of tx
     input wire i_enable,
+    input wire i_end_byte,
     output reg [4:0] o_crc_value,
-    output reg o_crc_valid,
+    output reg o_crc_valid
 );
 
 
 // CRC polynomial
 parameter polynomial = 5'b101101; // 5-bit CRC polynomial
-localparam  IDLE     = 1'b0,
-            CALC_CRC = 1'b1;
+localparam  IDLE     = 2'b00,
+            CALC_CRC = 2'b01,
+            OUT_CRC  = 2'b10;
+
 
 
 
 // CRC registers
 //reg [4:0] crc_reg;
 reg [7:0] data_reg;
-reg current_state, next_state;
+reg [4:0] LFSR;
+reg [2:0] current_state, next_state;
 reg [2:0] counter;  // Counter to keep track of bit position
 reg [4:0] shift_reg; // Shift register for CRC calculation
 reg serial_out;
+wire Feedback;
+reg enter_crc ;
  always@(posedge i_sys_clk or negedge i_sys_rst) begin
       if (!i_sys_rst) begin
         o_crc_value   <= 5'b00000; // Initialize CRC register to 0
@@ -63,8 +69,9 @@ reg serial_out;
         o_crc_valid   <= 1'b0; // Output valid signal low on reset
         current_state <= IDLE;
         counter <= 3'b000;
+        ///LFSR <= seeed;
       end
-      else if (enable)
+      else if (i_enable)
       begin
         current_state <= next_state;
         case (current_state)
@@ -72,6 +79,7 @@ reg serial_out;
                   //if(i_enable)
                     if(i_input_valid) begin
                       data_reg <= i_parallel_data;
+                      ///ser
                       o_crc_value <= 5'b00000;
                       o_crc_valid <= 1'b0;
                       next_state <= CALC_CRC;
@@ -86,11 +94,19 @@ reg serial_out;
 
                 CALC_CRC : begin
                   ///serializing
+                  //flag
+                  enter_crc <= 1'b1;
                       if (counter < 3'b111)
                         counter <= counter + 1;
-                      else
+                      else begin
                         counter <= 3'b000;
-
+                        if (!i_end_byte) begin
+                          next_state <= IDLE;
+                        end
+                        else
+                          next_state <= OUT_CRC;
+                        
+                      end
                         // Output serial_out based on the counter value
                         case(counter)
                           3'b000: serial_out <= data_reg[0];
@@ -104,24 +120,20 @@ reg serial_out;
                           default: serial_out <= 1'b0; // Default case
                         endcase
                     ///calc crc
-                            // Shift in the serial input
-                            shift_reg[4:1] <= shift_reg[3:0];
-                            shift_reg[0] <= serial_out;
-
-                            // Compute CRC
-                            if (shift_reg[4] == 1'b1) begin
-                                shift_reg = shift_reg ^ polynomial;
-                            end
-
+/*
         // Output the contents of the shift register as CRC
-        crc_out <= shift_reg;
+                  crc_out <= shift_reg;
                   if(i_input_valid) //mfrud aCheck an valid atrf3 tany w ana 5lst al 8 bits aly ablhum
                     next_state <= IDLE;
                   else
                     begin
                       o_crc_valid <= 1'b1;
                       //o_crc_value <= 5'b;
-                    end
+                    end*/
+
+                end
+                OUT_CRC : begin
+
 
                 end
         endcase
@@ -133,7 +145,22 @@ reg serial_out;
       end
 end
 
-          
+   assign Feedback = serial_out ^ LFSR[0] ;
+
+//parameter polynomial = 5'b10_1101; // 5-bit CRC polynomial
+//0100_0100
+      always @(posedge i_sys_clk or negedge i_sys_rst) begin 
+            if(~i_sys_rst) begin
+               o_crc_value<= 0;
+            end else if(enter_crc) begin
+            LFSR <= {Feedback , LFSR[4] , LFSR[3]^Feedback , LFSR[2]^Feedback , LFSR[1];
+          end
+            else if (counter==3'b111) begin
+              //shift output of serial of 5 bits
+            end
+          end
+            
+      end    
 
 
 
@@ -141,30 +168,7 @@ end
 
 
 
-/*
-// CRC calculation process
-always @(posedge i_sys_clk or negedge i_sys_rst) begin
-    if (reset) begin
-        crc_reg <= 5'b00000; // Initialize CRC register to 0
-        data_reg <= 8'b0; // Initialize data register to 0
-        crc_valid <= 1'b0; // Output valid signal low on reset
-    end else if (enable) begin
-        if (input_valid) begin
-            // Shift CRC register left by one bit
-            crc_reg <= {crc_reg[3:0], crc_reg[4]};
-            // Load incoming data into data register
-            data_reg <= i_parallel_data;
-            // XOR the MSB of CRC with incoming data
-            crc_reg[4] <= crc_reg[4] ^ data_reg[7];
 
-        end
-        else
-          crc_reg <= 5'b0;
-    end
-    else
-    crc_reg <= 5'b0;
-end
-*/
 endmodule
 
 
