@@ -41,6 +41,7 @@ module crc_variable_input (
     output reg o_crc_valid,
 );
 
+
 // CRC polynomial
 parameter polynomial = 5'b101101; // 5-bit CRC polynomial
 localparam  IDLE     = 1'b0,
@@ -53,6 +54,7 @@ localparam  IDLE     = 1'b0,
 reg [7:0] data_reg;
 reg current_state, next_state;
 reg [2:0] counter;  // Counter to keep track of bit position
+reg [4:0] shift_reg; // Shift register for CRC calculation
 reg serial_out;
  always@(posedge i_sys_clk or negedge i_sys_rst) begin
       if (!i_sys_rst) begin
@@ -70,6 +72,20 @@ reg serial_out;
                   //if(i_enable)
                     if(i_input_valid) begin
                       data_reg <= i_parallel_data;
+                      o_crc_value <= 5'b00000;
+                      o_crc_valid <= 1'b0;
+                      next_state <= CALC_CRC;
+                    end
+                    else
+                      begin
+                      o_crc_value <= 5'b00000;
+                      o_crc_valid <= 1'b0;
+                      next_state <= IDLE;
+                      end
+                end
+
+                CALC_CRC : begin
+                  ///serializing
                       if (counter < 3'b111)
                         counter <= counter + 1;
                       else
@@ -87,21 +103,18 @@ reg serial_out;
                           3'b111: serial_out <= data_reg[7];
                           default: serial_out <= 1'b0; // Default case
                         endcase
-                      o_crc_value <= 5'b00000;
-                      o_crc_valid <= 1'b0;
-                      next_state <= CALC_CRC;
-                    end
-                    else
-                      begin
-                      o_crc_value <= 5'b00000;
-                      o_crc_valid <= 1'b0;
-                      next_state <= IDLE;
-                      end
-                end
-
-                CALC_CRC : begin
                     ///calc crc
+                            // Shift in the serial input
+                            shift_reg[4:1] <= shift_reg[3:0];
+                            shift_reg[0] <= serial_out;
 
+                            // Compute CRC
+                            if (shift_reg[4] == 1'b1) begin
+                                shift_reg = shift_reg ^ polynomial;
+                            end
+
+        // Output the contents of the shift register as CRC
+        crc_out <= shift_reg;
                   if(i_input_valid) //mfrud aCheck an valid atrf3 tany w ana 5lst al 8 bits aly ablhum
                     next_state <= IDLE;
                   else
