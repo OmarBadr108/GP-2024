@@ -52,13 +52,15 @@ localparam  IDLE     = 1'b0,
 //reg [4:0] crc_reg;
 reg [7:0] data_reg;
 reg current_state, next_state;
-
+reg [2:0] counter;  // Counter to keep track of bit position
+reg serial_out;
  always@(posedge i_sys_clk or negedge i_sys_rst) begin
       if (!i_sys_rst) begin
         o_crc_value   <= 5'b00000; // Initialize CRC register to 0
         data_reg      <= 8'b0; // Initialize data register to 0
         o_crc_valid   <= 1'b0; // Output valid signal low on reset
         current_state <= IDLE;
+        counter <= 3'b000;
       end
       else if (enable)
       begin
@@ -68,6 +70,23 @@ reg current_state, next_state;
                   //if(i_enable)
                     if(i_input_valid) begin
                       data_reg <= i_parallel_data;
+                      if (counter < 3'b111)
+                        counter <= counter + 1;
+                      else
+                        counter <= 3'b000;
+
+                        // Output serial_out based on the counter value
+                        case(counter)
+                          3'b000: serial_out <= data_reg[0];
+                          3'b001: serial_out <= data_reg[1];
+                          3'b010: serial_out <= data_reg[2];
+                          3'b011: serial_out <= data_reg[3];
+                          3'b100: serial_out <= data_reg[4];
+                          3'b101: serial_out <= data_reg[5];
+                          3'b110: serial_out <= data_reg[6];
+                          3'b111: serial_out <= data_reg[7];
+                          default: serial_out <= 1'b0; // Default case
+                        endcase
                       o_crc_value <= 5'b00000;
                       o_crc_valid <= 1'b0;
                       next_state <= CALC_CRC;
@@ -135,3 +154,43 @@ end
 */
 endmodule
 
+
+/*
+
+module serializer(
+    input clk,       // Clock input
+    input reset,     // Reset input
+    input [7:0] data_in, // 8-bit input data
+    output reg serial_out // Serialized output
+);
+
+reg [2:0] counter;  // Counter to keep track of bit position
+
+always @(posedge clk or posedge reset) begin
+    if (reset) begin
+        counter <= 3'b000; // Reset counter
+        serial_out <= 1'b0; // Reset serial output
+    end else begin
+        // Shift data_out left on every clock cycle
+        if (counter < 3'b111)
+            counter <= counter + 1;
+        else
+            counter <= 3'b000;
+
+        // Output serial_out based on the counter value
+        case(counter)
+            3'b000: serial_out <= data_in[0];
+            3'b001: serial_out <= data_in[1];
+            3'b010: serial_out <= data_in[2];
+            3'b011: serial_out <= data_in[3];
+            3'b100: serial_out <= data_in[4];
+            3'b101: serial_out <= data_in[5];
+            3'b110: serial_out <= data_in[6];
+            3'b111: serial_out <= data_in[7];
+            default: serial_out <= 1'b0; // Default case
+        endcase
+    end
+end
+
+endmodule
+*/
