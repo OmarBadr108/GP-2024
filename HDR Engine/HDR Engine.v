@@ -52,7 +52,7 @@ localparam  IDLE          = 2'b00;
 localparam  CCC           = 2'b01;
 localparam  DDR_MODE      = 2'b10;
 
-reg current_state, next_state;
+reg [1:0] current_state, next_state;
 reg ccc_done;
 
 //--------------------------------- main ------------------------------------------------
@@ -94,7 +94,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
             else if ((!i_TOC && i_ccc_done) && (i_MODE == 'd6)) begin
               ccc_done                      <= 1'b0 ; //******signal 3mltha 3shan a3rf arg3 ll ddrmode*//////
               o_ccc_en                      <= 1'b0 ;
-              //o_regf_addr_special           <= 8'd10;
+              o_regf_addr_special           <= 8'd10;
               o_i3cengine_hdrengine_done    <= 1'b0 ;
               ///tid puts on output when the command is done
                   if(!i_CP) 
@@ -112,6 +112,8 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
 
                   ////****/////
                   if(i_ccc_done && ccc_done && !i_CP ) begin
+                    o_regf_addr_special           <= 8'd10;
+                    o_ccc_en   <= 1'b0 ;
                     o_ddrmode_en <= 1'b1 ;
                     next_state   <= DDR_MODE ; 
                   end
@@ -131,7 +133,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
               o_ddrmode_en    <= 1'b0 ;
               o_i3cengine_hdrengine_done    <= 1'b0 ;
               //tid puts on output when it is done
-                  if (!CP) begin
+                  if (!i_CP) begin
                     o_ddrmode_en <= 1'b1 ;
                     next_state   <= DDR_MODE ;
                   end
@@ -155,3 +157,4 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
             end        
 end 
 endmodule
+
