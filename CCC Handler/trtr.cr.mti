@@ -1,0 +1,22 @@
+{C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/scl_generation.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/scl_generation.v}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module scl_generation
+
+Top level modules:
+	scl_generation
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/bits_counter.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/bits_counter.v}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module bits_counter
+
+Top level modules:
+	bits_counter
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler_tb.sv} {1 {vlog -work work -vopt -sv -stats=none {C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler_tb.sv}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module CCC_Handler_tb
+
+Top level modules:
+	CCC_Handler_tb
+
+} {} {}}

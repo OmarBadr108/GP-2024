@@ -1,0 +1,118 @@
+m255
+K4
+z2
+Z0 !s99 nomlopt
+R0
+R0
+R0
+R0
+R0
+R0
+!s11f vlog 2021.1 2021.01, Jan 19 2021
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler
+T_opt
+!s110 1709842718
+VKa19Yi[J4N990NV2ae9O51
+04 16 4 work frame_counter_tb fast 0
+=3-48a472837b0b-65ea211d-2d1-b30
+!s124 OEM100
+o-quiet -auto_acc_if_foreign -work work +acc
+Z1 tCvgOpt 0
+n@_opt
+OL;O;2021.1;73
+vbits_counter
+Z2 !s110 1709842715
+!i10b 1
+!s100 Ed@e71<1VP`T8Y830gF9H2
+II;hg;?91C1?PfA3mQCI^h0
+Z3 dC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter
+w1709047035
+8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/bits_counter.v
+FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/bits_counter.v
+!i122 30
+L0 3 84
+Z4 VDg1SIo80bB@j0V0VzS_@n1
+Z5 OL;L;2021.1;73
+r1
+!s85 0
+31
+Z6 !s108 1709842715.000000
+!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/bits_counter.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/bits_counter.v|
+!i113 0
+Z7 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1
+vframe_counter
+R2
+!i10b 1
+!s100 FTzm>U?B<J^gK_jA[ko1K0
+Iec[elek=2>V6gJNc]k:YO3
+R3
+w1709842072
+8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/FRAME_COUNTER.v
+FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/FRAME_COUNTER.v
+!i122 31
+L0 4 78
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/FRAME_COUNTER.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/FRAME_COUNTER.v|
+!i113 0
+R7
+R1
+vframe_counter_tb
+DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+R2
+!i10b 1
+!s100 mRdkgn3P=4^8HF9z1g8dm1
+Iz4Q9LW>2BYgczXR?X[Z`[2
+S1
+R3
+w1709842711
+8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/frame_counter_tb.sv
+FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/frame_counter_tb.sv
+!i122 29
+L0 1 139
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/frame_counter_tb.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/frame_counter_tb.sv|
+!i113 0
+o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1
+vscl_generation
+R2
+!i10b 1
+!s100 `Y0Fd4C>ZTJlnmoNMj0Xh0
+I@CZ7Lzl>23B8nKknYE2VF2
+R3
+w1708522074
+8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/scl_generation.v
+FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/scl_generation.v
+!i122 32
+L0 34 134
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/scl_generation.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/scl_generation.v|
+!i113 0
+R7
+R1

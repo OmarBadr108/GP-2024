@@ -151,6 +151,10 @@ R0
 R0
 R0
 R0
+R0
+R0
+R0
+R0
 !s11f vlog 2021.1 2021.01, Jan 19 2021
 13
 !s112 1.1
@@ -160,10 +164,10 @@ R0
 cModel Technology
 Z1 dC:/questasim64_2021.1/examples
 T_opt
-!s110 1709500457
-V6df1DIWBDKnPzCRRORY6e1
+!s110 1709841349
+VZgKI1dfKQ7`Y2UWmJ^l0D3
 Z2 04 14 4 work CCC_Handler_tb fast 0
-=21-48a472837b0b-65e4e829-57-83c
+=2-3c2c30a457d5-65ea1bc4-381-21b0
 Z3 !s124 OEM100
 o-quiet -auto_acc_if_foreign -work work +acc
 Z4 tCvgOpt 0
@@ -181,7 +185,7 @@ n@_opt1
 R5
 R1
 vbits_counter
-Z6 !s110 1709500454
+Z6 !s110 1709841340
 !i10b 1
 !s100 Ed@e71<1VP`T8Y830gF9H2
 I=GTNoXD=Kz:JziZCYN_ag2
@@ -189,14 +193,14 @@ Z7 dC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler
 w1709047035
 8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/bits_counter.v
 FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/bits_counter.v
-!i122 704
+!i122 727
 L0 3 84
 Z8 VDg1SIo80bB@j0V0VzS_@n1
 Z9 OL;L;2021.1;73
 r1
 !s85 0
 31
-Z10 !s108 1709500454.000000
+Z10 !s108 1709841340.000000
 !s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/bits_counter.v|
 !s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/bits_counter.v|
 !i113 0
@@ -205,14 +209,14 @@ R4
 vCCC_Handler
 R6
 !i10b 1
-!s100 i1MEz0KIClgZXGU3B?SfQ2
-IT@?K2XS@^jl`ej27_VaKe0
+!s100 73@C`]ZHg;f8WM^zZNMZ;0
+IKWG10W8?>dNKdXJCM@[Ea1
 R7
-w1709500450
+w1709841335
 8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC Handler.v
 FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC Handler.v
-!i122 705
-L0 33 1065
+!i122 728
+L0 33 861
 R8
 R9
 r1
@@ -233,10 +237,10 @@ R6
 IZ_AoUCDcG<X<f@=Qh:26m2
 S1
 R7
-w1709500316
+w1709806318
 8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler_tb.sv
 FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler_tb.sv
-!i122 706
+!i122 729
 L0 1 2030
 R8
 R9
@@ -281,7 +285,7 @@ R7
 w1708522074
 8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/scl_generation.v
 FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/scl_generation.v
-!i122 707
+!i122 730
 L0 34 134
 R8
 R9
