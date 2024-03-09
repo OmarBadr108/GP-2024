@@ -34,10 +34,13 @@ reg					i_scl_gen_stall_tb          ;
 reg 					i_sdr_ctrl_scl_idle_tb		;
 reg 					i_timer_cas_tb				;
 
-wire [7:0] DATA 				= 'b10100001;
-wire [7:0] DATA2 				= 'b11010100;
-wire [3:0] TOKEN     		= 'b0011;
-wire [4:0] CRC_VALUE 		= 'b10101;
+wire [7:0]  DATA 				= 'b10100001;
+wire [7:0]  DATA2 			= 'b11010100;
+wire [3:0]  TOKEN     		= 'b0011;
+wire [4:0]  CRC_VALUE 		= 'b10101;
+wire [37:0] ERROR_BITS 		= 38'b1;
+
+
 // Clock Generation
  always #(CLK_PERIOD/2) i_sys_clk_tb  = ~ i_sys_clk_tb ;
 
@@ -172,9 +175,25 @@ initial
 
 	    for (i=2 ; i<7 ; i=i+1)  
        	begin
-           @(negedge i_sclgen_scl_tb or posedge i_sclgen_scl_tb)
+           //@(negedge i_sclgen_scl_tb or posedge i_sclgen_scl_tb)
               #(2*CLK_PERIOD) i_sdahnd_rx_sda_tb = CRC_VALUE[i-1] ;  
         end
+
+
+        //////////////////////// 6. Error Case //////////////////////////////
+        	    @(negedge o_ddrccc_rx_mode_done_tb)
+	    i_ddrccc_rx_en_tb   = 1'b1; 
+	    i_ddrccc_rx_mode_tb = 4'b1111;   // ERROR state
+
+	    //#(CLK_PERIOD) 
+	    i_sdahnd_rx_sda_tb = ERROR_BITS[0] ;
+
+	    for (i=2 ; i<38 ; i=i+1)  
+       	begin
+           //@(negedge i_sclgen_scl_tb or posedge i_sclgen_scl_tb)
+              #(2*CLK_PERIOD) i_sdahnd_rx_sda_tb = CRC_VALUE[i-1] ;  
+        end
+
 
 
         #(7*CLK_PERIOD)
