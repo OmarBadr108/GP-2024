@@ -39,7 +39,7 @@ input                     i_sclgen_scl_pos_edge,
 input                     i_sclgen_scl_neg_edge,
 input                     i_ddrccc_rx_en,
 input                     i_sdahnd_rx_sda,
-input     [4:0]           i_bitcnt_rx_bit_count,
+//input     [4:0]           i_bitcnt_rx_bit_count,
 input     [3:0]           i_ddrccc_rx_mode,
 input                     i_crc_value,
 input                     i_crc_valid,
@@ -66,7 +66,7 @@ localparam [3:0]
                      DESERIALIZING_BYTE  = 4'b0011  ,                   
                      CHECK_TOKEN         = 4'b0101  ,
                      CHECK_PAR_VALUE     = 4'b0110  ,
-                     CHECK_CRC_VALUE     = 4'b0111  ;
+                     CHECK_CRC_VALUE     = 4'b0111  ,
                      ERROR               = 4'b1111  ;
 
 
@@ -74,7 +74,7 @@ localparam [3:0]
 ////////////////////////////////////////////////////////////////////////////
 
 
-reg [2:0]  count;
+reg [5:0]  count;
 wire        count_done;
 reg [15:0] data_paritychecker;
 reg        byte_num;
