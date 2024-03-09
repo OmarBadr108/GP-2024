@@ -4,15 +4,15 @@
  Copyright (c) 2023 Mixel, Inc.  All Rights Reserved.
  CONFIDENTIAL AND PROPRIETARY SOFTWARE/DATA OF MIXEL and ASU 2024 GP, INC.
 
- Authors: 
+ Authors: Omar Mohammed Badr
  
  Revision:   
 
  Version : 1.0
 
- Create Date: 
- Design Name:  
- Module Name:  
+ Create Date: 12/2/2024
+ Design Name: Common Command Code Handler
+ Module Name: CCC_Handler
 
 ==================================================================================
 
@@ -103,30 +103,22 @@ localparam [4:0] IDLE               = 5'd0 ; // 0
 localparam [4:0] PRE_CMD            = 5'd1 ; // 1
 localparam [4:0] RNW                = 5'd2 ; // 2
 localparam [4:0] RESERVED           = 5'd3 ; // 3
-//localparam [4:0] FIRST_CMD_BYTE   = 5'b00010 ; // 2
 localparam [4:0] SECOND_CMD_BYTE    = 5'd4 ; // 4
-
 localparam [4:0] PARITY_CMD         = 5'd5 ; 
 localparam [4:0] PRE_FIRST_DATA_ONE = 5'd6 ; 
 localparam [4:0] PRE_FIRST_DATA_TWO = 5'd7 ; 
 localparam [4:0] CCC_BYTE           = 5'd8 ; 
 localparam [4:0] DEFINING_BYTE      = 5'd9 ; 
-
 localparam [4:0] ZEROS              = 5'd10 ;
 localparam [4:0] PARITY_DATA        = 5'd11 ;
 localparam [4:0] PRE_DATA_ONE       = 5'd12 ;
-localparam [4:0] PRE_DATA_TWO       = 5'd13 ;
-//localparam [4:0] PRE_DATA           = 5'd12 ; 
+localparam [4:0] PRE_DATA_TWO       = 5'd13 ; 
 localparam [4:0] FIRST_DATA_BYTE    = 5'd14 ; 
-
 localparam [4:0] SECOND_DATA_BYTE   = 5'd15 ;
-//localparam [4:0] CRC_STATE          = 5'd15 ;
 localparam [4:0] C_TOKEN_STATE      = 5'd16 ; 
 localparam [4:0] CRC_CHECKSUM_STATE = 5'd17 ; 
-
 localparam [4:0] RESTART_PATTERN    = 5'd18 ; 
 localparam [4:0] EXIT_PATTERN       = 5'd19 ; 
-
 localparam [4:0] ERROR              = 5'd20 ; 
 localparam [4:0] FINISH             = 5'd21 ; 
 
@@ -332,6 +324,8 @@ end
 
                 if (i_engine_en) begin 
                     next_state = PRE_CMD ;
+                    o_tx_en    = 1'b1 ; 
+                    o_tx_mode  = special_preamble ; 
                 end
                 else begin 
                     next_state = IDLE ;
@@ -482,39 +476,6 @@ end
             end 
 
 
-
-/*
-
-            PRE_FIRST_DATA : begin  // should be 10 to mean ACK ,    and 11 is NACK
-                    if (i_bitcnt_number == 5'd1 && i_tx_mode_done) begin 
-                        o_tx_en   = 1'b0 ;
-                        o_rx_en   = 1'b1 ;
-                        o_rx_mode = preamble_rx_mode ;
-                        //o_sdahand_pp_od = 1'b0 ;             // open drain 
-                    end 
-                    else begin 
-                        o_tx_en   = 1'b1 ; 
-                    end 
-                    // enable rx and check the target's response
-                    if (i_bitcnt_number == 5'd1 && i_rx_mode_done && !i_rx_pre) begin 
-                        next_state = CCC_BYTE ;
-                        o_tx_en    = 1'b1 ;   
-                        o_rx_en    = 1'b0 ;
-                    end
-                    else if (i_bitcnt_number == 5'd1 && i_rx_mode_done && i_rx_pre) begin 
-                        next_state        = ERROR ;
-                        o_regf_ERR_STATUS = NACK ;
-                        o_tx_en    = 1'b1 ;   
-                        o_rx_en    = 1'b0 ;
-                    end
-                    else begin
-                        next_state = PRE_FIRST_DATA ;
-                    end
-            
-            end
-
-*/
-
             CCC_BYTE : begin    // contains CCC value
 
                 o_tx_en      = 1'b1 ;
@@ -524,17 +485,13 @@ end
                 if (i_tx_mode_done && Defining_byte) begin   // if a defining byte exists
                     next_state = DEFINING_BYTE ;
                 end
-                else if (i_tx_mode_done && !Defining_byte && i_frmcnt_last_frame) begin   
+                else if (i_tx_mode_done && !Defining_byte) begin   
                     next_state = ZEROS ;
-                    o_engine_odd = 1'b1 ;  
-                end
+                end 
                 else begin 
                     next_state = CCC_BYTE ;
                 end
 
-                // erorr state condition is remaining 
-
-                
             end
 
             DEFINING_BYTE : begin    // contains definaing byte if exist
@@ -558,8 +515,14 @@ end
                 o_tx_mode    = serializing_byte_regf ; 
                 o_regf_rd_en = 1'b1 ;
                 o_regf_addr  = first_location - 1  ;
+                if (i_frmcnt_last_frame) begin 
+                    o_engine_odd = 1'b1 ; 
+                end 
+                else begin 
+                    o_engine_odd = 1'b0 ; 
+                end 
 
-                if (i_bitcnt_number == 5'd17 && i_tx_mode_done) begin   
+                if (i_tx_mode_done) begin   
                     next_state = PARITY_DATA ;
 
                 end
@@ -695,81 +658,7 @@ end
                 end 
             end 
 
-/*
-            PRE_DATA : begin        //  11  means ok continue , and 10 to be aborted 
-                if(i_regf_RnW) begin                // read operation from target
-                    if (i_bitcnt_number == 5'd0 && i_rx_mode_done) begin 
-                        if(i_rx_pre) begin // to check that the first preamble is 1 (else is framing error)
-                            o_tx_en   = 1'b1 ;
-                            o_rx_en   = 1'b1 ;
-                            if(controller_abort) begin
-                                o_tx_mode  = zero ; // next state is abort state written below 
-                            end
-                            else begin 
-                                o_tx_mode  = one ; // but OPEN DRAIN ------------------------------- important ---------------------------------
-                            end 
-                        end 
-                        else begin
-                            o_tx_en    = 1'b0 ;
-                            o_rx_en    = 1'b0 ;
-                            next_state = ERROR  ;       // framing error 
-                            o_regf_ERR_STATUS = FRAME ;
-                        end
-                        
-                    end 
-                    //else if (i_bitcnt_number == 5'd2 && i_rx_mode_done && !i_rx_pre) begin // then it's a short read an i have to go to CRC state
 
-                    //end 
-                    else begin 
-                        o_rx_en   = 1'b1 ; 
-                        o_tx_en   = 1'b0 ;
-                        o_rx_mode = preamble_rx_mode ;
-                    end 
-                    // state transition
-                    if (i_bitcnt_number == 5'd1 && i_tx_mode_done && i_rx_pre) begin 
-                        next_state = FIRST_DATA_BYTE ;
-                        //o_tx_en    = 1'b1 ;   
-                        //o_rx_en    = 1'b0 ;
-                    end
-                    else if (i_bitcnt_number == 5'd1 && i_tx_mode_done && controller_abort) begin 
-                        next_state = ERROR ; // abort reading state
-                        o_regf_ERR_STATUS = C_ABORTED ;
-                    end
-                    else begin
-                        next_state = PRE_DATA ;
-                    end
-                end 
-                else begin                          // write operation to target
-
-                    if (i_bitcnt_number == 5'd0 && i_tx_mode_done) begin 
-                        o_tx_en   = 1'b0 ;
-                        o_rx_en   = 1'b1 ;
-                        o_rx_mode = preamble_rx_mode ;
-                        //o_sdahand_pp_od = 1'b0 ;             // open drain 
-                    end 
-                    else begin 
-                        o_tx_en   = 1'b1 ; 
-                        o_tx_mode = one ;
-                    end 
-
-
-                    // enable rx and check the target's response
-                    if (i_bitcnt_number == 5'd1 && i_rx_mode_done && i_rx_pre) begin 
-                        next_state = FIRST_DATA_BYTE ;
-                        //o_tx_en    = 1'b1 ;   
-                        //o_rx_en    = 1'b0 ;
-                    end
-                    else if (i_bitcnt_number == 5'd1 && i_rx_mode_done && !i_rx_pre) begin 
-                        next_state = ERROR ;
-                        o_regf_ERR_STATUS = T_ABORTED ;
-                    end
-                    else begin
-                        next_state = PRE_DATA ;
-                    end
-                end 
-            end
-
-*/
             FIRST_DATA_BYTE : begin    // contains first repeated data byte
                 if (!i_regf_RnW) begin  // write operation 
                     o_tx_en      = 1'b1 ;
@@ -808,7 +697,7 @@ end
                 // for both read and write 
                 if ((i_rx_mode_done | i_tx_mode_done) && i_frmcnt_last_frame) begin  // to handle odd number of bytes in both regular and immediate
                     next_state   = ZEROS ; 
-                    o_engine_odd = 1'b1 ;            // to be put in the response discreptor      
+                    //o_engine_odd = 1'b1 ;            // to be put in the response discreptor      
                 end
                 else if ((i_rx_mode_done | i_tx_mode_done) && !i_frmcnt_last_frame) begin  
                     next_state = SECOND_DATA_BYTE ; 
@@ -928,97 +817,6 @@ end
                 end  
             end 
 
-/*
-            CRC_STATE : begin                  // this state can handle the rest of the CRC word (2 + 4 + 5 + 1)
-                if (!i_regf_RnW) begin  // write 
-                    o_tx_en   = 1'b1 ;
-                    if (i_bitcnt_number < 5'd2) begin 
-                        // tx mode on preamble 01  
-                        o_tx_mode = special_preamble ;
-                    end 
-                    else if ((i_bitcnt_number >= 5'd2 && i_bitcnt_number < 5'd6) && i_tx_mode_done) begin 
-                        o_tx_mode = c_token_CRC ;  
-                    end
-                    else if ((i_bitcnt_number >= 5'd6 && i_bitcnt_number < 5'd11) && i_tx_mode_done) begin 
-                        // tx mode on 5-bits CRC checksum
-                        o_tx_mode = value_CRC ;  
-                    end 
-
-               
-                    else if (i_bitcnt_number == 5'd11 && i_tx_mode_done) begin 
-                        // finish a command discriptor
-                        o_tx_mode = one ;
-                 
-                        if (Direct_Broadcast_n && first_time) begin 
-                            next_state    = RESTART_PATTERN ;
-                            o_engine_done = 1'b0 ;
-                            first_time    = 1'b0 ;
-                        end 
-                        else begin  // finshed crc on DATA (second CRC)
-                            if (!i_regf_TOC) begin 
-                                next_state = RESTART_PATTERN ;
-                                //o_engine_done = 1'b1 ;
-                            end 
-                    
-                            else begin 
-                                next_state = EXIT_PATTERN ;
-                                //o_engine_done = 1'b1 ;
-                            end 
-                        end 
-
-                    end
-
-                    else begin 
-                        next_state = CRC_STATE ;
-                    end
-                end  
-                    //////////////////////////////////////////// READ //////////////////////////////////////////////
-                else begin  // read  
-                    o_rx_en   = 1'b1 ;
-                    if (i_bitcnt_number < 5'd2) begin 
-                        // rx mode on preamble 01  
-                        o_rx_mode = special_preamble_rx ;
-                    end 
-                    else if ((i_bitcnt_number >= 5'd2 && i_bitcnt_number < 5'd6) && i_rx_mode_done) begin 
-                        o_rx_mode = check_c_token_CRC ;  
-                    end
-                    else if ((i_bitcnt_number >= 5'd6 && i_bitcnt_number < 5'd11) && i_rx_mode_done) begin 
-                        // rx mode on 5-bits CRC checksum
-                        o_rx_mode = check_value_CRC ;  
-                    end 
-
-               
-                    else if (i_bitcnt_number == 5'd11 && i_rx_mode_done) begin 
-                        // check CRC error 
-                        if (i_rx_error) begin 
-                            next_state        = ERROR ;
-                            o_regf_ERR_STATUS = CRC_ERR ;
-                        end 
-                        
-                        else if (Direct_Broadcast_n && first_time) begin 
-                            next_state    = RESTART_PATTERN ;
-                            o_engine_done = 1'b0 ;
-                            first_time    = 1'b0 ;
-                        end 
-                        else begin 
-                            if (!i_regf_TOC) begin 
-                                next_state = RESTART_PATTERN ;
-                                //o_engine_done = 1'b1 ;
-                            end 
-                    
-                            else begin 
-                                next_state = EXIT_PATTERN ;
-                                //o_engine_done = 1'b1 ;
-                            end 
-                        end 
-                    end
-
-                    else begin 
-                        next_state = CRC_STATE ;
-                    end
-                end     
-            end
-*/
 
             RESTART_PATTERN : begin 
                 // access timer and staller and tx to perform restart pattern 
@@ -1077,6 +875,7 @@ end
             
 
             FINISH : begin 
+                
                 first_time        = 1'b1 ;   // flag to help to differentiate between the direct and broadcast with assistance of Direct_Braodcast_n flag 
                 o_bitcnt_en       = 1'b0 ;
                 regular_counter   = 'd4  ;   // data starts from fifth location
@@ -1088,10 +887,7 @@ end
                 o_regf_ERR_STATUS = SUCCESS ;
                 next_state = IDLE ;
 
-
             end 
-
-
         endcase
     end
 endmodule 

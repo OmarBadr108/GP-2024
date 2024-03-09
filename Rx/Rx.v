@@ -49,7 +49,8 @@ output  reg               o_ddrccc_rx_mode_done,
 output  reg               o_ddrccc_pre,
 output  reg               o_ddrccc_error,
 output  reg               o_crc_en,                 
-output  reg               o_crc_data_valid
+output  reg               o_crc_data_valid,
+output  reg               o_ddrccc_error_done
 );
 
 
@@ -66,7 +67,7 @@ localparam [3:0]
                      CHECK_TOKEN         = 4'b0101  ,
                      CHECK_PAR_VALUE     = 4'b0110  ,
                      CHECK_CRC_VALUE     = 4'b0111  ;
-                     
+                     ERROR               = 4'b1111  ;
 
 
 
@@ -148,7 +149,9 @@ begin
     count                 <= 'b0;
     byte_num              <= 1'b0;
     o_crc_data_valid      <=  'b0;
-   // parity_value_temp     <= 1'b0;
+ // parity_value_temp     <= 1'b0;
+    o_ddrccc_error_done   <= 1'b0; 
+
    end
 
 
@@ -162,6 +165,7 @@ begin
     //rx_mode_done_flag     <= 1'b0;
    // parity_value_temp     <= 1'b0;
     o_crc_data_valid      <= 1'b0;
+    o_ddrccc_error_done   <= 1'b0; 
 
    case(i_ddrccc_rx_mode) 
 
@@ -338,6 +342,23 @@ begin
                            end
                          
                         end
+
+
+      ERROR:        begin
+                     
+
+                     if (SCL_edges)
+                     begin
+                         count <= count + 1'b1; 
+                     end
+ 
+                     else if (count=='d37 && !i_sdahnd_rx_sda)
+                        begin                       
+                         o_ddrccc_rx_mode_done <= 1'b1; 
+                         o_ddrccc_error_done<=1'b1;
+                         count <= 'b0;
+                        end 
+                    end
  
  
  
@@ -348,7 +369,8 @@ begin
                  o_ddrccc_pre          <= 1'b0;
                  o_ddrccc_error        <= 1'b0;
                  o_crc_en              <= 1'b0; 
-                 o_crc_data_valid      <= 1'b0;        
+                 o_crc_data_valid      <= 1'b0; 
+                 o_ddrccc_error_done   <= 1'b0;       
                  end
 
    

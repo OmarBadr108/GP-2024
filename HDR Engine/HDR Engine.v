@@ -38,11 +38,13 @@ module hdr_engine (
     input   wire            i_TOC                                 , //term of completion if 0 restart/ 1 exit needed for exit
     input   wire            i_CP                                  , // Cmnd present=1 if CCC 0 for Normal Transcation
     input   wire  [2:0]     i_MODE                                ,
+    //input   wire  [3:0]     i_TID                               ,
     //to_blocks
     output  reg             o_i3cengine_hdrengine_done            ,
     output  reg             o_ddrmode_en                          ,
     output  reg             o_ccc_en                              ,
     output  reg   [7:0]     o_regf_addr_special
+    //output  reg  [3:0]     o_TID
 
     );
 /////////////parameters////////////
@@ -50,7 +52,7 @@ localparam  IDLE          = 2'b00;
 localparam  CCC           = 2'b01;
 localparam  DDR_MODE      = 2'b10;
 
-reg current_state, next_state;
+reg [1:0] current_state, next_state;
 reg ccc_done;
 
 //--------------------------------- main ------------------------------------------------
@@ -85,27 +87,38 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
             if((i_TOC && i_ccc_done)||(i_MODE != 'd6)) begin
                   o_ccc_en    <= 1'b0 ;
                   o_i3cengine_hdrengine_done      <= 1'b1 ;
+                  ///tid puts on output when the command is done
 
 
             end
             else if ((!i_TOC && i_ccc_done) && (i_MODE == 'd6)) begin
-              ccc_done   <= 1'b1 ; //******signal 3mltha 3shan a3rf arg3 ll ddrmode*//////
-              o_ccc_en   <= 1'b0 ;
-              o_regf_addr_special <= 8'd10;
+              ccc_done                      <= 1'b0 ; //******signal 3mltha 3shan a3rf arg3 ll ddrmode*//////
+              o_ccc_en                      <= 1'b0 ;
+              o_regf_addr_special           <= 8'd10;
+              o_i3cengine_hdrengine_done    <= 1'b0 ;
+              ///tid puts on output when the command is done
                   if(!i_CP) 
                   begin
-                    ccc_done <= 1'b0 ;
+                    ccc_done   <= 1'b1 ;
                     o_regf_addr_special <= 8'd9; //go to special address to get dummy value
                     o_ccc_en   <= 1'b1 ;
                     next_state <= CCC ; ////********lma yru7 y3ml al dummy hwdeh ddr azay*******//////////
                   end
                   else
-                    next_state <= CCC ;
-/**************guz2 da w ana bfkr azay awdeh ddrmode*///////////
-                  /*if(!i_CP && ccc_done)
-                    next_state <= DDR_MODE ;
+                    begin
+                      o_regf_addr_special           <= 8'd10;
+                      next_state                    <= CCC ;
+                    end
+
+                  ////****/////
+                  if(i_ccc_done && ccc_done && !i_CP ) begin
+                    o_regf_addr_special           <= 8'd10;
+                    o_ccc_en   <= 1'b0 ;
+                    o_ddrmode_en <= 1'b1 ;
+                    next_state   <= DDR_MODE ; 
+                  end
                   else
-                    o_i3cengine_hdrengine_done      <= 1'b1 ;*/
+                    next_state   <= CCC ;
             end
             else
                   o_i3cengine_hdrengine_done      <= 1'b0 ;
@@ -114,9 +127,13 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
             if ((i_TOC && i_ddr_mode_done)||(i_MODE != 'd6)) begin
               o_ddrmode_en    <= 1'b0 ;
               o_i3cengine_hdrengine_done      <= 1'b1 ;
+              //tid puts on output when it is done
             end
-            else if ((!i_TOC && i_ccc_done) && (i_MODE == 'd6)) begin
-                  if (!CP) begin
+            else if ((!i_TOC && i_ddr_mode_done) && (i_MODE == 'd6)) begin
+              o_ddrmode_en    <= 1'b0 ;
+              o_i3cengine_hdrengine_done    <= 1'b0 ;
+              //tid puts on output when it is done
+                  if (!i_CP) begin
                     o_ddrmode_en <= 1'b1 ;
                     next_state   <= DDR_MODE ;
                   end
@@ -124,7 +141,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                     o_ccc_en <= 1'b1 ;
                     next_state <= CCC ;
                   end
-                  end
+            end
             else
               begin
                 o_i3cengine_hdrengine_done      <= 1'b0 ;
@@ -140,3 +157,4 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
             end        
 end 
 endmodule
+
