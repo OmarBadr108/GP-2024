@@ -344,20 +344,33 @@ begin
                         end
 
 
-      ERROR:        begin
+      ERROR:        begin                              //error state: to be revisit during target design//
                      
 
                      if (SCL_edges)
-                     begin
-                         count <= count + 1'b1; 
-                     end
- 
-                     else if (count=='d37 && !i_sdahnd_rx_sda)
-                        begin                       
+                      begin
+                          count <= count + 1'b1;
+                          /*if(!i_sdahnd_rx_sda)
+                           count <=1'b0;*/
+                      end
+                     else if (!i_sdahnd_rx_sda)
+                      begin 
+                    
+                       o_ddrccc_rx_mode_done <= 1'b0; 
+                       o_ddrccc_error_done<=1'b0;
+                       count <= 'b0;
+                      end    
+                  
+
+
+                   
+                     else if (count=='d37)
+                        begin 
+                    
                          o_ddrccc_rx_mode_done <= 1'b1; 
                          o_ddrccc_error_done<=1'b1;
                          count <= 'b0;
-                        end 
+                        end    
                     end
  
  

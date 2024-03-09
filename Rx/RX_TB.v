@@ -189,10 +189,14 @@ initial
 	    //#(CLK_PERIOD) 
 	    i_sdahnd_rx_sda_tb = ERROR_BITS[0] ;
 
-	    for (i=2 ; i<38 ; i=i+1)  
+	    for (i=2 ; i<39 ; i=i+1)  
        	begin
            //@(negedge i_sclgen_scl_tb or posedge i_sclgen_scl_tb)
-              #(2*CLK_PERIOD) i_sdahnd_rx_sda_tb = ERROR_BITS[i-1] ;  
+             /*if (i==7)
+              #(2*CLK_PERIOD) i_sdahnd_rx_sda_tb ='b0;
+             else*/ 
+              #(2*CLK_PERIOD) i_sdahnd_rx_sda_tb = ERROR_BITS[i-1] ;
+
         end
 
         	 #(2*CLK_PERIOD) i_sdahnd_rx_sda_tb ='b0 ;
@@ -212,13 +216,13 @@ task initialize;
 	begin
 		i_sys_clk_tb 				= 1'b0;
 		i_sys_rst_tb 				= 1'b1;
-		i_ddrccc_rx_en_tb 			= 1'b0;
-		i_sdahnd_rx_sda_tb          = 'bz;
-		i_crc_valid_tb				=1'b0;
+		i_ddrccc_rx_en_tb 	   = 1'b0;
+		i_sdahnd_rx_sda_tb      =  'bz;
+		i_crc_valid_tb				= 1'b0;
 		i_scl_gen_stall_tb      = 1'b0;
-		i_sdr_ctrl_scl_idle_tb =1'b0;
-		i_sdr_scl_gen_pp_od_tb = 1'b1;
-		i_timer_cas_tb = 1'b0;
+		i_sdr_ctrl_scl_idle_tb  = 1'b0;
+		i_sdr_scl_gen_pp_od_tb  = 1'b1;
+		i_timer_cas_tb          = 1'b0;
 	end
 	endtask
 
