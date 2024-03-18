@@ -14,7 +14,6 @@ reg [4:0]  i_crc_crc_value_tb;
 wire         o_sdahnd_serial_data_tb;
 wire         o_ddrccc_mode_done_tb;
 wire  [7:0]  o_crc_parallel_data_tb;
-wire         o_ddrccc_parity_data_tb;
 wire         o_crc_en_tb;
 
 
@@ -65,8 +64,7 @@ tx DUT1 (
 .o_sdahnd_serial_data (o_sdahnd_serial_data_tb),
 .o_ddrccc_mode_done (o_ddrccc_mode_done_tb),
 .o_crc_parallel_data (o_crc_parallel_data_tb),
-.o_crc_en (o_crc_en_tb),
-.o_ddrccc_parity_data (o_ddrccc_parity_data_tb)
+.o_crc_en (o_crc_en_tb)
 );
 
 
@@ -86,39 +84,44 @@ initial
 		#(3*CLK_PERIOD);
 		i_sys_rst_tb    = 1'b1 ; // not asserted
 		
-		#(7*CLK_PERIOD);
+		#(6*CLK_PERIOD);
 		
 		
 		i_ddrccc_tx_en_tb = 1;
+		i_ddrccc_tx_mode_tb = restart_Pattern;
+		@(posedge o_ddrccc_mode_done_tb);
+		#(2*CLK_PERIOD);
+		
+		
 		i_ddrccc_tx_mode_tb = special_preambles; //start with special pereamble
 		@(posedge o_ddrccc_mode_done_tb); //wait until mode done
-		#(CLK_PERIOD); //wait a sys clk cycle for recieving the new mode
+		#(2*CLK_PERIOD); //wait a sys clk cycle for recieving the new mode
 		
 		
 		i_ddrccc_tx_mode_tb = zero; //mode of sending zero representing the write bit in the cmd word
 		@(posedge o_ddrccc_mode_done_tb);
-		#(CLK_PERIOD);
+		#(2*CLK_PERIOD);
 		
 		
 		i_ddrccc_tx_mode_tb = serializing_zeros; //mode of sending seven zeros to complete the first byte of cmd word
 		@(posedge o_ddrccc_mode_done_tb);
-		#(CLK_PERIOD);
+		#(2*CLK_PERIOD);
 		
 		
 		i_ddrccc_special_data_tb = 8'b01100110; //i will use in this mode just the first 7 bits that represent address
 		i_ddrccc_tx_mode_tb = serializing_address; //mode of sending the address and the parity adj (second byte of cmd word)
 		@(posedge o_ddrccc_mode_done_tb);
-		#(CLK_PERIOD);
+		#(2*CLK_PERIOD);
 		
 		
 		i_ddrccc_tx_mode_tb = calculating_Parity; //mode of sending the parity of the cmd word
 		@(posedge o_ddrccc_mode_done_tb);
-		#(CLK_PERIOD);
+		#(2*CLK_PERIOD);
 		
 		
 		i_ddrccc_tx_mode_tb = one; //mode of sending one representing the first preamble of the second stage of preambles
 		@(posedge o_ddrccc_mode_done_tb);
-		#(CLK_PERIOD);
+		#(2*CLK_PERIOD);
 		
 		
 		i_ddrccc_tx_en_tb = 0; //disable tx for enabling rx to recieve ack bit 
@@ -129,35 +132,39 @@ initial
 		i_ddrccc_tx_en_tb = 1;
 		i_ddrccc_tx_mode_tb = CCC_value; //mode of sending ccc_value as first byte of data word
 		@(posedge o_ddrccc_mode_done_tb);
-		#(CLK_PERIOD);
+		#(2*CLK_PERIOD);
 		
 		
 		i_regf_tx_parallel_data_tb = 8'b11001001; 
 	  i_ddrccc_tx_mode_tb = serializing_data; //mode of sending data byte as second byte of data word
 		@(posedge o_ddrccc_mode_done_tb);
-		#(CLK_PERIOD);
+		#(2*CLK_PERIOD);
 		
 		
 		i_ddrccc_tx_mode_tb = calculating_Parity; //mode of sending the parity of the data word (same mode of cmd word parity by using internal flag)
 		@(posedge o_ddrccc_mode_done_tb);
-		#(CLK_PERIOD);
+		#(2*CLK_PERIOD);
 		
 
 		i_ddrccc_tx_mode_tb = special_preambles; //sending special preamble 'b10 indicating end of transmission and crc in the waaay
 		@(posedge o_ddrccc_mode_done_tb);
-		#(CLK_PERIOD);
+		#(2*CLK_PERIOD);
 		
 		
 		i_ddrccc_tx_mode_tb = token_CRC; //mode of sending crc token 'b1100
 		#(3*CLK_PERIOD); 
 		i_crc_crc_value_tb = 'b10110; //the crc values arrived from crc block
 		@(posedge o_ddrccc_mode_done_tb);
-		#(CLK_PERIOD);
+		#(2*CLK_PERIOD);
 		
 		
 		i_ddrccc_tx_mode_tb = CRC_value; //sending crc values
 		@(posedge o_ddrccc_mode_done_tb);
-		#(CLK_PERIOD);
+		#(2*CLK_PERIOD);
+		
+		i_ddrccc_tx_mode_tb = exit_Pattern;
+		@(posedge o_ddrccc_mode_done_tb);
+		#(2*CLK_PERIOD);
 		
 		
 		i_ddrccc_tx_en_tb = 0;
@@ -181,7 +188,6 @@ initial
 		
    
 	
-
 
 
 
