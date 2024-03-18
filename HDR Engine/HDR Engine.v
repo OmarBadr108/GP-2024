@@ -86,7 +86,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
           CCC : begin
             if((i_TOC && i_ccc_done)||(i_MODE != 'd6)) begin
                   o_ccc_en    <= 1'b0 ;
-                  o_i3cengine_hdrengine_done      <= 1'b1 ;
+                  o_i3cengine_hdrengine_done      <= 1'b1 ;             //exit pattern should be sent before the done signal -laila
                   ///tid puts on output when the command is done
 
 
@@ -107,7 +107,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                   else
                     begin
                       o_regf_addr_special           <= 8'd10;
-                      next_state                    <= CCC ;
+                      next_state                    <= CCC ;     //**o_ccc_en                      <= 1'b1 ;   -laila
                     end
 
                   ////****/////
