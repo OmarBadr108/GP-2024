@@ -106,6 +106,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                   end
                   else
                     begin
+                      o_ccc_en                      <= 1'b1 ;
                       o_regf_addr_special           <= 8'd10;
                       next_state                    <= CCC ;     //**o_ccc_en                      <= 1'b1 ;   -laila
                     end
