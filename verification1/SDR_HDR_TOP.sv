@@ -324,7 +324,7 @@ module sdr_hdr_transition_top (
    wire       [2:0]      enthdr_rx_mode              ;
    wire                  enthdr_bit_cnt_en           ;
    wire                  ser_hdr_data                ;
-   wire                  reg_wr_en_mode              ; 
+   wire                  regf_wr_en_mode              ; 
    wire                  regf_rd_en_mode             ; 
    wire                  regf_rd_address_mode        ;
    wire                  scl_pp_od_mode              ;    
@@ -345,7 +345,9 @@ module sdr_hdr_transition_top (
    wire                  ddr_regf_wr_en;                 // out from ddr_block
    wire                  regf_wr_en_hdr_mux_sel;          //out_from hdr_engine 
 
-
+   wire         [9:0]    ccc_regfaddr;                      // out from ccc_block   
+   wire         [9:0]    ddr_regf_address;                  // out from ddr_block
+   wire         [9:0]    regf_rd_address_hdr_mux_sel;          //out_from hdr_engine 
 
 
 
@@ -433,7 +435,7 @@ i3c_engine u_i3c_engine (
             .o_mode_sda_sel  (sda_sel),
             .o_hdrengine_en   (hdrengine_en), 
 
-            .o_regf_wr_en_sdr_hdr_sel(reg_wr_en_mode), 
+            .o_regf_wr_en_sdr_hdr_sel(regf_wr_en_mode), 
             .o_regf_rd_en_sdr_hdr_sel(regf_rd_en_mode), 
             .o_regf_rd_address_sdr_hdr_sel(regf_rd_address_mode),
             .o_scl_pp_od_sdr_hdr_sel(scl_pp_od_mode)        
@@ -950,12 +952,12 @@ gen_mux #(10,1) regf_rd_address__hdr_mux (
 ///////////////sdr_hdr_muxs/////////////////////
 gen_mux #(1,1) reg_rd_en_mode_mux (
             .data_in  ({regf_rd_en_hdr_mux_out,regf_rd_en_sdr_mux_out}),        
-            .ctrl_sel (reg_rd_en_mode)  ,
+            .ctrl_sel (regf_rd_en_mode)  ,
             .data_out (regf_rd_en_mux_out));
 
 gen_mux #(1,1) reg_wr_en_mode_mux (
             .data_in  ({regf_wr_en_hdr_mux_out,regf_wr_en_sdr_mux_out}),        
-            .ctrl_sel (reg_wr_en_mode)  ,
+            .ctrl_sel (regf_wr_en_mode)  ,
             .data_out (regf_wr_en_mux_out));
 
 
