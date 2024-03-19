@@ -65,7 +65,7 @@ module i3c_engine (
     ///////////////////////hdr//////////////////////////////////
     input   wire          i_hdr_en                    ,
     input   wire          i_enthdr_done               ,
-    input   wire          i_hdrengine_exit          ,
+    input   wire          i_hdrengine_done          ,
     ////////////////////////////////////////////////////////////
     output  reg           o_sdr_en                  ,
     output  reg           o_i2c_en                  , 
@@ -759,7 +759,7 @@ always @(posedge i_clk or negedge i_rst_n)
 
              HDR_ENGINE:
                begin
-                 if(i_hdrengine_exit)
+                 if(i_hdrengine_done)
                   begin
                     o_scl_pp_od_mux_sel           <= I3C_ENGINE_SEL ;
                     o_tx_en_mux_sel               <= I3C_ENGINE_SEL ;
