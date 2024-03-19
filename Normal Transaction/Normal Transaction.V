@@ -12,12 +12,13 @@ input        i_rx_error,
 
 //----------- interface input signals-----------//
 
-input        i_regf_toc,          // 1’b0: RESTART ; 1’b1: STOP
-input [4:0]  i_regf_dev_index,   // 5’b0: Broadcat  ;  any other value: Direct  
-input        i_regf_short_read,  // 1’b0: ALLOW_SHORT_READ  ; 1’b1: SHORT_READ_IS_ERROR 
-input        i_regf_wroc ,       //1’b0: NOT_REQUIRED RESPONSE ; 1’b1: REQUIRED RESPONSE
-input        i_regf_wr_rd_bit,   //  1’b0: WRITE ; 1’b1: READ
-
+input        i_regf_toc,          	// 1’b0: RESTART ; 1’b1: STOP
+input [4:0]  i_regf_dev_index,   	// 5’b0: Broadcat  ;  any other value: Direct  
+input        i_regf_short_read,  	// 1’b0: ALLOW_SHORT_READ  ; 1’b1: SHORT_READ_IS_ERROR 
+input        i_regf_wroc ,       	//1’b0: NOT_REQUIRED RESPONSE ; 1’b1: REQUIRED RESPONSE
+input        i_regf_wr_rd_bit,   	//  1’b0: WRITE ; 1’b1: READ
+input        i_regf_cmd_attr,     	// 1'b1: Immediate Data Transfer Command ; 1'b0:Regular Transfer Command
+input [2:0]  i_regf_dtt,			// Determine The Number of Data Byte
 
 
 /*// to be removed 
@@ -27,7 +28,7 @@ input        i_scl_neg_edge,*/
 
 
 output reg       o_tx_en,
-output reg [4:0] o_tx_mode,
+output reg [3:0] o_tx_mode,
 output reg       o_rx_en,
 output reg [3:0] o_rx_mode,
 output reg       o_frmcnt_en,
@@ -40,6 +41,7 @@ output reg [9:0] o_regf_addr,
 output reg [3:0] o_sclstall_no_of_cycles,
 output reg       o_sclstall_en,  
 output reg       o_engine_done,
+output reg [7:0] o_tx_special_data, ////////////////////// to be added in testbench
 
 //------------ interface output signals ---------//
 output reg       o_regf_abort,
@@ -111,7 +113,7 @@ localparam [3:0]  seven_zeros = 'd0,
  
  // -------------- rx modes ----------------//  
 localparam [3:0]     preamble = 'd0, 
-                     nack_bit = 'd1 ,				 
+                  //   nack_bit = 'd1 ,				 
                      Deserializing_byte = 'd3,                   
                      Check_token = 'd4,
                      Check_Parity_value = 'd5,
@@ -261,6 +263,8 @@ always @(posedge i_sys_clk or negedge i_sys_rst)
 
 		        if (i_rx_mode_done | i_tx_mode_done)
 		          begin
+				  	 
+
 
 				    if (Parity_data_seq)begin	
 				          		 
@@ -329,7 +333,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst)
 		        if (i_rx_mode_done)  
 		          begin
 				
-				       if (!i_rx_error)      
+				       if (i_rx_pre)      
 		             next_state = first_data_byte ;
 				    else 
                  next_state = error ;
@@ -702,16 +706,20 @@ always @(*)
 		
 		
 		if (!i_regf_dev_index)
-		o_regf_addr = broadcast_address;      // sending in broadcast mode   
+		o_tx_special_data = broadcast_address;      // sending in broadcast mode   
         else 
-		o_regf_addr = target_addres;          // sending in Direct mode 
+		o_tx_special_data = target_addres;          // sending in Direct mode 
 
 		  end
 
 
   parity        : begin
-
-        if (!i_regf_wr_rd_bit)
+		if (i_tx_mode_done)
+		 o_frmcnt_en = 'b1 ;
+		 else 
+		  o_frmcnt_en = 'b0 ;
+		
+	   if (!i_regf_wr_rd_bit)
          begin
           o_tx_en = 'b1;
 		  
@@ -752,8 +760,8 @@ always @(*)
 	     
 		// o_sdahand_pp_od = 'b0;   //listening to sda
           o_rx_en = 'b1 ;
-	      o_rx_mode = nack_bit ;
-	      if (i_rx_error)
+	      o_rx_mode = preamble ;
+	      if (!i_rx_pre)
          o_regf_error_type = NACK_Error;
         else 
 		begin
@@ -762,10 +770,27 @@ always @(*)
 		 end
 		   
 		   
-		   if (!i_regf_wr_rd_bit)
-		   o_regf_addr = 'd1;      // starting from this address to write 
+		 if (!i_regf_wr_rd_bit)
+		  if (i_regf_cmd_attr)              // Immediate Transfer
+			begin 
+			case (i_regf_dtt)
+			'd0 : o_regf_addr = 'd0;         // no data 
+			'd1 : o_regf_addr = 'd20;       // sending Byte1 of address 'd20 
+			'd2 : o_regf_addr = 'd20;       // sending Byte1 of address 'd20 and  sending Byte2 of address 'd21
+			'd3 : o_regf_addr = 'd20;		// sending Byte1 of address 'd20 and sending Byte2 of address 'd21 and sending Byte3 of address 'd22
+			'd4 : o_regf_addr = 'd20;		// sending Byte1 of address 'd20 and sending Byte2 of address 'd21 and sending Byte3 of address 'd22 and sending Byte3 of address 'd23
+			'd5 : o_regf_addr = 'd0;        // only defining byte and no data
+			'd6 : o_regf_addr = 'd21;       // sending defining byte and sending Byte2 of address 'd21
+			'd7 : o_regf_addr = 'd21;		// sending defining byte and sending Byte2 of address 'd21 and sending Byte3 of address 'd22
+			endcase
+			end
+		else                              // Regular Transfer
+			begin 
+			o_regf_addr = 'd
+			o_regf_addr = 'd1;      // starting from this address to write Regular data
+			end 
 		   else
-           o_regf_addr = 'd10;		// starting from this address to read  
+           o_regf_addr = 'd10;		// starting from this address to read  Regular data
 		   
 
              end 
@@ -1013,6 +1038,11 @@ fourth_stage_crc_first_pre     : begin
          begin
           o_rx_en = 'b1;
           o_rx_mode = Check_token;
+		  
+		  if (i_rx_error)
+            o_regf_error_type = Frame_Error;
+          else
+            o_regf_error_type = SUCCESS;
          end
 
              end 			 
