@@ -128,7 +128,6 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
            counter <= 0;
            reset_counter_flag <= 1;
            o_sdahnd_serial_data <= 1;
-       			 if ( counter == 'd0 )
 			       o_ddrccc_mode_done <= 'b1;
           end
 			 end
@@ -152,7 +151,6 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
            counter <= 'd0;
            reset_counter_flag <= 1;
    		      o_sdahnd_serial_data <= 0;
- 		       if ( counter == 'd0 )
 			       o_ddrccc_mode_done <= 'b1;
           end
 			 end
