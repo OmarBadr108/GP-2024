@@ -406,7 +406,7 @@ i3c_engine u_i3c_engine (
             ////////////////////////HDR///////////////////////////////
             .o_enthdr_en (enthdr_en),
             .o_mode_sda_sel  (sda_sel),
-            .o_hdrengine_en   (hdrengine_en), 
+            .o_hdrengine_en   (hdrengine_en) 
 
             .o_regf_wr_en_sdr_hdr_sel(reg_wr_en_mode), 
             .o_regf_rd_en_sdr_hdr_sel(regf_rd_en_mode), 
