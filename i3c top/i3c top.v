@@ -365,7 +365,7 @@ i3c_engine u_i3c_engine (
             ////////////////////////HDR///////////////////////////////
             .i_hdr_en   (i_hdr_en)                                     ,
             .i_enthdr_done(enthdr_done)                              ,
-            .i_hdrengine_exit (hdrengine_exit)                       ,
+            .i_hdrengine_done (hdrengine_exit)                       ,
 
             .o_sdr_en                     (sdr_en)                   ,
             .o_i2c_en                     (i2c_en)                   ,
