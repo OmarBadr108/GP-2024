@@ -365,7 +365,7 @@ i3c_engine u_i3c_engine (
             ////////////////////////HDR///////////////////////////////
             .i_hdr_en   (i_hdr_en)                                     ,
             .i_enthdr_done(enthdr_done)                              ,
-            .i_hdrengine_done (hdrengine_exit)                       ,
+            .i_hdrengine_exit (hdrengine_exit)                       ,
 
             .o_sdr_en                     (sdr_en)                   ,
             .o_i2c_en                     (i2c_en)                   ,
@@ -406,7 +406,7 @@ i3c_engine u_i3c_engine (
             ////////////////////////HDR///////////////////////////////
             .o_enthdr_en (enthdr_en),
             .o_mode_sda_sel  (sda_sel),
-            .o_hdrengine_en   (hdrengine_en), 
+            .o_hdrengine_en   (hdrengine_en) 
 
             .o_regf_wr_en_sdr_hdr_sel(reg_wr_en_mode), 
             .o_regf_rd_en_sdr_hdr_sel(regf_rd_en_mode), 
