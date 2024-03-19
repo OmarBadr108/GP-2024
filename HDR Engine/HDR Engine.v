@@ -74,9 +74,9 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
         case (current_state)
           IDLE : begin
               if(i_CP) begin
-                  o_ccc_en        <= 1'b1 ;
-                  next_state      <= CCC ;
-                end
+                     o_ccc_en        <= 1'b1 ;
+                     next_state      <= CCC ;
+                 end
               else 
               begin
                 o_ddrmode_en      <= 1'b1 ;

@@ -915,6 +915,9 @@ gen_mux #(1,1) regf_wr_en_hdr_mux (
             .data_out (regf_wr_en_hdr_mux_out) );
 
 
+gen_mux
+
+
 ///////////////sdr_hdr_muxs/////////////////////
 gen_mux #(1,1) reg_rd_en_mode_mux (
             .data_in  ({regf_rd_en_hdr_mux_out,regf_rd_en_sdr_mux_out}),        

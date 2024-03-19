@@ -283,7 +283,8 @@ module sdr_hdr_transition_top (
    wire                  regf_wr_en_hdr_mux_out      ; 
    wire                  regf_wr_en_sdr_mux_out      ;
 
-   wire                   
+   wire                  regf_rd_address_sdr_mux_out ;
+   wire                  regf_rd_address_hdr_mux_out ;
 ////////////////////// Mux output wires ////////////////////////////
    wire                  regf_rd_en_mux_out          ;
    wire                  regf_wr_en_mux_out          ;
@@ -949,7 +950,7 @@ gen_mux #(10,1) regf_rd_address__hdr_mux (
 ///////////////sdr_hdr_muxs/////////////////////
 gen_mux #(1,1) reg_rd_en_mode_mux (
             .data_in  ({regf_rd_en_hdr_mux_out,regf_rd_en_sdr_mux_out}),        
-            .ctrl_sel (reg_wr_en_mode)  ,
+            .ctrl_sel (reg_rd_en_mode)  ,
             .data_out (regf_rd_en_mux_out));
 
 gen_mux #(1,1) reg_wr_en_mode_mux (
@@ -959,9 +960,9 @@ gen_mux #(1,1) reg_wr_en_mode_mux (
 
 
 gen_mux #(10,1) regf_rd_address_mode_mux (
-            .data_in  ({ regf_rd_address_hdr_mux_out, }),
-            .ctrl_sel (regf_rd_address_hdr_mux_sel)  ,
-            .data_out (regf_rd_address_hdr_mux_out) );
+            .data_in  ({ regf_rd_address_hdr_mux_out,regf_rd_address_sdr_mux_out }),
+            .ctrl_sel (regf_rd_address_mode)  ,
+            .data_out (regf_rd_address_mux_out) );
 
 
 
