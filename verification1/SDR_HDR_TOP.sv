@@ -276,6 +276,7 @@ module sdr_hdr_transition_top (
    wire       [2:0]      ser_rx_tx_mux_sel           ;
    wire       [2:0]      bits_cnt_regf_rx_tx_sel     ;
 
+
    wire                  sda_sel                     ;                // CHOOSE BETWEEN HDR & SDR 
    wire                  regf_rd_en_hdr_mux_out      ; 
    wire                  regf_rd_en_sdr_mux_out      ; 
@@ -285,6 +286,8 @@ module sdr_hdr_transition_top (
 
    wire                  regf_rd_address_sdr_mux_out ;
    wire                  regf_rd_address_hdr_mux_out ;
+
+
 ////////////////////// Mux output wires ////////////////////////////
    wire                  regf_rd_en_mux_out          ;
    wire                  regf_wr_en_mux_out          ;
@@ -328,9 +331,9 @@ module sdr_hdr_transition_top (
    wire                  regf_rd_en_mode             ; 
    wire                  regf_rd_address_mode        ;
    wire                  scl_pp_od_mode              ;    
-   
 
-
+   wire                  scl_pp_od_hdr_mux_out       ;
+   wire                  scl_pp_od_sdr_mux_out       ;
 
 
 
@@ -850,7 +853,7 @@ gen_mux #(8,1) regf_wr_data_mux (
 gen_mux #(1,3) scl_pp_od_mux (
             .data_in  ({ enthdr_pp_od, crh_pp_od , ibi_pp_od , hj_pp_od , daa_pp_od ,i3c_pp_od , i2c_pp_od , sdr_pp_od}),
             .ctrl_sel (scl_pp_od_mux_sel)  ,
-            .data_out (scl_pp_od_mux_out) );
+            .data_out (scl_pp_od_sdr_mux_out) );
 
 ///// to be removed /////
 gen_mux #(1,3) scl_idle_mux (
@@ -965,6 +968,12 @@ gen_mux #(10,1) regf_rd_address_mode_mux (
             .data_in  ({ regf_rd_address_hdr_mux_out,regf_rd_address_sdr_mux_out }),
             .ctrl_sel (regf_rd_address_mode)  ,
             .data_out (regf_rd_address_mux_out) );
+
+gen_mux #(1,1) scl_pp_od_mode_mux (
+            .data_in ({scl_pp_od_hdr_mux_out,scl_pp_od_sdr_mux_out}),
+            .ctrl_sel (scl_pp_od_mode),
+            .data_out (scl_pp_od_mux_out)
+    );
 
 
 

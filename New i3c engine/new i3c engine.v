@@ -199,10 +199,9 @@ always @(posedge i_clk or negedge i_rst_n)
         end
 
     else
-        begin
-             o_mode_sda_sel            <= SDR_MODE_SEL; 
-             o_hdrengine_en            <= 1'b0 ;
-             o_enthdr_en               <= 1'b0 ;
+        begin 
+             o_hdrengine_en                  <= 1'b0 ;
+             o_enthdr_en                     <= 1'b0 ;
              o_mode_sda_sel                  <= SDR_MODE_SEL;
              o_regf_wr_en_sdr_hdr_sel        <= SDR_MODE_SEL;
              o_regf_rd_en_sdr_hdr_sel        <= SDR_MODE_SEL;
@@ -712,36 +711,18 @@ always @(posedge i_clk or negedge i_rst_n)
                             o_hdrengine_en            <= 1'b1 ;          
 
 
-                            //////////////// Selectors of muxes that are shared between SDR and HDR to choose the required mode///////
+    /// Selectors of muxes that are shared between SDR and HDR to choose the required mode///////
                             
-                           o_mode_sda_sel                 <= HDR_MODE_SEL   ; 
-                            //o_mode_bit_cnt_en_mux_sel      <= HDR_MODE_SEL   ;
-                           
-                           o_regf_wr_en_sdr_hdr_sel        <=HDR_MODE_SEL;  
-                           o_regf_rd_en_sdr_hdr_sel        <=HDR_MODE_SEL; 
-                           o_regf_rd_address_sdr_hdr_sel   <=HDR_MODE_SEL; 
-                           o_scl_pp_od_sdr_hdr_sel         <=HDR_MODE_SEL; 
+                           o_mode_sda_sel                  <= HDR_MODE_SEL   ; 
+                           o_regf_wr_en_sdr_hdr_sel        <=HDR_MODE_SEL    ;  
+                           o_regf_rd_en_sdr_hdr_sel        <=HDR_MODE_SEL    ; 
+                           o_regf_rd_address_sdr_hdr_sel   <=HDR_MODE_SEL    ; 
+                           o_scl_pp_od_sdr_hdr_sel         <=HDR_MODE_SEL    ; 
 
-                            //o_regf_rd_en_mux_sel      <= HDR_ENGINE_SEL ;             //(REG File) shared btw HDR & SDR
-                            //o_regf_rd_address_mux_sel <= HDR_ENGINE_SEL ;             //(REG File) shared btw HDR & SDR
-                            //o_regf_wr_en_mux_sel      <= HDR_ENGINE_SEL ;             //(REG File) shared btw HDR & SDR
-                            //o_scl_pp_od_mux_sel       <= HDR_ENGINE_SEL ;             //(SCL GEN) shared btw HDR & SDR
-                           
-
-
-                            //o_tx_en_mux_sel           <= HDR_ENGINE_SEL ;
-                            // o_tx_mode_mux_sel        <= HDR_ENGINE_SEL ;
-                           
-                            //o_rx_en_mux_sel           <= I3C_ENGINE_SEL  ;            //TO Disable sdr rx 
-             
-                            //o_bit_cnt_en_mode_mux_sel <= HDR_ENGINE_SEL ;
-                            //o_bit_cnt_en_mux_sel      <= HDR_ENGINE_SEL ;
-                            //o_bit_rx_cnt_en_mux_sel   <= HDR_ENGINE_SEL ;
-                            //o_fcnt_en_mux_sel         <= HDR_ENGINE_SEL ;
                             //o_scl_idle_mux_sel        <= HDR_ENGINE_SEL ;
                             
 
-                            state                     <= HDR_ENGINE     ; 
+                            state                           <= HDR_ENGINE    ; 
                         end 
                         
                     /*  else if (i_enthdr_error_detected) //signal not added yet in design or instantiation
@@ -766,7 +747,16 @@ always @(posedge i_clk or negedge i_rst_n)
                     o_tx_mode_mux_sel             <= I3C_ENGINE_SEL ;
                     o_scl_idle_mux_sel            <= I3C_ENGINE_SEL ;
                     o_bits_cnt_regf_rx_tx_sel     <= I3C_ENGINE_SEL ;  
-                    o_ser_rx_tx_mux_sel           <= I3C_ENGINE_SEL ; 
+                    o_ser_rx_tx_mux_sel           <= I3C_ENGINE_SEL ;
+
+                              
+                    o_mode_sda_sel                  <=SDR_MODE_SEL ; 
+                    o_regf_wr_en_sdr_hdr_sel        <=SDR_MODE_SEL;  
+                    o_regf_rd_en_sdr_hdr_sel        <=SDR_MODE_SEL; 
+                    o_regf_rd_address_sdr_hdr_sel   <=SDR_MODE_SEL; 
+                    o_scl_pp_od_sdr_hdr_sel         <=SDR_MODE_SEL;
+
+                    o_hdrengine_en                  <= 1'b0 ;
                     state                         <= STOP           ; 
                   end
                  else 
