@@ -11,6 +11,9 @@ module frame_counter(
     input  wire [2:0]  i_regf_DTT         ,     // HDR
     input  wire [5:0]  i_cnt_bit_count    ,     // HDR
     input  wire        Direct_Broadcast_n ,     // HDR  1 for direct and 0 for Broadcast
+    input  wire        i_scl_pos_edge     ,
+    input  wire        i_scl_neg_edge     ,
+    input  wire        i_bitcnt_toggle    ,
     //output reg         o_fcnt_last_frame  ,     
     output reg         o_cccnt_last_frame       // HDR
     );
@@ -30,13 +33,13 @@ reg [15:0] count = 16'd0 ;
                     // stay here for 20 bits
                 end 
                 else begin 
-                    if (i_cnt_bit_count == 'd9 || i_cnt_bit_count == 'd19) begin 
+                    if ((i_cnt_bit_count == 'd9 || i_cnt_bit_count == 'd19 ) && i_bitcnt_toggle) begin 
                         count = count - 1 ;
                     end 
-
                 end 
             end 
             else begin                                      // Disabled to load the count value
+                o_cccnt_last_frame = 1'b0 ;
                 if (Direct_Broadcast_n) begin               // Direct
                     if (!i_regf_CMD_ATTR) begin             // regular 
                         count = i_regf_DATA_LEN + 5 ;       // 8 + 8 + CRC word + RESTART + 8 

@@ -1,0 +1,85 @@
+m255
+K4
+z2
+Z0 !s99 nomlopt
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+!s11f vlog 2021.1 2021.01, Jan 19 2021
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/Users/omerb/OneDrive/Desktop/Verification kolya
+T_opt
+!s110 1711063734
+VB[faA;O^m?@Ki1]V^giim2
+04 16 4 work frame_counter_tb fast 0
+=19-48a472837b0b-65fcc2b6-1d-3cc8
+!s124 OEM100
+o-quiet -auto_acc_if_foreign -work work +acc
+Z1 tCvgOpt 0
+n@_opt
+OL;O;2021.1;73
+vframe_counter_tb
+DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+Z2 !s110 1711063729
+!i10b 1
+!s100 C2]4OU34`H^O_XBWL6?lf1
+I3li@bA5oCO_AUa0<mYhMe3
+S1
+Z3 dC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/reg_file
+w1711063382
+8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/reg_file/regfile_tb.sv
+FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/reg_file/regfile_tb.sv
+!i122 41
+L0 1 149
+Z4 VDg1SIo80bB@j0V0VzS_@n1
+Z5 OL;L;2021.1;73
+r1
+!s85 0
+31
+Z6 !s108 1711063729.000000
+!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/reg_file/regfile_tb.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/reg_file/regfile_tb.sv|
+!i113 0
+o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1
+vreg_file
+R2
+!i10b 1
+!s100 <lhJ`BQV_kUJAZlHMLPmL3
+I<E=W[iZ?ONI=8U8VzNeez0
+R3
+w1711063718
+8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/reg_file/reg_file (1).v
+FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/reg_file/reg_file (1).v
+!i122 40
+L0 33 294
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/reg_file/reg_file (1).v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/reg_file/reg_file (1).v|
+!i113 0
+o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1

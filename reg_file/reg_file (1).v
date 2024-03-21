@@ -30,7 +30,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 `default_nettype none
 
-module reg_file #(parameter WIDTH = 16 , DEPTH = 2**16 , ADDR = 16 )
+module reg_file #(parameter WIDTH = 8 , DEPTH = 2**12 , ADDR = 12 )
 
 	( input  wire			     i_regf_clk  		  ,   // clock , connected to the 50mhz clock , input from controller
 	  input  wire			     i_regf_rst_n	     ,  	// active low reset , input from controller
@@ -38,9 +38,29 @@ module reg_file #(parameter WIDTH = 16 , DEPTH = 2**16 , ADDR = 16 )
 	  input  wire			     i_regf_wr_en 	  ,  	// write data enable, pulse at the end of the last bit , input from controller
 	  input  wire [ADDR-1:0]  i_regf_addr  	  ,  	// adress of the reg file , input from controller
 	  input  wire [WIDTH-1:0] i_regf_data_wr	  ,	// data write  , input from rx
-	  output reg              o_ser_rx_tx		  ,
-	  output reg  [WIDTH-1:0] o_regf_data_rd    ,	// data read   ,  output to tx
-	  output reg  [WIDTH-1:0] o_regf_num_frames ,	
+
+
+
+/////////////////////////////////////////// HDR //////////////////////////////////////////
+	  input wire  [ADDR-1:0]  i_engine_configuration      ,   // location of configuration it has only 2 values either normal conf = 1000 or dummy conf = 900
+
+	   output reg [15:0]      o_frmcnt_data_len 			   ,
+		output reg [2:0] 		  o_cccnt_CMD_ATTR 			   ,
+		output reg [3:0]	     o_engine_TID 	 			   ,	 	
+		output reg [7:0]		  o_ccc_CMD  	 	 	 	 	   ,
+		output reg [4:0]	     o_cccnt_DEV_INDEX 	 	 	   ,
+		output reg [2:0]		  o_frmcnt_DTT  	   	 	   ,
+		output reg [2:0]		  o_engine_MODE  		 	 	   ,
+		output reg  			  o_cccnt_RnW 	 		 		   ,
+		output reg 				  o_cccnt_WROC 				   ,
+		output reg 				  o_cccnt_TOC 		 	 	 	   ,
+		output reg 				  o_engine_CP  		  	 	   ,
+////////////////////////////////////////////////////////////////////////////////////////////
+
+
+	  output reg              o_ser_rx_tx		  			   ,
+	  output reg  [WIDTH-1:0] o_regf_data_rd    			   ,	// data read   ,  output to tx
+	  output reg  [WIDTH-1:0] o_regf_num_frames 	 		   ,	
 	  //outputs for crh
 	  output reg  [WIDTH-1:0] o_crh_CRHDLY	 	 	  			,
 	  output reg  [WIDTH-1:0] o_crh_getstatus_data 			,
@@ -90,12 +110,44 @@ localparam EVENT_DISABLE_BYTE_ADDRESS=10'd392; //Disable Target Events Command B
  localparam TGTS_COUNT_REG_FILE = 9'd35 ;
  localparam GETSTATUS_MSB_ADDR_REG_FILE = 9'd408 ;
  localparam DISEC_DATA_ADDR_REG_FILE  =  9'd406   ;
+
+
+
+ localparam DUMMY_CONFIGURATION = 12'd450 ;
 //--------------------------------- ----------------------------------- ------------------------------------------	
 	
 
 
  reg [WIDTH-1:0] reg_array [DEPTH-1:0] ;  // 32 entry * 8 bits
  integer I, J ,K ;
+
+/////////////////////////////////////////////      HDR     ///////////////////////////////////////////////////////
+reg [31:0] DWORD_0_Vector ;
+reg [31:0] DWORD_1_Vector ;
+
+always @(*) begin 
+	DWORD_0_Vector [7:0]   = reg_array [i_engine_configuration] ;
+	DWORD_0_Vector [15:8]  = reg_array [i_engine_configuration + 1] ;
+	DWORD_0_Vector [23:16] = reg_array [i_engine_configuration + 2] ;  
+	DWORD_0_Vector [31:24] = reg_array [i_engine_configuration + 3] ;  
+
+	DWORD_1_Vector [7:0]   = reg_array [i_engine_configuration + 4] ;
+	DWORD_1_Vector [15:8]  = reg_array [i_engine_configuration + 5] ;
+	DWORD_1_Vector [23:16] = reg_array [i_engine_configuration + 6] ;  
+	DWORD_1_Vector [31:24] = reg_array [i_engine_configuration + 7] ; 
+end 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -109,6 +161,20 @@ assign o_regf_hj_support  = reg_array[409][0]   ;
  	begin: regf_file_always
  		if (!i_regf_rst_n)
  			begin
+ 				
+ 				/////////////////////////////////////////////      HDR     ///////////////////////////////////////////////////////
+ 				// DWORD0 for Dummy configuration .. that's a fixed configurations that doesn't change so it's made on the reset condition
+ 				// so whenever is needed to excute this dummy configuration the engine just has to give the input "i_engine_configuration" a value equals "DUMMY_CONFIGURATION" value .. say 'd 900
+ 				reg_array[DUMMY_CONFIGURATION]     <= 8'b1000_0001 ;		// 413
+ 				reg_array[DUMMY_CONFIGURATION + 1] <= 8'b1000_1111 ;		// 414
+ 				reg_array[DUMMY_CONFIGURATION + 2] <= 8'b0000_0000 ;		// 415
+ 				reg_array[DUMMY_CONFIGURATION + 3] <= 8'b0001_1000 ;		// 416 
+
+				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
  				o_regf_data_rd    <= 'b0 ;
  				o_regf_num_frames <= 'b0 ;     // editted by nour
 				o_regf_ibi_cfg  <= 'b0 ;
@@ -120,6 +186,7 @@ assign o_regf_hj_support  = reg_array[409][0]   ;
  				reg_array[2]   <= 'b00000001  	 ;
  				reg_array[3]   <= 'b00000010  	 ;
  				reg_array[4]   <= 'b00000110  	 ;
+
 
  				for (I=5; I < 46 ; I = I +1) // SDR RX Data bytes
 	 			reg_array[I] <= 'b0 ;
@@ -175,7 +242,7 @@ assign o_regf_hj_support  = reg_array[409][0]   ;
                reg_array[CRH_CFG_REG_FILE] <= 'h01 ;
                reg_array[TGTS_COUNT_REG_FILE] <= 'h02 ;
 
-                for (K=412; K< DEPTH; K = K +1) 
+                for (K=454; K< DEPTH; K = K +1) 	 	
                 reg_array[K] <= 'b0 ;
                
                
@@ -189,6 +256,33 @@ assign o_regf_hj_support  = reg_array[409][0]   ;
  			end
  		else
  		  begin
+
+
+ 		  	/////////////////////////////////////////////      HDR     ///////////////////////////////////////////////////////
+ 		  		o_frmcnt_data_len <= DWORD_1_Vector [31:16] ;
+
+ 		  		o_cccnt_CMD_ATTR  <= DWORD_0_Vector [2:0]   ;
+ 		  		o_engine_TID 	 	<= DWORD_0_Vector [6:3]   ;
+ 		  		o_ccc_CMD  	 	 	<= DWORD_0_Vector [14:7]  ;
+ 		  		o_engine_CP  		<= DWORD_0_Vector [15]    ;
+ 		  		o_cccnt_DEV_INDEX <= DWORD_0_Vector [20:16] ;
+ 		  		o_frmcnt_DTT  	   <= DWORD_0_Vector [25:23] ;
+ 		  		o_engine_MODE  	<= DWORD_0_Vector [28:26] ;
+ 		  		o_cccnt_RnW 	 	<= DWORD_0_Vector [29]    ;
+ 		  		o_cccnt_WROC 		<= DWORD_0_Vector [30]    ;
+ 		  		o_cccnt_TOC 		<= DWORD_0_Vector [31]    ;
+
+
+ 		  		reg_array [i_engine_configuration - 1] = 8'b0000_0000 ; //zerozzzz location to ba serialized in ZEROS state 
+
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
  		    o_crh_CRHDLY <= reg_array[CRHDLY1_ADDR_REG_FILE] ;
                                  o_crh_getstatus_data <= reg_array[GETSTATUS_LSB_ADDR_REG_FILE] ;
                                  o_crh_CRCAP2 <= reg_array[CRCAPS2_ADDR_REG_FILE] ;
