@@ -42,7 +42,7 @@ wire        o_frcnt_toggle_tb ;
 		.i_regf_DATA_LEN (i_regf_DATA_LEN_tb),
 		.i_regf_DTT (i_regf_DTT_tb),
 		.i_cnt_bit_count (o_cnt_bit_count_tb),
-		.Direct_Broadcast_n(Direct_Broadcast_n_tb),
+		.i_ccc_Direct_Broadcast_n(Direct_Broadcast_n_tb),
 		.i_scl_pos_edge (scl_pos_edge_tb),
 		.i_scl_neg_edge(scl_neg_edge_tb),
 		.i_bitcnt_toggle(o_frcnt_toggle_tb),

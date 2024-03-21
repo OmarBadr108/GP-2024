@@ -22,6 +22,7 @@ R0
 R0
 R0
 R0
+R0
 !s11f vlog 2021.1 2021.01, Jan 19 2021
 13
 !s112 1.1
@@ -31,17 +32,17 @@ R0
 cModel Technology
 dC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler
 T_opt
-!s110 1710773378
-VlQ8MYF?f]_2WU;nkcZJ8Y1
+!s110 1711064121
+VVKbB`5df_4BLkQge5oo:]1
 04 16 4 work frame_counter_tb fast 0
-=18-48a472837b0b-65f85482-24f-3c28
+=1-3c2c30a457d5-65fcc439-1a3-4f6c
 !s124 OEM100
 o-quiet -auto_acc_if_foreign -work work +acc
 Z1 tCvgOpt 0
 n@_opt
 OL;O;2021.1;73
 vbits_counter
-Z2 !s110 1710773375
+Z2 !s110 1711064116
 !i10b 1
 !s100 PhE23J2:Jn`cACOPJoYA<0
 I15bJD?==4ERlkUTa7L<>i0
@@ -49,14 +50,14 @@ Z3 dC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter
 w1710770363
 8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/bits_counter.v
 FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/bits_counter.v
-!i122 102
+!i122 110
 L0 3 61
 Z4 VDg1SIo80bB@j0V0VzS_@n1
 Z5 OL;L;2021.1;73
 r1
 !s85 0
 31
-Z6 !s108 1710773375.000000
+Z6 !s108 1711064116.000000
 !s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/bits_counter.v|
 !s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/bits_counter.v|
 !i113 0
@@ -65,13 +66,13 @@ R1
 vframe_counter
 R2
 !i10b 1
-!s100 <^8_H6?oRfIkobo==><f23
-Izh[RF8>B1Cz;cJcL>>78<1
+!s100 ZSHNVYGidl7OWJ?zO:5>Y1
+Ij34c2_J0o>0YV:AYe;>AN2
 R3
-w1710770727
+w1710774834
 8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/FRAME_COUNTER.v
 FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/FRAME_COUNTER.v
-!i122 103
+!i122 111
 L0 4 81
 R4
 R5
@@ -88,14 +89,14 @@ vframe_counter_tb
 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
 R2
 !i10b 1
-!s100 g>278AoK;WQf_SfHXD74N0
-I`<mS?D[YJmKS@397AX]^H2
+!s100 1Dh3S;Zo^6nTi^G<eoC1_2
+I9NM4]QF<JUUCka?a;V=UA0
 S1
 R3
-w1710773371
+w1711064112
 8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/frame_counter_tb.sv
 FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/frame_counter_tb.sv
-!i122 104
+!i122 112
 L0 1 349
 R4
 R5
@@ -109,7 +110,7 @@ R6
 o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
 R1
 vscl_generation
-R2
+!s110 1711064117
 !i10b 1
 !s100 `Y0Fd4C>ZTJlnmoNMj0Xh0
 I@CZ7Lzl>23B8nKknYE2VF2
@@ -117,14 +118,14 @@ R3
 w1708522074
 8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/scl_generation.v
 FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/scl_generation.v
-!i122 105
+!i122 113
 L0 34 134
 R4
 R5
 r1
 !s85 0
 31
-R6
+!s108 1711064117.000000
 !s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/scl_generation.v|
 !s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/scl_generation.v|
 !i113 0
