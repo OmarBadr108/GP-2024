@@ -6,8 +6,8 @@ reg        i_sys_clk_tb;
 reg        i_sys_rst_tb;
 reg        i_engine_en_tb;
 reg        i_frmcnt_last_tb;
-reg        i_tx_mode_done_tb;
-//reg        i_tx_parity_data_tb;
+//reg        i_tx_mode_done_tb;
+reg        i_tx_parity_data_tb;
 reg        i_rx_mode_done_tb;
 reg        i_rx_pre_tb;
 reg        i_regf_wr_rd_bit_tb;
@@ -16,7 +16,7 @@ reg        i_regf_toc_tb;
 reg [4:0]  i_regf_dev_index_tb;
 reg        i_regf_short_read_tb;
 reg        i_regf_wroc_tb;
-reg        i_regf_dtt_tb;
+//reg        i_regf_dtt_tb;
 reg        i_regf_cmd_attr_tb;
 /*wire [4:0]  i_bitcount_tb;
 wire        i_scl_pos_edge_tb;    
@@ -25,13 +25,13 @@ wire        scl_tb,*/
  
 
  wire        o_tx_en_tb;
- wire  [4:0] o_tx_mode_tb;
+ wire  [3:0] o_tx_mode_tb;
  wire        o_rx_en_tb;
  wire  [3:0] o_rx_mode_tb;
  wire        o_frmcnt_en_tb;
  wire        o_bitcnt_en_tb; // added
  wire        o_bitcnt_rst_tb; // rst the counter due to error 
- //wire        o_sdahand_pp_od_tb;
+ wire        o_sdahand_pp_od_tb;
  wire        o_regf_wr_en_tb;
  wire        o_regf_rd_en_tb;
  wire  [9:0] o_regf_addr_tb;
@@ -40,6 +40,7 @@ wire        scl_tb,*/
  wire        o_regf_abort_tb;  
  wire        o_engine_done_tb;
  wire  [3:0] o_regf_error_type_tb ;
+ wire  [7:0] o_tx_special_data_tb;
 
  
  
@@ -80,13 +81,45 @@ wire    [7:0]       o_regfcrc_rx_data_out_tb	;
 wire                o_ddrccc_rx_mode_done_tb	;
 wire                o_ddrccc_pre_tb				;
 wire                o_ddrccc_error_tb			;
-wire                o_crc_en_tb        		;         
+//wire                o_crc_en_tb        		;         
 wire 				 o_crc_data_valid_tb      ; 
+
+
+/*******************frame_counter***************/	 
+
+/*reg                       i_fcnt_clk_tb,
+reg            i_fcnt_rst_n_tb,*/
+/*reg               i_fcnt_en_tb,*/
+reg               i_regf_CMD_ATTR_tb;
+reg   [15:0]      i_regf_DATA_LEN_tb;
+reg    [2:0]          i_regf_DTT_tb;
+//reg         i_cnt_bit_count_tb,
+reg            i_Direct_Broadcast_n_tb;
+//wire     o_cccnt_last_frame_tb
+
+
+
+/******************tx********************/
+   /* reg i_sys_clk;
+    reg i_sys_rst;
+    reg i_ddrccc_tx_en;*/
+   // reg i_sclgen_scl_pos_edge;
+   // reg i_sclgen_scl_neg_edge;
+   // reg [3:0] i_ddrccc_tx_mode;
+    reg [7:0] i_regf_tx_parallel_data_tb;
+   // reg [7:0] i_ddrccc_special_data;
+    //reg [4:0] i_crc_crc_value_tb;
+
+    wire o_sdahnd_serial_data_tb;
+    //wire o_ddrccc_mode_done;
+  //  wire o_crc_en_tb;
+    wire [7:0] o_regfcrc_tx_data_out_tb;
+   // wire o_ddrccc_parity_data;
 	 
      
 /*************common***************/
 
-wire pos,neg,sdr_scl_gen_pp_od;
+wire pos,neg,sdr_scl_gen_pp_od,tx_mode_done_tb;
 
 
 
@@ -96,8 +129,8 @@ wire pos,neg,sdr_scl_gen_pp_od;
     .i_sys_clk(i_sys_clk_tb),
     .i_sys_rst(i_sys_rst_tb),
     .i_engine_en(i_engine_en_tb),
-    .i_frmcnt_last(i_frmcnt_last_tb),
-    .i_tx_mode_done(i_tx_mode_done_tb),
+    .i_frmcnt_last(o_cccnt_last_frame_tb),
+    .i_tx_mode_done(tx_mode_done_tb),
    // .i_tx_parity_data(i_tx_parity_data_tb),
     .i_rx_mode_done(o_ddrccc_rx_mode_done_tb),
     .i_rx_pre(o_ddrccc_pre_tb),
@@ -107,7 +140,7 @@ wire pos,neg,sdr_scl_gen_pp_od;
     .i_regf_dev_index(i_regf_dev_index_tb),
 	.i_regf_short_read(i_regf_short_read_tb),
 	.i_regf_wroc(i_regf_wroc_tb),
-	.i_regf_dtt(i_regf_dtt_tb),
+	.i_regf_dtt(i_regf_DTT_tb),
 	.i_regf_cmd_attr (i_regf_cmd_attr_tb),
     .o_tx_en(o_tx_en_tb),
     .o_tx_mode(o_tx_mode_tb),
@@ -124,6 +157,7 @@ wire pos,neg,sdr_scl_gen_pp_od;
     .o_sclstall_en(o_sclstall_en_tb),
     .o_regf_abort(o_regf_abort_tb),
     .o_engine_done(o_engine_done_tb),
+	.o_tx_special_data(o_tx_special_data_tb),
     .o_regf_error_type(o_regf_error_type_tb)
 	
 );
@@ -153,7 +187,7 @@ scl_generation  DUT2 (
 			);
 			
 RX     	 DUT3 (			
-.i_sys_clk					    (i_sys_clk_tb)				,
+    .i_sys_clk					    (i_sys_clk_tb)				,
 	.i_sys_rst					(i_sys_rst_tb)				,
 	.i_sclgen_scl				(o_scl_tb)			,
 	.i_sclgen_scl_pos_edge		(pos)	,
@@ -174,6 +208,36 @@ RX     	 DUT3 (
 );	
 
 
+ frame_counter DUT4 (
+    .i_fcnt_clk          (i_fcnt_clk_tb),
+    .i_fcnt_rst_n        (i_fcnt_rst_n_tb),
+    .i_fcnt_en           (o_frmcnt_en_tb),
+    .i_regf_CMD_ATTR     (i_regf_cmd_attr_tb),
+    .i_regf_DATA_LEN     (i_regf_DATA_LEN_tb),
+    .i_regf_DTT          (i_regf_DTT_tb),
+    .i_cnt_bit_count     (o_bitcnt_tb),
+    .i_Direct_Broadcast_n  (i_Direct_Broadcast_n_tb),
+    .o_cccnt_last_frame  (o_cccnt_last_frame_tb)
+  );
+
+
+tx  DUT5 (
+        .i_sys_clk(i_sys_clk_tb),
+        .i_sys_rst(i_sys_rst_tb),
+        .i_ddrccc_tx_en(o_tx_en_tb),
+        .i_sclgen_scl_pos_edge(pos),
+        .i_sclgen_scl_neg_edge(neg),
+        .i_ddrccc_tx_mode(o_tx_mode_tb),
+        .i_regf_tx_parallel_data(i_regf_tx_parallel_data_tb),
+        .i_ddrccc_special_data(o_tx_special_data_tb),
+        .i_crc_crc_value(i_crc_value_tb),
+        .o_sdahnd_serial_data(o_sdahnd_serial_data_tb),
+        .o_ddrccc_mode_done(tx_mode_done_tb),
+        .o_crc_en(o_crc_en_tb),
+        .o_crc_parallel_data(o_regfcrc_tx_data_out_tb)
+       
+
+);
 
 
 /********clock generation*********/
@@ -196,7 +260,7 @@ initial
 	
 	
 	#24                
-	//i_tx_mode_done_tb =0;
+	////i_tx_mode_done_tb =0;
 	#2            
 	
 	
@@ -204,43 +268,43 @@ initial
 	
 	/************command frame ***********************/
 	#18
-	i_tx_mode_done_tb =1;
+	//i_tx_mode_done_tb =1;
 	#2                 //  edge 2  , from 1--->2
-	i_tx_mode_done_tb =0;
+	//i_tx_mode_done_tb =0;
 	
 	/***********************************/
 	#18
-	i_tx_mode_done_tb =1;
+	//i_tx_mode_done_tb =1;
 	i_regf_wr_rd_bit_tb = 0 ; //write 
 	#2                 //  edge 3
-	i_tx_mode_done_tb =0;
+	//i_tx_mode_done_tb =0;
 	
 	/***********************************/
 	#((7*20)-2)
-	i_tx_mode_done_tb =1;
+	//i_tx_mode_done_tb =1;
 	#2                 //  edge 10 , from 3--->10
-	i_tx_mode_done_tb =0;
+	//i_tx_mode_done_tb =0;
 	/***********************************/
 	
 	i_regf_dev_index_tb = 1;
 	#((8*20)-2)
-	i_tx_mode_done_tb =1;
+	//i_tx_mode_done_tb =1;
 	#2                 //  edge 18   , from 11--->18
-	i_tx_mode_done_tb =0;
+	//i_tx_mode_done_tb =0;
 	/***********************************/
 	
 	#38 
-	i_tx_mode_done_tb =1;
+	//i_tx_mode_done_tb =1;
 	#2                 //  edge 20  ,from 19--->20
-	i_tx_mode_done_tb =0;
+	//i_tx_mode_done_tb =0;
 	
 	
 	/***************data frame*******************/
 	
 	#18 
-	i_tx_mode_done_tb =1;
+	//i_tx_mode_done_tb =1;
 	#2                 //  edge 1
-	i_tx_mode_done_tb =0;
+	//i_tx_mode_done_tb =0;
 	i_sdahnd_rx_sda_tb = 1;
 	
 	/**********************************/
@@ -251,7 +315,7 @@ initial
 	i_rx_mode_done_tb=1;
 	i_rx_error_tb = 1;
 	#2                 //  edge 2
-	i_tx_mode_done_tb =0;*/ 
+	//i_tx_mode_done_tb =0;*/ 
 	
 	#18 
 	//#10                 // added delay one clk cycle due to open drain 
@@ -266,22 +330,22 @@ initial
 
 	i_regf_wr_rd_bit_tb = 0 ; //write 
 	#((8*20)-2)
-	i_tx_mode_done_tb =1;
-	i_frmcnt_last_tb = 0 ;
+	//i_tx_mode_done_tb =1;
+	//i_frmcnt_last_tb = 0 ;
 	#2                 //  edge 10
-	i_tx_mode_done_tb =0;
+	//i_tx_mode_done_tb =0;
 	
 	#((8*20)-2)
-	i_tx_mode_done_tb =1;
-	i_frmcnt_last_tb = 1;
+	//i_tx_mode_done_tb =1;
+//	i_frmcnt_last_tb = 1;
 	#2                 //  edge 18
-	i_tx_mode_done_tb =0;
+	//i_tx_mode_done_tb =0;
 	
 	
 	#38 
-	i_tx_mode_done_tb =1;
+	//i_tx_mode_done_tb =1;
 	#2                 //  edge 20
-	i_tx_mode_done_tb =0;
+	//i_tx_mode_done_tb =0;
 	
 	
 	
