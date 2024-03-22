@@ -74,19 +74,27 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
         case (current_state)
           IDLE : begin
               if(i_CP) begin
-                  o_ccc_en        <= 1'b1 ;
-                  next_state      <= CCC ;
-                end
+                     o_ccc_en        <= 1'b1 ;
+                     next_state      <= CCC ;
+/*
+                     // mux selectors
+                     o_tx_sel        <= CCC_;    // selects the hdr engine to control the sda line
+                     o_regf_rd_en_sel <= CCC_;
+                     o_regf_wr_en_sel <= CCC_;
+                     o_regf_addr_sel  <= CCC_;
+                     o_scl_pp_od_sel  <= CCC_; */
+                 end
               else 
               begin
                 o_ddrmode_en      <= 1'b1 ;
                 next_state        <= DDR_MODE ;
+
               end
           end
           CCC : begin
-            if((i_TOC && i_ccc_done)||(i_MODE != 'd6)) begin
+            if((i_TOC && i_ccc_done)||(i_MODE != 'd6)) begin     // ||(i_MODE != 'd6) assuming mode will not be changed unless an exit pattern was sent before it. -laila
                   o_ccc_en    <= 1'b0 ;
-                  o_i3cengine_hdrengine_done      <= 1'b1 ;             //exit pattern should be sent before the done signal -laila
+                  o_i3cengine_hdrengine_done      <= 1'b1 ;             
                   ///tid puts on output when the command is done
 
 

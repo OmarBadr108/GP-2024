@@ -264,7 +264,11 @@ module i3c_controller_top (
    wire       [2:0]      ser_rx_tx_mux_sel           ;
    wire       [2:0]      bits_cnt_regf_rx_tx_sel     ;
 
-   wire                  sda_sel                     ;                // CHOOSE BETWEEN HDR & SDR   
+   wire                  sda_sel                     ;                // CHOOSE BETWEEN HDR & SDR 
+   wire                  regf_rd_en_hdr_mux_out      ; 
+   wire                  regf_rd_en_sdr_mux_out      ; 
+   wire                  regf_wr_en_hdr_mux_out      ; 
+   wire                  regf_wr_en_sdr_mux_out      ; 
 ////////////////////// Mux output wires ////////////////////////////
    wire                  regf_rd_en_mux_out          ;
    wire                  regf_wr_en_mux_out          ;
@@ -292,6 +296,7 @@ module i3c_controller_top (
              ;
 //////////////////////// HDR SIGNALS /////////////////////
    wire                  enthdr_en;
+   wire                  hdrengine_en;
    wire                  ser_s_data_mux_out          ;                            // OUT CHOOSE BETWEEN HDR & SDR
    wire                  enthdr_done                 ;
    wire                  hdrengine_exit              ;
@@ -303,7 +308,28 @@ module i3c_controller_top (
    wire       [2:0]      enthdr_rx_mode              ;
    wire                  enthdr_bit_cnt_en           ;
    wire                  ser_hdr_data                ;
+   wire                  reg_wr_en_mode              ; 
+   wire                  regf_rd_en_mode             ; 
+   wire                  regf_rd_address_mode        ;
+   wire                  scl_pp_od_mode              ;    
    
+
+
+
+
+
+
+   /////////////////////////hdr_mux//////////////////////////
+
+   wire                  ccc_regf_rd_en;                  // out from ccc_block
+   wire                  ddr_regf_rd_en;                  // out from ddr_block
+   wire                  regf_rd_en_hdr_mux_sel;          //out from hdr_engine 
+
+   wire                  ccc_regf_wr_en;                 // out from ccc_block
+   wire                  ddr_regf_wr_en;                 // out from ddr_block
+   wire                  regf_wr_en_hdr_mux_sel;          //out_from hdr_engine 
+
+
 assign o_sdr_rx_valid = regf_wr_en_mux_out ;
 
 i3c_engine u_i3c_engine (
@@ -339,7 +365,7 @@ i3c_engine u_i3c_engine (
             ////////////////////////HDR///////////////////////////////
             .i_hdr_en   (i_hdr_en)                                     ,
             .i_enthdr_done(enthdr_done)                              ,
-            .i_hdrengine_exit (hdrengine_exit)                       ,
+            .i_hdrengine_done (hdrengine_exit)                       ,
 
             .o_sdr_en                     (sdr_en)                   ,
             .o_i2c_en                     (i2c_en)                   ,
@@ -379,7 +405,13 @@ i3c_engine u_i3c_engine (
             .o_controller_done            (o_ctrl_done)          ,
             ////////////////////////HDR///////////////////////////////
             .o_enthdr_en (enthdr_en),
-            .o_mode_sda_sel  (sda_sel)
+            .o_mode_sda_sel  (sda_sel),
+            .o_hdrengine_en   (hdrengine_en), 
+
+            .o_regf_wr_en_sdr_hdr_sel(reg_wr_en_mode), 
+            .o_regf_rd_en_sdr_hdr_sel(regf_rd_en_mode), 
+            .o_regf_rd_address_sdr_hdr_sel(regf_rd_address_mode),
+            .o_scl_pp_od_sdr_hdr_sel(scl_pp_od_mode)        
                                                 );
 
 
@@ -745,13 +777,31 @@ enthdr u_enthdr (
 );
 
 
+/*hdr_engine u_hdr_engine (
+    .i_sys_clk                              (sys_clk_50mhz)           , 
+    .i_sys_rst_n                            (i_sdr_rst_n)             ,
+    .i_i3cengine_hdrengine_en               (hdrengine_en)            , 
+    .i_ccc_done                             (ccc_done)                ,
+    .i_ddr_mode_done                        (ddr_mode_done)           ,
+    .i_TOC                                  (i_toc_interface)         , //term of completion if 0 restart/ 1 exit needed for exit
+    .i_CP                                   (i_cp_interface)           , // Cmnd present=1 if CCC 0 for Normal Transcation
+    .i_MODE                                 (i_MODE_interface)           ,
+
+    .o_i3cengine_hdrengine_done             (hdrengine_exit)           ,
+    .o_ddrmode_en                           (ddrmode_en)           ,
+    .o_ccc_en                               (ccc_en)           ,
+    .o_regf_addr_special                    (regf_addr_special)    )
+   */
+
+
+
 
 
 
 gen_mux #(1,3) regf_rd_en_mux (
             .data_in  ({ enthdr_regf_rd_en, crh_regf_rd_en , ibi_regf_rd_en , hj_regf_rd_en , daa_regf_rd_en , i3c_regf_rd_en , i2c_regf_rd_en , sdr_regf_rd_en}),
             .ctrl_sel (regf_rd_en_mux_sel)  ,
-            .data_out (regf_rd_en_mux_out) );
+            .data_out (regf_rd_en_sdr_mux_out) );
 
 gen_mux #(10,3) regf_rd_address_mux (
             .data_in  ({ enthdr_regf_addr, crh_regf_addr , ibi_regf_address , hj_regf_addr , daa_regf_addr , 10'b0 , i2c_regf_addr , sdr_regf_addr}),
@@ -761,7 +811,7 @@ gen_mux #(10,3) regf_rd_address_mux (
 gen_mux #(1,3) regf_wr_en_mux (
             .data_in  ({ 1'b0, crh_regf_wr_en , ibi_regf_wr_en , 1'b0 , daa_regf_wr_en , i3c_rx_valid , i2c_rx_valid , sdr_rx_valid}),
             .ctrl_sel (regf_wr_en_mux_sel)  ,
-            .data_out (regf_wr_en_mux_out) );
+            .data_out (regf_wr_en_sdr_mux_out) );
 
 gen_mux #(8,1) regf_wr_data_mux (
             .data_in  ({daa_regf_wr_data , regf_data_wr}),
@@ -849,6 +899,36 @@ gen_mux #(1,1) sda_handling_mode_mux (
             .data_in  ({ser_hdr_data,ser_s_data}),        
             .ctrl_sel (sda_sel)  ,
             .data_out (ser_s_data_mux_out) );
+
+//////////////////hdr_mux/////////////////////
+
+gen_mux #(1,1) regf_rd_en_hdr_mux (
+            .data_in  ({ ccc_regf_rd_en, ddr_regf_rd_en}),             ////to be added 
+            .ctrl_sel (regf_rd_en_hdr_mux_sel)  ,
+            .data_out (regf_rd_en_hdr_mux_out) );
+
+
+
+gen_mux #(1,1) regf_wr_en_hdr_mux (
+            .data_in  ({ ccc_regf_wr_en, ddr_regf_wr_en}),             ////to be added 
+            .ctrl_sel (regf_wr_en_hdr_mux_sel)  ,
+            .data_out (regf_wr_en_hdr_mux_out) );
+
+
+gen_mux
+
+
+///////////////sdr_hdr_muxs/////////////////////
+gen_mux #(1,1) reg_rd_en_mode_mux (
+            .data_in  ({regf_rd_en_hdr_mux_out,regf_rd_en_sdr_mux_out}),        
+            .ctrl_sel (reg_wr_en_mode)  ,
+            .data_out (regf_rd_en_mux_out));
+
+gen_mux #(1,1) reg_wr_en_mode_mux (
+            .data_in  ({regf_wr_en_hdr_mux_out,regf_wr_en_sdr_mux_out}),        
+            .ctrl_sel (reg_wr_en_mode)  ,
+            .data_out (regf_wr_en_mux_out));
+
 
 
 endmodule

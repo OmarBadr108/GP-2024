@@ -7,6 +7,7 @@ module bits_counter(
     input  wire       i_scl_pos_edge         ,  
     input  wire       i_scl_neg_edge         , 
     input  wire       i_cccnt_err_rst        , 
+    output reg        o_frcnt_toggle         ,
     output reg  [5:0] o_cnt_bit_count = 6'd0
     );
 
@@ -50,37 +51,13 @@ always @(posedge i_sys_clk or negedge i_rst_n) begin
     end
 end
 
-/*
-// combinational version the counter is incremented as soon as pos or neg edge of SCL happen 
-
-always @(*) begin 
-    if (i_bitcnt_en) begin 
-        if (i_cccnt_err_rst) begin 
-            if (i_scl_neg_edge || i_scl_pos_edge) begin 
-                if (o_cnt_bit_count == 6'd37) begin 
-                    o_cnt_bit_count = 6'd0 ;                     // from 0 to 37 it won't reach 38 
-                end
-                else begin 
-                    o_cnt_bit_count = o_cnt_bit_count + 1 ; 
-                end  
-            end
-        end 
-        else begin 
-            if (i_scl_neg_edge || i_scl_pos_edge) begin 
-                if (o_cnt_bit_count == 6'd19) begin 
-                    o_cnt_bit_count = 6'd0 ;                     // from 0 to 19 it won't reach 20 
-                end
-                else begin 
-                    o_cnt_bit_count = o_cnt_bit_count + 1 ; 
-                end  
-            end
-        end     
-             
-    end 
+always @(negedge i_sys_clk) begin 
+    if ((o_cnt_bit_count == 'd9 || o_cnt_bit_count == 'd19) && (!i_scl_pos_edge && !i_scl_neg_edge)) begin
+        o_frcnt_toggle = 1'b1 ;
+    end
     else begin 
-        o_cnt_bit_count = 6'd0 ;
+        o_frcnt_toggle = 1'b0 ;
     end 
 end
-*/
 
 endmodule 

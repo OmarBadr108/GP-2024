@@ -31,6 +31,7 @@ module frame_counter_tb ();
 
 	parameter FRAME_PERIOD = 40 * CLK_PERIOD ;
 */
+wire        o_frcnt_toggle_tb ; 
 // 3-DUT instatiation 
 		frame_counter DUT0 (
 		//.i_fcnt_no_frms (i_fcnt_no_frms_tb),
@@ -41,14 +42,18 @@ module frame_counter_tb ();
 		.i_regf_DATA_LEN (i_regf_DATA_LEN_tb),
 		.i_regf_DTT (i_regf_DTT_tb),
 		.i_cnt_bit_count (o_cnt_bit_count_tb),
-		.Direct_Broadcast_n(Direct_Broadcast_n_tb),
-
+		.i_ccc_Direct_Broadcast_n(Direct_Broadcast_n_tb),
+		.i_scl_pos_edge (scl_pos_edge_tb),
+		.i_scl_neg_edge(scl_neg_edge_tb),
+		.i_bitcnt_toggle(o_frcnt_toggle_tb),
 		//.o_fcnt_last_frame (o_fcnt_last_frame_tb)
 		.o_cccnt_last_frame (o_cccnt_last_frame_tb)
 
 	);
 		reg 		i_bitcnt_en_tb ;
 		reg   	    o_bitcnt_err_rst_tb ;
+		
+
 
 		bits_counter DUT1 (
 		.i_sys_clk       (i_sys_clk_tb),
@@ -57,6 +62,7 @@ module frame_counter_tb ();
 		.i_scl_pos_edge  (scl_pos_edge_tb),
 		.i_scl_neg_edge  (scl_neg_edge_tb),
 		.i_cccnt_err_rst (o_bitcnt_err_rst_tb),
+		.o_frcnt_toggle (o_frcnt_toggle_tb),
 		.o_cnt_bit_count (o_cnt_bit_count_tb)
 		
 	);
@@ -106,33 +112,237 @@ module frame_counter_tb ();
 		i_bitcnt_en_tb 	 	   = 1'b1 ;
 		i_fcnt_en_tb 	 	   = 1'b1 ;
 
-		
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 		#(500*CLK_PERIOD);
+
+
+		i_fcnt_en_tb 	 	   = 1'b0 ;
+		i_bitcnt_en_tb	 	   = 1'b0 ;
+		#(5* CLK_PERIOD) ;
+		i_fcnt_en_tb 	 	   = 1'b1 ;
+		i_bitcnt_en_tb	 	   = 1'b1 ;
+		i_regf_CMD_ATTR_tb     = 1'b0 ; // regular 
+		i_regf_DATA_LEN_tb 	   =  'd3 ;
+		#(500*CLK_PERIOD);
+
+		i_fcnt_en_tb 	 	   = 1'b0 ;
+		i_bitcnt_en_tb	 	   = 1'b0 ;
+		i_regf_CMD_ATTR_tb     = 1'b0 ; // regular 
+		i_regf_DATA_LEN_tb 	   =  'd5 ;
+		Direct_Broadcast_n_tb  = 1'b1 ; // Direct
+		#(5* CLK_PERIOD) ;
+		i_fcnt_en_tb 	 	   = 1'b1 ;
+		i_bitcnt_en_tb	 	   = 1'b1 ;
+		#(500*CLK_PERIOD);
+
+		i_fcnt_en_tb 	 	   = 1'b0 ;
+		i_bitcnt_en_tb	 	   = 1'b0 ;
+		i_regf_CMD_ATTR_tb     = 1'b0 ; // regular 
+		i_regf_DATA_LEN_tb 	   =  'd6 ;
+		Direct_Broadcast_n_tb  = 1'b1 ; // Direct
+		#(5* CLK_PERIOD) ;
+		i_fcnt_en_tb 	 	   = 1'b1 ;
+		i_bitcnt_en_tb	 	   = 1'b1 ;
+		#(500*CLK_PERIOD);
+
+		i_fcnt_en_tb 	 	   = 1'b0 ;
+		i_bitcnt_en_tb	 	   = 1'b0 ;
+		i_regf_CMD_ATTR_tb     = 1'b1 ; // immediate 
+		//i_regf_DATA_LEN_tb 	   =  'd6 ;
+		i_regf_DTT_tb   	   = 3'd0 ;
+		Direct_Broadcast_n_tb  = 1'b1 ; // Direct
+		#(5* CLK_PERIOD) ;
+		i_fcnt_en_tb 	 	   = 1'b1 ;
+		i_bitcnt_en_tb	 	   = 1'b1 ;
+		#(500*CLK_PERIOD);
+
+		i_fcnt_en_tb 	 	   = 1'b0 ;
+		i_bitcnt_en_tb	 	   = 1'b0 ;
+		i_regf_CMD_ATTR_tb     = 1'b1 ; // immediate 
+		//i_regf_DATA_LEN_tb 	   =  'd6 ;
+		i_regf_DTT_tb   	   = 3'd1 ;
+		Direct_Broadcast_n_tb  = 1'b1 ; // Direct
+		#(5* CLK_PERIOD) ;
+		i_fcnt_en_tb 	 	   = 1'b1 ;
+		i_bitcnt_en_tb	 	   = 1'b1 ;
+		#(500*CLK_PERIOD);
+
+		i_fcnt_en_tb 	 	   = 1'b0 ;
+		i_bitcnt_en_tb	 	   = 1'b0 ;
+		i_regf_CMD_ATTR_tb     = 1'b1 ; // immediate 
+		//i_regf_DATA_LEN_tb 	   =  'd6 ;
+		i_regf_DTT_tb   	   = 3'd2 ;
+		Direct_Broadcast_n_tb  = 1'b1 ; // Direct
+		#(5* CLK_PERIOD) ;
+		i_fcnt_en_tb 	 	   = 1'b1 ;
+		i_bitcnt_en_tb	 	   = 1'b1 ;
+		#(500*CLK_PERIOD);
+
+		i_fcnt_en_tb 	 	   = 1'b0 ;
+		i_bitcnt_en_tb	 	   = 1'b0 ;
+		i_regf_CMD_ATTR_tb     = 1'b1 ; // immediate 
+		//i_regf_DATA_LEN_tb 	   =  'd6 ;
+		i_regf_DTT_tb   	   = 3'd3 ;
+		Direct_Broadcast_n_tb  = 1'b1 ; // Direct
+		#(5* CLK_PERIOD) ;
+		i_fcnt_en_tb 	 	   = 1'b1 ;
+		i_bitcnt_en_tb	 	   = 1'b1 ;
+		#(500*CLK_PERIOD);
+
+		i_fcnt_en_tb 	 	   = 1'b0 ;
+		i_bitcnt_en_tb	 	   = 1'b0 ;
+		i_regf_CMD_ATTR_tb     = 1'b1 ; // immediate 
+		//i_regf_DATA_LEN_tb 	   =  'd6 ;
+		i_regf_DTT_tb   	   = 3'd4 ;
+		Direct_Broadcast_n_tb  = 1'b1 ; // Direct
+		#(5* CLK_PERIOD) ;
+		i_fcnt_en_tb 	 	   = 1'b1 ;
+		i_bitcnt_en_tb	 	   = 1'b1 ;
+		#(500*CLK_PERIOD);
+
+
+		i_fcnt_en_tb 	 	   = 1'b0 ;
+		i_bitcnt_en_tb	 	   = 1'b0 ;
+		i_regf_CMD_ATTR_tb     = 1'b1 ; // immediate 
+		//i_regf_DATA_LEN_tb 	   =  'd6 ;
+		i_regf_DTT_tb   	   = 3'd5 ;
+		Direct_Broadcast_n_tb  = 1'b1 ; // Direct
+		#(5* CLK_PERIOD) ;
+		i_fcnt_en_tb 	 	   = 1'b1 ;
+		i_bitcnt_en_tb	 	   = 1'b1 ;
+		#(500*CLK_PERIOD);
+
+
+
+
+		i_fcnt_en_tb 	 	   = 1'b0 ;
+		i_bitcnt_en_tb	 	   = 1'b0 ;
+		i_regf_CMD_ATTR_tb     = 1'b1 ; // immediate 
+		//i_regf_DATA_LEN_tb 	   =  'd6 ;
+		i_regf_DTT_tb   	   = 3'd6 ;
+		Direct_Broadcast_n_tb  = 1'b1 ; // Direct
+		#(5* CLK_PERIOD) ;
+		i_fcnt_en_tb 	 	   = 1'b1 ;
+		i_bitcnt_en_tb	 	   = 1'b1 ;
+		#(500*CLK_PERIOD);
+
+
+		i_fcnt_en_tb 	 	   = 1'b0 ;
+		i_bitcnt_en_tb	 	   = 1'b0 ;
+		i_regf_CMD_ATTR_tb     = 1'b1 ; // immediate 
+		//i_regf_DATA_LEN_tb 	   =  'd6 ;
+		i_regf_DTT_tb   	   = 3'd7 ;
+		Direct_Broadcast_n_tb  = 1'b1 ; // Direct
+		#(5* CLK_PERIOD) ;
+		i_fcnt_en_tb 	 	   = 1'b1 ;
+		i_bitcnt_en_tb	 	   = 1'b1 ;
+		#(500*CLK_PERIOD);
+
+
+
+
+
+
+
+
+		i_fcnt_en_tb 	 	   = 1'b0 ;
+		i_bitcnt_en_tb	 	   = 1'b0 ;
+		i_regf_CMD_ATTR_tb     = 1'b1 ; // immediate 
+		//i_regf_DATA_LEN_tb 	   =  'd6 ;
+		i_regf_DTT_tb   	   = 3'd0 ;
+		Direct_Broadcast_n_tb  = 1'b0 ; // Broadcast
+		#(5* CLK_PERIOD) ;
+		i_fcnt_en_tb 	 	   = 1'b1 ;
+		i_bitcnt_en_tb	 	   = 1'b1 ;
+		#(500*CLK_PERIOD);
+
+		i_fcnt_en_tb 	 	   = 1'b0 ;
+		i_bitcnt_en_tb	 	   = 1'b0 ;
+		i_regf_CMD_ATTR_tb     = 1'b1 ; // immediate 
+		//i_regf_DATA_LEN_tb 	   =  'd6 ;
+		i_regf_DTT_tb   	   = 3'd1 ;
+		Direct_Broadcast_n_tb  = 1'b0 ; // Broadcast
+		#(5* CLK_PERIOD) ;
+		i_fcnt_en_tb 	 	   = 1'b1 ;
+		i_bitcnt_en_tb	 	   = 1'b1 ;
+		#(500*CLK_PERIOD);
+
+		i_fcnt_en_tb 	 	   = 1'b0 ;
+		i_bitcnt_en_tb	 	   = 1'b0 ;
+		i_regf_CMD_ATTR_tb     = 1'b1 ; // immediate 
+		//i_regf_DATA_LEN_tb 	   =  'd6 ;
+		i_regf_DTT_tb   	   = 3'd2 ;
+		Direct_Broadcast_n_tb  = 1'b0 ; // Broadcast
+		#(5* CLK_PERIOD) ;
+		i_fcnt_en_tb 	 	   = 1'b1 ;
+		i_bitcnt_en_tb	 	   = 1'b1 ;
+		#(500*CLK_PERIOD);
+
+		i_fcnt_en_tb 	 	   = 1'b0 ;
+		i_bitcnt_en_tb	 	   = 1'b0 ;
+		i_regf_CMD_ATTR_tb     = 1'b1 ; // immediate 
+		//i_regf_DATA_LEN_tb 	   =  'd6 ;
+		i_regf_DTT_tb   	   = 3'd3 ;
+		Direct_Broadcast_n_tb  = 1'b0 ; // Broadcast
+		#(5* CLK_PERIOD) ;
+		i_fcnt_en_tb 	 	   = 1'b1 ;
+		i_bitcnt_en_tb	 	   = 1'b1 ;
+		#(500*CLK_PERIOD);
+
+		i_fcnt_en_tb 	 	   = 1'b0 ;
+		i_bitcnt_en_tb	 	   = 1'b0 ;
+		i_regf_CMD_ATTR_tb     = 1'b1 ; // immediate 
+		//i_regf_DATA_LEN_tb 	   =  'd6 ;
+		i_regf_DTT_tb   	   = 3'd4 ;
+		Direct_Broadcast_n_tb  = 1'b0 ; // Broadcast
+		#(5* CLK_PERIOD) ;
+		i_fcnt_en_tb 	 	   = 1'b1 ;
+		i_bitcnt_en_tb	 	   = 1'b1 ;
+		#(500*CLK_PERIOD);
+
+
+		i_fcnt_en_tb 	 	   = 1'b0 ;
+		i_bitcnt_en_tb	 	   = 1'b0 ;
+		i_regf_CMD_ATTR_tb     = 1'b1 ; // immediate 
+		//i_regf_DATA_LEN_tb 	   =  'd6 ;
+		i_regf_DTT_tb   	   = 3'd5 ;
+		Direct_Broadcast_n_tb  = 1'b0 ; // Broadcast
+		#(5* CLK_PERIOD) ;
+		i_fcnt_en_tb 	 	   = 1'b1 ;
+		i_bitcnt_en_tb	 	   = 1'b1 ;
+		#(500*CLK_PERIOD);
+
+
+
+
+		i_fcnt_en_tb 	 	   = 1'b0 ;
+		i_bitcnt_en_tb	 	   = 1'b0 ;
+		i_regf_CMD_ATTR_tb     = 1'b1 ; // immediate 
+		//i_regf_DATA_LEN_tb 	   =  'd6 ;
+		i_regf_DTT_tb   	   = 3'd6 ;
+		Direct_Broadcast_n_tb  = 1'b0 ; // Broadcast
+		#(5* CLK_PERIOD) ;
+		i_fcnt_en_tb 	 	   = 1'b1 ;
+		i_bitcnt_en_tb	 	   = 1'b1 ;
+		#(500*CLK_PERIOD);
+
+
+		i_fcnt_en_tb 	 	   = 1'b0 ;
+		i_bitcnt_en_tb	 	   = 1'b0 ;
+		i_regf_CMD_ATTR_tb     = 1'b1 ; // immediate 
+		//i_regf_DATA_LEN_tb 	   =  'd6 ;
+		i_regf_DTT_tb   	   = 3'd7 ;
+		Direct_Broadcast_n_tb  = 1'b0 ; // Broadcast
+		#(5* CLK_PERIOD) ;
+		i_fcnt_en_tb 	 	   = 1'b1 ;
+		i_bitcnt_en_tb	 	   = 1'b1 ;
+		#(500*CLK_PERIOD);
+
+
+
+
+
+
 
 		$stop ;
 	end

@@ -22,7 +22,9 @@ module CCC_Handler_tb ();
 	wire [5:0] o_cnt_bit_count_tb ;
 	wire  	   o_bitcnt_err_rst_tb ;
 	/////////////////////////// CCC Handler /////////////////////////////
-	reg        i_engine_en_tb , i_frmcnt_last_frame_tb ,i_sclstall_stall_done_tb  ;
+	reg        i_engine_en_tb  ,i_sclstall_stall_done_tb  ;
+	wire       i_frmcnt_last_frame_tb ;
+	wire   	   o_frmcnt_Direct_Broadcast_n_tb ;
 	// related to tx
 	reg 	   i_tx_mode_done_tb ,o_tx_en_tb ;
 	reg  [3:0] o_tx_mode_tb ;
@@ -66,7 +68,7 @@ module CCC_Handler_tb ();
 
 // 3-DUT instatiation 
 
-	CCC_Handler DUT2 (
+	CCC_Handler DUT0 (
 		.i_sys_clk	            (i_sys_clk_tb),
 		.i_sys_rst			    (i_rst_n_tb),
 		.i_engine_en 			(i_engine_en_tb),
@@ -103,6 +105,7 @@ module CCC_Handler_tb ();
 		.o_frmcnt_en(o_frmcnt_en_tb),
 		.o_sdahand_pp_od(i_sdr_scl_gen_pp_od_tb),
 
+		.o_frmcnt_Direct_Broadcast_n(o_frmcnt_Direct_Broadcast_n_tb),
 
 		.o_regf_wr_en(o_regf_wr_en_tb),
 		.o_regf_rd_en(o_regf_rd_en_tb),
@@ -114,7 +117,7 @@ module CCC_Handler_tb ();
 		);
 
 
-	scl_generation DUT0 (
+	scl_generation DUT1 (
 		.i_sdr_ctrl_clk      (i_sys_clk_tb),
 		.i_sdr_ctrl_rst_n 	 (i_rst_n_tb),
 		.i_sdr_scl_gen_pp_od (i_sdr_scl_gen_pp_od_tb),
@@ -127,18 +130,22 @@ module CCC_Handler_tb ();
 
 	);
 
-		bits_counter DUT1 (
+		wire  		 o_frcnt_toggle_tb ;
+
+
+		bits_counter DUT2 (
 		.i_sys_clk       (i_sys_clk_tb),
 		.i_rst_n 	     (i_rst_n_tb),
 		.i_bitcnt_en     (i_bitcnt_en_tb),
 		.i_scl_pos_edge  (scl_pos_edge_tb),
 		.i_scl_neg_edge  (scl_neg_edge_tb),
 		.i_cccnt_err_rst (o_bitcnt_err_rst_tb),
+		.o_frcnt_toggle  (o_frcnt_toggle_tb),
 		.o_cnt_bit_count (o_cnt_bit_count_tb)
 		
 	);
-/*
-		wire [15:0]	i_regf_DATA_LEN_tb ;
+
+		reg  [15:0]	i_regf_DATA_LEN_tb ;
 		wire    	i_fcnt_no_frms_tb ;
 		wire 	 	i_fcnt_en_tb ;
 		wire  	 	o_fcnt_last_frame_tb ;
@@ -146,20 +153,23 @@ module CCC_Handler_tb ();
 
 
 		frame_counter DUT3 (
-		.i_fcnt_no_frms (i_fcnt_no_frms_tb),
+		//.i_fcnt_no_frms (i_fcnt_no_frms_tb),
 		.i_fcnt_clk (i_sys_clk_tb),
 		.i_fcnt_rst_n (i_rst_n_tb),
 		.i_fcnt_en (o_frmcnt_en_tb),
-		.i_regf_CMD_ATTR (i_regf_CMD_ATTR_tb),
+		.i_regf_CMD_ATTR (i_regf_CMD_ATTR_tb[0]),
 		.i_regf_DATA_LEN (i_regf_DATA_LEN_tb),
 		.i_regf_DTT (i_regf_DTT_tb),
 		.i_cnt_bit_count (o_cnt_bit_count_tb),
-
-		.o_fcnt_last_frame (o_fcnt_last_frame_tb),
-		.o_cccnt_last_frame (i_frmcnt_last_frame_tb)
+		.i_ccc_Direct_Broadcast_n(o_frmcnt_Direct_Broadcast_n_tb), // 
+		.i_scl_pos_edge (scl_pos_edge_tb),
+		.i_scl_neg_edge(scl_neg_edge_tb),
+		.i_bitcnt_toggle(o_frcnt_toggle_tb),
+		//.o_fcnt_last_frame (o_fcnt_last_frame_tb)
+		.o_cccnt_last_frame (i_frmcnt_last_frame_tb)	 	 		 	 
 
 	);
-*/
+
 // 4-initial block 
 /* IMPORTANT NOTES :
 		1- (General) when driving input to the block which is considered as output of other block u must drive it at posedge not at negdge .
@@ -176,7 +186,6 @@ module CCC_Handler_tb ();
 		//i_sdr_scl_gen_pp_od_tb = 1'b1 ;
 		 
 		/////////////////////////////// CCC Handler //////////////////////////////
-		i_frmcnt_last_frame_tb 	 = 1'b0 ;
 		i_sclstall_stall_done_tb = 1'b0 ;
 		i_tx_mode_done_tb 	 	 = 1'b0 ;
 		i_rx_mode_done_tb 	 	 = 1'b0 ;  // important
@@ -191,7 +200,7 @@ module CCC_Handler_tb ();
 		i_regf_SRE_tb 		= 1'b0 ; 	 		// short read is not considered as error 
 		i_regf_CMD_ATTR_tb  = 3'd0 ; 	// 0 regular  , 1 immediate 
 		i_regf_DTT_tb 		= 3'd2 ; 	 	 	// only 2 payload without defining byte 
-
+		i_regf_DATA_LEN_tb  = 16'd4 ;
 		i_sclstall_stall_done_tb = 1'b0 ;
 		i_engine_en_tb 			 = 1'b0 ;
 
@@ -285,7 +294,7 @@ module CCC_Handler_tb ();
 		DDR_clk_wait(1);
 		sys_clk_wait(1);
 		i_tx_mode_done_tb = 1'b1 ;
-		i_frmcnt_last_frame_tb = 1'b1 ;
+		//i_frmcnt_last_frame_tb = 1'b1 ;
 		system_clk_pulse(i_tx_mode_done_tb) ;
 		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
 
@@ -318,10 +327,10 @@ module CCC_Handler_tb ();
 
 		@(posedge i_sys_clk_tb)
 		i_engine_en_tb = 1'b0 ;
-		i_frmcnt_last_frame_tb = 1'b0 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
 		// finish 
 		DDR_clk_wait(50);
-		i_frmcnt_last_frame_tb = 1'b0 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
 
 		////////////////////////////////////////////////////////////// PASSED /////////////////////////////////////////////////////////////////
 
@@ -411,7 +420,7 @@ module CCC_Handler_tb ();
 		DDR_clk_wait(1);
 		sys_clk_wait(1);
 		i_tx_mode_done_tb = 1'b1 ;
-		i_frmcnt_last_frame_tb = 1'b0 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
 		system_clk_pulse(i_tx_mode_done_tb) ;
 		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
 
@@ -488,7 +497,7 @@ module CCC_Handler_tb ();
 		DDR_clk_wait(1);
 		sys_clk_wait(1);
 		i_tx_mode_done_tb = 1'b1 ;
-		i_frmcnt_last_frame_tb = 1'b1 ;
+		//i_frmcnt_last_frame_tb = 1'b1 ;
 		system_clk_pulse(i_tx_mode_done_tb) ;
 		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
 
@@ -520,7 +529,7 @@ module CCC_Handler_tb ();
 		i_tx_mode_done_tb = 1'b1 ;
 		system_clk_pulse(i_tx_mode_done_tb) ;
 		DDR_clk_pulse(i_sclstall_stall_done_tb) ;
-		i_frmcnt_last_frame_tb = 1'b0 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
 
 		@(posedge i_sys_clk_tb)
 		i_engine_en_tb = 1'b0 ;
@@ -613,7 +622,7 @@ module CCC_Handler_tb ();
 		DDR_clk_wait(1);
 		sys_clk_wait(1);
 		i_tx_mode_done_tb = 1'b1 ;
-		i_frmcnt_last_frame_tb = 1'b0 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
 		system_clk_pulse(i_tx_mode_done_tb) ;
 		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
 
@@ -677,7 +686,7 @@ module CCC_Handler_tb ();
 
 
 
-		i_frmcnt_last_frame_tb = 1'b1 ;
+		//i_frmcnt_last_frame_tb = 1'b1 ;
 
 
 
@@ -699,7 +708,7 @@ module CCC_Handler_tb ();
 		DDR_clk_wait(1);
 		sys_clk_wait(1);
 		i_tx_mode_done_tb = 1'b1 ;
-		i_frmcnt_last_frame_tb = 1'b1 ;
+		//i_frmcnt_last_frame_tb = 1'b1 ;
 		system_clk_pulse(i_tx_mode_done_tb) ;
 		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
 
@@ -735,7 +744,7 @@ module CCC_Handler_tb ();
 
 		@(posedge i_sys_clk_tb)
 		i_engine_en_tb = 1'b0 ;
-		i_frmcnt_last_frame_tb = 1'b0 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
 		// finish 
 
 
@@ -827,7 +836,7 @@ module CCC_Handler_tb ();
 		DDR_clk_wait(1);
 		sys_clk_wait(1);
 		i_tx_mode_done_tb = 1'b1 ;
-		i_frmcnt_last_frame_tb = 1'b0 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
 		system_clk_pulse(i_tx_mode_done_tb) ;
 		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
 
@@ -963,7 +972,7 @@ module CCC_Handler_tb ();
 
 
 
-		i_frmcnt_last_frame_tb = 1'b1 ;
+		//i_frmcnt_last_frame_tb = 1'b1 ;
 
 
 
@@ -985,7 +994,7 @@ module CCC_Handler_tb ();
 		DDR_clk_wait(1);
 		sys_clk_wait(1);
 		i_tx_mode_done_tb = 1'b1 ;
-		i_frmcnt_last_frame_tb = 1'b1 ;
+		//i_frmcnt_last_frame_tb = 1'b1 ;
 		system_clk_pulse(i_tx_mode_done_tb) ;
 		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
 
@@ -1021,7 +1030,7 @@ module CCC_Handler_tb ();
 
 		@(posedge i_sys_clk_tb)
 		i_engine_en_tb = 1'b0 ;
-		i_frmcnt_last_frame_tb = 1'b0 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
 		// finish 
 
 
@@ -1116,7 +1125,7 @@ module CCC_Handler_tb ();
 		DDR_clk_wait(1);
 		sys_clk_wait(1);
 		i_tx_mode_done_tb = 1'b1 ;
-		i_frmcnt_last_frame_tb = 1'b0 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
 		system_clk_pulse(i_tx_mode_done_tb) ;
 		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
 
@@ -1252,7 +1261,7 @@ module CCC_Handler_tb ();
 
 
 
-		i_frmcnt_last_frame_tb = 1'b0 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
 
 
 
@@ -1269,16 +1278,15 @@ module CCC_Handler_tb ();
 		sys_clk_wait(1);
 		i_tx_mode_done_tb = 1'b1 ;
 		system_clk_pulse(i_tx_mode_done_tb) ;
-		i_frmcnt_last_frame_tb = 1'b0 ;
+		
 
 
 		// 2 parity == 1.5 DDR clk cycles
 		DDR_clk_wait(1);
 		sys_clk_wait(1);
 		i_tx_mode_done_tb = 1'b1 ;
-		i_frmcnt_last_frame_tb = 1'b1 ;
 		system_clk_pulse(i_tx_mode_done_tb) ;
-		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
+		
 
 		//////////////////// CRC ////////////////////////////
 
@@ -1312,7 +1320,7 @@ module CCC_Handler_tb ();
 
 		@(posedge i_sys_clk_tb)
 		i_engine_en_tb = 1'b0 ;
-		i_frmcnt_last_frame_tb = 1'b0 ;
+		
 
 
 		DDR_clk_wait(49);
@@ -1323,7 +1331,7 @@ module CCC_Handler_tb ();
 		// first things first 
 		@(posedge i_sys_clk_tb)
 		i_engine_en_tb = 1'b1 ;
-		
+		$display("here is the immediate testcase",$time);
 		
 		// configuration 
 		i_regf_CMD_tb 	 	= 8'h90 ;	 	 	// Direct
@@ -1384,7 +1392,7 @@ module CCC_Handler_tb ();
 
 		// 8 CCC value 
 		DDR_clk_wait(6);
-		i_frmcnt_last_frame_tb = 1'b1 ;
+		//i_frmcnt_last_frame_tb = 1'b1 ;
 		sys_clk_wait(1);
 		i_tx_mode_done_tb = 1'b1 ;
 		system_clk_pulse(i_tx_mode_done_tb) ;
@@ -1400,7 +1408,7 @@ module CCC_Handler_tb ();
 		DDR_clk_wait(1);
 		sys_clk_wait(1);
 		i_tx_mode_done_tb = 1'b1 ;
-		i_frmcnt_last_frame_tb = 1'b0 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
 		system_clk_pulse(i_tx_mode_done_tb) ;
 		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
 
@@ -1596,7 +1604,7 @@ module CCC_Handler_tb ();
 
 		@(posedge i_sys_clk_tb)
 		i_engine_en_tb = 1'b0 ;
-		i_frmcnt_last_frame_tb = 1'b0 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
 
 		DDR_clk_wait(49);
 		sys_clk_wait(1);
@@ -1683,7 +1691,7 @@ module CCC_Handler_tb ();
 		DDR_clk_wait(1);
 		sys_clk_wait(1);
 		i_tx_mode_done_tb = 1'b1 ;
-		i_frmcnt_last_frame_tb = 1'b0 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
 		system_clk_pulse(i_tx_mode_done_tb) ;
 		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
 
@@ -1821,7 +1829,7 @@ module CCC_Handler_tb ();
 
 
 
-		i_frmcnt_last_frame_tb = 1'b0 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
 
 
 
@@ -1838,14 +1846,14 @@ module CCC_Handler_tb ();
 		sys_clk_wait(1);
 		i_rx_mode_done_tb = 1'b1 ;
 		system_clk_pulse(i_rx_mode_done_tb) ;
-		i_frmcnt_last_frame_tb = 1'b0 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
 
 
 		// 2 parity == 1.5 DDR clk cycles
 		DDR_clk_wait(1);
 		sys_clk_wait(1);
 		i_rx_mode_done_tb = 1'b1 ;
-		i_frmcnt_last_frame_tb = 1'b0 ; 						/////////////////// deh lw7dha test case (abort by target vs matched length of data)
+		//i_frmcnt_last_frame_tb = 1'b0 ; 						/////////////////// deh lw7dha test case (abort by target vs matched length of data)
 		system_clk_pulse(i_rx_mode_done_tb) ;
 		//system_clk_pulse(i_frmcnt_last_frame_tb) ;
 
@@ -1903,7 +1911,7 @@ module CCC_Handler_tb ();
 
 		@(posedge i_sys_clk_tb)
 		i_engine_en_tb = 1'b0 ;
-		i_frmcnt_last_frame_tb = 1'b0 ;
+		//i_frmcnt_last_frame_tb = 1'b0 ;
 
 
 		DDR_clk_wait(49);
