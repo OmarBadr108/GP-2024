@@ -43,7 +43,7 @@ module hdr_engine (
     output  reg             o_i3cengine_hdrengine_done            ,
     output  reg             o_ddrmode_en                          ,
     output  reg             o_ccc_en                              ,
-    output  reg   [7:0]     o_regf_addr_special
+    output  reg   [11:0]     o_regf_addr_special
     //output  reg  [3:0]     o_TID
 
     );
@@ -64,7 +64,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
             o_i3cengine_hdrengine_done      <= 1'b0   ;
             o_ddrmode_en                    <= 1'b0   ;
             o_ccc_en                        <= 1'b0   ;
-            o_regf_addr_special             <= 8'd10 ;
+            o_regf_addr_special             <= 12'd1000 ;
             current_state                   <= IDLE ;
         end
 
@@ -94,26 +94,26 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
             else if ((!i_TOC && i_ccc_done) && (i_MODE == 'd6)) begin
               ccc_done                      <= 1'b0 ; //******signal 3mltha 3shan a3rf arg3 ll ddrmode*//////
               o_ccc_en                      <= 1'b0 ;
-              o_regf_addr_special           <= 8'd10;
+              o_regf_addr_special           <= 12'd1000;
               o_i3cengine_hdrengine_done    <= 1'b0 ;
               ///tid puts on output when the command is done
                   if(!i_CP) 
                   begin
                     ccc_done   <= 1'b1 ;
-                    o_regf_addr_special <= 8'd9; //go to special address to get dummy value
+                    o_regf_addr_special <= 12'd450; //go to special address to get dummy value
                     o_ccc_en   <= 1'b1 ;
                     next_state <= CCC ; ////********lma yru7 y3ml al dummy hwdeh ddr azay*******//////////
                   end
                   else
                     begin
                       o_ccc_en                      <= 1'b1 ;
-                      o_regf_addr_special           <= 8'd10;
-                      next_state                    <= CCC ;     //**o_ccc_en                      <= 1'b1 ;   -laila
+                      o_regf_addr_special           <= 12'd1000;
+                      next_state                    <= CCC ;    
                     end
 
                   ////****/////
                   if(i_ccc_done && ccc_done && !i_CP ) begin
-                    o_regf_addr_special           <= 8'd10;
+                    o_regf_addr_special           <= 12'd1000;
                     o_ccc_en   <= 1'b0 ;
                     o_ddrmode_en <= 1'b1 ;
                     next_state   <= DDR_MODE ; 
