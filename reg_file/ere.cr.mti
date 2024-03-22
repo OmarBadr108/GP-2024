@@ -1,0 +1,15 @@
+C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/reg_file/regfile_tb.sv {1 {vlog -work work -vopt -sv -stats=none C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/reg_file/regfile_tb.sv
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module frame_counter_tb
+
+Top level modules:
+	frame_counter_tb
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/reg_file/reg_file (1).v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/reg_file/reg_file (1).v}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module reg_file
+
+Top level modules:
+	reg_file
+
+} {} {}}

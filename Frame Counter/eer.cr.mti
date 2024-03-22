@@ -1,0 +1,29 @@
+{C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/bits_counter.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/bits_counter.v}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module bits_counter
+
+Top level modules:
+	bits_counter
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/scl_generation.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/scl_generation.v}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module scl_generation
+
+Top level modules:
+	scl_generation
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/frame_counter_tb.sv} {1 {vlog -work work -vopt -sv -stats=none {C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/frame_counter_tb.sv}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module frame_counter_tb
+
+Top level modules:
+	frame_counter_tb
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/FRAME_COUNTER.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/Frame Counter/FRAME_COUNTER.v}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module frame_counter
+
+Top level modules:
+	frame_counter
+
+} {} {}}

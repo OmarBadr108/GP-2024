@@ -59,7 +59,7 @@ input wire        i_regf_SRE ,
 //input wire [15:0] i_regf_DATA_LENGTH , // will be removed 
 
 
-
+output reg        o_frmcnt_Direct_Broadcast_n ,
 output reg        o_sclstall_en      ,
 output reg [3:0]  o_sclstall_code    ,
 output reg        o_tx_en            ,
@@ -176,7 +176,9 @@ localparam [3:0]
 
 
 
-
+always @(*) begin 
+    o_frmcnt_Direct_Broadcast_n = Direct_Broadcast_n ;
+end 
 /////////////////////////// decoding the device address (DAT entry 3al daya2 :) ) ///////////////////////////////////////
 
 always@(*) begin
@@ -667,7 +669,7 @@ end
                         o_tx_mode    = serializing_byte_regf ;
                         o_regf_addr  = first_location + regular_counter ; // regular counter starts with value 4 to point to the fifth location 
                     end 
-                    else begin // if immediate
+                    else begin                                  // if immediate
                         if (Defining_byte) begin 
                             o_regf_addr = first_location + immediate_counter + 1'b1 ; // for 8 bit width Regfile .. point to fifth location
     
@@ -883,7 +885,8 @@ end
                 o_engine_odd      = 1'b0 ;
                 controller_abort  = 1'b0 ;
                 o_engine_done     = 1'b1 ;
-                
+                o_frmcnt_en       = 1'b0 ;
+                o_bitcnt_en       = 1'b0 ;
                 o_regf_ERR_STATUS = SUCCESS ;
                 next_state = IDLE ;
 
