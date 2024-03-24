@@ -22,6 +22,9 @@ parameter CLK_PERIOD  = 40;
     reg          i_ccc_done_tb         		; // done signal from CCC block
     reg          i_ddr_mode_done_tb    		; // done signal from ddr block
 
+    reg          i_ddr_pp_od_tb    			;
+ 	reg          i_ccc_pp_od_tb    			;
+
     wire         sda_tb                		;
 
    
@@ -54,12 +57,42 @@ initial begin
 //Reset
 	reset();        
         
-// Test Case: enabling the hdr mode to send the ENTHDR CCC and then enabling the HDR engine     
+// Test Case 1: enabling the hdr mode to send the ENTHDR CCC and then enabling the HDR engine     
      
      // INPUTS 
         i_controller_en_tb = 1'b1 ;
         i_i3c_i2c_sel_tb   = 1'b1;
         i_hdr_en_tb        = 1'b1;
+
+
+        #80100
+        sda_drive = 1'b0;
+        #10000
+        sda_drive = 1'bz;
+
+// Test Case 2: testing the HDR engine functions 
+// 2.1 sending normal transaction with exit pattern after it followed by stop bit.
+		i_cp_interface_tb = 'b0;
+ 		i_toc_interface_tb = 'b1 ; //exit pattern
+  		i_MODE_interface_tb = 'd6; 
+
+ 		#(10000*CLK_PERIOD)		
+		i_ddr_mode_done_tb  = 'b1;
+
+// 2.2 sending CCC with exit pattern after it followed by stop bit.
+
+
+
+
+
+
+
+
+         #10000000
+         $stop ;
+         
+         
+
 
         /* @(negedge DUT.u_i3c_engine.i_tx_mode_done)
         if(DUT.u_enthdr.o_tx_mode == 3'b001)
@@ -68,23 +101,6 @@ initial begin
         	#5000
         	sda_drive   = 'bz;
         end */
-        #80100
-        sda_drive = 1'b0;
-        #10000
-        sda_drive = 1'bz;
-         #1000000
-         $stop ;
-         
-         
-        //#80100
-        //sda_drive = 1'b0;
-        //#10000
-        //sda_drive = 1'bz;
-        //#2000
-        //sda_tb   = sda_drive
-
-
-
   // #80100
 
    //$stop ;
@@ -102,6 +118,8 @@ task initialize;
         i_ccc_done_tb			= 1'b0;
         i_ddr_mode_done_tb      = 1'b0;
 		sda_drive 				= 1'bz;
+		i_ddr_pp_od_tb			= 1'b0;
+		i_ddr_pp_od_tb			= 1'b0;
 
 	end
 	endtask
@@ -135,7 +153,9 @@ sdr_hdr_transition_top DUT (
  .o_ccc_enable            	(o_ccc_enable_tb),
  .o_regf_address_special  	(o_regf_address_special_tb),
  .scl                 		(scl_tb),
- .o_sdr_rx_valid      		(o_sdr_rx_valid_tb), 
+ .o_sdr_rx_valid      		(o_sdr_rx_valid_tb),
+ .i_ddr_pp_od         		(i_ddr_pp_od_tb),
+ .i_ccc_pp_od         		(i_ccc_pp_od_tb),
  .o_ctrl_done               (o_ctrl_done_tb)
  ); 
 	

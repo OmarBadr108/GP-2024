@@ -163,6 +163,7 @@ reg write_adress_to_regf    ;
 reg arbitrated_adress_ready ;
 reg dynamic_address_assigned ; 
 reg send_stop ;
+reg HDR_send_stop;
 //--------------------------------- controller main fsm -------------------------------------------------
 
 always @(posedge i_clk or negedge i_rst_n) 
@@ -599,7 +600,7 @@ always @(posedge i_clk or negedge i_rst_n)
             STOP:
                 begin 
                     o_scl_idle <= 1'b1 ; //Yaseen's Edit 
-                    if(i_tx_mode_done && send_stop)
+                    if((i_tx_mode_done && send_stop)) /// editted
                         begin
                             o_tx_en           <= 1'b0   ; 
                             o_tx_mode         <= 3'b010 ;
@@ -630,6 +631,7 @@ always @(posedge i_clk or negedge i_rst_n)
                             o_i3c_idle_flag   <= 1'b1   ; 
                             state             <= IDLE   ;
                         end
+                        else
                     
                 end
 
@@ -719,8 +721,10 @@ always @(posedge i_clk or negedge i_rst_n)
                            o_regf_rd_address_sdr_hdr_sel   <=HDR_MODE_SEL    ; 
                            o_scl_pp_od_sdr_hdr_sel         <=HDR_MODE_SEL    ; 
 
-                            //o_scl_idle_mux_sel        <= HDR_ENGINE_SEL ;
-                            
+
+o_scl_pp_od_mux_sel       <= I3C_ENGINE_SEL ;
+
+                           o_scl_idle_mux_sel              <= I3C_ENGINE_SEL ;
 
                             state                           <= HDR_ENGINE    ; 
                         end 
@@ -757,6 +761,7 @@ always @(posedge i_clk or negedge i_rst_n)
                     o_scl_pp_od_sdr_hdr_sel         <=SDR_MODE_SEL;
 
                     o_hdrengine_en                  <= 1'b0 ;
+                    //HDR_send_stop                       <= 1'b1;
                     state                         <= STOP           ; 
                   end
                  else 
@@ -767,10 +772,11 @@ always @(posedge i_clk or negedge i_rst_n)
                     o_regf_rd_en_sdr_hdr_sel        <=HDR_MODE_SEL; 
                     o_regf_rd_address_sdr_hdr_sel   <=HDR_MODE_SEL; 
                     o_scl_pp_od_sdr_hdr_sel         <=HDR_MODE_SEL; 
-                   /* o_regf_rd_en_mux_sel      <= HDR_ENGINE_SEL ;             //(REG File) shared btw HDR & SDR
-                    o_regf_rd_address_mux_sel <= HDR_ENGINE_SEL ;             //(REG File) shared btw HDR & SDR
-                    o_regf_wr_en_mux_sel      <= HDR_ENGINE_SEL ;             //(REG File) shared btw HDR & SDR
-                    o_scl_pp_od_mux_sel       <= HDR_ENGINE_SEL ;     */        //(SCL GEN) shared btw HDR & SDR                 
+
+
+o_scl_pp_od_mux_sel       <= I3C_ENGINE_SEL ;
+
+                    //o_scl_pp_od_mux_sel             <= HDR_MODE_SEL ;             //(SCL GEN) shared btw HDR & SDR                 
                  
 
                     state                     <= HDR_ENGINE     ; 
