@@ -35,35 +35,6 @@ module frame_counter_tb ();
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // 2-clk generation 
 
 	// system clk = 50 Mhz

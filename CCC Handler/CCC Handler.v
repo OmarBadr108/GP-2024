@@ -65,14 +65,14 @@ output reg [3:0]  o_sclstall_code    ,
 output reg        o_tx_en            ,
 output reg [3:0]  o_tx_mode          ,
 output reg        o_rx_en            ,
-output reg [2:0]  o_rx_mode          ,
+output reg [3:0]  o_rx_mode          ,
 output reg        o_bitcnt_en        ,
 output reg        o_bitcnt_err_rst   , 
 output reg        o_frmcnt_en        ,
 output reg        o_sdahand_pp_od    ,
 output reg        o_regf_wr_en       ,
 output reg        o_regf_rd_en       ,
-output reg [15:0] o_regf_addr        , // depends on the depth of the regfile
+output reg [11:0] o_regf_addr        , // depends on the depth of the regfile
 output reg        o_engine_done      ,
 output reg [7:0]  o_txrx_addr_ccc    ,         // new 
 output reg        o_engine_odd       ,         // new
@@ -129,18 +129,18 @@ localparam [6:0] SEVEN_E = 7'h7E;
 
 // tx modes parameters 
 localparam [3:0]  
-                zero                   = 4'd0  ,  // 0                       approved by abdo
-                one                    = 4'd1  ,  // 1                       approved by abdo
-                special_preamble       = 4'd2  ,  // 01 of cmd word          approved by abdo
+                zero                   = 4'd6  ,  //                        approved by abdo
+                one                    = 4'd2  ,  //                        approved by abdo
+                special_preamble       = 4'd0  ,  // 01 of cmd word          approved by abdo
                 seven_zeros            = 4'd3  ,  // 7'b 0000_000            approved by abdo
-                serializing_address    = 4'd4  ,  // serializing 7 bits      approved by abdo
+                serializing_address    = 4'd1  ,  // serializing 7 bits      approved by abdo
                 serializing_byte_port  = 4'd5  ,  // serializing 8 bits that given from CCC to tx not from regfile to tx 
-                serializing_byte_regf  = 4'd6  ,  //                         approved by abdo
-                parity_calc            = 4'd7  ,  //                         approved by abdo
-                c_token_CRC            = 4'd8  ,  // 4'hC                    approved by abdo
-                value_CRC              = 4'd9  ,  // 5 bit value             approved by abdo
-                restart_pattern        = 4'd10 ,  //                         approved by abdo
-                exit_pattern           = 4'd11 ;  //                         approved by abdo
+                serializing_byte_regf  = 4'd7  ,  //                         approved by abdo
+                parity_calc            = 4'd4  ,  //                         approved by abdo
+                c_token_CRC            = 4'd12  ,  // 4'hC                    approved by abdo
+                value_CRC              = 4'd13  ,  // 5 bit value             approved by abdo
+                restart_pattern        = 4'd15 ,  //                         approved by abdo
+                exit_pattern           = 4'd14 ;  //                         approved by abdo
                 
 
 // regfile parameters 
@@ -149,11 +149,10 @@ localparam [11:0] first_location = 12'd1000 ;
 // rx parameters 
 localparam [3:0] 
                  preamble_rx_mode    = 4'd0 , 
-                 parity_check        = 4'd2 ,
-                 special_preamble_rx = 4'd3 ,
-                 deserializing_byte  = 4'd4 ,
+                 parity_check        = 4'd6 ,
+                 deserializing_byte  = 4'd3 ,
                  check_c_token_CRC   = 4'd5 ,
-                 check_value_CRC     = 4'd6 ;
+                 check_value_CRC     = 4'd7 ;
 
 
 // SCL staller parameters 
@@ -302,10 +301,10 @@ end
     o_tx_en            = 1'b0 ; 
     o_tx_mode          = 4'b0 ; 
     o_rx_en            = 1'b0 ; 
-    o_rx_mode          = 3'b0 ; 
+    o_rx_mode          = 4'b0 ; 
     o_bitcnt_en        = 1'b1 ; // enabled in all states except for idle state
     o_bitcnt_err_rst   = 1'b0 ; 
-    o_frmcnt_en        = 1'b1 ; 
+    //o_frmcnt_en        = 1'b1 ; 
     o_sdahand_pp_od    = 1'b1 ; // 1 means PP
     o_regf_wr_en       = 1'b0 ;
     o_regf_rd_en       = 1'b0 ;
@@ -323,6 +322,7 @@ end
                 o_engine_odd      = 1'b0 ;
                 controller_abort  = 1'b0 ;
                 o_tx_en           = 1'b0 ;
+                o_frmcnt_en       = 1'b0 ;
 
                 if (i_engine_en) begin 
                     next_state = PRE_CMD ;
@@ -344,7 +344,7 @@ end
                     if (i_tx_mode_done && !(i_frmcnt_last_frame || (Direct_Broadcast_n_del && first_time))) begin   
                         next_state = RNW ;
                     end 
-                    else if ((i_tx_mode_done || i_rx_mode_done) && (i_frmcnt_last_frame || (Direct_Broadcast_n_del && first_time))) begin  // at reading operation with matched data length
+                    else if ((i_tx_mode_done || i_rx_mode_done) && (i_frmcnt_last_frame  || (Direct_Broadcast_n_del && first_time))) begin  // at reading operation with matched data length
                         next_state = C_TOKEN_STATE ;
                     end 
                     else begin 
@@ -381,7 +381,7 @@ end
                 o_tx_mode = seven_zeros ;
                 
                 // state transition
-                if (i_bitcnt_number == 5'd9 && i_tx_mode_done) begin 
+                if (i_tx_mode_done) begin 
                     next_state = SECOND_CMD_BYTE ;
                 end
                 else begin 
@@ -396,7 +396,7 @@ end
                     o_tx_mode = serializing_address ;
                     o_txrx_addr_ccc = SEVEN_E ;
 
-                    if (i_bitcnt_number == 5'd17 &&i_tx_mode_done) begin 
+                    if (i_tx_mode_done) begin 
                         next_state = PARITY_CMD ;
                     end
                     else begin 
@@ -424,7 +424,7 @@ end
                 o_tx_en   = 1'b1 ; 
                 o_tx_mode = parity_calc ;
 
-                if (i_bitcnt_number == 5'd19 && i_tx_mode_done) begin 
+                if (i_tx_mode_done) begin 
                     next_state = PRE_FIRST_DATA_ONE ;
                 end
                 else begin 
@@ -502,7 +502,7 @@ end
                 o_regf_rd_en = 1'b1 ;
                 o_regf_addr  = first_location + 4 ;                 // fifth location (8 bits width)
 
-                if (i_bitcnt_number == 5'd17 && i_tx_mode_done) begin   
+                if (i_tx_mode_done) begin   
                     next_state = PARITY_DATA ;
                 end
                 else begin 
@@ -567,7 +567,7 @@ end
                         end 
                     end
 
-                    else if (i_bitcnt_number == 5'd19 && i_rx_mode_done && i_rx_error) begin 
+                    else if (i_rx_mode_done && i_rx_error) begin 
                         next_state = ERROR ;
                         o_regf_ERR_STATUS = PARITY_ERR ;
                     end 
