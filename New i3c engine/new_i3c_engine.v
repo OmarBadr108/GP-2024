@@ -161,7 +161,7 @@ localparam HDR_MODE_SEL     = 1'b1 ;
 reg [3:0] state ;
 reg write_adress_to_regf    ;
 reg arbitrated_adress_ready ;
-reg dynamic_address_assigned ;
+reg dynamic_address_assigned ; 
 reg send_stop ;
 //--------------------------------- controller main fsm -------------------------------------------------
 
@@ -192,7 +192,7 @@ always @(posedge i_clk or negedge i_rst_n)
 
             arbitrated_adress_ready <=  1'b0 ;
             write_adress_to_regf    <=  1'b0 ;
-            dynamic_address_assigned <= 1'b0 ; //for TESTINGGGGG
+            dynamic_address_assigned <= 1'b1 ; //for TESTINGGGGG
 
 
             state             <= IDLE   ;          
@@ -706,7 +706,7 @@ always @(posedge i_clk or negedge i_rst_n)
 
             ENTHDR: 
                 begin
-                    if (i_enthdr_done && i_scl_neg_edge)
+                    if (i_enthdr_done)
                         begin
                             o_hdrengine_en            <= 1'b1 ;          
 
@@ -789,7 +789,7 @@ always @(posedge i_clk or negedge i_rst_n)
 
 
 
-               end*/
+               end
          endcase
             
         end

@@ -74,8 +74,6 @@ initial begin
         sda_drive = 1'bz;
          #1000000
          $stop ;
-         
-         
         //#80100
         //sda_drive = 1'b0;
         //#10000
@@ -89,7 +87,7 @@ initial begin
 
    //$stop ;
 end 
-pullup(sda_tb);
+
 //--------------------------------------------------- Tasks --------------------------------------------------------//
 task initialize; 
 	begin

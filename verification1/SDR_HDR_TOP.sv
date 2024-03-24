@@ -277,7 +277,20 @@ module sdr_hdr_transition_top (
    wire       [2:0]      bits_cnt_regf_rx_tx_sel     ;
 
 
+<<<<<<< Updated upstream
   
+=======
+   wire                  sda_sel                     ;                // CHOOSE BETWEEN HDR & SDR 
+   wire                  regf_rd_en_hdr_mux_out      ; 
+   wire                  regf_rd_en_sdr_mux_out      ; 
+
+   wire                  regf_wr_en_hdr_mux_out      ; 
+   wire                  regf_wr_en_sdr_mux_out      ;
+
+   wire      [9:0]       regf_rd_address_sdr_mux_out ;
+   wire      [9:0]       regf_rd_address_hdr_mux_out ;
+
+>>>>>>> Stashed changes
 
 ////////////////////// Mux output wires ////////////////////////////
    wire                  regf_rd_en_mux_out          ;
@@ -355,7 +368,7 @@ module sdr_hdr_transition_top (
 
    wire         [9:0]    ccc_regfaddr;                      // out from ccc_block   
    wire         [9:0]    ddr_regf_address;                  // out from ddr_block
-   wire         [9:0]    regf_rd_address_hdr_mux_sel;          //out_from hdr_engine 
+   wire                  regf_rd_address_hdr_mux_sel;          //out_from hdr_engine 
 
    
    wire                 ccc_tx_en;
