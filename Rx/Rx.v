@@ -40,7 +40,7 @@ input                     i_sclgen_scl_neg_edge,
 input                     i_ddrccc_rx_en,
 input                     i_sdahnd_rx_sda,
 //input     [4:0]           i_bitcnt_rx_bit_count,
-input     [3:0]           i_ddrccc_rx_mode,
+input        [3:0]        i_ddrccc_rx_mode,
 input                     i_crc_value,
 input                     i_crc_valid,
 
