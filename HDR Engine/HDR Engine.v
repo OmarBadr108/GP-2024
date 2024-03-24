@@ -43,11 +43,8 @@ module hdr_engine (
     output  reg             o_i3cengine_hdrengine_done            ,
     output  reg             o_ddrmode_en                          ,
     output  reg             o_ccc_en                              ,
-<<<<<<< Updated upstream
-    output  reg   [11:0]     o_regf_addr_special
-=======
-<<<<<<< HEAD
-    output  reg   [7:0]     o_regf_addr_special                   ,
+
+    output  reg   [11:0]     o_regf_addr_special                  ,
     
     output  reg             o_tx_en_sel                           ,
     output  reg             o_rx_en_sel                           ,
@@ -61,10 +58,6 @@ module hdr_engine (
     output  reg             o_frm_cnt_en_sel                      ,
     output  reg             o_sdahand_pp_od_sel                    
 
-=======
-    output  reg   [11:0]     o_regf_addr_special
->>>>>>> f01e072f179e2bebbc3d65375a3a442100e37959
->>>>>>> Stashed changes
     //output  reg  [3:0]     o_TID
 
     );
