@@ -43,7 +43,20 @@ module hdr_engine (
     output  reg             o_i3cengine_hdrengine_done            ,
     output  reg             o_ddrmode_en                          ,
     output  reg             o_ccc_en                              ,
-    output  reg   [7:0]     o_regf_addr_special
+    output  reg   [7:0]     o_regf_addr_special                   ,
+    
+    output  reg             o_tx_en_sel                           ,
+    output  reg             o_rx_en_sel                           ,
+    output  reg   [2:0]     o_tx_mode_sel                         ,
+    output  reg   [2:0]     o_rx_mode_sel                         ,
+    output  reg             o_regf_rd_en_sel                      ,
+    output  reg             o_regf_wr_en_sel                      ,
+    output  reg             o_regf_addr_sel                       ,
+    //output  reg             o_scl_pp_od_sel                       ,
+    output  reg             o_bit_cnt_en_sel                      ,
+    output  reg             o_frm_cnt_en_sel                      ,
+    output  reg             o_sdahand_pp_od_sel                   ,    
+
     //output  reg  [3:0]     o_TID
 
     );
@@ -54,6 +67,10 @@ localparam  DDR_MODE      = 2'b10;
 
 reg [1:0] current_state, next_state;
 reg ccc_done;
+
+/////////////Mux Selection Parameters///////////////
+localparam DDR_SEL=1'b0;
+localparam CCC_SEL=1'b1;
 
 //--------------------------------- main ------------------------------------------------
 
@@ -76,18 +93,39 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
               if(i_CP) begin
                      o_ccc_en        <= 1'b1 ;
                      next_state      <= CCC ;
-/*
-                     // mux selectors
-                     o_tx_sel        <= CCC_;    // selects the hdr engine to control the sda line
-                     o_regf_rd_en_sel <= CCC_;
-                     o_regf_wr_en_sel <= CCC_;
-                     o_regf_addr_sel  <= CCC_;
-                     o_scl_pp_od_sel  <= CCC_; */
+
+                     // mux selectors         
+                     o_tx_en_sel            <=CCC_SEL;  
+                     o_rx_en_sel            <=CCC_SEL;
+                     o_tx_mode_sel          <=CCC_SEL;
+                     o_rx_mode_sel          <=CCC_SEL;
+                     o_regf_rd_en_sel       <=CCC_SEL;
+                     o_regf_wr_en_sel       <=CCC_SEL;
+                     o_regf_addr_sel        <=CCC_SEL;
+                     //o_scl_pp_od_sel        <=CCC_SEL;
+                     o_bit_cnt_en_sel       <=CCC_SEL;
+                     o_frm_cnt_en_sel       <=CCC_SEL;
+                     o_sdahand_pp_od_sel    <=CCC_SEL;    
+                     
+                     
+                     
+                  
                  end
               else 
               begin
                 o_ddrmode_en      <= 1'b1 ;
                 next_state        <= DDR_MODE ;
+                     o_tx_en_sel            <=DDR_SEL;  
+                     o_rx_en_sel            <=DDR_SEL;
+                     o_tx_mode_sel          <=DDR_SEL;
+                     o_rx_mode_sel          <=DDR_SEL;
+                     o_regf_rd_en_sel       <=DDR_SEL;
+                     o_regf_wr_en_sel       <=DDR_SEL;
+                     o_regf_addr_sel        <=DDR_SEL;
+                     //o_scl_pp_od_sel        <=DDR_SEL;
+                     o_bit_cnt_en_sel       <=DDR_SEL;
+                     o_frm_cnt_en_sel       <=DDR_SEL;
+                     o_sdahand_pp_od_sel    <=DDR_SEL;  
 
               end
           end
@@ -124,14 +162,39 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                     o_regf_addr_special           <= 8'd10;
                     o_ccc_en   <= 1'b0 ;
                     o_ddrmode_en <= 1'b1 ;
-                    next_state   <= DDR_MODE ; 
+                    next_state   <= DDR_MODE ;
+                     o_tx_en_sel            <=DDR_SEL;  
+                     o_rx_en_sel            <=DDR_SEL;
+                     o_tx_mode_sel          <=DDR_SEL;
+                     o_rx_mode_sel          <=DDR_SEL;
+                     o_regf_rd_en_sel       <=DDR_SEL;
+                     o_regf_wr_en_sel       <=DDR_SEL;
+                     o_regf_addr_sel        <=DDR_SEL;
+                     //o_scl_pp_od_sel        <=DDR_SEL;
+                     o_bit_cnt_en_sel       <=DDR_SEL;
+                     o_frm_cnt_en_sel       <=DDR_SEL;
+                     o_sdahand_pp_od_sel    <=DDR_SEL;   
                   end
                   else
                     next_state   <= CCC ;
+                    o_tx_en_sel            <=CCC_SEL;  
+                    o_rx_en_sel            <=CCC_SEL;
+                    o_tx_mode_sel          <=CCC_SEL;
+                    o_rx_mode_sel          <=CCC_SEL;
+                    o_regf_rd_en_sel       <=CCC_SEL;
+                    o_regf_wr_en_sel       <=CCC_SEL;
+                    o_regf_addr_sel        <=CCC_SEL;
+                    //o_scl_pp_od_sel        <=CCC_SEL;
+                    o_bit_cnt_en_sel       <=CCC_SEL;
+                    o_frm_cnt_en_sel       <=CCC_SEL;
+                    o_sdahand_pp_od_sel    <=CCC_SEL;  
             end
             else
                   o_i3cengine_hdrengine_done      <= 1'b0 ;
           end
+          
+
+
           DDR_MODE : begin
             if ((i_TOC && i_ddr_mode_done)||(i_MODE != 'd6)) begin
               o_ddrmode_en    <= 1'b0 ;
@@ -145,10 +208,32 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                   if (!i_CP) begin
                     o_ddrmode_en <= 1'b1 ;
                     next_state   <= DDR_MODE ;
+                     o_tx_en_sel            <=DDR_SEL;  
+                     o_rx_en_sel            <=DDR_SEL;
+                     o_tx_mode_sel          <=DDR_SEL;
+                     o_rx_mode_sel          <=DDR_SEL;
+                     o_regf_rd_en_sel       <=DDR_SEL;
+                     o_regf_wr_en_sel       <=DDR_SEL;
+                     o_regf_addr_sel        <=DDR_SEL;
+                   //  o_scl_pp_od_sel        <=DDR_SEL;
+                     o_bit_cnt_en_sel       <=DDR_SEL;
+                     o_frm_cnt_en_sel       <=DDR_SEL;
+                     o_sdahand_pp_od_sel    <=DDR_SEL;  
                   end
                   else begin
                     o_ccc_en <= 1'b1 ;
                     next_state <= CCC ;
+                     o_tx_en_sel            <=CCC_SEL;  
+                     o_rx_en_sel            <=CCC_SEL;
+                     o_tx_mode_sel          <=CCC_SEL;
+                     o_rx_mode_sel          <=CCC_SEL;
+                     o_regf_rd_en_sel       <=CCC_SEL;
+                     o_regf_wr_en_sel       <=CCC_SEL;
+                     o_regf_addr_sel        <=CCC_SEL;
+                     //o_scl_pp_od_sel        <=CCC_SEL;
+                     o_bit_cnt_en_sel       <=CCC_SEL;
+                     o_frm_cnt_en_sel       <=CCC_SEL;
+                     o_sdahand_pp_od_sel    <=CCC_SEL;  
                   end
             end
             else
