@@ -49,6 +49,9 @@ module sdr_hdr_transition_top (
     input  wire          i_ccc_done          ,
     input  wire          i_ddr_mode_done     ,
 
+    input  wire          i_ddr_pp_od         ,
+    input  wire          i_ccc_pp_od         ,
+
     inout  wire          sda                 , // sda bus
     
 
@@ -277,20 +280,10 @@ module sdr_hdr_transition_top (
    wire       [2:0]      bits_cnt_regf_rx_tx_sel     ;
 
 
-<<<<<<< Updated upstream
-  
-=======
-   wire                  sda_sel                     ;                // CHOOSE BETWEEN HDR & SDR 
-   wire                  regf_rd_en_hdr_mux_out      ; 
-   wire                  regf_rd_en_sdr_mux_out      ; 
 
-   wire                  regf_wr_en_hdr_mux_out      ; 
-   wire                  regf_wr_en_sdr_mux_out      ;
 
-   wire      [9:0]       regf_rd_address_sdr_mux_out ;
-   wire      [9:0]       regf_rd_address_hdr_mux_out ;
 
->>>>>>> Stashed changes
+
 
 ////////////////////// Mux output wires ////////////////////////////
    wire                  regf_rd_en_mux_out          ;
@@ -383,18 +376,18 @@ module sdr_hdr_transition_top (
 
    wire        [2:0]    ccc_tx_mode;
    wire        [2:0]    ddr_tx_mode;
-   wire        [2:0]    hdr_tx_mode_sel;
+   wire                 hdr_tx_mode_sel;
    wire        [2:0]    tx_mode_hdr_mux_out;
 
    wire        [2:0]    ccc_rx_mode;
    wire        [2:0]    ddr_rx_mode;
-   wire        [2:0]    hdr_rx_mode_sel;
+   wire                 hdr_rx_mode_sel;
    wire        [2:0]    rx_mode_hdr_mux_out;
 
-   wire                 ccc_pp_od;
-   wire                 ddr_pp_od;
+   //wire                 ccc_pp_od;
+   //wire                 ddr_pp_od;
    wire                 hdr_sdahand_pp_od_sel;
-
+   wire                 hdr_scl_pp_od_sel;
    wire                 ccc_bit_cnt_en;
    wire                 ddr_bit_cnt_en;
    wire                 hdr_bit_cnt_en_sel;
@@ -871,7 +864,7 @@ hdr_engine u_hdr_engine (
     .o_regf_rd_en_sel                       (regf_rd_en_hdr_mux_sel),
     .o_regf_wr_en_sel                       (regf_wr_en_hdr_mux_sel),
     .o_regf_addr_sel                        (regf_rd_address_hdr_mux_sel),
-    //.o_scl_pp_od_sel                        (hdr_pp_od_sel),
+    .o_scl_pp_od_sel                        (hdr_scl_pp_od_sel),
     .o_bit_cnt_en_sel                       (hdr_bit_cnt_en_sel),
     .o_frm_cnt_en_sel                       (hdr_frm_cnt_en_sel),
     .o_sdahand_pp_od_sel                    (hdr_sdahand_pp_od_sel),
@@ -1031,10 +1024,15 @@ gen_mux #(3,1) rx_mode_hdr_mux (
 
 
 
-gen_mux #(1,1) pp_od_hdr_mux (
+ /*gen_mux #(1,1) pp_od_hdr_mux (
             .data_in  ({ccc_pp_od, ddr_pp_od}),             ////to be added out from ccc/ddr blocks
             .ctrl_sel (hdr_sdahand_pp_od_sel)  ,
-            .data_out (scl_pp_od_hdr_mux_out) );
+            .data_out (scl_pp_od_hdr_mux_out) ); */
+
+   gen_mux #(1,1) scl_pp_od_hdr_mux (
+            .data_in  ({i_ccc_pp_od, i_ddr_pp_od}),             ////to be added out from ccc/ddr blocks
+            .ctrl_sel (hdr_scl_pp_od_sel)  ,
+            .data_out (scl_pp_od_hdr_mux_out) );         
 
 gen_mux #(1,1) bit_cnt_hdr_mux (
             .data_in  ({ccc_bit_cnt_en, ddr_bit_cnt_en}),             ////to be added out from ccc/ddr blocks

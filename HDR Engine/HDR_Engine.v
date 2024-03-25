@@ -48,12 +48,12 @@ module hdr_engine (
     
     output  reg             o_tx_en_sel                           ,
     output  reg             o_rx_en_sel                           ,
-    output  reg   [2:0]     o_tx_mode_sel                         ,
-    output  reg   [2:0]     o_rx_mode_sel                         ,
+    output  reg             o_tx_mode_sel                         ,
+    output  reg             o_rx_mode_sel                         ,
     output  reg             o_regf_rd_en_sel                      ,
     output  reg             o_regf_wr_en_sel                      ,
     output  reg             o_regf_addr_sel                       ,
-    //output  reg             o_scl_pp_od_sel                       ,
+    output  reg             o_scl_pp_od_sel                       ,
     output  reg             o_bit_cnt_en_sel                      ,
     output  reg             o_frm_cnt_en_sel                      ,
     output  reg             o_sdahand_pp_od_sel                    
@@ -83,13 +83,14 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
             o_ddrmode_en                    <= 1'b0   ;
             o_ccc_en                        <= 1'b0   ;
             o_regf_addr_special             <= 12'd1000 ;
-            current_state                   <= IDLE ;
+            //current_state                   <= IDLE ;
+            next_state                   <= IDLE ;
         end
 
     else if (i_i3cengine_hdrengine_en)
       begin
-        current_state <= next_state;
-        case (current_state)
+        //current_state <= next_state;
+        case (next_state)    //case (current_state)
           IDLE : begin
               if(i_CP) begin
                      o_ccc_en        <= 1'b1 ;
@@ -103,7 +104,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                      o_regf_rd_en_sel       <=CCC_SEL;
                      o_regf_wr_en_sel       <=CCC_SEL;
                      o_regf_addr_sel        <=CCC_SEL;
-                     //o_scl_pp_od_sel        <=CCC_SEL;
+                     o_scl_pp_od_sel        <=CCC_SEL;
                      o_bit_cnt_en_sel       <=CCC_SEL;
                      o_frm_cnt_en_sel       <=CCC_SEL;
                      o_sdahand_pp_od_sel    <=CCC_SEL;    
@@ -123,7 +124,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                      o_regf_rd_en_sel       <=DDR_SEL;
                      o_regf_wr_en_sel       <=DDR_SEL;
                      o_regf_addr_sel        <=DDR_SEL;
-                     //o_scl_pp_od_sel        <=DDR_SEL;
+                     o_scl_pp_od_sel        <=DDR_SEL;
                      o_bit_cnt_en_sel       <=DDR_SEL;
                      o_frm_cnt_en_sel       <=DDR_SEL;
                      o_sdahand_pp_od_sel    <=DDR_SEL;  
@@ -171,7 +172,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                      o_regf_rd_en_sel       <=DDR_SEL;
                      o_regf_wr_en_sel       <=DDR_SEL;
                      o_regf_addr_sel        <=DDR_SEL;
-                     //o_scl_pp_od_sel        <=DDR_SEL;
+                     o_scl_pp_od_sel        <=DDR_SEL;
                      o_bit_cnt_en_sel       <=DDR_SEL;
                      o_frm_cnt_en_sel       <=DDR_SEL;
                      o_sdahand_pp_od_sel    <=DDR_SEL;   
@@ -185,7 +186,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                     o_regf_rd_en_sel       <=CCC_SEL;
                     o_regf_wr_en_sel       <=CCC_SEL;
                     o_regf_addr_sel        <=CCC_SEL;
-                    //o_scl_pp_od_sel        <=CCC_SEL;
+                    o_scl_pp_od_sel        <=CCC_SEL;
                     o_bit_cnt_en_sel       <=CCC_SEL;
                     o_frm_cnt_en_sel       <=CCC_SEL;
                     o_sdahand_pp_od_sel    <=CCC_SEL;  
@@ -216,7 +217,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                      o_regf_rd_en_sel       <=DDR_SEL;
                      o_regf_wr_en_sel       <=DDR_SEL;
                      o_regf_addr_sel        <=DDR_SEL;
-                   //  o_scl_pp_od_sel        <=DDR_SEL;
+                     o_scl_pp_od_sel        <=DDR_SEL;
                      o_bit_cnt_en_sel       <=DDR_SEL;
                      o_frm_cnt_en_sel       <=DDR_SEL;
                      o_sdahand_pp_od_sel    <=DDR_SEL;  
@@ -231,7 +232,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                      o_regf_rd_en_sel       <=CCC_SEL;
                      o_regf_wr_en_sel       <=CCC_SEL;
                      o_regf_addr_sel        <=CCC_SEL;
-                     //o_scl_pp_od_sel        <=CCC_SEL;
+                     o_scl_pp_od_sel        <=CCC_SEL;
                      o_bit_cnt_en_sel       <=CCC_SEL;
                      o_frm_cnt_en_sel       <=CCC_SEL;
                      o_sdahand_pp_od_sel    <=CCC_SEL;  
