@@ -1,0 +1,278 @@
+m255
+K4
+z2
+Z0 !s99 nomlopt
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+!s11f vlog 2021.1 2021.01, Jan 19 2021
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFO_PROJECT
+T_opt
+!s110 1683229257
+Vf0K79cofIcSo5fF_>:?7=2
+04 8 4 work top_FIFO fast 0
+=1-48a472837b0b-64540a48-321-c64
+!s124 OEM100
+o-quiet -auto_acc_if_foreign -work work +acc
+Z1 tCvgOpt 0
+n@_opt
+OL;O;2021.1;73
+vFIFO
+Z2 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+Z3 DXx4 work 8 FIFO_pkg 0 22 lYZE262UkWn`a6M=5<Pn:0
+DXx4 work 13 FIFO_svp_unit 0 22 >J>]iIF`ec<1C6c1EikfH3
+Z4 !s110 1683229256
+Z5 VDg1SIo80bB@j0V0VzS_@n1
+r1
+!s85 0
+!i10b 1
+!s100 WNJGWkBO86_zVJX[g7EL93
+IX_]F4DlW1_e?9kZPm7Oe>0
+!i119 1
+!s105 FIFO_svp_unit
+S1
+Z6 dC:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO
+Z7 w1682348954
+Z8 8FIFO.svp
+Z9 FFIFO.svp
+!i122 103
+L0 2 12
+Z10 OL;L;2021.1;73
+31
+Z11 !s108 1683229256.000000
+Z12 !s107 TESTBENCH.sv|FIFO.svp|
+Z13 !s90 -reportprogress|300|FIFO.svp|TESTBENCH.sv|+cover|-covercells|
+!i113 0
+Z14 !s102 +cover -covercells
+Z15 o+cover -covercells -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1
+n@f@i@f@o
+YFIFO_if
+R2
+R3
+DXx4 work 22 INTERFACE_FIFO_sv_unit 0 22 4BFZY;74=ISO8oGE47:3]1
+Z16 !s110 1683229251
+R5
+r1
+!s85 0
+!i10b 1
+!s100 AIHIAbeE2U4m0;dJ_7@iC2
+Ii258YRDa3F@5W2Ja=:HEo0
+!s105 INTERFACE_FIFO_sv_unit
+S1
+R6
+Z17 w1683116119
+Z18 8C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/INTERFACE_FIFO.sv
+Z19 FC:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/INTERFACE_FIFO.sv
+!i122 99
+L0 3 0
+R10
+31
+Z20 !s108 1683229251.000000
+Z21 !s107 C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/INTERFACE_FIFO.sv|
+Z22 !s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/INTERFACE_FIFO.sv|
+!i113 0
+Z23 o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1
+n@f@i@f@o_if
+vFIFO_MON
+R2
+R16
+!i10b 1
+!s100 iChS8g_O[0fA6:NhO>7Z:0
+Ikz`<WkoYnMHhC1:Vk9Nf@1
+S1
+R6
+w1683108571
+8C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/MONITOR_FIFO.sv
+FC:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/MONITOR_FIFO.sv
+!i122 100
+L0 1 33
+R5
+R10
+r1
+!s85 0
+31
+R20
+!s107 C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/MONITOR_FIFO.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/MONITOR_FIFO.sv|
+!i113 0
+R23
+R1
+n@f@i@f@o_@m@o@n
+XFIFO_pkg
+R2
+R16
+!i10b 1
+!s100 3=ToeQFoe6<9J`>YC_6]d0
+IlYZE262UkWn`a6M=5<Pn:0
+S1
+R6
+w1683149204
+8C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/FIFO_PACKAGE.sv
+FC:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/FIFO_PACKAGE.sv
+!i122 98
+Z24 L0 1 0
+VlYZE262UkWn`a6M=5<Pn:0
+R10
+r1
+!s85 0
+31
+!s108 1683229250.000000
+!s107 C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/FIFO_PACKAGE.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/FIFO_PACKAGE.sv|
+!i113 0
+R23
+R1
+n@f@i@f@o_pkg
+XFIFO_svp_unit
+R2
+R3
+R4
+V>J>]iIF`ec<1C6c1EikfH3
+r1
+!s85 0
+!i10b 1
+!s100 oR4W;IPWY`OdlOoLoShME1
+I>J>]iIF`ec<1C6c1EikfH3
+!i103 1
+S1
+R6
+R7
+R8
+R9
+!i122 103
+R24
+R10
+31
+R11
+R12
+R13
+!i113 0
+R14
+R15
+R1
+n@f@i@f@o_svp_unit
+vFIFO_TB
+R2
+R2
+R3
+DXx4 work 17 TESTBENCH_sv_unit 0 22 `bB6mnd^Xd;l9A=J_Q;FR0
+R4
+R5
+r1
+!s85 0
+!i10b 1
+!s100 U[XkDj^:GJ4BnYlglLN6D3
+Ilh4JgYPU95Xb1a@So=6=32
+!s105 TESTBENCH_sv_unit
+S1
+R6
+Z25 w1683229247
+Z26 8TESTBENCH.sv
+Z27 FTESTBENCH.sv
+!i122 103
+L0 3 125
+R10
+31
+R11
+R12
+R13
+!i113 0
+R14
+R15
+R1
+n@f@i@f@o_@t@b
+XINTERFACE_FIFO_sv_unit
+R2
+R3
+R16
+V4BFZY;74=ISO8oGE47:3]1
+r1
+!s85 0
+!i10b 1
+!s100 B1oaDHL_6QQZ3K6=V8D2O0
+I4BFZY;74=ISO8oGE47:3]1
+!i103 1
+S1
+R6
+R17
+R18
+R19
+!i122 99
+R24
+R10
+31
+R20
+R21
+R22
+!i113 0
+R23
+R1
+n@i@n@t@e@r@f@a@c@e_@f@i@f@o_sv_unit
+XTESTBENCH_sv_unit
+R2
+R2
+R3
+R4
+V`bB6mnd^Xd;l9A=J_Q;FR0
+r1
+!s85 0
+!i10b 1
+!s100 2C:RZliaVE37^QY6`TKob1
+I`bB6mnd^Xd;l9A=J_Q;FR0
+!i103 1
+S1
+R6
+R25
+R26
+R27
+!i122 103
+R24
+R10
+31
+R11
+R12
+R13
+!i113 0
+R14
+R15
+R1
+n@t@e@s@t@b@e@n@c@h_sv_unit
+vtop_FIFO
+R2
+R16
+!i10b 1
+!s100 20UVV@6fzDbzQjM=T0S>n0
+IeXYGG9]Kd01QJ2CB>hE?Q2
+S1
+R6
+w1683228691
+8C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/TOP_FIFO.sv
+FC:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/TOP_FIFO.sv
+!i122 102
+L0 1 10
+R5
+R10
+r1
+!s85 0
+31
+R20
+!s107 C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/TOP_FIFO.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/TOP_FIFO.sv|
+!i113 0
+R23
+R1
+ntop_@f@i@f@o

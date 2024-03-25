@@ -264,7 +264,7 @@ assign o_regf_hj_support  = reg_array[409][0]   ;
  		  	/////////////////////////////////////////////      HDR     ///////////////////////////////////////////////////////
  		  		o_frmcnt_data_len <= DWORD_1_Vector [31:16] ;
 
- 		  		o_cccnt_CMD_ATTR  <= DWORD_0_Vector [2:0]   ;
+ 		  		o_cccnt_CMD_ATTR  <= DWORD_0_Vector [2:0]   ; 
  		  		o_engine_TID 	 	  <= DWORD_0_Vector [6:3]   ;
  		  		o_ccc_CMD  	 	 	  <= DWORD_0_Vector [14:7]  ;
  		  		o_engine_CP  		  <= DWORD_0_Vector [15]    ;

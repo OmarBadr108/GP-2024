@@ -1,0 +1,41 @@
+{C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/TOP_FIFO.sv} {1 {vlog -work work -vopt -sv -stats=none {C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/TOP_FIFO.sv}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module top_FIFO
+
+Top level modules:
+	top_FIFO
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/MONITOR_FIFO.sv} {2 {vlog -work work -vopt -sv -stats=none {C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/MONITOR_FIFO.sv}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module FIFO_MON
+** Warning: C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/MONITOR_FIFO.sv(3): (vlog-2643) Unterminated string literal continues onto next line.
+
+Top level modules:
+	FIFO_MON
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/FIFO_PACKAGE.sv} {1 {vlog -work work -vopt -sv -stats=none {C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/FIFO_PACKAGE.sv}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling package FIFO_pkg
+
+Top level modules:
+	--none--
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/FIFO.svp} {1 {vlog -work work -vopt -sv -stats=none {C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/FIFO.svp}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling package FIFO_svp_unit
+-- Importing package FIFO_pkg
+-- Compiling module FIFO
+
+Top level modules:
+	FIFO
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/INTERFACE_FIFO.sv} {1 {vlog -work work -vopt -sv -stats=none {C:/Users/omerb/OneDrive/Desktop/All about System Verilog/FIFOOOOOOOOO/INTERFACE_FIFO.sv}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling package INTERFACE_FIFO_sv_unit
+-- Importing package FIFO_pkg
+-- Compiling interface FIFO_if
+
+Top level modules:
+	--none--
+
+} {} {}}

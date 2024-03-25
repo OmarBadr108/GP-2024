@@ -185,6 +185,27 @@ R0
 R0
 R0
 R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
 !s11f vlog 2021.1 2021.01, Jan 19 2021
 13
 !s112 1.1
@@ -194,10 +215,10 @@ R0
 cModel Technology
 Z1 dC:/questasim64_2021.1/examples
 T_opt
-!s110 1711245539
-VIR6_iKC]ELFESk;^<d:Na0
+!s110 1711405638
+VCo?ii39?LA?ahj`92fKzJ3
 04 14 4 work CCC_Handler_tb fast 0
-=19-48a472837b0b-65ff88e3-2b3-1fc8
+=2-3c2c30a457d5-6601fa46-e8-1fa0
 Z2 !s124 OEM100
 Z3 o-quiet -auto_acc_if_foreign -work work +acc
 Z4 tCvgOpt 0
@@ -226,7 +247,7 @@ n@_opt2
 R5
 R1
 vbits_counter
-Z7 !s110 1711244501
+Z7 !s110 1711405634
 !i10b 1
 !s100 PhE23J2:Jn`cACOPJoYA<0
 IJNLn@M1>Z^>W`TGHSc2J<0
@@ -234,69 +255,124 @@ Z8 dC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler
 w1710770363
 8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/bits_counter.v
 FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/bits_counter.v
-!i122 888
+!i122 1104
 L0 3 61
 Z9 VDg1SIo80bB@j0V0VzS_@n1
 Z10 OL;L;2021.1;73
 r1
 !s85 0
 31
-Z11 !s108 1711244501.000000
+Z11 !s108 1711405634.000000
 !s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/bits_counter.v|
 !s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/bits_counter.v|
 !i113 0
 Z12 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
 R4
 vCCC_Handler
-Z13 !s110 1711245342
+R7
 !i10b 1
-!s100 Gz7T`MKJ^L9m8L8B2HGPa1
-IL=`EQL:8C`@Hb=8QTodgz0
+!s100 C[Q2i3LgI4S3kieiDEMlo2
+Ifn8EPOZ@PVo4DER8;dQzK3
 R8
-w1711245337
-8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC Handler.v
-FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC Handler.v
-!i122 899
-L0 33 864
+w1711328359
+8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler.v
+FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler.v
+!i122 1105
+L0 33 876
 R9
 R10
 r1
 !s85 0
 31
-Z14 !s108 1711245342.000000
-!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC Handler.v|
-!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC Handler.v|
+R11
+!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler.v|
 !i113 0
 R12
 R4
 n@c@c@c_@handler
-vCCC_Handler_tb
-DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
-!s110 1711245537
+XCCC_HANDLER_PACKAGE
+Z13 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+Z14 !s110 1711405635
 !i10b 1
-!s100 5fWZQ`iJSkXJ6<T;_=g9C1
-I=_Y:^?H:<f?N;?4i:`3o=1
+!s100 BJ:iPh0k@?]X7e[LB?G0b1
+I4H2VkKP4IXAE7odbXEFSK0
 S1
 R8
-w1711245532
-8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler_tb_final.sv
-FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler_tb_final.sv
-!i122 901
-L0 1 2135
-R9
+w1711405173
+8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/package.sv
+FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/package.sv
+!i122 1108
+Z15 L0 1 0
+V4H2VkKP4IXAE7odbXEFSK0
 R10
 r1
 !s85 0
 31
-!s108 1711245537.000000
-!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler_tb_final.sv|
-!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler_tb_final.sv|
+Z16 !s108 1711405635.000000
+!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/package.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/package.sv|
 !i113 0
-o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z17 o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R4
+n@c@c@c_@h@a@n@d@l@e@r_@p@a@c@k@a@g@e
+vCCC_Handler_tb
+R13
+Z18 DXx4 work 19 CCC_HANDLER_PACKAGE 0 22 4H2VkKP4IXAE7odbXEFSK0
+DXx4 work 28 CCC_Handler_tb_final_sv_unit 0 22 L`;8g2ZNbWGVh7`fK@YhQ3
+R7
+R9
+r1
+!s85 0
+!i10b 1
+!s100 Hd3gNYXgaOhd0IMBHINNZ0
+IZzJ_ngekMXg]6K_kLl[2L3
+!s105 CCC_Handler_tb_final_sv_unit
+S1
+R8
+Z19 w1711405631
+Z20 8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler_tb_final.sv
+Z21 FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler_tb_final.sv
+!i122 1106
+L0 3 528
+R10
+31
+R11
+Z22 !s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler_tb_final.sv|
+Z23 !s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler_tb_final.sv|
+!i113 0
+R17
 R4
 n@c@c@c_@handler_tb
-vframe_counter
+XCCC_Handler_tb_final_sv_unit
+R13
+R18
 R7
+VL`;8g2ZNbWGVh7`fK@YhQ3
+r1
+!s85 0
+!i10b 1
+!s100 S3@mWdQKnO>1KSUQVd:df0
+IL`;8g2ZNbWGVh7`fK@YhQ3
+!i103 1
+S1
+R8
+R19
+R20
+R21
+!i122 1106
+R15
+R10
+31
+R11
+R22
+R23
+!i113 0
+R17
+R4
+n@c@c@c_@handler_tb_final_sv_unit
+vframe_counter
+R14
 !i10b 1
 !s100 ZSHNVYGidl7OWJ?zO:5>Y1
 Ij2lLT=o9UX`<g1be?@2:81
@@ -304,7 +380,7 @@ R8
 w1710774834
 8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/FRAME_COUNTER.v
 FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/FRAME_COUNTER.v
-!i122 890
+!i122 1107
 L0 4 81
 R9
 R10
@@ -317,30 +393,52 @@ R11
 !i113 0
 R12
 R4
+vmux
+R14
+!i10b 1
+!s100 A^cHjWiEEaoCVPNW0zz`W1
+I9_kFhG7K8JHkH4Ec^KUeX2
+R8
+w1711373421
+8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/testing_mux.v
+FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/testing_mux.v
+!i122 1113
+L0 1 16
+R9
+R10
+r1
+!s85 0
+31
+R16
+!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/testing_mux.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/testing_mux.v|
+!i113 0
+R12
+R4
 vreg_file
-R7
+R14
 !i10b 1
 !s100 AaNhK08f>`kaEZNK=<D323
-IA_CM[W@n0ObDb<BaGNUio2
+I?n:I_4TXW[0c:ofA`@f[N3
 R8
-w1711233999
-8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/reg_file (1).v
-FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/reg_file (1).v
-!i122 891
+w1711395860
+8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/reg_file.v
+FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/reg_file.v
+!i122 1109
 L0 33 307
 R9
 R10
 r1
 !s85 0
 31
-R11
-!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/reg_file (1).v|
-!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/reg_file (1).v|
+R16
+!s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/reg_file.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/reg_file.v|
 !i113 0
 R12
 R4
 vRX
-R7
+R14
 !i10b 1
 !s100 A8jY@>`^67=_R69[`9Cg32
 IISf65A3AW><o0[kb[hjIi0
@@ -348,14 +446,14 @@ R8
 w1711066327
 8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/Rx.v
 FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/Rx.v
-!i122 892
+!i122 1110
 L0 33 361
 R9
 R10
 r1
 !s85 0
 31
-R11
+R16
 !s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/Rx.v|
 !s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/Rx.v|
 !i113 0
@@ -363,7 +461,7 @@ R12
 R4
 n@r@x
 vscl_generation
-R7
+R14
 !i10b 1
 !s100 `Y0Fd4C>ZTJlnmoNMj0Xh0
 IGoB@P_gTUBFdZgNQ4kacF2
@@ -371,21 +469,21 @@ R8
 w1708522074
 8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/scl_generation.v
 FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/scl_generation.v
-!i122 893
+!i122 1111
 L0 34 134
 R9
 R10
 r1
 !s85 0
 31
-R11
+R16
 !s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/scl_generation.v|
 !s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/scl_generation.v|
 !i113 0
 R12
 R4
 vscl_staller
-R7
+R14
 !i10b 1
 !s100 KPeE8VMWBl:iznGBDmdiU1
 IYUVFo:780O@2^WLT<MYcc1
@@ -393,21 +491,21 @@ R8
 w1711066147
 8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/stalller.v
 FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/stalller.v
-!i122 894
+!i122 1112
 L0 1 35
 R9
 R10
 r1
 !s85 0
 31
-R11
+R16
 !s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/stalller.v|
 !s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/stalller.v|
 !i113 0
 R12
 R4
 vtx
-R13
+R14
 !i10b 1
 !s100 kdEeX_Y`gbaM5^G^e9blO1
 I[YMO:VTJ3W][OTYQ_GY=o2
@@ -415,14 +513,14 @@ R8
 w1711245145
 8C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/Tx.v
 FC:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/Tx.v
-!i122 900
+!i122 1114
 L0 1 485
 R9
 R10
 r1
 !s85 0
 31
-R14
+R16
 !s107 C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/Tx.v|
 !s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/GP/Codes/GP-2024/CCC Handler/Tx.v|
 !i113 0

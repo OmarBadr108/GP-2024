@@ -64,8 +64,13 @@ output reg        o_sclstall_en      ,
 output reg [3:0]  o_sclstall_code    ,
 output reg        o_tx_en            ,
 output reg [3:0]  o_tx_mode          ,
-output reg        o_rx_en            ,
-output reg [3:0]  o_rx_mode          ,
+//output reg        o_rx_en    ,
+//output reg [3:0]  o_rx_mode  ,
+
+output reg        o_rx_en_negedge    ,
+output reg [3:0]  o_rx_mode_negedge  ,
+
+
 output reg        o_bitcnt_en        ,
 output reg        o_bitcnt_err_rst   , 
 output reg        o_frmcnt_en        ,
@@ -92,7 +97,8 @@ reg       controller_abort ; // new by badr (needs to be assigned by some logic)
 integer   regular_counter ;
 integer   immediate_counter ; 
 reg [9:0] tmp_shift ;
-
+reg [3:0] o_rx_mode ;
+reg       o_rx_en ;
 
 ///////////////////////////////// state encoding //////////////////////////////////////////////
 
@@ -177,6 +183,11 @@ localparam [3:0]
 
 always @(*) begin 
     o_frmcnt_Direct_Broadcast_n = Direct_Broadcast_n ;
+end 
+
+always @ (negedge i_sys_clk) begin 
+    o_rx_en_negedge   <= o_rx_en ;
+    o_rx_mode_negedge <= o_rx_mode ;
 end 
 /////////////////////////// decoding the device address (DAT entry 3al daya2 :) ) ///////////////////////////////////////
 
@@ -445,7 +456,7 @@ end
                 if (i_tx_mode_done) begin
                     next_state = PRE_FIRST_DATA_TWO ;
                     //o_rx_en    = 1'b1 ;
-                    o_rx_mode  = preamble_rx_mode ;
+                    //o_rx_mode  = preamble_rx_mode ;
                 end
                 else begin 
                     next_state = PRE_FIRST_DATA_ONE ;
@@ -587,6 +598,7 @@ end
                     if (i_tx_mode_done) begin
                         next_state = PRE_DATA_TWO ;
                         //o_rx_en  = 1'b1 ;
+                        //o_rx_mode = preamble_rx_mode ;
                     end
                     else begin 
                         next_state = PRE_DATA_ONE ;
