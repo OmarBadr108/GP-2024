@@ -394,7 +394,8 @@ module sdr_hdr_transition_top (
    wire                 hdr_bit_cnt_en_mux_out;
 
    wire                 ccc_frm_cnt_en;
-   wire                 ddr_frm_cnt_en;
+   wire                 ddr_frm_cnt_en;  
+   
    wire                 hdr_frm_cnt_en_sel;
    wire                 hdr_frm_cnt_en_sel_mux_out;
 
