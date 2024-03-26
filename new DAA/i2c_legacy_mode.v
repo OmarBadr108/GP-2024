@@ -51,7 +51,7 @@ module i2c_legacy_mode(
     output reg   [2:0]   o_rx_mode              , //Rx Current Mode Selector
     output reg           o_pp_od                , //Push-Pull/Open-Drain Selector (Always = 0 in I2C)
     output reg           o_regf_rd_en           , //RegFile Read Enable-Flag
-    output reg   [9:0]   o_regf_addr            , //RegFile Read/Write Address
+    output reg   [11:0]   o_regf_addr            , //RegFile Read/Write Address
     output reg           o_rx_data_valid        , //Received Data Valid-Flag for Host Interface
     output reg           o_target_nack          , //Error-Flag for I3C Engine (Target doesn't ACK)
     output reg           o_i2c_mode_done          //I2C Legacy Mode Done-Flag for I3C Engine
@@ -90,7 +90,7 @@ always @(posedge i_clk or negedge i_rst_n)
             o_rx_mode       <= 2'b00     ;
             o_pp_od         <= 1'b0      ;
             o_regf_rd_en    <= 1'b0      ;
-            o_regf_addr     <= 6'b000000 ;   
+            o_regf_addr     <= 12'b000000 ;   
             o_rx_data_valid <= 1'b0      ;
             o_target_nack   <= 1'b1      ;  
             o_i2c_mode_done <= 1'b0      ;
@@ -128,7 +128,7 @@ always @(posedge i_clk or negedge i_rst_n)
                             o_tx_en         <= 1'b1      ;
                             o_tx_mode       <= 3'b001    ; //SERIALIZING MODE
                             o_regf_rd_en    <= 1'b1      ;
-                            o_regf_addr     <= 6'b000000 ;  //TBD After Register File Locations Management
+                            o_regf_addr     <= 12'b000000 ;  //TBD After Register File Locations Management
 
                             //// Arbitration signals //////
                             o_rx_en         <= 1'b1      ; 
@@ -194,7 +194,7 @@ always @(posedge i_clk or negedge i_rst_n)
                                                     o_rx_en         <= 1'b1      ;
                                                     o_rx_mode       <= 2'b01     ; //DESERIALIZING MODE
                                                     o_bit_rx_cnt_en <= 1'b1      ; //Counting under Rx Conditions
-                                                    o_regf_addr     <= 6'b010011 ; // 1st frame to be written in RegFile at index 19 
+                                                    o_regf_addr     <= 12'b010011 ; // 1st frame to be written in RegFile at index 19 
                                                     state           <= DATA_IN   ; 
                                                 end
                                             else
@@ -204,7 +204,7 @@ always @(posedge i_clk or negedge i_rst_n)
                                                     o_rx_en      <= 1'b0      ;
                                                     o_rx_mode    <= 2'b00     ;
                                                     o_regf_rd_en <= 1'b1      ;
-                                                    o_regf_addr  <= 6'b000010 ; // 1st frame of data in RegFile at index 2.
+                                                    o_regf_addr  <= 12'b000010 ; // 1st frame of data in RegFile at index 2.
                                                     state        <= DATA_OUT  ;
                                                 end                            
                                         end

@@ -66,7 +66,7 @@ module sdr_mode(
     output reg           o_sdr_ctrl_done               ,
     output reg           o_sdr_ctrl_regf_wr_en         ,
     output reg           o_sdr_ctrl_regf_rd_en_pulse   ,
-    output reg   [9:0]   o_sdr_ctrl_regf_addr          ,
+    output reg   [11:0]   o_sdr_ctrl_regf_addr          ,
     output reg           o_sdr_ctrl_payload_done       ,
     output reg           o_sdr_ctrl_rx_valid            // need to be parametrized using define   
     );
@@ -217,7 +217,7 @@ always @(posedge i_sdr_ctrl_clk or negedge i_sdr_ctrl_rst_n)
               if (i_i3c_ctrl_sdr_en)
                 begin 
                   state <= ADDRESS ;
-                   o_sdr_ctrl_regf_addr         <=  10'b000000   ; 
+                   o_sdr_ctrl_regf_addr         <=  12'b000000   ; 
                    o_sdr_ctrl_pp_od       <= 1'b0   ; 
 
                 end 
@@ -251,7 +251,7 @@ always @(posedge i_sdr_ctrl_clk or negedge i_sdr_ctrl_rst_n)
               if (i_sdr_rx_arbitration_lost)
                 begin 
                   state                <= SDR_IDLE;
-                  o_sdr_ctrl_regf_addr <= 10'd48;
+                  o_sdr_ctrl_regf_addr <= 12'd48;
                 end
               else if (i_ser_mode_done_pulse)
                 begin 
@@ -288,7 +288,7 @@ always @(posedge i_sdr_ctrl_clk or negedge i_sdr_ctrl_rst_n)
                                 begin
                                     state                 <= DATA_IN ;          //Receiving Data at Rx
                                     o_sdr_ctrl_regf_wr_en <= 1'b1      ; // enable reg file to write 
-                                    o_sdr_ctrl_regf_addr  <= 10'b010011 ; // 1st frame to be written in RegFile at index 19 
+                                    o_sdr_ctrl_regf_addr  <= 12'b010011 ; // 1st frame to be written in RegFile at index 19 
                                     o_sdr_ctrl_ser_en            <= 1'b0  ;
                                 end
                             else 
@@ -316,7 +316,7 @@ always @(posedge i_sdr_ctrl_clk or negedge i_sdr_ctrl_rst_n)
                         o_sdr_ctrl_scl_stall_cycles <= 4'd6      ;
                         o_sdr_ctrl_ser_en           <= 1'b1      ; //Tx Enable
                         o_sdr_ctrl_regf_rd_en       <= 1'b1      ;
-                        o_sdr_ctrl_regf_addr        <= 10'b000010 ; // 1st frame of data in RegFile at index 2.
+                        o_sdr_ctrl_regf_addr        <= 12'b000010 ; // 1st frame of data in RegFile at index 2.
                         state <= SCL_STALLING; //----------added recently
                       end                      
                   end

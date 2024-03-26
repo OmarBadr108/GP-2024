@@ -126,10 +126,10 @@ module i3c_controller_top (
     wire                 i2c_regf_rd_en              ;
     wire                 daa_regf_rd_en              ;
     wire                 hj_regf_rd_en               ;
-    wire      [9:0]      sdr_regf_addr               ;
-    wire      [9:0]      i2c_regf_addr               ;
-    wire      [9:0]      daa_regf_addr               ;
-    wire      [9:0]      hj_regf_addr                ;
+    wire      [11:0]      sdr_regf_addr               ;
+    wire      [11:0]      i2c_regf_addr               ;
+    wire      [11:0]      daa_regf_addr               ;
+    wire      [11:0]      hj_regf_addr                ;
     wire      [7:0]      regf_data_rd                ;
     wire                 ser_rx_tx                   ;
     wire                 i3c_rx_valid                ;
@@ -153,7 +153,7 @@ module i3c_controller_top (
 
     wire                 ibi_regf_rd_en         ;
     wire                 ibi_regf_wr_en         ;
-    wire         [9:0]   ibi_regf_address    ;
+    wire         [11:0]   ibi_regf_address    ;
     wire                 ibi_pp_od              ;
     wire                 ibi_rx_en              ;
     wire                 ibi_tx_en              ;
@@ -232,7 +232,7 @@ module i3c_controller_top (
    wire       [2:0]      crh_rx_mode				 ;
    wire                  crh_regf_wr_en				 ;
    wire                  crh_regf_rd_en				 ;
-   wire       [9:0]      crh_regf_addr				 ;
+   wire       [11:0]      crh_regf_addr				 ;
    wire                  crh_timer_set				 ;
    wire                  crh_scl_idle      ;
    wire                  crh_send_stop     ;
@@ -264,7 +264,7 @@ module i3c_controller_top (
    wire                  regf_rd_en_mux_out          ;
    wire                  regf_wr_en_mux_out          ;
    wire       [7:0]      regf_wr_data_mux_out        ;
-   wire       [9:0]      regf_rd_address_mux_out     ;
+   wire       [11:0]      regf_rd_address_mux_out     ;
    wire                  scl_pp_od_mux_out           ;
    wire                  rx_en_mux_out               ;
    wire                  tx_en_mux_out               ;
@@ -693,7 +693,7 @@ gen_mux #(1,3) regf_rd_en_mux (
             .ctrl_sel (regf_rd_en_mux_sel)  ,
             .data_out (regf_rd_en_mux_out) );
 
-gen_mux #(10,3) regf_rd_address_mux (
+gen_mux #(12,3) regf_rd_address_mux (
             .data_in  ({ crh_regf_addr , ibi_regf_address , hj_regf_addr , daa_regf_addr , 10'b0 , i2c_regf_addr , sdr_regf_addr}),
             .ctrl_sel (regf_rd_address_mux_sel)  ,
             .data_out (regf_rd_address_mux_out) );

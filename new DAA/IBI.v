@@ -37,7 +37,7 @@ module IBI(
     input        i_ibi_ack_nack,
    
     output reg       o_ibi_pp_od,    
-    output reg [9:0] o_ibi_regf_address,
+    output reg [11:0] o_ibi_regf_address,
     output reg       o_ibi_regf_rd_en,
     output reg       o_ibi_rx_en,
     output reg       o_ibi_tx_en,

@@ -57,7 +57,7 @@ module sdr_hdr_transition_top (
 
     output wire          o_ddrmode_enable       ,
     output wire          o_ccc_enable            ,
-    output wire   [7:0]  o_regf_address_special  ,
+    output wire   [11:0]  o_regf_address_special  ,
     output wire          scl                 , // scl bus
     output wire          o_sdr_rx_valid      , // output to host >> valid data are loaded
     output wire          o_ctrl_done         ); // sdr block done signal
@@ -146,10 +146,10 @@ module sdr_hdr_transition_top (
     wire                 i2c_regf_rd_en              ;
     wire                 daa_regf_rd_en              ;
     wire                 hj_regf_rd_en               ;
-    wire      [9:0]      sdr_regf_addr               ;
-    wire      [9:0]      i2c_regf_addr               ;
-    wire      [9:0]      daa_regf_addr               ;
-    wire      [9:0]      hj_regf_addr                ;
+    wire      [11:0]      sdr_regf_addr               ;
+    wire      [11:0]      i2c_regf_addr               ;
+    wire      [11:0]      daa_regf_addr               ;
+    wire      [11:0]      hj_regf_addr                ;
     wire      [7:0]      regf_data_rd                ;
     wire                 ser_rx_tx                   ;
     wire                 i3c_rx_valid                ;
@@ -173,7 +173,7 @@ module sdr_hdr_transition_top (
 
     wire                 ibi_regf_rd_en         ;
     wire                 ibi_regf_wr_en         ;
-    wire         [9:0]   ibi_regf_address    ;
+    wire         [11:0]   ibi_regf_address    ;
     wire                 ibi_pp_od              ;
     wire                 ibi_rx_en              ;
     wire                 ibi_tx_en              ;
@@ -252,7 +252,7 @@ module sdr_hdr_transition_top (
    wire       [2:0]      crh_rx_mode                 ;
    wire                  crh_regf_wr_en              ;
    wire                  crh_regf_rd_en              ;
-   wire       [9:0]      crh_regf_addr               ;
+   wire       [11:0]      crh_regf_addr               ;
    wire                  crh_timer_set               ;
    wire                  crh_scl_idle      ;
    wire                  crh_send_stop     ;
@@ -289,7 +289,7 @@ module sdr_hdr_transition_top (
    wire                  regf_rd_en_mux_out          ;
    wire                  regf_wr_en_mux_out          ;
    wire       [7:0]      regf_wr_data_mux_out        ;
-   wire       [9:0]      regf_rd_address_mux_out     ;
+   wire       [11:0]      regf_rd_address_mux_out     ;
    wire                  scl_pp_od_mux_out           ;
    wire                  rx_en_mux_out               ;
    wire                  tx_en_mux_out               ;
@@ -317,7 +317,7 @@ module sdr_hdr_transition_top (
    wire                  enthdr_done                 ;
    wire                  hdrengine_exit              ;
    wire                  enthdr_regf_rd_en           ;
-   wire       [9:0]      enthdr_regf_addr            ;
+   wire       [11:0]     enthdr_regf_addr            ;
    wire                  enthdr_tx_en                ;
    wire       [2:0]      enthdr_tx_mode              ;  
    wire                  enthdr_rx_en                ;  
@@ -343,8 +343,8 @@ module sdr_hdr_transition_top (
    wire                  regf_wr_en_hdr_mux_out      ; 
    wire                  regf_wr_en_sdr_mux_out      ;
 
-   wire     [9:0]        regf_rd_address_sdr_mux_out ;
-   wire     [9:0]        regf_rd_address_hdr_mux_out ;
+   wire     [11:0]        regf_rd_address_sdr_mux_out ;
+   wire     [11:0]        regf_rd_address_hdr_mux_out ;
 
 
  /////////////////////////hdr_mux//////////////////////////
@@ -359,8 +359,8 @@ module sdr_hdr_transition_top (
    wire                  ddr_regf_wr_en;                 // out from ddr_block
    wire                  regf_wr_en_hdr_mux_sel;          //out_from hdr_engine 
 
-   wire         [9:0]    ccc_regfaddr;                      // out from ccc_block   
-   wire         [9:0]    ddr_regf_address;                  // out from ddr_block
+   wire         [11:0]    ccc_regfaddr;                      // out from ccc_block   
+   wire         [11:0]    ddr_regf_address;                  // out from ddr_block
    wire                  regf_rd_address_hdr_mux_sel;          //out_from hdr_engine 
 
    
@@ -887,7 +887,7 @@ gen_mux #(1,3) regf_rd_en_mux (
             .ctrl_sel (regf_rd_en_mux_sel)  ,
             .data_out (regf_rd_en_sdr_mux_out) );
 
-gen_mux #(10,3) regf_rd_address_mux (
+gen_mux #(12,3) regf_rd_address_mux (
             .data_in  ({ enthdr_regf_addr, crh_regf_addr , ibi_regf_address , hj_regf_addr , daa_regf_addr , 10'b0 , i2c_regf_addr , sdr_regf_addr}),
             .ctrl_sel (regf_rd_address_mux_sel)  ,
             .data_out (regf_rd_address_sdr_mux_out) );
@@ -998,7 +998,7 @@ gen_mux #(1,1) regf_wr_en_hdr_mux (
             .ctrl_sel (regf_wr_en_hdr_mux_sel)  ,
             .data_out (regf_wr_en_hdr_mux_out) );
 
-gen_mux #(10,1) regf_rd_address__hdr_mux (
+gen_mux #(12,1) regf_rd_address__hdr_mux (
             .data_in  ({ ccc_regfaddr, ddr_regf_address}),
             .ctrl_sel (regf_rd_address_hdr_mux_sel)  ,
             .data_out (regf_rd_address_hdr_mux_out) );
@@ -1058,7 +1058,7 @@ gen_mux #(1,1) reg_wr_en_mode_mux (
             .data_out (regf_wr_en_mux_out));
 
 
-gen_mux #(10,1) regf_rd_address_mode_mux (
+gen_mux #(12,1) regf_rd_address_mode_mux (
             .data_in  ({ regf_rd_address_hdr_mux_out,regf_rd_address_sdr_mux_out }),
             .ctrl_sel (regf_rd_address_mode)  ,
             .data_out (regf_rd_address_mux_out) );

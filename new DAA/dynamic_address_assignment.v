@@ -45,7 +45,7 @@ module dynamic_address_assignment (
     output reg           o_daa_regf_rd_en             , // Reg_file read enable
     output reg           o_daa_regf_wr_en             , // Reg_file write enable
     output reg  [7:0]    o_daa_regf_data_wr           , // Reg_file data write
-    output reg  [9:0]    o_daa_regf_addr              , // Reg_file Address
+    output reg  [11:0]    o_daa_regf_addr              , // Reg_file Address
     output reg  [2:0]    o_daa_tx_mode                , // TX configuration
     output reg           o_daa_tx_en                  , // TX enable
     output reg  [2:0]    o_daa_rx_mode                , // RX configuration 

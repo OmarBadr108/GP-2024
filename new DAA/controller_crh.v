@@ -71,7 +71,7 @@ output  reg  [2:0]       o_crh_rx_mode,
 //outputs to reg file
 output  reg              o_crh_regf_wr_en,
 output  reg              o_crh_regf_rd_en, //to be edited to pulse
-output  reg  [9:0]       o_crh_regf_addr,
+output  reg  [11:0]       o_crh_regf_addr,
 //outputs to i3c_engine
 output  reg              o_crh_done,
 //output  reg              o_crh_ncr_win,

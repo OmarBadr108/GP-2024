@@ -43,7 +43,7 @@ module enthdr (
   output  wire             o_pp_od         , 
   output  reg              o_bit_cnt_en    ,   
   output  reg              o_regf_rd_en    ,
-  output  reg     [9:0]    o_regf_addr     ,
+  output  reg     [11:0]   o_regf_addr     ,
   output  reg              o_tx_en         ,
   output  reg     [2:0]    o_tx_mode       ,
   output  reg              o_rx_en         ,
@@ -82,7 +82,7 @@ module enthdr (
          o_i3cengine_done    <= 1'b0;
          o_tx_mode           <= 3'b0;
          o_rx_mode           <= 3'b0;
-         o_regf_addr         <= 10'b0;
+         o_regf_addr         <= 12'b0;
          o_bit_cnt_en        <= 1'b0;
        end
      else 
@@ -93,7 +93,7 @@ module enthdr (
          o_i3cengine_done    <= 1'b0;
          o_tx_mode           <= 3'b0;
          o_rx_mode           <= 3'b0;
-         o_regf_addr         <= 10'b0;
+         o_regf_addr         <= 12'b0;
          o_bit_cnt_en        <= 1'b0;
         
         case(state)
@@ -106,7 +106,7 @@ module enthdr (
                      o_rx_mode     <= 3'b010; // arbitration state   
                      
                      o_regf_rd_en  <= 1'b1;
-                     o_regf_addr   <= 10'b0000101110; // 9'd46 >> broadcast address in reg file ('h7E+w)
+                     o_regf_addr   <= 12'b000000101110; // 9'd46 >> broadcast address in reg file ('h7E+w)
                      o_tx_en       <= 1'b1;
                      o_tx_mode     <= 3'b001;         // serializing state in TX
                      o_bit_cnt_en  <= 1'b1;
@@ -139,7 +139,7 @@ module enthdr (
                  o_rx_mode     <= 3'b010; // arbitration state   
                  
                  o_regf_rd_en  <= 1'b1;
-                 o_regf_addr   <= 10'b0000101110; // 9'd46 >> broadcast address in reg file ('h7E+w)
+                 o_regf_addr   <= 12'b000000101110; // 9'd46 >> broadcast address in reg file ('h7E+w)
                  o_tx_en       <= 1'b1;
                  o_tx_mode     <= 3'b001;         // serializing state in TX
                  o_bit_cnt_en  <= 1'b1;
@@ -219,7 +219,7 @@ module enthdr (
              o_i3cengine_done    <= 1'b0;
              o_tx_mode           <= 3'b0;
              o_rx_mode           <= 3'b0;
-             o_regf_addr         <= 10'b0;
+             o_regf_addr         <= 12'b0;
              state               <= IDLE;
             end
          endcase
