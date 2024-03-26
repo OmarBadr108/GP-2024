@@ -79,6 +79,13 @@ initial begin
  		#(10000*CLK_PERIOD)		
 		i_ddr_mode_done_tb  = 'b1;
 
+		@(negedge DUT.u_controller_tx.o_ser_mode_done)
+		i_controller_en_tb = 1'b0 ;
+        i_hdr_en_tb        = 1'b0 ;
+
+
+		// DUT.u_scl_generation.i_scl_gen_stall = 'b1;		
+
 // 2.2 sending CCC with exit pattern after it followed by stop bit.
 
 

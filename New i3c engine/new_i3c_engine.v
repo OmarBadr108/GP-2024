@@ -163,7 +163,7 @@ reg write_adress_to_regf    ;
 reg arbitrated_adress_ready ;
 reg dynamic_address_assigned ; 
 reg send_stop ;
-reg HDR_send_stop;
+//reg HDR_send_stop;
 //--------------------------------- controller main fsm -------------------------------------------------
 
 always @(posedge i_clk or negedge i_rst_n) 
@@ -631,7 +631,6 @@ always @(posedge i_clk or negedge i_rst_n)
                             o_i3c_idle_flag   <= 1'b1   ; 
                             state             <= IDLE   ;
                         end
-                        else
                     
                 end
 
@@ -744,6 +743,9 @@ o_scl_pp_od_mux_sel       <= I3C_ENGINE_SEL ;
 
              HDR_ENGINE:
                begin
+                    o_tx_en             <= 1'b0      ;
+                    send_stop           <= 1'b0      ;
+
                  if(i_hdrengine_done)
                   begin
                     o_scl_pp_od_mux_sel           <= I3C_ENGINE_SEL ;
@@ -761,7 +763,11 @@ o_scl_pp_od_mux_sel       <= I3C_ENGINE_SEL ;
                     o_scl_pp_od_sdr_hdr_sel         <=SDR_MODE_SEL;
 
                     o_hdrengine_en                  <= 1'b0 ;
-                    //HDR_send_stop                       <= 1'b1;
+
+                    o_tx_en             <= 1'b1      ;
+                    o_tx_mode           <= 3'b010    ; //stop bit
+                    o_pp_od             <= 1'b1      ; 
+                    send_stop           <= 1'b0      ;
                     state                         <= STOP           ; 
                   end
                  else 
