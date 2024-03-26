@@ -44,17 +44,17 @@ module reg_file #(parameter WIDTH = 8 , DEPTH = 2**12 , ADDR = 12 )
 /////////////////////////////////////////// HDR //////////////////////////////////////////
 	  input wire  [ADDR-1:0]  i_engine_configuration      ,   // location of configuration it has only 2 values either normal conf = 1000 or dummy conf = 900
 
-	   output reg [15:0]      o_frmcnt_data_len 			   ,
-		output reg [2:0] 		  o_cccnt_CMD_ATTR 			   ,
-		output reg [3:0]	     o_engine_TID 	 			   ,	 	
-		output reg [7:0]		  o_ccc_CMD  	 	 	 	 	   ,
-		output reg [4:0]	     o_cccnt_DEV_INDEX 	 	 	   ,
-		output reg [2:0]		  o_frmcnt_DTT  	   	 	   ,
-		output reg [2:0]		  o_engine_MODE  		 	 	   ,
-		output reg  			  o_cccnt_RnW 	 		 		   ,
-		output reg 				  o_cccnt_WROC 				   ,
-		output reg 				  o_cccnt_TOC 		 	 	 	   ,
-		output reg 				  o_engine_CP  		  	 	   ,
+	  output reg [15:0]      o_frmcnt_data_len 			      ,
+		output reg [2:0] 		   o_cccnt_CMD_ATTR 			      ,
+		output reg [3:0]	     o_engine_TID 	 			        ,	 	
+		output reg [7:0]		   o_ccc_CMD  	 	 	 	 	        ,
+		output reg [4:0]	     o_cccnt_DEV_INDEX 	 	 	      ,
+		output reg [2:0]		   o_frmcnt_DTT  	   	 	        ,
+		output reg [2:0]		   o_engine_MODE  		 	 	      ,
+		output reg  			     o_cccnt_RnW 	 		 		        ,
+		output reg 				     o_cccnt_WROC 				        ,
+		output reg 				     o_cccnt_TOC 		 	 	 	        ,
+		output reg 				     o_engine_CP  		  	 	      ,
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -197,7 +197,7 @@ assign o_regf_hj_support  = reg_array[409][0]   ;
  				reg_array[46]  <= 'b11111100 ; // 7'h7E broadcast address with rnw = 0 *write*
  				reg_array[47]  <= 'b11111101 ; // 7'h7E broadcast address with rnw = 1 *read*
  				reg_array[49]  <= 'b00000111 ; // ENTDAA CCC
-
+ 				reg_array[50]  <= 'b00100000 ; // 2024 : ENTHDR_DDR CCC (20 in hexadecimal)
 
  				//////////// Hot-Join Registers ////////////
  				reg_array[401] <= 'b00000000     ;   //ENEC CCC

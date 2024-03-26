@@ -160,6 +160,19 @@ module sdr_hdr_transition_top (
     wire                 daa_regf_wr_en              ;
     wire      [7:0]      daa_regf_data_wr            ;
 
+    wire      [11:0]     engine_configuration_addr   ;
+    wire      [15:0]     frmcnt_data_len             ; 
+    wire      [2:0]      cccnt_CMD_ATTR              ;
+    wire      [3:0]      engine_TID                  ; 
+    wire      [7:0]      ccc_CMD                     ;
+    wire      [4:0]      cccnt_DEV_INDEX             ;
+    wire      [2:0]      frmcnt_DTT                  ;
+    wire      [2:0]      engine_MODE                 ;
+    wire                 cccnt_RnW                   ;
+    wire                 cccnt_WROC                  ;
+    wire                 cccnt_TOC                   ;
+    wire                 engine_CP                   ;
+ 
 ////////////////////// IBI wires ////////////////////////////////
     wire         [7:0]   regf_ibi_cfg               ;
     wire         [7:0]   ibi_payload_size_reg       ;
@@ -804,18 +817,32 @@ reg_file u_reg_file (
             .i_regf_wr_en                 (regf_wr_en_mux_out)       ,
             .i_regf_addr                  (regf_rd_address_mux_out)  ,
             .i_regf_data_wr               (regf_wr_data_mux_out)     ,
+
+            .i_engine_configuration_addr  (engine_configuration_addr),   
+            .o_frmcnt_data_len            (frmcnt_data_len)          ,    // input to : CCC & DDR
+            .o_cccnt_CMD_ATTR             (cccnt_CMD_ATTR)           ,
+            .o_engine_TID                 (engine_TID)               ,       
+            .o_ccc_CMD                    (ccc_CMD)                  ,
+            .o_cccnt_DEV_INDEX            (cccnt_DEV_INDEX)          ,
+            .o_frmcnt_DTT                 (frmcnt_DTT)               ,
+            .o_engine_MODE                (engine_MODE)              ,
+            .o_cccnt_RnW                  (cccnt_RnW)                ,
+            .o_cccnt_WROC                 (cccnt_WROC)               ,
+            .o_cccnt_TOC                  (cccnt_TOC)                ,
+            .o_engine_CP                  (engine_CP)                ,
+
             .o_regf_data_rd               (regf_data_rd)             ,
             .o_ser_rx_tx                  (ser_rx_tx)                ,
             .o_regf_num_frames            (fcnt_no_frms)             ,
             .o_crh_CRHDLY                 (crh_CRHDLY)               ,
-              .o_crh_getstatus_data         (crh_getstatus_data)       ,
-              .o_crh_CRCAP2                 (crh_CRCAP2)               ,
-              .o_crh_PRECR                  (crh_PRECR)                  ,
-              .o_crh_cfg_reg                (crh_cfg_reg)              ,
-              .o_crh_tgts_count             (crh_tgts_count)           ,
-            .o_regf_ibi_cfg                (regf_ibi_cfg)   ,
-             .o_regf_ibi_payload_size_reg  (ibi_payload_size_reg)   ,
-             .o_i_ibi_tgt_address          (ibi_tgt_address) ,
+            .o_crh_getstatus_data         (crh_getstatus_data)       ,
+            .o_crh_CRCAP2                 (crh_CRCAP2)               ,
+            .o_crh_PRECR                  (crh_PRECR)                ,
+            .o_crh_cfg_reg                (crh_cfg_reg)              ,
+            .o_crh_tgts_count             (crh_tgts_count)           ,
+            .o_regf_ibi_cfg                (regf_ibi_cfg)            ,
+             .o_regf_ibi_payload_size_reg  (ibi_payload_size_reg)    ,
+             .o_i_ibi_tgt_address          (ibi_tgt_address)         ,
             .o_regf_hj_cfg                (hj_cfg_reg)               ,
             .o_regf_hj_support            (hj_support_reg)          );
 
@@ -853,9 +880,9 @@ hdr_engine u_hdr_engine (
     .i_i3cengine_hdrengine_en               (hdrengine_en)            , 
     .i_ccc_done                             (i_ccc_done)                ,
     .i_ddr_mode_done                        (i_ddr_mode_done)           ,
-    .i_TOC                                  (i_toc_interface)         , //term of completion if 0 restart/ 1 exit needed for exit
-    .i_CP                                   (i_cp_interface)           , // Cmnd present=1 if CCC 0 for Normal Transcation
-    .i_MODE                                 (i_MODE_interface)           ,
+    .i_TOC                                  (cccnt_TOC)         , //term of completion if 0 restart/ 1 exit needed for exit
+    .i_CP                                   (engine_CP)           , // Cmnd present=1 if CCC 0 for Normal Transcation
+    .i_MODE                                 (engine_MODE)           ,
     
     .o_tx_en_sel                            (hdr_tx_en_sel),                   
     .o_rx_en_sel                            (hdr_rx_en_sel),
@@ -874,7 +901,7 @@ hdr_engine u_hdr_engine (
     .o_i3cengine_hdrengine_done             (hdrengine_exit)           ,
     .o_ddrmode_en                           (o_ddrmode_enable)           ,
     .o_ccc_en                               (o_ccc_enable)           ,
-    .o_regf_addr_special                    (o_regf_address_special)    );
+    .o_regf_addr_special                    (engine_configuration_addr)    );
      //output  reg   [7:0]     o_regf_addr_special
 
 
