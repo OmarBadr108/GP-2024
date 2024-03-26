@@ -157,7 +157,7 @@ always @(posedge i_ibi_clk or negedge i_ibi_rst_n)
     	begin
     	state <= IDLE;
     	o_ibi_pp_od <= 1'b0;
-    	o_ibi_regf_address <= 8'b0;
+    	o_ibi_regf_address <= 12'b0;
         o_ibi_regf_rd_en   <= 1'b0;
         ibi_regf_wr_en     <= 1'b0;
         o_ibi_rx_mode      <= 3'b0;
