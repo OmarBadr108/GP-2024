@@ -208,8 +208,8 @@ module CCC_Handler_tb ();
 		.i_regf_rst_n(i_rst_n_tb),
 		.i_regf_rd_en(o_regf_rd_en_tb),
 		.i_regf_wr_en(my_regf_wr_en_tb_mux_out), 	 	 	// muxed 
-		.i_regf_data_wr(i_regf_data_wr_tb), // with rx  
-		.i_regf_addr(my_regf_addr_tb_mux_out),
+		.i_regf_data_wr(my_regf_data_wr_tb_mux_out),        // muxed with rx 
+		.i_regf_addr(my_regf_addr_tb_mux_out),				// muxed 
 		.i_engine_configuration(i_engine_configuration_tb),
 
 		.o_frmcnt_data_len(i_regf_DATA_LEN_tb),
@@ -383,7 +383,7 @@ module CCC_Handler_tb ();
 		// initialization of the object 
 		conf_obj = new();
 
-		for (i=0 ; i<99 ; i++) begin
+		for (i=0 ; i<1000 ; i++) begin
 
 			assert(conf_obj.randomize()); // "lw feh moshkla fel constrains edeny error" deh lazmet the word assert
 
@@ -430,7 +430,7 @@ module CCC_Handler_tb ();
 			#(CLK_PERIOD) i_rst_n_tb = 1'b1 ;
 		end 
 	endtask
-
+/*
 	task system_clk_pulse (inout logic pulse_signal) ;
 		begin 
 			//pulse_signal = 1'b1 ;
@@ -466,7 +466,7 @@ module CCC_Handler_tb ();
 			#(DDR_CLK_PERIOD) not_pulse_signal = 1'b1 ;
 		end 
 	endtask
-
+*/
 	task switch_muxes(input selector);
 		begin 
 			my_regf_wr_en_tb_selector    = selector ;

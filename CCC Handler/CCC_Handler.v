@@ -436,7 +436,8 @@ end
                 o_tx_mode = parity_calc ;
 
                 if (i_tx_mode_done) begin 
-                    next_state = PRE_FIRST_DATA_ONE ;
+                    next_state   = PRE_FIRST_DATA_ONE ;
+                    o_frmcnt_en  = 1'b1 ;
                 end
                 else begin 
                     next_state = PARITY_CMD ;

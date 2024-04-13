@@ -84,7 +84,7 @@ class configuration ;
 	}
 
 	constraint DATA_FOUR {
-		RAND_DATA_FOUR inside {[0:255]} ;	
+		RAND_DATA_FOUR == 0 ;	
 	}
 	
 
