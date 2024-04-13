@@ -519,7 +519,7 @@ i3c_engine u_i3c_engine (
 
 
 sdr_mode u_sdr_mode (
-            .i_sdr_ctrl_clk               (sys_clk_50mhz)            ,
+            .i_sdr_ctrl_clk               (sys_clk_50mhz)            , //
             .i_sdr_ctrl_rst_n             (i_sdr_rst_n)              ,
             .i_sdr_ctrl_cnt_done          (sdr_ctrl_cnt_done)        ,
             .i_i3c_ctrl_sdr_en            (sdr_en)                   ,
