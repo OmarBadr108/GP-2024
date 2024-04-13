@@ -113,6 +113,7 @@ module i3c_engine (
     output reg           o_regf_wr_en_sdr_hdr_sel, 
     output reg           o_regf_rd_en_sdr_hdr_sel, 
 
+    output reg           o_regf_data_sdr_hdr_sel,
     output reg           o_regf_rd_address_sdr_hdr_sel,                             
     output reg           o_scl_pp_od_sdr_hdr_sel       
 
@@ -206,6 +207,7 @@ always @(posedge i_clk or negedge i_rst_n)
              o_mode_sda_sel                  <= SDR_MODE_SEL;
              o_regf_wr_en_sdr_hdr_sel        <= SDR_MODE_SEL;
              o_regf_rd_en_sdr_hdr_sel        <= SDR_MODE_SEL;
+             o_regf_data_sdr_hdr_sel         <= SDR_MODE_SEL;
              o_regf_rd_address_sdr_hdr_sel   <= SDR_MODE_SEL;
              o_scl_pp_od_sdr_hdr_sel         <= SDR_MODE_SEL;
             case(state)
@@ -714,11 +716,12 @@ always @(posedge i_clk or negedge i_rst_n)
 
     /// Selectors of muxes that are shared between SDR and HDR to choose the required mode///////
                             
-                           o_mode_sda_sel                  <= HDR_MODE_SEL   ; 
-                           o_regf_wr_en_sdr_hdr_sel        <=HDR_MODE_SEL    ;  
-                           o_regf_rd_en_sdr_hdr_sel        <=HDR_MODE_SEL    ; 
-                           o_regf_rd_address_sdr_hdr_sel   <=HDR_MODE_SEL    ; 
-                           o_scl_pp_od_sdr_hdr_sel         <=HDR_MODE_SEL    ; 
+                           o_mode_sda_sel                  <= HDR_MODE_SEL    ; 
+                           o_regf_wr_en_sdr_hdr_sel        <= HDR_MODE_SEL    ;  
+                           o_regf_rd_en_sdr_hdr_sel        <= HDR_MODE_SEL    ; 
+                           o_regf_rd_address_sdr_hdr_sel   <= HDR_MODE_SEL    ; 
+                           o_scl_pp_od_sdr_hdr_sel         <= HDR_MODE_SEL    ; 
+                           o_regf_data_sdr_hdr_sel         <= HDR_MODE_SEL    ;
 
 
 o_scl_pp_od_mux_sel       <= I3C_ENGINE_SEL ;
@@ -759,6 +762,7 @@ o_scl_pp_od_mux_sel       <= I3C_ENGINE_SEL ;
                     o_mode_sda_sel                  <=SDR_MODE_SEL ; 
                     o_regf_wr_en_sdr_hdr_sel        <=SDR_MODE_SEL;  
                     o_regf_rd_en_sdr_hdr_sel        <=SDR_MODE_SEL; 
+                    
                     o_regf_rd_address_sdr_hdr_sel   <=SDR_MODE_SEL; 
                     o_scl_pp_od_sdr_hdr_sel         <=SDR_MODE_SEL;
 
