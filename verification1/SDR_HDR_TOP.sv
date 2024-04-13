@@ -831,7 +831,7 @@ reg_file u_reg_file (
             .o_cccnt_RnW                  (cccnt_RnW)                ,
             .o_cccnt_WROC                 (cccnt_WROC)               ,
             .o_cccnt_TOC                  (cccnt_TOC)                ,
-            .o_engine_CP                  (engine_CP)                ,
+            .o_engine_CP                  (engine_CP)                ,            
 
             .o_regf_data_rd               (regf_data_rd)             ,
             .o_ser_rx_tx                  (ser_rx_tx)                ,
