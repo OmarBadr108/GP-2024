@@ -16,9 +16,17 @@ parameter CLK_PERIOD  = 40;
     reg          i_i3c_i2c_sel_tb 			;
     reg          i_hdr_en_tb				; // enable signal for the hdr mode
     reg          i_ccc_en_dis_hj_tb			;
-    reg          i_toc_interface_tb    		; // toc : 1 : exit,  0: restart
-    reg          i_cp_interface_tb     		; // cp  : 1 : CCC ,  0: normal transaction
-    reg  [2:0]   i_MODE_interface_tb   		; // mode = 6 for HDR mode
+
+
+    //reg          i_toc_interface_tb    		; // toc : 1 : exit,  0: restart
+    //reg          i_cp_interface_tb     		; // cp  : 1 : CCC ,  0: normal transaction
+    //reg  [2:0]   i_MODE_interface_tb   		; // mode = 6 for HDR mode
+    reg   [7:0]  i_regf_config  ;
+    reg          i_data_config_mux_sel;  //1: to write configurations to the controller ,     0:i3c blocks to access reg file  
+    reg   [11:0] i_regf_wr_address_config;
+    reg          i_regf_wr_en_config     ;
+    reg          i_regf_rd_en_config     ;
+
     reg          i_ccc_done_tb         		; // done signal from CCC block
     reg          i_ddr_mode_done_tb    		; // done signal from ddr block
 
@@ -34,7 +42,7 @@ parameter CLK_PERIOD  = 40;
     wire         scl_tb                		;
     wire         o_ddrmode_enable_tb        ; // enable for the ddr block
     wire         o_ccc_enable_tb            ; // enable for the CCC block
-    wire  [7:0]  o_regf_address_special_tb  ; // regf special address
+    wire  [11:0]  o_regf_address_special_tb  ; // regf special address
 
 
 //--------------------------------------------------- Internal Signals --------------------------------------------//
@@ -42,7 +50,28 @@ parameter CLK_PERIOD  = 40;
     // locally driven value
     assign sda_tb   = sda_drive 			;
 
-    
+
+
+//--------------------------------------------------- Configuration Values --------------------------------------------//
+
+
+localparam  [11:0]  config_location = 12'd1000;
+
+localparam  [2:0]   CMD_ATTR 	= 'b0;
+localparam	[3:0]	TID 		= 'b0;
+localparam	[7:0]	CMD 		= 'b0;
+localparam			CP 			= 1'b0;	 //normal transaction
+localparam	[4:0]   DEV_INDEX   = 'b0;
+localparam	[1:0]   RESERVED    = 'b0;
+localparam	[2:0]   DTT         = 'b0;			
+localparam	[2:0]   MODE 		= 3'd6; // hdr mode
+localparam			TOC  		= 1'b1;  //exit pattern
+localparam			WROC 		= 'b0;
+localparam			RnW 		= 'b0;
+localparam	[7:0]	DEF_BYTE 	= 'b0;
+localparam	[7:0]	DATA_TWO 	= 'b0;
+localparam	[7:0]   DATA_THREE  = 'b0; 
+localparam	[7:0]   DATA_FOUR   = 'b0;  
 //--------------------------------------------------- Clock Generation --------------------------------------------//
 
 always #(CLK_PERIOD/2) i_clk_tb = ~i_clk_tb;   
@@ -50,7 +79,7 @@ always #(CLK_PERIOD/2) i_clk_tb = ~i_clk_tb;
 
 //--------------------------------------------------- Initial Block ------------------------------------------------//
 initial begin
-
+     	i_data_config_mux_sel   = 1'b0;
 //Signals Initialization
 	initialize();
 	     
@@ -59,22 +88,27 @@ initial begin
         
 // Test Case 1: enabling the hdr mode to send the ENTHDR CCC and then enabling the HDR engine     
      
+   // Writing configurations
+     	write_configurations();
+     	i_data_config_mux_sel   = 1'b0;
+
+
      // INPUTS 
         i_controller_en_tb = 1'b1 ;
         i_i3c_i2c_sel_tb   = 1'b1;
         i_hdr_en_tb        = 1'b1;
-
 
         #80100
         sda_drive = 1'b0;
         #10000
         sda_drive = 1'bz;
 
+
 // Test Case 2: testing the HDR engine functions 
 // 2.1 sending normal transaction with exit pattern after it followed by stop bit.
-		i_cp_interface_tb = 'b0;
- 		i_toc_interface_tb = 'b1 ; //exit pattern
-  		i_MODE_interface_tb = 'd6; 
+		//i_cp_interface_tb = 'b0;
+ 		//i_toc_interface_tb = 'b1 ; //exit pattern
+  		//i_MODE_interface_tb = 'd6; 
 
  		#(10000*CLK_PERIOD)		
 		i_ddr_mode_done_tb  = 'b1;
@@ -127,6 +161,9 @@ task initialize;
 		sda_drive 				= 1'bz;
 		i_ddr_pp_od_tb			= 1'b0;
 		i_ddr_pp_od_tb			= 1'b0;
+		i_data_config_mux_sel   = 1'b0;
+		i_regf_rd_en_config   	= 1'b0;								
+    	i_regf_wr_en_config   	= 1'b0;
 
 	end
 	endtask
@@ -142,6 +179,59 @@ task reset;
 	end	
 	endtask
 
+task write_configurations;
+	begin
+// DWORD 0
+	 @(negedge i_clk_tb)
+	i_regf_rd_en_config   = 1'b0																			;
+    i_regf_wr_en_config   = 1'b1 																		    ;
+    i_data_config_mux_sel = 1'b1																		    ;  //1: to write configurations to the controller ,     0:i3c blocks to access reg file
+
+
+		i_regf_config    = { CMD[0] , TID , CMD_ATTR }  												    ;
+    	i_regf_wr_address_config = config_location 															;
+    	    
+      #(CLK_PERIOD) ;
+      	//i_regf_wr_en_config   = 1'b1 																		; 
+		i_regf_config    = { CP , CMD[7:1] } 															    ;
+    	i_regf_wr_address_config = config_location + 1 														;
+
+      #(CLK_PERIOD) ;
+      	//i_regf_wr_en_config   = 1'b1 																		; 
+		i_regf_config    = { DTT[0] , RESERVED , DEV_INDEX }  											    ;		    
+    	i_regf_wr_address_config = config_location + 2 														;
+
+      #(CLK_PERIOD) ;
+      	//i_regf_wr_en_config   = 1'b1 																		; 
+		i_regf_config    = { TOC , WROC , RnW , MODE , DTT[2:1]} 										;
+    	i_regf_wr_address_config = config_location + 3 														;
+
+  // DWORD 1
+       #(CLK_PERIOD) ;
+      	//i_regf_wr_en_config   = 1'b1 																		; 
+		i_regf_config    = DEF_BYTE     																;
+    	i_regf_wr_address_config = config_location + 4 														;	
+
+       #(CLK_PERIOD) ;
+      	//i_regf_wr_en_config   = 1'b1 																		; 
+		i_regf_config    = DATA_TWO     																;
+    	i_regf_wr_address_config = config_location + 5 														;
+
+       #(CLK_PERIOD) ;
+      	//i_regf_wr_en_config   = 1'b1 																		; 
+		i_regf_config    = DATA_THREE     																;
+    	i_regf_wr_address_config = config_location + 6 														;
+
+       #(CLK_PERIOD) ;
+      	//i_regf_wr_en_config   = 1'b1 																		; 
+		i_regf_config    = DATA_FOUR     																;
+    	i_regf_wr_address_config = config_location + 7 														;
+
+
+        #(CLK_PERIOD) ;
+	end
+endtask
+
 //--------------------------------------------------- Design Instantiation -----------------------------------------//
 sdr_hdr_transition_top DUT (
  .i_sdr_clk           		(i_clk_tb), 
@@ -149,9 +239,14 @@ sdr_hdr_transition_top DUT (
  .i_controller_en     		(i_controller_en_tb), 
  .i_i3c_i2c_sel       		(i_i3c_i2c_sel_tb), 
  .i_ccc_en_dis_hj     		(i_ccc_en_dis_hj_tb), 
- .i_toc_interface     		(i_toc_interface_tb),
- .i_cp_interface      		(i_cp_interface_tb),
- .i_MODE_interface    		(i_MODE_interface_tb),  
+ //.i_toc_interface     		(i_toc_interface_tb),
+ //.i_cp_interface      		(i_cp_interface_tb),
+ //.i_MODE_interface    		(i_MODE_interface_tb),
+ .i_regf_config        (i_regf_config)					,
+ .i_data_config_mux_sel     (i_data_config_mux_sel)					,  //1: to write configurations to the controller ,     0:i3c blocks to access reg file  
+ .i_regf_wr_address_config  (i_regf_wr_address_config)					,
+ .i_regf_wr_en_config       (i_regf_wr_en_config)					,
+ .i_regf_rd_en_config       (i_regf_rd_en_config)                   ,  
  .i_hdr_en            		(i_hdr_en_tb), 
  .i_ccc_done          		(i_ccc_done_tb),
  .i_ddr_mode_done     		(i_ddr_mode_done_tb),

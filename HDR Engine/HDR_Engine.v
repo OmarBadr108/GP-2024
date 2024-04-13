@@ -89,6 +89,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
 
     else if (i_i3cengine_hdrengine_en)
       begin
+      o_regf_addr_special             <= 12'd1000 ;
         //current_state <= next_state;
         case (next_state)    //case (current_state)
           IDLE : begin

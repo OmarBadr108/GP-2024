@@ -42,12 +42,12 @@ module sdr_hdr_transition_top (
     
 
     // input to top module to write configurations
-    input wire   [7:0]   i_regf_data_config  ,
-    input wire           i_config_data_mux_sel,                //1: to write configurations to the controller ,     0:i3c blocks to access reg file  
+    input wire   [7:0]   i_regf_config  ,
+    input wire           i_data_config_mux_sel,  //1: to write configurations to the controller ,     0:i3c blocks to access reg file  
 
-    input wire   [11:0]  i_regf_rd_address_config,
+    input wire   [11:0]  i_regf_wr_address_config,
     input wire           i_regf_wr_en_config     ,
-
+    input wire           i_regf_rd_en_config     ,
 
 
     
@@ -306,9 +306,17 @@ module sdr_hdr_transition_top (
 
 ////////////////////// Mux output wires ////////////////////////////
    wire                  regf_rd_en_mux_out          ;
-   wire                  regf_wr_en_mode_mux_out          ;
-   wire       [7:0]      regf_wr_data_mode_mux_out        ;
-   wire       [11:0]      regf_rd_address__mode_mux_out     ;
+   wire                  regf_wr_en_mux_out          ;
+
+   wire                  regf_wr_en_mode_mux_out      ;
+   wire                  regf_rd_en_mode_mux_out      ;
+
+   wire       [7:0]      regf_wr_data_mode_mux_out    ;
+   wire       [7:0]      regf_wr_data_mux_out         ;
+
+   wire       [11:0]     regf_rd_address_mode_mux_out ;
+   wire       [11:0]     regf_rd_address_mux_out     ;
+
    wire                  scl_pp_od_mux_out           ;
    wire                  rx_en_mux_out               ;
    wire                  tx_en_mux_out               ;
@@ -503,7 +511,7 @@ i3c_engine u_i3c_engine (
             .o_hdrengine_en   (hdrengine_en), 
 
             .o_regf_wr_en_sdr_hdr_sel(regf_wr_en_mode), 
-            .o_regf_data_sdr_hdr_sel (regf_data_mode)
+            .o_regf_data_sdr_hdr_sel (regf_data_mode),
             .o_regf_rd_en_sdr_hdr_sel(regf_rd_en_mode), 
             .o_regf_rd_address_sdr_hdr_sel(regf_rd_address_mode),
             .o_scl_pp_od_sdr_hdr_sel(scl_pp_od_mode)        
@@ -830,7 +838,7 @@ reg_file u_reg_file (
             .i_regf_addr                  (regf_rd_address_mux_out)  ,
             .i_regf_data_wr               (regf_wr_data_mux_out)     ,
 
-            .i_engine_configuration_addr  (engine_configuration_addr),   
+            .i_engine_configuration       (engine_configuration_addr),   
             .o_frmcnt_data_len            (frmcnt_data_len)          ,    // input to : CCC & DDR
             .o_cccnt_CMD_ATTR             (cccnt_CMD_ATTR)           ,
             .o_engine_TID                 (engine_TID)               ,       
@@ -1089,7 +1097,7 @@ gen_mux #(1,1) frm_cnt_hdr_mux (
 gen_mux #(1,1) reg_rd_en_mode_mux (
             .data_in  ({regf_rd_en_hdr_mux_out,regf_rd_en_sdr_mux_out}),        
             .ctrl_sel (regf_rd_en_mode)  ,
-            .data_out (regf_rd_en_mux_out));
+            .data_out (regf_rd_en_mode_mux_out));
 
 gen_mux #(1,1) reg_wr_en_mode_mux (
             .data_in  ({regf_wr_en_hdr_mux_out,regf_wr_en_sdr_mux_out}),        
@@ -1118,19 +1126,25 @@ gen_mux #(1,1) scl_pp_od_mode_mux (
 
 gen_mux #(1,1) reg_wr_en_config_data_mux (
             .data_in  ({i_regf_wr_en_config,regf_wr_en_mode_mux_out}),        
-            .ctrl_sel (i_config_data_mux_sel)  ,
+            .ctrl_sel (i_data_config_mux_sel)  ,
             .data_out (regf_wr_en_mux_out));
 
 
 gen_mux #(12,1) regf_rd_address_config_data_mux (
-            .data_in  ({i_regf_rd_address_config,regf_rd_address_mode_mux_out}),
-            .ctrl_sel (i_config_data_mux_sel)  ,
+            .data_in  ({i_regf_wr_address_config,regf_rd_address_mode_mux_out}),
+            .ctrl_sel (i_data_config_mux_sel)  ,
             .data_out (regf_rd_address_mux_out) );
 
 gen_mux #(8,1) regf_wr_data_config_data_mux (
-            .data_in  ({i_regf_data_config , regf_wr_data_mode_mux_out}),
-            .ctrl_sel (i_config_data_mux_sel)  ,
+            .data_in  ({i_regf_config , regf_wr_data_mode_mux_out}),
+            .ctrl_sel (i_data_config_mux_sel)  ,
             .data_out (regf_wr_data_mux_out) );
+
+
+gen_mux #(1,1) reg_rd_en_config_data_mux (
+            .data_in  ({i_regf_rd_en_config,regf_rd_en_mode_mux_out}),        
+            .ctrl_sel (i_data_config_mux_sel)  ,
+            .data_out (regf_rd_en_mux_out));
 
 
 
