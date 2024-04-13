@@ -210,7 +210,7 @@ task write_configurations;
     	i_regf_wr_address_config = config_location + 'd3 														;
 
   // DWORD 1
-       #(3*CLK_PERIOD) ;
+       #(3*CLK_PERIOD) ; //
       	//i_regf_wr_en_config   = 1'b1 																		; 
 		i_regf_config    = DEF_BYTE     																;
     	i_regf_wr_address_config = config_location + 'd4 														;	
