@@ -63,7 +63,7 @@ module i3c_engine (
 
 
     ///////////////////////hdr//////////////////////////////////
-    input   wire          i_hdr_en                    ,
+    input   wire          i_hdr_en                    ,  
     input   wire          i_enthdr_done               ,
     input   wire          i_hdrengine_done          ,
     ////////////////////////////////////////////////////////////
@@ -724,7 +724,7 @@ always @(posedge i_clk or negedge i_rst_n)
                            o_regf_data_sdr_hdr_sel         <= HDR_MODE_SEL    ;
 
 
-o_scl_pp_od_mux_sel       <= I3C_ENGINE_SEL ;
+                           o_scl_pp_od_mux_sel       <= I3C_ENGINE_SEL ;
 
                            o_scl_idle_mux_sel              <= I3C_ENGINE_SEL ;
 
