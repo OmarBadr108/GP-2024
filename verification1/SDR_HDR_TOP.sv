@@ -41,9 +41,11 @@ module sdr_hdr_transition_top (
     input  wire          i_ccc_en_dis_hj     , // (TBD) for enable/disable events to prevent Bus-Initialization or DAA interruptions.
     
 
-    input  wire          i_toc_interface    ,
-    input  wire          i_cp_interface     ,
-    input  wire   [2:0]  i_MODE_interface   ,
+    // input to top module to write configurations
+    input 
+    //input  wire          i_toc_interface    ,
+    //input  wire          i_cp_interface     ,
+    //input  wire   [2:0]  i_MODE_interface   ,
     
     input  wire          i_hdr_en            , // enable signal for the hdr mode
     input  wire          i_ccc_done          ,
