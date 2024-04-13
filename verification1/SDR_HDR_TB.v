@@ -3,7 +3,7 @@
 
 module SDR_HDR_TB ();
 
-parameter CLK_PERIOD  = 40;
+parameter CLK_PERIOD  = 20;
 
 //--------------------------------------------------- Testbench Wires --------------------------------------------//
 
@@ -56,22 +56,22 @@ parameter CLK_PERIOD  = 40;
 
 
 localparam  [11:0]  config_location = 12'd1000;
-
-localparam  [2:0]   CMD_ATTR 	= 'b0;
-localparam	[3:0]	TID 		= 'b0;
-localparam	[7:0]	CMD 		= 'b0;
-localparam			CP 			= 1'b0;	 //normal transaction
-localparam	[4:0]   DEV_INDEX   = 'b0;
-localparam	[1:0]   RESERVED    = 'b0;
-localparam	[2:0]   DTT         = 'b0;			
+//reg [11:0] config_location;
+localparam  [2:0]   CMD_ATTR 	= 3'b111;
+localparam	[3:0]	TID 		= 4'b0101;
+localparam	[7:0]	CMD 		= 8'b0;
+localparam			CP 			= 1'b1;	 //normal transaction
+localparam	[4:0]   DEV_INDEX   = 5'b0;
+localparam	[1:0]   RESERVED    = 2'b11;
+localparam	[2:0]   DTT         = 3'b010;			
 localparam	[2:0]   MODE 		= 3'd6; // hdr mode
 localparam			TOC  		= 1'b1;  //exit pattern
-localparam			WROC 		= 'b0;
-localparam			RnW 		= 'b0;
-localparam	[7:0]	DEF_BYTE 	= 'b0;
-localparam	[7:0]	DATA_TWO 	= 'b0;
-localparam	[7:0]   DATA_THREE  = 'b0; 
-localparam	[7:0]   DATA_FOUR   = 'b0;  
+localparam			WROC 		= 1'b0;
+localparam			RnW 		= 1'b1;
+localparam	[7:0]	DEF_BYTE 	= 8'b0;
+localparam	[7:0]	DATA_TWO 	= 8'b10001010;
+localparam	[7:0]   DATA_THREE  = 8'b01011010; 
+localparam	[7:0]   DATA_FOUR   = 8'b11111111;  
 //--------------------------------------------------- Clock Generation --------------------------------------------//
 
 always #(CLK_PERIOD/2) i_clk_tb = ~i_clk_tb;   
@@ -181,6 +181,7 @@ task reset;
 
 task write_configurations;
 	begin
+
 // DWORD 0
 	 @(negedge i_clk_tb)
 	i_regf_rd_en_config   = 1'b0																			;
@@ -191,41 +192,43 @@ task write_configurations;
 		i_regf_config    = { CMD[0] , TID , CMD_ATTR }  												    ;
     	i_regf_wr_address_config = config_location 															;
     	    
-      #(CLK_PERIOD) ;
+      #(3*CLK_PERIOD) 
+      //@(negedge i_clk_tb)
       	//i_regf_wr_en_config   = 1'b1 																		; 
 		i_regf_config    = { CP , CMD[7:1] } 															    ;
-    	i_regf_wr_address_config = config_location + 1 														;
+    	i_regf_wr_address_config = config_location + 'd1 														;
 
-      #(CLK_PERIOD) ;
+      #(3*CLK_PERIOD) 
+      //@(negedge i_clk_tb)
       	//i_regf_wr_en_config   = 1'b1 																		; 
 		i_regf_config    = { DTT[0] , RESERVED , DEV_INDEX }  											    ;		    
-    	i_regf_wr_address_config = config_location + 2 														;
+    	i_regf_wr_address_config = config_location + 'd2 														;
 
-      #(CLK_PERIOD) ;
+      #(3*CLK_PERIOD) 
       	//i_regf_wr_en_config   = 1'b1 																		; 
 		i_regf_config    = { TOC , WROC , RnW , MODE , DTT[2:1]} 										;
-    	i_regf_wr_address_config = config_location + 3 														;
+    	i_regf_wr_address_config = config_location + 'd3 														;
 
   // DWORD 1
-       #(CLK_PERIOD) ;
+       #(3*CLK_PERIOD) ;
       	//i_regf_wr_en_config   = 1'b1 																		; 
 		i_regf_config    = DEF_BYTE     																;
-    	i_regf_wr_address_config = config_location + 4 														;	
+    	i_regf_wr_address_config = config_location + 'd4 														;	
 
-       #(CLK_PERIOD) ;
+       #(3*CLK_PERIOD) ;
       	//i_regf_wr_en_config   = 1'b1 																		; 
 		i_regf_config    = DATA_TWO     																;
-    	i_regf_wr_address_config = config_location + 5 														;
+    	i_regf_wr_address_config = config_location + 'd5 														;
 
-       #(CLK_PERIOD) ;
+       #(3*CLK_PERIOD) ;
       	//i_regf_wr_en_config   = 1'b1 																		; 
 		i_regf_config    = DATA_THREE     																;
-    	i_regf_wr_address_config = config_location + 6 														;
+    	i_regf_wr_address_config = config_location + 'd6 														;
 
-       #(CLK_PERIOD) ;
+       #(3*CLK_PERIOD) ;
       	//i_regf_wr_en_config   = 1'b1 																		; 
 		i_regf_config    = DATA_FOUR     																;
-    	i_regf_wr_address_config = config_location + 7 														;
+    	i_regf_wr_address_config = config_location + 'd7 														;
 
 
         #(CLK_PERIOD) ;
