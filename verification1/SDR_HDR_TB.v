@@ -57,17 +57,17 @@ parameter CLK_PERIOD  = 20;
 
 localparam  [11:0]  config_location = 12'd1000;
 //reg [11:0] config_location;
-localparam  [2:0]   CMD_ATTR 	= 3'b111;
-localparam	[3:0]	TID 		= 4'b0101;
+localparam  [2:0]   CMD_ATTR 	= 3'b000;
+localparam	[3:0]	TID 		= 4'b0000;
 localparam	[7:0]	CMD 		= 8'b0;
-localparam			CP 			= 1'b1;	 //normal transaction
+localparam			CP 			= 1'b0;	 //normal transaction
 localparam	[4:0]   DEV_INDEX   = 5'b0;
-localparam	[1:0]   RESERVED    = 2'b11;
-localparam	[2:0]   DTT         = 3'b010;			
+localparam	[1:0]   RESERVED    = 2'b00;
+localparam	[2:0]   DTT         = 3'b000;			
 localparam	[2:0]   MODE 		= 3'd6; // hdr mode
 localparam			TOC  		= 1'b1;  //exit pattern
 localparam			WROC 		= 1'b0;
-localparam			RnW 		= 1'b1;
+localparam			RnW 		= 1'b0;
 localparam	[7:0]	DEF_BYTE 	= 8'b0;
 localparam	[7:0]	DATA_TWO 	= 8'b10001010;
 localparam	[7:0]   DATA_THREE  = 8'b01011010; 
@@ -113,9 +113,9 @@ initial begin
  		#(10000*CLK_PERIOD)		
 		i_ddr_mode_done_tb  = 'b1;
 
-		@(negedge DUT.u_controller_tx.o_ser_mode_done)
+		/*@(negedge DUT.u_controller_tx.o_ser_mode_done)
 		i_controller_en_tb = 1'b0 ;
-        i_hdr_en_tb        = 1'b0 ;
+        i_hdr_en_tb        = 1'b0 ; */
 
 
 		// DUT.u_scl_generation.i_scl_gen_stall = 'b1;		
@@ -183,7 +183,8 @@ task write_configurations;
 	begin
 
 // DWORD 0
-	 @(negedge i_clk_tb)
+	 //@(negedge i_clk_tb)
+	 #(2*CLK_PERIOD)
 	i_regf_rd_en_config   = 1'b0																			;
     i_regf_wr_en_config   = 1'b1 																		    ;
     i_data_config_mux_sel = 1'b1																		    ;  //1: to write configurations to the controller ,     0:i3c blocks to access reg file
@@ -192,25 +193,25 @@ task write_configurations;
 		i_regf_config    = { CMD[0] , TID , CMD_ATTR }  												    ;
     	i_regf_wr_address_config = config_location 															;
     	    
-      #(3*CLK_PERIOD) 
+      #(2*CLK_PERIOD) 
       //@(negedge i_clk_tb)
       	//i_regf_wr_en_config   = 1'b1 																		; 
 		i_regf_config    = { CP , CMD[7:1] } 															    ;
     	i_regf_wr_address_config = config_location + 'd1 														;
 
-      #(3*CLK_PERIOD) 
+      #(2*CLK_PERIOD) 
       //@(negedge i_clk_tb)
       	//i_regf_wr_en_config   = 1'b1 																		; 
 		i_regf_config    = { DTT[0] , RESERVED , DEV_INDEX }  											    ;		    
     	i_regf_wr_address_config = config_location + 'd2 														;
 
-      #(3*CLK_PERIOD) 
+      #(2*CLK_PERIOD) 
       	//i_regf_wr_en_config   = 1'b1 																		; 
 		i_regf_config    = { TOC , WROC , RnW , MODE , DTT[2:1]} 										;
     	i_regf_wr_address_config = config_location + 'd3 														;
 
   // DWORD 1
-       #(3*CLK_PERIOD) ; //
+       #(3*CLK_PERIOD) ; 
       	//i_regf_wr_en_config   = 1'b1 																		; 
 		i_regf_config    = DEF_BYTE     																;
     	i_regf_wr_address_config = config_location + 'd4 														;	
@@ -231,7 +232,9 @@ task write_configurations;
     	i_regf_wr_address_config = config_location + 'd7 														;
 
 
+  
         #(CLK_PERIOD) ;
+
 	end
 endtask
 

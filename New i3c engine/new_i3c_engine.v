@@ -63,7 +63,10 @@ module i3c_engine (
 
 
     ///////////////////////hdr//////////////////////////////////
-    input   wire          i_hdr_en                    ,  
+    //input   wire          i_hdr_en                 , 
+    input   wire [2:0]    i_regf_mode               ,
+
+
     input   wire          i_enthdr_done               ,
     input   wire          i_hdrengine_done          ,
     ////////////////////////////////////////////////////////////
@@ -164,6 +167,11 @@ reg write_adress_to_regf    ;
 reg arbitrated_adress_ready ;
 reg dynamic_address_assigned ; 
 reg send_stop ;
+
+wire   hdr_en    ;
+
+
+assign hdr_en = (i_regf_mode == 3'd6)? 1:0 ;
 //reg HDR_send_stop;
 //--------------------------------- controller main fsm -------------------------------------------------
 
@@ -301,7 +309,7 @@ always @(posedge i_clk or negedge i_rst_n)
                                     1'b1: 
                                     //////////////////////////////ENTHDR///////////////////////////////
                                         begin
-                                           if(i_hdr_en) //input from outside (configration) >> ENABLES THE ENTHDR BLOCK
+                                           if(hdr_en) //input from outside (configration) >> ENABLES THE ENTHDR BLOCK
                                             begin
                                              o_enthdr_en               <= 1'b1       ; //enables enthdr block
                                              o_regf_rd_en_mux_sel      <= ENTHDR_SEL ;

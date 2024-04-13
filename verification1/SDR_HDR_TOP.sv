@@ -465,7 +465,7 @@ i3c_engine u_i3c_engine (
             .i_crh_send_stop              (crh_send_stop)            ,
             .i_ibi_done                   (ibi_done)                 ,
             ////////////////////////HDR///////////////////////////////
-            .i_hdr_en   (i_hdr_en)                                     ,
+            .i_regf_mode   (engine_MODE)                             ,
             .i_enthdr_done(enthdr_done)                              ,
             .i_hdrengine_done (hdrengine_exit)                       ,
 
