@@ -262,10 +262,10 @@ end
         endcase
     end
 
- always @ (i_sys_clk or negedge i_sys_rst) begin 
+ always @ (posedge i_sys_clk or negedge i_sys_rst) begin 
     if (!i_sys_rst) begin
-        tmp_shift = 10'd0 ;
-        Direct_Broadcast_n_del = 1'b0 ;
+        tmp_shift <= 10'd0 ;
+        Direct_Broadcast_n_del <= 1'b0 ;
     end 
     else begin 
         if (i_engine_en) begin 
@@ -275,7 +275,7 @@ end
         end 
         else begin 
             Direct_Broadcast_n_del <= 1'b0 ;
-            tmp_shift = 10'd0 ;
+            tmp_shift <= 10'd0 ;
         end  
     end   
 end 
