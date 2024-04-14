@@ -98,9 +98,9 @@ initial begin
         i_i3c_i2c_sel_tb   = 1'b1;
         i_hdr_en_tb        = 1'b1;
 
-        #39540
+        #40540
         sda_drive = 1'b0;
-        #10000
+        #5050
         sda_drive = 1'bz;
 
 
