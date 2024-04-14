@@ -717,6 +717,20 @@ always @(posedge i_clk or negedge i_rst_n)
 
             ENTHDR: 
                 begin
+                            o_enthdr_en               <= 1'b1       ; //enables enthdr block
+                            o_regf_rd_en_mux_sel      <= ENTHDR_SEL ;
+                            o_regf_rd_address_mux_sel <= ENTHDR_SEL ;
+                            o_regf_wr_en_mux_sel      <= ENTHDR_SEL ;
+                            o_scl_pp_od_mux_sel       <= ENTHDR_SEL ;
+                            o_tx_en_mux_sel           <= ENTHDR_SEL ;
+                            o_tx_mode_mux_sel         <= ENTHDR_SEL ;
+                            o_rx_en_mux_sel           <= ENTHDR_SEL ;
+                            o_rx_mode_mux_sel         <= ENTHDR_SEL ;
+                            o_bit_cnt_en_mux_sel      <= ENTHDR_SEL ;
+                            o_bit_rx_cnt_en_mux_sel   <= ENTHDR_SEL ;
+                            o_fcnt_en_mux_sel         <= ENTHDR_SEL ;
+                            o_scl_idle_mux_sel        <= ENTHDR_SEL ; 
+                            state                     <= ENTHDR; 
                     if (i_enthdr_done)
                         begin
                             o_hdrengine_en            <= 1'b1 ;          
@@ -747,7 +761,7 @@ always @(posedge i_clk or negedge i_rst_n)
                     else
                         begin
                             state                     <= ENTHDR         ;
-                             
+
                         end 
                 end
 
