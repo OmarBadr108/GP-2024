@@ -935,7 +935,7 @@ gen_mux #(1,3) regf_rd_en_mux (
             .data_out (regf_rd_en_sdr_mux_out) );
 
 gen_mux #(12,3) regf_rd_address_mux (
-            .data_in  ({ enthdr_regf_addr, crh_regf_addr , ibi_regf_address , hj_regf_addr , daa_regf_addr , 10'b0 , i2c_regf_addr , sdr_regf_addr}),
+            .data_in  ({ enthdr_regf_addr, crh_regf_addr , ibi_regf_address , hj_regf_addr , daa_regf_addr , 12'b0 , i2c_regf_addr , sdr_regf_addr}),
             .ctrl_sel (regf_rd_address_mux_sel)  ,
             .data_out (regf_rd_address_sdr_mux_out) );
 

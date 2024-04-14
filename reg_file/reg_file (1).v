@@ -87,7 +87,7 @@ localparam BDCST_WRITE_ADDRESS = 8'd46; //  write for broadcasring location in R
 localparam EVENT_DISABLE_BYTE_ADDRESS=10'd392; //Disable Target Events Command Byte location in RegFile
 
 //////////////////              CONTROLLER ROLE HANDOFF PARAMETERS              /////////////////
- localparam BROADCAST_ADDR_REG_FILE = 9'd46 ; //broadcast address in reg file (7E+w)
+ localparam BROADCAST_ADDR_REG_FILE = 12'd46 ; //broadcast address in reg file (7E+w)
  localparam ARBITRATION_ADDR_REG_FILE = 9'd48 ; //arbitration address 
  localparam TARGET_ADDR_REG_FILE =  9'd0   ; 
  localparam GETSTATUS_ADDR_REG_FILE = 9'd387 ; 

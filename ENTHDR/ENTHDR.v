@@ -99,6 +99,9 @@ module enthdr (
         case(state)
            IDLE:         
              begin
+              o_rx_en       <= 1'b1;
+              o_regf_rd_en  <= 1'b1;
+              o_regf_addr   <= 12'b000000101110;
                if (i_i3cengine_en)
                    begin
                      state         <= BROADCAST;

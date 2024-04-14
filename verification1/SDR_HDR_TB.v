@@ -98,7 +98,7 @@ initial begin
         i_i3c_i2c_sel_tb   = 1'b1;
         i_hdr_en_tb        = 1'b1;
 
-        #80100
+        #39540
         sda_drive = 1'b0;
         #10000
         sda_drive = 1'bz;
@@ -113,9 +113,9 @@ initial begin
  		#(10000*CLK_PERIOD)		
 		i_ddr_mode_done_tb  = 'b1;
 
-		/*@(negedge DUT.u_controller_tx.o_ser_mode_done)
+		@(negedge DUT.u_controller_tx.o_ser_mode_done)
 		i_controller_en_tb = 1'b0 ;
-        i_hdr_en_tb        = 1'b0 ; */
+        i_hdr_en_tb        = 1'b0 ; 
 
 
 		// DUT.u_scl_generation.i_scl_gen_stall = 'b1;		
@@ -211,22 +211,22 @@ task write_configurations;
     	i_regf_wr_address_config = config_location + 'd3 														;
 
   // DWORD 1
-       #(3*CLK_PERIOD) ; 
+       #(2*CLK_PERIOD) ; 
       	//i_regf_wr_en_config   = 1'b1 																		; 
 		i_regf_config    = DEF_BYTE     																;
     	i_regf_wr_address_config = config_location + 'd4 														;	
 
-       #(3*CLK_PERIOD) ;
+       #(2*CLK_PERIOD) ;
       	//i_regf_wr_en_config   = 1'b1 																		; 
 		i_regf_config    = DATA_TWO     																;
     	i_regf_wr_address_config = config_location + 'd5 														;
 
-       #(3*CLK_PERIOD) ;
+       #(2*CLK_PERIOD) ;
       	//i_regf_wr_en_config   = 1'b1 																		; 
 		i_regf_config    = DATA_THREE     																;
     	i_regf_wr_address_config = config_location + 'd6 														;
 
-       #(3*CLK_PERIOD) ;
+       #(2*CLK_PERIOD) ;
       	//i_regf_wr_en_config   = 1'b1 																		; 
 		i_regf_config    = DATA_FOUR     																;
     	i_regf_wr_address_config = config_location + 'd7 														;
