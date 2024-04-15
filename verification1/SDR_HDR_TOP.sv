@@ -55,9 +55,6 @@ module sdr_hdr_transition_top (
     input  wire          i_ccc_done          ,
     input  wire          i_ddr_mode_done     ,
 
-    input  wire          i_ddr_pp_od         ,
-    input  wire          i_ccc_pp_od         ,
-
     inout  wire          sda                 , // sda bus
     
 
@@ -357,9 +354,7 @@ module sdr_hdr_transition_top (
    wire                  regf_rd_address_mode        ;
    wire                  scl_pp_od_mode              ;    
 
-
-
-
+ 
 ///////////////////////////hdr_sdr_mux///////////////////////
    wire                  sda_sel                     ;                // CHOOSE BETWEEN HDR & SDR 
    wire                  regf_rd_en_hdr_mux_out      ; 
@@ -418,6 +413,10 @@ module sdr_hdr_transition_top (
 
    //wire                 ccc_pp_od;
    //wire                 ddr_pp_od;
+   wire                  scl_ddr_pp_od                 ;
+   wire                  scl_ccc_pp_od                 ;
+   assign  scl_ddr_pp_od =1'b0;                         //untill integration
+ 
    wire                 hdr_sdahand_pp_od_sel;
    wire                 hdr_scl_pp_od_sel;
    wire                 ccc_bit_cnt_en;
@@ -1078,7 +1077,7 @@ gen_mux #(3,1) rx_mode_hdr_mux (
             .data_out (scl_pp_od_hdr_mux_out) ); */
 
    gen_mux #(1,1) scl_pp_od_hdr_mux (
-            .data_in  ({i_ccc_pp_od, i_ddr_pp_od}),             ////to be added out from ccc/ddr blocks
+            .data_in  ({scl_ccc_pp_od, scl_ddr_pp_od}),             ////to be added out from ccc/ddr blocks
             .ctrl_sel (hdr_scl_pp_od_sel)  ,
             .data_out (scl_pp_od_hdr_mux_out) );         
 
