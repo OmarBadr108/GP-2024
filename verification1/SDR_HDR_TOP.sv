@@ -415,7 +415,7 @@ module sdr_hdr_transition_top (
    //wire                 ddr_pp_od;
    wire                  scl_ddr_pp_od                 ;
    wire                  scl_ccc_pp_od                 ;
-   assign  scl_ddr_pp_od =1'b0;                         //untill integration
+   assign  scl_ddr_pp_od =1'b0                         ;                         //untill integration
  
    wire                 hdr_sdahand_pp_od_sel;
    wire                 hdr_scl_pp_od_sel;
