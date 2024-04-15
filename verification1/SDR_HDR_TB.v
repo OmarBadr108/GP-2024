@@ -30,8 +30,8 @@ parameter CLK_PERIOD  = 20;
     reg          i_ccc_done_tb         		; // done signal from CCC block
     reg          i_ddr_mode_done_tb    		; // done signal from ddr block
 
-    reg          i_ddr_pp_od_tb    			;
- 	reg          i_ccc_pp_od_tb    			;
+  //  reg          i_ddr_pp_od_tb    			;
+ 	//reg          i_ccc_pp_od_tb    			;
 
     wire         sda_tb                		;
 
@@ -159,8 +159,8 @@ task initialize;
         i_ccc_done_tb			= 1'b0;
         i_ddr_mode_done_tb      = 1'b0;
 		sda_drive 				= 1'bz;
-		i_ddr_pp_od_tb			= 1'b0;
-		i_ddr_pp_od_tb			= 1'b0;
+		//i_ddr_pp_od_tb			= 1'b0;
+		//i_ddr_pp_od_tb			= 1'b0;
 		i_data_config_mux_sel   = 1'b0;
 		i_regf_rd_en_config   	= 1'b0;								
     	i_regf_wr_en_config   	= 1'b0;
@@ -262,8 +262,8 @@ sdr_hdr_transition_top DUT (
  .o_regf_address_special  	(o_regf_address_special_tb),
  .scl                 		(scl_tb),
  .o_sdr_rx_valid      		(o_sdr_rx_valid_tb),
- .i_ddr_pp_od         		(i_ddr_pp_od_tb),
- .i_ccc_pp_od         		(i_ccc_pp_od_tb),
+ //.i_ddr_pp_od         		(i_ddr_pp_od_tb),
+ //.i_ccc_pp_od         		(i_ccc_pp_od_tb),
  .o_ctrl_done               (o_ctrl_done_tb)
  ); 
 	
