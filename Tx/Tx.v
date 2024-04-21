@@ -12,8 +12,7 @@ input [4:0]  i_crc_crc_value, //separate calculation of crc (of what serialized)
 output reg        o_sdahnd_serial_data, //SDA
 output reg        o_ddrccc_mode_done,
 output reg        o_crc_en, 
-output reg [7:0]  o_crc_parallel_data, //sending byte byte of what serialized for crc block
-output reg        o_ddrccc_parity_data
+output reg [7:0]  o_crc_parallel_data //sending byte byte of what serialized for crc block
 );
 
 
@@ -47,8 +46,6 @@ reg [7:0] D1, D2; //first_and_second_Data_Bytes
 
 /***helpful flags****/
 integer counter;
-integer value;
-integer N;
 reg reset_counter_flag;
 reg rd_wr_flag; //storing rd_or_wr bit for calculating (parity adj) and (cmd word parity)
 reg parity_flag; //to distinguish parity is calculated for cmd or data
@@ -73,11 +70,9 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 		    o_sdahnd_serial_data<= 1;
         o_ddrccc_mode_done<= 0;
         o_crc_parallel_data<= 0;
-        o_ddrccc_parity_data<= 0;
         o_crc_en<= 0;
 		    counter <= 0;
 		    reset_counter_flag <= 0;
-		    value <= 0;
 		    parity_flag <= 0;
 		    first_byte_full <= 0;
 		    o_crc_en <= 0; 
@@ -96,23 +91,24 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 		   begin
 		    o_sdahnd_serial_data <= 1'b0 ;    
-		    if ( (counter == value) & (!reset_counter_flag) )
+		    if (!reset_counter_flag)
 		      begin
            counter <= 'd0;
            reset_counter_flag <= 1;
           end
           
 			  else
-			    counter <= counter + 1;
+			    begin
+			     if ( counter == 'd5 )
+			      o_ddrccc_mode_done <= 'b1;
+			      counter <= counter + 1;
+			    end
 			    
 			 end
 			 
 			else if ( counter == 'd6 )
-			  begin
-			 o_ddrccc_mode_done <= 'b1;
 			 reset_counter_flag <= 0;
-			 value <= 6;
-			 end
+
 		  
 		  end
 	
@@ -123,20 +119,19 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 		   begin
 		     
-		     if ( (counter == value) & (!reset_counter_flag) )
+		     if (!reset_counter_flag)
 		      begin
            counter <= 0;
            reset_counter_flag <= 1;
            o_sdahnd_serial_data <= 1;
+			     o_ddrccc_mode_done <= 'b1;
           end
 			 end
 			 
 			else if ( counter == 'd0 )
 			  begin
-			 o_ddrccc_mode_done <= 'b1;
 			 rd_wr_flag <= 'b1;
 			 reset_counter_flag <= 0;
-			 value <= 0;
 			 end
 		  end
 		  
@@ -146,20 +141,19 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 		  
 		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 		   begin
-		     if ( (counter == value) & (!reset_counter_flag) )
+		     if (!reset_counter_flag)
 		      begin
            counter <= 'd0;
            reset_counter_flag <= 1;
    		      o_sdahnd_serial_data <= 0;
+			     o_ddrccc_mode_done <= 1;
           end
 			 end
 			 
 			else if ( counter == 'd0 )
 			  begin
-			 o_ddrccc_mode_done <= 'b1;
 			 rd_wr_flag <= 'b0;
 			 reset_counter_flag <= 0;
-			 value <= 0;
 			 end
 		  end
 		  
@@ -170,7 +164,7 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 		   begin
 		        
-		    if ( (counter == value) & (!reset_counter_flag) )
+		    if (!reset_counter_flag)
 		      begin
            counter <= 'd0;
            reset_counter_flag <= 1;
@@ -181,16 +175,18 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 			    begin
 			    counter <= counter + 1;
 			    o_sdahnd_serial_data <= special_preamble['d0 - counter] ;
+			    if ( counter == 'd0 )
+			      begin
+			       o_ddrccc_mode_done <= 'b1;
+			       parity_flag <= 0;
+			      end
 			    end
 			    
 			 end
 			 
 			else if ( counter == 'd1 )
-			  begin
-			 o_ddrccc_mode_done <= 'b1;
 			 reset_counter_flag <= 0;
-			 value <= 1;
-			 end
+
 			 
 		 end	
 		 ////////////////////////////////////
@@ -201,7 +197,7 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 			o_crc_parallel_data <= i_ddrccc_special_data;
 		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 		   begin    
-		    if ( (counter == value) & (!reset_counter_flag) )
+		    if (!reset_counter_flag)
 		      begin
            counter <= 'd0;
            reset_counter_flag <= 1;
@@ -212,14 +208,14 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 			    begin
 			    counter <= counter + 1;
 			    o_sdahnd_serial_data <= i_ddrccc_special_data['d6 - counter] ;
+			    if ( counter == 'd6 )
+			       o_ddrccc_mode_done <= 'b1;
 			    end
 			 end
 			 
 	 else if ( counter == 'd7 )
 			begin
-			 o_ddrccc_mode_done <= 'b1;
 			 reset_counter_flag <= 0;
-			 value <= 7;
 			 parity_flag <= 1;
 			 if (!first_byte_full)
 			   begin
@@ -243,7 +239,7 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 			o_crc_parallel_data <= i_regf_tx_parallel_data;
 		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 		   begin    
-		    if ( (counter == value) & (!reset_counter_flag) )
+		    if (!reset_counter_flag)
 		      begin
            counter <= 'd0;
            reset_counter_flag <= 1;
@@ -254,14 +250,14 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 			    begin
 			    counter <= counter + 1;
 			    o_sdahnd_serial_data <= i_regf_tx_parallel_data['d6 - counter] ;
+			    if ( counter == 'd6 )
+			      o_ddrccc_mode_done <= 'b1;
 			    end
 			 end
 			 
 	 else if ( counter == 'd7 )
 			begin
-			 o_ddrccc_mode_done <= 'b1;
 			 reset_counter_flag <= 0;
-			 value <= 7;
 			 parity_flag <= 1;
 			 if (!first_byte_full)
 			   begin
@@ -279,11 +275,11 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 	 
 	 /////////////////////////////
 		 
-		serializing_address :  begin
-
+		serializing_address :  begin	
+		  
 		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 		   begin    
-		    if ( (counter == value) & (!reset_counter_flag) )
+		    if (!reset_counter_flag)
 		      begin
            counter <= 'd0;
            reset_counter_flag <= 1;
@@ -294,16 +290,15 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 			    begin
 			    counter <= counter + 1;
 			    o_sdahnd_serial_data <= A['d6 - counter] ;
+			    if ( counter == 'd6 )
+			      o_ddrccc_mode_done <= 'b1;
 			    end
 			    
 			 end
 			 
 			else if ( (counter == 'd7) )
-			  begin
-			 o_ddrccc_mode_done <= 'b1;
 			 reset_counter_flag <= 0;
-			 value <= 7;
-			 end
+
 			 
 		 end	
 		 
@@ -315,7 +310,7 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 		   if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 		    begin
 		      
-		     if ( (counter == value) & (!reset_counter_flag))
+		     if (!reset_counter_flag)
 		     begin
           counter <= 'd0;
           reset_counter_flag <= 1;
@@ -325,16 +320,15 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 			    begin
 			    counter <= counter + 1;
 			    o_sdahnd_serial_data <= P[(0 - counter)];
+			    if ( counter == 'd0 )
+			      o_ddrccc_mode_done <= 'b1;
 			    end
 			    
 			 end
 			 
 			else if ( counter == 1 )
-			  begin
-			 o_ddrccc_mode_done <= 'b1;
-			 reset_counter_flag <= 0;
-			 value <= 1;
-			 end
+			  reset_counter_flag <= 0;
+
 
 		 end	  
 		 
@@ -346,7 +340,7 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 		   begin
     
-		    if ( (counter == value) & (!reset_counter_flag))
+		    if (!reset_counter_flag)
 		     begin
           counter <= 'd0;
           reset_counter_flag <= 1;
@@ -356,16 +350,15 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 			    begin
 			    counter <= counter + 1;
 			    o_sdahnd_serial_data <= token[(2 - counter)];
+			    if ( counter == 'd2 )
+			      o_ddrccc_mode_done <= 'b1;
 			    end
 			    
 			 end
 			 
 			else if ( counter == 3 )
-			  begin
-			 o_ddrccc_mode_done <= 'b1;
 			 reset_counter_flag <= 0;
-			 value <= 3;
-			 end
+
 
 		 end	 
 		
@@ -375,30 +368,83 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 		  
 		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 		    begin    
-		     if ( (counter == value) & (!reset_counter_flag))
+		     if (!reset_counter_flag)
 		       begin
 		        o_sdahnd_serial_data <= i_crc_crc_value[4];
             counter <= 'd0;
-            reset_counter_flag <= 1;
-            
+            reset_counter_flag <= 1;  
            end
 			   else
 			     begin
 			    counter <= counter + 1;
 			    o_sdahnd_serial_data <= i_crc_crc_value[(3 - counter)];
+			    if ( counter == 'd3 )
+			      o_ddrccc_mode_done <= 'b1;
 			    end
 			  end
 			    
-			else if ( counter == 'd4 && !i_sclgen_scl_neg_edge )
-			 begin
-			  o_ddrccc_mode_done <= 'b1;
+			else if ( counter == 'd4 )
 			  reset_counter_flag <= 0;
-			  value <= 4;
-			 end
+
+			 
+	  end
 			  
+			  /////////////////////////////////////////////
+			  
+		restart_Pattern: begin
+			  
+		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
+		    begin    
+		     if (!reset_counter_flag)
+		       begin
+		        o_sdahnd_serial_data <= 1;
+            counter <= 'd0;
+            reset_counter_flag <= 1; 
+           end
+           
+			   else
+			    begin
+			     counter <= counter + 1;
+			     o_sdahnd_serial_data <= !o_sdahnd_serial_data;
+			     if ( counter == 'd2 )
+			      o_ddrccc_mode_done <= 'b1;
+			    end	  
+			  end
+			 
+	    else if ( counter == 'd3 )
+			 begin
+			  reset_counter_flag <= 0;
+			 end
+		  end
 		  
+			  ////////////////////////////////////////////
+			  
+			exit_Pattern: begin
+			  
+		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
+		    begin    
+		     if (!reset_counter_flag)
+		       begin
+		        o_sdahnd_serial_data <= 1;
+            counter <= 'd0;
+            reset_counter_flag <= 1; 
+           end
+           
+			   else
+			    begin
+			     counter <= counter + 1;
+			     o_sdahnd_serial_data <= !o_sdahnd_serial_data;
+			     if ( counter == 'd5 )
+			      o_ddrccc_mode_done <= 'b1;
+			    end	  
+			  end
+			 
+	    else if ( counter == 'd6 )
+			  reset_counter_flag <= 0;
+
 		  end
 		
+		////////////////////////////////////////////////
 		
 		endcase
 		end		
@@ -408,11 +454,9 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 		 	  o_sdahnd_serial_data<= 1;
         o_ddrccc_mode_done<= 0;
         o_crc_parallel_data<= 0;
-        o_ddrccc_parity_data<= 0;
         o_crc_en<= 0;
 		    counter <= 0;
 		    reset_counter_flag <= 0;
-		    value <= 0;
 		    end
 		    
 		end
