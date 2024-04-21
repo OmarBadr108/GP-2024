@@ -51,6 +51,79 @@ initial
  initialize();
  reset();
 
+
+ 
+  //--------------------------------------TEST CASE 1 : Normal Transaction >> nack ----------------------------------//
+  @(posedge i_sys_clk_tb)
+  #(7*CLK_PERIOD);
+  i_ddrccc_tx_en_tb = 1;
+  i_ddrccc_tx_mode_tb = PREAMBLE_ONE;
+ 
+   //--------------------------------------TEST CASE 2 : Normal Transaction >> nack ----------------------------------//
+ @(posedge o_ddrccc_tx_mode_done_tb);
+  #(2*CLK_PERIOD);
+	    i_ddrccc_tx_en_tb   = 1'b1; 
+	    i_ddrccc_tx_mode_tb = PREAMBLE_ZERO;
+  //--------------------------------------TEST CASE 3 : Normal Transaction >> byte1 ----------------------------------//
+ @(posedge o_ddrccc_tx_mode_done_tb);
+  #(2*CLK_PERIOD);	    i_regf_tx_parallel_data_tb = 8'b10000101;
+	    i_ddrccc_tx_en_tb   = 1'b1; 
+	    i_ddrccc_tx_mode_tb = SERIALIZING_BYTE;
+
+
+//--------------------------------------TEST CASE 4 : Normal Transaction >> byte2 ----------------------------------//
+@(posedge o_ddrccc_tx_mode_done_tb);
+  #(2*CLK_PERIOD);	
+	    i_regf_tx_parallel_data_tb = 8'b10101011;
+	    i_ddrccc_tx_en_tb   = 1'b1; 
+	    i_ddrccc_tx_mode_tb = SERIALIZING_BYTE;
+
+//--------------------------------------TEST CASE 5 : Normal Transaction >> par_calc ----------------------------------//
+@(posedge o_ddrccc_tx_mode_done_tb);
+  #(2*CLK_PERIOD);	
+
+	    i_ddrccc_tx_en_tb   = 1'b1; 
+	    i_ddrccc_tx_mode_tb = PAR_VALUE;
+
+
+//--------------------------------------TEST CASE 6 : Normal Transaction >> preamble1 ----------------------------------//
+ @(posedge o_ddrccc_tx_mode_done_tb);
+  #(2*CLK_PERIOD);	
+  i_ddrccc_tx_en_tb = 1;
+  i_ddrccc_tx_mode_tb = PREAMBLE_ZERO;
+  
+   //--------------------------------------TEST CASE 7 : Normal Transaction >> preamble0 ----------------------------------//
+
+  @(posedge o_ddrccc_tx_mode_done_tb);
+  #(2*CLK_PERIOD);	
+	    i_ddrccc_tx_en_tb   = 1'b1; 
+	    i_ddrccc_tx_mode_tb = PREAMBLE_ONE;
+
+ 
+   //--------------------------------------TEST CASE 8 : Normal Transaction >> crc_token ----------------------------------//
+
+  @(posedge o_ddrccc_tx_mode_done_tb);
+  #(2*CLK_PERIOD);	
+	    i_ddrccc_tx_en_tb   = 1'b1; 
+	    i_ddrccc_tx_mode_tb = CRC_TOKEN;
+
+
+//--------------------------------------TEST CASE 9 : Normal Transaction >> crc_value ----------------------------------//
+
+  @(posedge o_ddrccc_tx_mode_done_tb);
+  #(2*CLK_PERIOD);	
+	    i_crc_crc_value_tb = 'b1001; //the crc values arrived from crc block
+	    i_ddrccc_tx_en_tb   = 1'b1; 
+	    i_ddrccc_tx_mode_tb = CRC_VALUE;
+
+  @(posedge o_ddrccc_tx_mode_done_tb);
+  #(2*CLK_PERIOD);	
+   i_ddrccc_tx_en_tb   = 1'b0;
+
+ #(9*CLK_PERIOD);
+ $stop ;
+ 
+/*
   //--------------------------------------TEST CASE 1 : Normal Transaction >> nack ----------------------------------//
   #(6*CLK_PERIOD);
     @(posedge i_sys_clk_tb)
@@ -69,7 +142,7 @@ initial
 	    i_ddrccc_tx_mode_tb = SERIALIZING_BYTE;
 //--------------------------------------TEST CASE 4 : Normal Transaction >> byte2 ----------------------------------//
 @(negedge o_ddrccc_tx_mode_done_tb)
-	    i_regf_tx_parallel_data_tb = 8'b00101011;
+	    i_regf_tx_parallel_data_tb = 8'b10101011;
 	    i_ddrccc_tx_en_tb   = 1'b1; 
 	    i_ddrccc_tx_mode_tb = SERIALIZING_BYTE;
 
@@ -82,22 +155,36 @@ initial
 
 
 //--------------------------------------TEST CASE 6 : Normal Transaction >> preamble1 ----------------------------------//
-  #(6*CLK_PERIOD);
-    @(posedge i_sys_clk_tb)
+  @(negedge o_ddrccc_tx_mode_done_tb)
   i_ddrccc_tx_en_tb = 1;
   i_ddrccc_tx_mode_tb = PREAMBLE_ZERO;
   
-   //--------------------------------------TEST CASE 2 : Normal Transaction >> preamble0 ----------------------------------//
- #(2*CLK_PERIOD);
+   //--------------------------------------TEST CASE 7 : Normal Transaction >> preamble0 ----------------------------------//
+
   @(negedge o_ddrccc_tx_mode_done_tb)
 	    i_ddrccc_tx_en_tb   = 1'b1; 
 	    i_ddrccc_tx_mode_tb = PREAMBLE_ONE;
 
+ 
+   //--------------------------------------TEST CASE 8 : Normal Transaction >> crc_token ----------------------------------//
+
+  @(negedge o_ddrccc_tx_mode_done_tb)
+	    i_ddrccc_tx_en_tb   = 1'b1; 
+	    i_ddrccc_tx_mode_tb = CRC_TOKEN;
 
 
+//--------------------------------------TEST CASE 9 : Normal Transaction >> crc_value ----------------------------------//
+
+  @(negedge o_ddrccc_tx_mode_done_tb)
+	    i_crc_crc_value_tb = 'b1001; //the crc values arrived from crc block
+	    i_ddrccc_tx_en_tb   = 1'b1; 
+	    i_ddrccc_tx_mode_tb = CRC_VALUE;
+
+  @(negedge o_ddrccc_tx_mode_done_tb)
+   i_ddrccc_tx_en_tb   = 1'b0;
 
  #(9*CLK_PERIOD);
- $stop ;
+ $stop ;*/
 
 	
  end
@@ -113,19 +200,22 @@ task initialize;
 		i_sys_rst_tb 				= 1'b1;
 		i_ddrccc_tx_en_tb 	        = 1'b0;
 
-		i_scl_gen_stall_tb      = 1'b0;
-		i_sdr_ctrl_scl_idle_tb  = 1'b0;
-		i_sdr_scl_gen_pp_od_tb  = 1'b1;
-		i_timer_cas_tb          = 1'b0;
+
+		i_regf_tx_parallel_data_tb  = 8'b0;
+        i_crc_crc_value_tb          =  'b0;
+		i_scl_gen_stall_tb          = 1'b0;
+		i_sdr_ctrl_scl_idle_tb      = 1'b0;
+		i_sdr_scl_gen_pp_od_tb      = 1'b1;
+		i_timer_cas_tb              = 1'b0;
 	end
 	endtask
 
 task reset;
 	begin
-		# (CLK_PERIOD)
+		# (3*CLK_PERIOD)
 		i_sys_rst_tb 				= 1'b0; // activated
 
-		# (CLK_PERIOD)
+		# (3*CLK_PERIOD)
 		i_sys_rst_tb 				= 1'b1; // de-activated
 
 	end	

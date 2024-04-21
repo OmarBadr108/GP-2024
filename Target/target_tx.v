@@ -74,43 +74,14 @@ reg  [15:0] data_parity_calc;
 wire [1:0]  parity_value;
 
 
-reg  [7:0] i_regf_tx_parallel_data_temp;
-wire count_done;
-assign count_done = (count==7)? 1'b1:1'b0 ;
-
-
-/*always@(count) begin
-  if (count==7)
-    i_regf_tx_parallel_data_temp = i_regf_tx_parallel_data;
-  
-end*/
-
-
-
-reg data_mode;
-
-/*always @(posedge i_sys_clk or negedge i_sys_rst)  
-begin
-  if(!i_sys_rst)
-
-  begin
-    data_parity_calc <= 'b0;
-  end
-
-  else if ((byte_num == 0) && data_mode/*&& (count_done))
-   data_parity_calc[15:8] <= i_regf_tx_parallel_data_temp;
-
-  else if ((byte_num == 1) && data_mode)
-   data_parity_calc[7 :0]  <= i_regf_tx_parallel_data_temp;
-
-
-end*/
-
-
 reg [3:0] crc_token_value  = 4'b1100;
 
 assign parity_value[1] =  data_parity_calc[15]^data_parity_calc[13]^data_parity_calc[11]^data_parity_calc[9]^data_parity_calc[7]^data_parity_calc[5]^data_parity_calc[3]^data_parity_calc[1] ;     
 assign parity_value[0] =  data_parity_calc[14]^data_parity_calc[12]^data_parity_calc[10]^data_parity_calc[8]^data_parity_calc[6]^data_parity_calc[4]^data_parity_calc[2]^data_parity_calc[0]^1'b1 ; 
+
+
+
+
 
 always @(posedge i_sys_clk or negedge i_sys_rst) 
 begin
@@ -119,21 +90,19 @@ begin
    begin
     o_sdahnd_tgt_serial_data <= 1'b0;
     o_ddrccc_tx_mode_done    <= 1'b0;
-    o_crc_en               <= 1'b0; 
-  o_crc_parallel_data      <= 8'b0;
-  count            <= 1'b0;
+    o_crc_en                 <= 1'b0; 
+    o_crc_parallel_data      <= 8'b0;
+    count                    <= 1'b0;
+    byte_num                 <= 1'b0;
 
    end
 
    else if (i_ddrccc_tx_en)
     begin
-      // o_sdahnd_tgt_serial_data <= 1'b0;
+     
        o_ddrccc_tx_mode_done    <= 1'b0;
        o_crc_en                 <= 1'b0; 
-     o_crc_parallel_data      <= 8'b0;
-     //count          <= 1'b0;
-       
-       data_mode              <=1'b1;
+       o_crc_parallel_data      <= 8'b0;
      
      case (i_ddrccc_tx_mode)
          
@@ -176,22 +145,18 @@ begin
                       begin 
                         o_crc_parallel_data<= i_regf_tx_parallel_data;
                         o_crc_en<=1'b1;
-                        data_mode <=1'b1;
+                     
 
                         if (SCL_edges)
                          begin
                             o_sdahnd_tgt_serial_data <= i_regf_tx_parallel_data['d7-count];  
                             count                    <= count +1'b1;
                           
-
-                             if (count=='d7) 
+                            if (count=='d7) 
                               begin
                                count <= 'd0;
-                               o_ddrccc_tx_mode_done<=1'b1;
-        
-                               
+                               o_ddrccc_tx_mode_done<=1'b1; 
                               end
-                        
                          end
                         
                       
@@ -266,11 +231,11 @@ begin
 
                            o_sdahnd_tgt_serial_data<=i_crc_crc_value['d4-count];  
                            count<=count +1'b1;
-                           if (count==1'd4) 
-                          begin
-                            count<='d0;
-                            o_ddrccc_tx_mode_done<=1'b1;
-                          end
+                           if (count=='d4) 
+                            begin
+                              count<='d0;
+                              o_ddrccc_tx_mode_done<=1'b1;
+                            end
   
                          end
                         else
@@ -290,21 +255,6 @@ begin
                       byte_num                 <= 1'b0;
                end
      endcase
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     end
 end
