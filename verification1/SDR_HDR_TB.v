@@ -14,7 +14,7 @@ parameter CLK_PERIOD  = 20;
     // Design Inputs   
     reg          i_controller_en_tb     	;        
     reg          i_i3c_i2c_sel_tb 			;
-    reg          i_hdr_en_tb				; // enable signal for the hdr mode
+    //reg          i_hdr_en_tb				; // enable signal for the hdr mode
     reg          i_ccc_en_dis_hj_tb			;
 
 
@@ -96,7 +96,7 @@ initial begin
      // INPUTS 
         i_controller_en_tb = 1'b1 ;
         i_i3c_i2c_sel_tb   = 1'b1;
-        i_hdr_en_tb        = 1'b1;
+        //i_hdr_en_tb        = 1'b1;
 
         #40540
         sda_drive = 1'b0;
@@ -115,7 +115,7 @@ initial begin
 
 		@(negedge DUT.u_controller_tx.o_ser_mode_done)
 		i_controller_en_tb = 1'b0 ;
-        i_hdr_en_tb        = 1'b0 ; 
+        //i_hdr_en_tb        = 1'b0 ; 
 
 
 		// DUT.u_scl_generation.i_scl_gen_stall = 'b1;		
@@ -154,7 +154,7 @@ task initialize;
 		i_rst_n_tb 				= 1'b1;
 		i_i3c_i2c_sel_tb        = 1'b1;  //i3c mode
 		i_controller_en_tb      = 1'b0;
-		i_hdr_en_tb				= 1'b0;
+		//i_hdr_en_tb				= 1'b0;
 		i_ccc_en_dis_hj_tb      = 1'b0;
         i_ccc_done_tb			= 1'b0;
         i_ddr_mode_done_tb      = 1'b0;
@@ -253,7 +253,7 @@ sdr_hdr_transition_top DUT (
  .i_regf_wr_address_config  (i_regf_wr_address_config)					,
  .i_regf_wr_en_config       (i_regf_wr_en_config)					,
  .i_regf_rd_en_config       (i_regf_rd_en_config)                   ,  
- .i_hdr_en            		(i_hdr_en_tb), 
+ //.i_hdr_en            		(i_hdr_en_tb), 
  .i_ccc_done          		(i_ccc_done_tb),
  .i_ddr_mode_done     		(i_ddr_mode_done_tb),
  .sda                 		(sda_tb),
