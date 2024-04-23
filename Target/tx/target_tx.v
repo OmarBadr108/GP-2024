@@ -160,7 +160,7 @@ begin
                          end
                         
                       
-                        else if (count=='d7)     //
+                        else if (count=='d7)     
                          begin
 
                            if (!byte_num) 
