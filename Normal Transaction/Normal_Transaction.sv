@@ -41,7 +41,7 @@ output reg       o_sdahand_pp_od,
 output reg       o_regf_wr_en,
 output reg       o_regf_rd_en,
 output reg [9:0] o_regf_addr,
-output reg [3:0] o_sclstall_no_of_cycles,
+output reg [4:0] o_sclstall_no_of_cycles,
 output reg       o_sclstall_en,  
 output reg       o_engine_done,
 output reg [6:0] o_tx_special_data,
@@ -76,8 +76,8 @@ localparam [3:0]    SUCCESS = 'd0,
 
 
 //------------ timing specification ------------//  
-localparam [3:0]  restart_stalling = 'd5,
-                  exit_stalling = 'd9;
+localparam [4:0]  restart_stalling = 'd10,
+                  exit_stalling = 'd16;
 
 
 
@@ -152,7 +152,8 @@ localparam [4:0]              idle = 'd0,
 					          restart = 'd16,
 					          exit = 'd17,
 							  Read_Write_bit = 'd18,
-							  serializing_zeros = 'd19;
+							  serializing_zeros = 'd19,
+							  waiting = 'd20 ;
 
 
 //------------------ internal signals decleration -----------------//					 
@@ -596,7 +597,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst)
 			restart :  begin
 
 		        if (i_tx_mode_done /*&& i_staller_done*/)
-		          next_state = idle ;  // return to idle waitng to be enabled
+		          next_state = waiting ;  // return to idle waitng to be enabled
 		        else
 		          next_state = restart ;
 
@@ -606,11 +607,21 @@ always @(posedge i_sys_clk or negedge i_sys_rst)
 			exit :  begin
 
 		        if (i_tx_mode_done /*&& i_staller_done*/)
-		          next_state = idle ;
+		          next_state = waiting ;
 		        else
 		          next_state = exit ;
 
 		  end 
+		  
+		  
+		  waiting :  begin 
+		  
+		  if (sysclk_done /*&& i_staller_done*/)
+		          next_state = idle ;
+		        else
+		          next_state = waiting ;
+		  
+		  end
 		  
 		  
 		/*  parity_0	: begin 
@@ -1146,7 +1157,7 @@ fourth_stage_crc_first_pre     : begin
          begin
           o_tx_en = 'b1;
           o_tx_mode =  CRC_value ;
-		if(i_bitcnt == 'd11)
+		if((i_bitcnt == 'd12) || (i_bitcnt == 'd11))
 			begin 
 			o_sclstall_en = 1;
 			if(!i_regf_toc)
@@ -1170,7 +1181,7 @@ fourth_stage_crc_first_pre     : begin
           else
 			begin 
 				o_regf_error_type = SUCCESS;
-					if(i_bitcnt == 'd11)
+					if((i_bitcnt == 'd12) || (i_bitcnt == 'd11))
 						begin 
 						o_sclstall_en = 1;
 						if(!i_regf_toc)
@@ -1208,11 +1219,12 @@ fourth_stage_crc_first_pre     : begin
           o_tx_mode = Restart_Pattern;
           o_sclstall_no_of_cycles = restart_stalling;
           o_sclstall_en = 'b1;
-		 // o_bitcnt_rst = 'b1 ;
-        
-		if(i_tx_mode_done)
-		 o_engine_done = 'b1;		  
+		   
 
+			if(i_tx_mode_done )
+			 o_sclstall_en = 'b0;
+		  else 
+			o_sclstall_en = 'b1;
              end
 
 
@@ -1222,13 +1234,26 @@ fourth_stage_crc_first_pre     : begin
           o_tx_mode = Exit_Pattern;
           o_sclstall_no_of_cycles = exit_stalling;
           o_sclstall_en = 'b1;
-		 // o_bitcnt_rst = 'b1 ; 
-		  
-		  
-		  if(i_tx_mode_done)
-		 o_engine_done = 'b1;		  
+		 
+			if(i_tx_mode_done )
+			 o_sclstall_en = 'b0;
+		  else 
+			o_sclstall_en = 'b1;
 
-             end            
+             end     
+
+	waiting : begin 
+		o_sclstall_en = 'b0;
+		o_tx_en = 'b1;
+		if(i_regf_toc)
+			o_tx_mode = Exit_Pattern;
+		else 
+			o_tx_mode = Restart_Pattern;
+		en_sysclk =1 ;
+		
+		
+		
+		end
 
       endcase
     end
