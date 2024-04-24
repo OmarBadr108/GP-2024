@@ -20,6 +20,7 @@ input        i_regf_wroc ,       	//1’b0: NOT_REQUIRED RESPONSE ; 1’b1: REQU
 input        i_regf_wr_rd_bit,   	//  1’b0: WRITE ; 1’b1: READ
 input        i_regf_cmd_attr,     	// 1'b1: Immediate Data Transfer Command ; 1'b0:Regular Transfer Command
 input [2:0]  i_regf_dtt,			// Determine The Number of Data Byte
+input [5:0]  i_bitcnt ,
 
 
 /*// to be removed 
@@ -75,8 +76,8 @@ localparam [3:0]    SUCCESS = 'd0,
 
 
 //------------ timing specification ------------//  
-localparam [3:0]  restart_stalling = 'd8,
-                  exit_stalling = 'd11;
+localparam [3:0]  restart_stalling = 'd5,
+                  exit_stalling = 'd9;
 
 
 
@@ -543,7 +544,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst)
 						
 						if (!i_rx_error) 
 						begin
-
+							
 							if (!i_regf_toc)
 								next_state = restart ;
 							else
@@ -555,6 +556,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst)
 					
 					else
 						begin
+						
 
 							if (!i_regf_toc)
 								next_state = restart ;
@@ -1092,6 +1094,7 @@ fourth_stage_crc_first_pre     : begin
          begin
           o_tx_en = 'b1;
           o_tx_mode = one_preamble;
+		  
          end
        
 	 else
@@ -1143,6 +1146,17 @@ fourth_stage_crc_first_pre     : begin
          begin
           o_tx_en = 'b1;
           o_tx_mode =  CRC_value ;
+		if(i_bitcnt == 'd11)
+			begin 
+			o_sclstall_en = 1;
+			if(!i_regf_toc)
+				o_sclstall_no_of_cycles = restart_stalling;
+			else 
+				o_sclstall_no_of_cycles = exit_stalling;
+				
+			end
+		else 
+			o_sclstall_en = 0;
          end
     else
          begin
@@ -1150,12 +1164,29 @@ fourth_stage_crc_first_pre     : begin
           o_rx_en = 'b1;
           o_rx_mode = Check_CRC_value;
           
-		  if (i_rx_error)
+		 
+		 if (i_rx_error)
             o_regf_error_type = CRC_Error;
           else
-            o_regf_error_type = SUCCESS;
+			begin 
+				o_regf_error_type = SUCCESS;
+					if(i_bitcnt == 'd11)
+						begin 
+						o_sclstall_en = 1;
+						if(!i_regf_toc)
+							o_sclstall_no_of_cycles = restart_stalling;
+						else 
+							o_sclstall_no_of_cycles = exit_stalling;
+						end
+					else 
+						o_sclstall_en = 0;
+			end
+			
+			
 
          end
+		 
+		 
 
              end 
 
@@ -1176,7 +1207,7 @@ fourth_stage_crc_first_pre     : begin
           o_tx_en = 'b1;
           o_tx_mode = Restart_Pattern;
           o_sclstall_no_of_cycles = restart_stalling;
-         // o_sclstall_en = 'b1;
+          o_sclstall_en = 'b1;
 		 // o_bitcnt_rst = 'b1 ;
         
 		if(i_tx_mode_done)
@@ -1190,7 +1221,7 @@ fourth_stage_crc_first_pre     : begin
           o_tx_en = 'b1;
           o_tx_mode = Exit_Pattern;
           o_sclstall_no_of_cycles = exit_stalling;
-         // o_sclstall_en = 'b1;
+          o_sclstall_en = 'b1;
 		 // o_bitcnt_rst = 'b1 ; 
 		  
 		  
