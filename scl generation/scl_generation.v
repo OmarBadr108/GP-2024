@@ -71,17 +71,19 @@ always @(posedge i_sdr_ctrl_clk or negedge i_sdr_ctrl_rst_n)
           o_scl_neg_edge <= 1'b0;
       end
 
-    else if (i_scl_gen_stall)
-				 
-		o_scl <=   1'b0 ;
-	else
+    else
       begin
         case (state)
           LOW:
             begin
                 o_scl_neg_edge <= 1'b0;
-               
-                
+               if (i_scl_gen_stall)
+			   begin
+					state <=   LOW  ;
+					//switch <= 1'b1;
+				end
+               else
+                begin
                     if (switch)
                       begin
                         o_scl <=   1'b1 ;
@@ -94,7 +96,7 @@ always @(posedge i_sdr_ctrl_clk or negedge i_sdr_ctrl_rst_n)
                         state <=   LOW  ;
                         o_scl_pos_edge <= 1'b0;
                       end
-                
+                end
             end
 
           HIGH:
