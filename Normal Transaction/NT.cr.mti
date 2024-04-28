@@ -1,0 +1,62 @@
+{E:/GP/hdr_arch/Sub_Top/bit counter.v} {1 {vlog -work work {E:/GP/hdr_arch/Sub_Top/bit counter.v}
+
+Top level modules:
+	top
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module bits_counter
+
+Top level modules:
+	bits_counter
+
+} {} {}} {E:/GP/hdr_arch/Sub_Top/frame counter.v} {1 {vlog -work work {E:/GP/hdr_arch/Sub_Top/frame counter.v}
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module frame_counter
+
+Top level modules:
+	frame_counter
+
+} {} {}} E:/GP/hdr_arch/Sub_Top/staller.v {1 {vlog -work work E:/GP/hdr_arch/Sub_Top/staller.v
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module scl_staller
+
+Top level modules:
+	scl_staller
+
+} {} {}} E:/GP/hdr_arch/Sub_Top/top.v {1 {vlog -work work E:/GP/hdr_arch/Sub_Top/DDR.v
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module ddr_mode
+
+Top level modules:
+	ddr_mode
+
+} {} {}} E:/GP/hdr_arch/Sub_Top/Tx.v {2 {vlog -work work E:/GP/hdr_arch/Sub_Top/Tx.v
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module tx
+** Warning: E:/GP/hdr_arch/Sub_Top/Tx.v(210): (vlog-2576) [BSOB] - Bit-select into 'i_ddrccc_special_data' is out of bounds.
+
+
+Top level modules:
+	tx
+
+} {} {}} E:/GP/hdr_arch/Sub_Top/scl_generation.v {1 {vlog -work work E:/GP/hdr_arch/Sub_Top/scl_generation.v
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module scl_generation
+
+Top level modules:
+	scl_generation
+
+} {} {}} E:/GP/hdr_arch/Sub_Top/nt_tb.sv {1 {vlog -work work -sv E:/GP/hdr_arch/Sub_Top/nt_tb.sv
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module top_test
+
+Top level modules:
+	top_test
+
+} {} {}} E:/GP/hdr_arch/Sub_Top/rx.v {1 {vlog -work work E:/GP/hdr_arch/Sub_Top/rx.v
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module rx
+
+Top level modules:
+	rx
+
+} {} {}}

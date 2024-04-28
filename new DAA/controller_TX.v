@@ -73,6 +73,7 @@ module controller_tx (
   //-- internal wires declaration ---------------------------------------------
 reg last_bit_flag ;
 
+
   //-- transmitter ------------------------------------------------
 
     always @(posedge i_clk or negedge i_rst_n)
@@ -168,11 +169,14 @@ reg last_bit_flag ;
                               else
                                 o_ser_mode_done <= 1'b0; */
                                  //unused-wrong implementation
+
                               if (!i_ser_scl)
                                 begin
                                   o_ser_s_data    <= ~^i_ser_regf_data ;
-                                  o_ser_mode_done    <= 1'b1 ;
                                 end
+                                else
+                                  o_ser_mode_done    <= 1'b1 ;
+
 
                               //for push-pull
                               if (i_ser_scl_pos_edge)
@@ -278,4 +282,5 @@ reg last_bit_flag ;
 
 endmodule
 `default_nettype wire
+
 

@@ -159,6 +159,7 @@ module enthdr (
                  o_regf_rd_en        <= 1'b1;  
                  o_regf_addr         <= 'd50;  //*** DDR Mode value added in the regfile but needs to be rechecked  
                  o_tx_mode           <= 3'b001;
+                 
                  o_tx_en             <= 1'b1;
                   o_bit_cnt_en       <= 1'b1;                
                end
@@ -196,7 +197,7 @@ module enthdr (
  
            PARITY:     
             begin
-              if(i_tx_mode_done && i_scl_pos_edge)    ///*** T bit completion plus scl falling edge condition should be added
+              if(i_tx_mode_done && i_scl_neg_edge)    ///*** T bit completion plus scl falling edge condition should be added
                begin
                  o_i3cengine_done <= 1'b1;
                  state            <= IDLE;

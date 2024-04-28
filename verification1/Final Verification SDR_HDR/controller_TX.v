@@ -72,6 +72,7 @@ module controller_tx (
 
   //-- internal wires declaration ---------------------------------------------
 reg last_bit_flag ;
+reg parity_counter;
 
   //-- transmitter ------------------------------------------------
 
@@ -171,8 +172,15 @@ reg last_bit_flag ;
                               if (!i_ser_scl)
                                 begin
                                   o_ser_s_data    <= ~^i_ser_regf_data ;
-                                  o_ser_mode_done    <= 1'b1 ;
+                                  //o_ser_mode_done    <= 1'b1 ;
                                 end
+                                else
+                                  o_ser_mode_done    <= 1'b1 ;
+
+                            //  if(i_ser_scl) begin
+                            //    o_ser_mode_done    <= 1'b1 ;
+                             // end
+
 
                               //for push-pull
                               if (i_ser_scl_pos_edge)

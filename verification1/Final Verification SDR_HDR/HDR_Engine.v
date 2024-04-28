@@ -87,55 +87,70 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
             next_state                   <= IDLE ;
         end
 
-    else if (i_i3cengine_hdrengine_en)
+    else 
       begin
       o_regf_addr_special             <= 12'd1000 ;
         //current_state <= next_state;
         case (next_state)    //case (current_state)
+
           IDLE : begin
-              if(i_CP) begin
-                     o_ccc_en        <= 1'b1 ;
-                     next_state      <= CCC ;
-
-                     // mux selectors         
-                     o_tx_en_sel            <=CCC_SEL;  
-                     o_rx_en_sel            <=CCC_SEL;
-                     o_tx_mode_sel          <=CCC_SEL;
-                     o_rx_mode_sel          <=CCC_SEL;
-                     o_regf_rd_en_sel       <=CCC_SEL;
-                     o_regf_wr_en_sel       <=CCC_SEL;
-                     o_regf_addr_sel        <=CCC_SEL;
-                     o_scl_pp_od_sel        <=CCC_SEL;
-                     o_bit_cnt_en_sel       <=CCC_SEL;
-                     o_frm_cnt_en_sel       <=CCC_SEL;
-                     o_sdahand_pp_od_sel    <=CCC_SEL;    
-                     
-                     
-                     
-                  
-                 end
-              else 
-              begin
-                o_ddrmode_en      <= 1'b1 ;
-                next_state        <= DDR_MODE ;
-                     o_tx_en_sel            <=DDR_SEL;  
-                     o_rx_en_sel            <=DDR_SEL;
-                     o_tx_mode_sel          <=DDR_SEL;
-                     o_rx_mode_sel          <=DDR_SEL;
-                     o_regf_rd_en_sel       <=DDR_SEL;
-                     o_regf_wr_en_sel       <=DDR_SEL;
-                     o_regf_addr_sel        <=DDR_SEL;
-                     o_scl_pp_od_sel        <=DDR_SEL;
-                     o_bit_cnt_en_sel       <=DDR_SEL;
-                     o_frm_cnt_en_sel       <=DDR_SEL;
-                     o_sdahand_pp_od_sel    <=DDR_SEL;  
-
-              end
+            if (i_i3cengine_hdrengine_en) 
+             begin
+                      if(i_CP) 
+                        begin
+                             o_ccc_en        <= 1'b1 ;
+                             next_state      <= CCC ;
+        
+                             // mux selectors         
+                             o_tx_en_sel            <=CCC_SEL;  
+                             o_rx_en_sel            <=CCC_SEL;
+                             o_tx_mode_sel          <=CCC_SEL;
+                             o_rx_mode_sel          <=CCC_SEL;
+                             o_regf_rd_en_sel       <=CCC_SEL;
+                             o_regf_wr_en_sel       <=CCC_SEL;
+                             o_regf_addr_sel        <=CCC_SEL;
+                             o_scl_pp_od_sel        <=CCC_SEL;
+                             o_bit_cnt_en_sel       <=CCC_SEL;
+                             o_frm_cnt_en_sel       <=CCC_SEL;
+                             o_sdahand_pp_od_sel    <=CCC_SEL;    
+                         end
+                      else 
+                        begin
+                              o_ddrmode_en      <= 1'b1 ;
+                              next_state        <= DDR_MODE ;
+                             o_tx_en_sel            <=DDR_SEL;  
+                             o_rx_en_sel            <=DDR_SEL;
+                             o_tx_mode_sel          <=DDR_SEL;
+                             o_rx_mode_sel          <=DDR_SEL;
+                             o_regf_rd_en_sel       <=DDR_SEL;
+                             o_regf_wr_en_sel       <=DDR_SEL;
+                             o_regf_addr_sel        <=DDR_SEL;
+                             o_scl_pp_od_sel        <=DDR_SEL;
+                             o_bit_cnt_en_sel       <=DDR_SEL;
+                             o_frm_cnt_en_sel       <=DDR_SEL;
+                             o_sdahand_pp_od_sel    <=DDR_SEL;  
+        
+                        end
           end
+
+          else
+              begin
+                o_i3cengine_hdrengine_done      <= 1'b0   ;
+                o_ddrmode_en                    <= 1'b0   ;
+                o_ccc_en                        <= 1'b0   ;
+                next_state                      <= IDLE;  
+              end
+
+          end 
+
           CCC : begin
+if (i_i3cengine_hdrengine_en) begin
+
+          
             if((i_TOC && i_ccc_done)||(i_MODE != 'd6)) begin     // ||(i_MODE != 'd6) assuming mode will not be changed unless an exit pattern was sent before it. -laila
                   o_ccc_en    <= 1'b0 ;
-                  o_i3cengine_hdrengine_done      <= 1'b1 ;             
+                  o_i3cengine_hdrengine_done      <= 1'b1 ;
+                  next_state <= IDLE;             
                   ///tid puts on output when the command is done
 
 
@@ -178,7 +193,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                      o_frm_cnt_en_sel       <=DDR_SEL;
                      o_sdahand_pp_od_sel    <=DDR_SEL;   
                   end
-                  else
+                  else begin
                     next_state   <= CCC ;
                     o_tx_en_sel            <=CCC_SEL;  
                     o_rx_en_sel            <=CCC_SEL;
@@ -190,18 +205,37 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                     o_scl_pp_od_sel        <=CCC_SEL;
                     o_bit_cnt_en_sel       <=CCC_SEL;
                     o_frm_cnt_en_sel       <=CCC_SEL;
-                    o_sdahand_pp_od_sel    <=CCC_SEL;  
+                    o_sdahand_pp_od_sel    <=CCC_SEL;
+                    end  
             end
             else
+               begin
                   o_i3cengine_hdrengine_done      <= 1'b0 ;
-          end
+                  o_ccc_en                      <= 1'b0 ;
+                end
+                  
           
+          
+end
 
+else
+                next_state                      <= IDLE;
+               /* o_i3cengine_hdrengine_done      <= 1'b0   ;
+                o_ddrmode_en                    <= 1'b0   ;
+                o_ccc_en                        <= 1'b0   ;
+*/
+
+end
 
           DDR_MODE : begin
+if (i_i3cengine_hdrengine_en) begin
+
+
+          
             if ((i_TOC && i_ddr_mode_done)||(i_MODE != 'd6)) begin
               o_ddrmode_en    <= 1'b0 ;
               o_i3cengine_hdrengine_done      <= 1'b1 ;
+              next_state <= IDLE;
               //tid puts on output when it is done
             end
             else if ((!i_TOC && i_ddr_mode_done) && (i_MODE == 'd6)) begin
@@ -242,16 +276,25 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
             else
               begin
                 o_i3cengine_hdrengine_done      <= 1'b0 ;
+                o_ddrmode_en                    <= 1'b1   ;
               end
           end
+else begin
+
+                  o_i3cengine_hdrengine_done      <= 1'b0   ;
+                o_ddrmode_en                    <= 1'b0   ;
+                o_ccc_en                        <= 1'b0   ;
+                next_state                      <= IDLE; 
+end
+
+end
         endcase
       end
-    else
-    begin
-      o_i3cengine_hdrengine_done      <= 1'b0   ;
-      o_ddrmode_en                    <= 1'b0   ;
-      o_ccc_en                        <= 1'b0   ;  
-            end        
+      
+
+
+
+
 end 
 endmodule
 

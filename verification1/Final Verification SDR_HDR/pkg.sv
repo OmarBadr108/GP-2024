@@ -17,7 +17,7 @@ package pkg ;
     parameter EXPECTED_ENTHDR0 = 9'b001000000;
 
     bit running 			    = 1'b1;
-    
+    bit send_enthdr;
 class configuration ;
 	// DWORD0
 	rand bit  [2:0] RAND_CMD_ATTR ;
@@ -47,8 +47,8 @@ class configuration ;
  	rand bit               i_regf_wr_en_config         ;   
  	rand bit               i_regf_rd_en_config         ;    
  	rand bit               i_hdr_en            		;
- 	rand bit               i_ccc_done          		;
- 	rand bit               i_ddr_mode_done     		;
+ 	//rand bit               i_ccc_done          		;
+ 	//rand bit               i_ddr_mode_done     		;
 
 
 constraint controller_en_rand 		    { 
@@ -67,6 +67,7 @@ constraint data_config_mux_sel_rand     {
 constraint regf_wr_en_config_rand     	{
 
 	i_regf_wr_en_config  inside  {0,1};
+	
 }
 constraint regf_rd_en_config_rand   	{ 
 
@@ -82,6 +83,7 @@ constraint hdr_en_rand  			    {
 
 	i_hdr_en inside {0,1};
 }
+/*
 constraint ccc_done_rand                {
 
  	i_ccc_done inside {0,1};
@@ -89,7 +91,7 @@ constraint ccc_done_rand                {
 constraint ddr_mode_done_rand           {
 
     i_ddr_mode_done inside {0,1};
-}
+}*/
 	constraint CMD_ATTR {
 		RAND_CMD_ATTR dist {1:/70 , 0:/30} ;	
 	}
