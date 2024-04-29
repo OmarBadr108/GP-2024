@@ -1,0 +1,723 @@
+m255
+K4
+z2
+Z0 !s99 nomlopt
+R0
+R0
+R0
+R0
+R0
+R0
+!s11f MIXED_VERSIONS
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z1 dD:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/verification1/Final Verification SDR_HDR
+T_opt
+!s110 1713910239
+VY:<JgTXJYOE31[k5Y6T7=2
+Z2 04 16 4 work SDR_HDR_TB_FINAL fast 0
+=1-145afc03b739-662831df-140-4770
+Z3 !s124 OEM100
+o-quiet -auto_acc_if_foreign -work work
+Z4 tCvgOpt 0
+n@_opt
+Z5 OL;O;2021.1;73
+R1
+T_opt1
+!s110 1713914346
+V3;L_bLoEiXjG`TdHETEdC3
+R2
+=1-145afc03b739-662841ea-181-6364
+R3
+o-quiet -auto_acc_if_foreign -work work +acc
+R4
+n@_opt1
+R5
+vbits_counter
+Z6 !s110 1713913532
+!i10b 1
+!s100 7PzB745k`TVJhD5NF];1M0
+I>AL=akZfzS4ieK6jn5Oi`2
+R1
+Z7 w1708285790
+8bits_counter.v
+Fbits_counter.v
+!i122 49
+L0 33 73
+Z8 VDg1SIo80bB@j0V0VzS_@n1
+Z9 OL;L;2021.1;73
+r1
+!s85 0
+31
+Z10 !s108 1713913532.000000
+Z11 !s107 tri_state_buf_n.v|tri_state_buf.v|ENTHDR.v|scl_staller.v|push_pull_behav_model.v|open_drain_behav_model.v|pkg.sv|gen_mux.v|HDR_Engine.v|clk_divider.v|reg_file_new.v|scl_generation.v|sda_handling.v|frame_counter.v|controller_RX.v|bits_counter.v|controller_tx.v|i3c_timer_fsm.v|controller_crh.v|IBI.v|hot_join.v|dynamic_address_assignment.v|i2c_legacy_mode.v|sdr_mode.v|new_i3c_engine.v|SDR_HDR_TB_FINAL.sv|SDR_HDR_TOP.sv|
+Z12 !s90 -reportprogress|300|-coveropt|3|+cover|+acc|SDR_HDR_TOP.sv|SDR_HDR_TB_FINAL.sv|new_i3c_engine.v|sdr_mode.v|i2c_legacy_mode.v|dynamic_address_assignment.v|hot_join.v|IBI.v|controller_crh.v|i3c_timer_fsm.v|controller_tx.v|bits_counter.v|controller_RX.v|frame_counter.v|sda_handling.v|scl_generation.v|reg_file_new.v|clk_divider.v|HDR_Engine.v|gen_mux.v|pkg.sv|open_drain_behav_model.v|push_pull_behav_model.v|scl_staller.v|ENTHDR.v|tri_state_buf.v|tri_state_buf_n.v|+cover|-covercells|
+!i113 0
+Z13 !s102 -coveropt 3 +cover +cover -covercells
+Z14 o-coveropt 3 +cover +acc +cover -covercells -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R4
+vclk_divider
+R6
+!i10b 1
+!s100 j5cRYn?3I<jdiJ64HjJa31
+IgeliX2dhNR[d9Dod`;oI]1
+R1
+R7
+8clk_divider.v
+Fclk_divider.v
+!i122 49
+L0 32 22
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vcontroller_crh
+R6
+!i10b 1
+!s100 olFMBT[K6W=kBnP>P_T6i0
+In5?^UghEkU2i;zU=66k0D2
+R1
+Z15 w1711484878
+8controller_crh.v
+Fcontroller_crh.v
+!i122 49
+L0 35 1282
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vcontroller_rx
+R6
+!i10b 1
+!s100 kgW4J0=mjd_3_l=G=2nh21
+IJW3TC5DiCZT?db;LbS`MY2
+R1
+R7
+8controller_RX.v
+Fcontroller_RX.v
+!i122 49
+L0 36 193
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vcontroller_tx
+R6
+!i10b 1
+!s100 :G8koV=J<jP7734o:i2OK3
+IzfT`XI`C3LfFN_lj8lS=[0
+R1
+w1713903066
+8controller_tx.v
+Fcontroller_tx.v
+!i122 49
+L0 33 255
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vdynamic_address_assignment
+R6
+!i10b 1
+!s100 XCQiN>Rbc===5Zig05hQZ2
+I0_TTgf6cQ3;Mkg;3g^9`G2
+R1
+R15
+8dynamic_address_assignment.v
+Fdynamic_address_assignment.v
+!i122 49
+L0 34 397
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+venthdr
+R6
+!i10b 1
+!s100 UoT=<hmGIHcZjaLDBU`N<2
+Ij;gNagC_S[d=fg9QcVbgz1
+R1
+w1713902495
+8ENTHDR.v
+FENTHDR.v
+!i122 49
+L0 33 202
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vframe_counter
+R6
+!i10b 1
+!s100 ezN7[]cTBdR]Z]J9ogUTY3
+IR2L_B1Pd;A?Ol;gY5KogA2
+R1
+R7
+8frame_counter.v
+Fframe_counter.v
+!i122 49
+L0 22 33
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vgen_mux
+R6
+!i10b 1
+!s100 8M<HVM<Fe8GDamASz:<MD3
+Imi?CF7kQL`fM5I;O1TV0W3
+R1
+R7
+8gen_mux.v
+Fgen_mux.v
+!i122 49
+L0 23 15
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vhdr_engine
+R6
+!i10b 1
+!s100 G=RNO21NSA7Mn<DQ[1Q4X1
+I2:N3gTGQzlhN7hLkBe8VU3
+R1
+w1713033150
+8HDR_Engine.v
+FHDR_Engine.v
+!i122 49
+L0 32 225
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vhot_join
+R6
+!i10b 1
+!s100 gzYKP7OD8aZj1;K0>cP9[1
+IS3LOaK0QW`XZHI9`CG;iO2
+R1
+R7
+8hot_join.v
+Fhot_join.v
+!i122 49
+L0 33 357
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vi2c_legacy_mode
+R6
+!i10b 1
+!s100 YG<fjcR:0=FZ7kjYD7A]?3
+Iz>;Y@CeWPzakJX]B?bY:f3
+R1
+R15
+8i2c_legacy_mode.v
+Fi2c_legacy_mode.v
+!i122 49
+L0 33 291
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vi3c_engine
+R6
+!i10b 1
+!s100 SOZSSf4OLPLS9Y0?XH0?A2
+Ikc:Hn<>]2eOg]ckai1DbV1
+R1
+w1713109927
+8new_i3c_engine.v
+Fnew_i3c_engine.v
+!i122 49
+L0 34 803
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vi3c_timer_fsm
+R6
+!i10b 1
+!s100 H;lDMZlgM8CR6I1l=n@;d3
+IzSK`Q^M<PehzB>TcePEkX3
+R1
+R7
+8i3c_timer_fsm.v
+Fi3c_timer_fsm.v
+!i122 49
+L0 34 277
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vIBI
+R6
+!i10b 1
+!s100 ec<];9I]jzME7m<4z19QM2
+IB95ja<^Bj[0nJS75_4F<i2
+R1
+w1711489453
+8IBI.v
+FIBI.v
+!i122 49
+L0 23 510
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+n@i@b@i
+vopen_drain_behav_model
+R6
+!i10b 1
+!s100 VXD:jZl67ZIC@m3kP=3:a0
+I<^I=[Vf0175OZG<26m=:d3
+R1
+R7
+8open_drain_behav_model.v
+Fopen_drain_behav_model.v
+!i122 49
+L0 3 13
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+Xpkg
+Z16 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+R6
+!i10b 1
+!s100 O8GA=A`cd3[^SGRnVhCZ:2
+Io^<Q9Hkdf6oWIE]HlGP6a1
+S1
+R1
+w1713703097
+8pkg.sv
+Fpkg.sv
+!i122 49
+L0 1 0
+Vo^<Q9Hkdf6oWIE]HlGP6a1
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vpush_pull_behav_model
+R6
+!i10b 1
+!s100 GH:QdCS^4P^BoBFHhHVj`3
+I[cdaTI]2I_^FaN@g?QYEi3
+R1
+R7
+8push_pull_behav_model.v
+Fpush_pull_behav_model.v
+!i122 49
+L0 3 25
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vreg_file
+R6
+!i10b 1
+!s100 jSVKLC@lYEjgh>[00eon32
+IedmDZH10>2Wz[eZgRGWZI2
+R1
+w1713108777
+8reg_file_new.v
+Freg_file_new.v
+!i122 49
+L0 33 294
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vscl_generation
+R6
+!i10b 1
+!s100 8VZcz]`Fd4znTY]NfQ:aC0
+IPIgBM7_1N`b@8>[z1?VBm0
+R1
+R7
+8scl_generation.v
+Fscl_generation.v
+!i122 49
+L0 34 136
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vscl_staller
+R6
+!i10b 1
+!s100 Wj04geBBBlIDV8QgNglXf3
+IMU8z@a>hFl482oZE]bkH_0
+R1
+R7
+8scl_staller.v
+Fscl_staller.v
+!i122 49
+L0 23 35
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vsda_handling
+R6
+!i10b 1
+!s100 GbNdmZ>H>5>e9HGRX<D>V0
+IgF:a=50b2z6e<jO:[P[`A0
+R1
+R7
+8sda_handling.v
+Fsda_handling.v
+!i122 49
+L0 33 56
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vSDR_HDR_TB_FINAL
+R16
+Z17 DXx4 work 3 pkg 0 22 o^<Q9Hkdf6oWIE]HlGP6a1
+DXx4 work 24 SDR_HDR_TB_FINAL_sv_unit 0 22 7nBla1RlV]L:?4SKe4l392
+Z18 !s110 1713914315
+R8
+r1
+!s85 0
+!i10b 1
+!s100 m_Dz3CNI9hUzU7Ho=2fbY2
+IjAF10]KTjfeEJ^NYIlW:O2
+!s105 SDR_HDR_TB_FINAL_sv_unit
+S1
+R1
+Z19 w1713914130
+Z20 8D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/verification1/Final Verification SDR_HDR/SDR_HDR_TB_FINAL.sv
+Z21 FD:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/verification1/Final Verification SDR_HDR/SDR_HDR_TB_FINAL.sv
+!i122 51
+L0 17 420
+R9
+31
+Z22 !s108 1713914315.000000
+Z23 !s107 D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/verification1/Final Verification SDR_HDR/SDR_HDR_TB_FINAL.sv|
+Z24 !s90 -reportprogress|300|-work|work|D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/verification1/Final Verification SDR_HDR/SDR_HDR_TB_FINAL.sv|
+!i113 0
+Z25 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R4
+n@s@d@r_@h@d@r_@t@b_@f@i@n@a@l
+XSDR_HDR_TB_FINAL_sv_unit
+R16
+R17
+R18
+V7nBla1RlV]L:?4SKe4l392
+r1
+!s85 0
+!i10b 1
+!s100 @l=Gm1RMCE5HOS6>oU]1j0
+I7nBla1RlV]L:?4SKe4l392
+!i103 1
+S1
+R1
+R19
+R20
+R21
+!i122 51
+L0 15 0
+R9
+31
+R22
+R23
+R24
+!i113 0
+R25
+R4
+n@s@d@r_@h@d@r_@t@b_@f@i@n@a@l_sv_unit
+vsdr_hdr_transition_top
+R16
+R6
+!i10b 1
+!s100 JV;H[6[7LTgZ8]lj7SQ?e0
+I@8S_C7o6GBBegnRhf43_g1
+S1
+R1
+w1713504943
+8SDR_HDR_TOP.sv
+FSDR_HDR_TOP.sv
+!i122 49
+L0 36 1115
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vsdr_mode
+R6
+!i10b 1
+!s100 L_49dQS6c[?;]QJAb@H_X0
+IA:FkTnD2k3KcQF4Wo:Dg`1
+R1
+R15
+8sdr_mode.v
+Fsdr_mode.v
+!i122 49
+L0 33 433
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vtop
+R16
+DXx4 work 3 pkg 0 22 LA2bgN>ZkAHYIeNHGgKdN0
+!s110 1713677633
+!i10b 1
+!s100 iD@Fk?Z;32ClUaGIIzmi=2
+I`hC4fY7Y6VF0^FDRgz5AB0
+S1
+R1
+w1713222632
+8TOP_TB.sv
+FTOP_TB.sv
+!i122 0
+L0 1 25
+R8
+R9
+r1
+!s85 0
+31
+!s108 1713677632.000000
+!s107 transaction.sv|pkg.sv|interface.sv|generator.sv|driver.sv|TOP_TB.sv|SDR_HDR_TOP.sv|SDR_HDR_TB_FINAL.sv|
+!s90 -reportprogress|300|-cover|bcs|SDR_HDR_TB_FINAL.sv|SDR_HDR_TOP.sv|TOP_TB.sv|driver.sv|generator.sv|interface.sv|pkg.sv|transaction.sv|
+!i113 0
+!s102 -cover bcs
+o-cover bcs -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R4
+vtri_state_buf
+R6
+!i10b 1
+!s100 ^8BGUZ;<c0a0TWl_[3]713
+I7;^TYhNdoXl0DdCdn32H[1
+R1
+R7
+8tri_state_buf.v
+Ftri_state_buf.v
+!i122 49
+Z26 L0 3 8
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4
+vtri_state_buf_n
+R6
+!i10b 1
+!s100 NFGUL:iR8Q=4HU<:JQ>IK3
+I@KSo3DH<i@2=;MIO5k8HL1
+R1
+R7
+8tri_state_buf_n.v
+Ftri_state_buf_n.v
+!i122 49
+R26
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R4

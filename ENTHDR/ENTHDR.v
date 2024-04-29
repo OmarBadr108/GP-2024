@@ -197,7 +197,7 @@ module enthdr (
  
            PARITY:     
             begin
-              if(i_tx_mode_done && i_scl_pos_edge )    ///*** T bit completion plus scl falling edge condition should be added
+              if(i_tx_mode_done && i_scl_neg_edge)    ///*** T bit completion plus scl falling edge condition should be added
                begin
                  o_i3cengine_done <= 1'b1;
                  state            <= IDLE;

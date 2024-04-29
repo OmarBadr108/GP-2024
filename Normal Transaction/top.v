@@ -69,7 +69,7 @@ wire frmcnt_last,frmcnt_en,frcnt_toggle;
 wire sdahand_pp_od,scl_pos_edge,scl_neg_edge;
 
 //---------------------staller wires -------------------------------//
-wire [3:0] sclstall_no_of_cycles;
+wire [4:0] sclstall_no_of_cycles;
 wire scl_stall,sclstall_en,stall_done;
 
 
@@ -100,6 +100,7 @@ ddr_mode dut0 (
     .i_frmcnt_last(frmcnt_last),
     .o_frmcnt_en(frmcnt_en),
     
+	.i_bitcnt(cnt_bit_count),
 	.o_bitcnt_en(bitcnt_en),
     .o_bitcnt_rst(bitcnt_rst),
   

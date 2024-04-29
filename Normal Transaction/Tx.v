@@ -51,6 +51,7 @@ reg reset_counter_flag;
 reg rd_wr_flag; //storing rd_or_wr bit for calculating (parity adj) and (cmd word parity)
 reg parity_flag; //to distinguish parity is calculated for cmd or data
 reg first_byte_full; //to distinguish tx is serializing first byte or second byte
+reg last_crc_bit;
 
 
 assign A = {i_ddrccc_special_data[6:0],parity_adj} ; 
@@ -385,8 +386,8 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 		     if ( (counter == value) & (!reset_counter_flag))
 		       begin
 		        o_sdahnd_serial_data <= i_crc_crc_value[4];
-            counter <= 'd0;
-            reset_counter_flag <= 1;  
+				counter <= 'd0;
+				reset_counter_flag <= 1;  
            end
 			   else
 			     begin
@@ -400,8 +401,17 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 			else if ( counter == 'd4 )
 			 begin
 			  reset_counter_flag <= 0;
-			  value <= 4;
+			  value <= 'b0;
+			  counter <= 'd0;
+			 
 			 end
+			 
+			 
+			 if (i_crc_crc_value [4] == 1)
+				last_crc_bit <= 'b1;
+			else 
+				last_crc_bit <= 'b0;
+				
 			 
 	  end
 			  
@@ -409,7 +419,7 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 			  
 		restart_Pattern: begin
 			  
-		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
+		/*  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 		    begin    
 		     if ( (counter == value) & (!reset_counter_flag))
 		       begin
@@ -432,13 +442,70 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 			  reset_counter_flag <= 0;
 			  value <= 3;
 			 end
+		  end*/
+		  
+	if(last_crc_bit)
+		begin
+		  if (counter == 'd8)
+			begin
+				//counter <= 'd4;
+				o_sdahnd_serial_data <= 'b1;
+			end
+			
+		  
+		  else 
+			begin
+			
+				if(!counter[0])
+					o_sdahnd_serial_data <= ~ o_sdahnd_serial_data;
+				
+				counter <= counter +1 ;
+				
+					if (counter == 'd7)
+						begin
+						o_ddrccc_mode_done <= 'b1;
+						//o_sdahnd_serial_data<= 'b0;
+						end
+					else 
+						o_ddrccc_mode_done <= 'b0;
+				
+			end		  
+		end
+		
+	else 
+		begin 
+			if (counter == 'd10)
+			begin
+				//counter <= 'd4;
+				o_sdahnd_serial_data <= 'b1;
+			end
+			
+		  
+		  else 
+			begin
+			
+				if(!counter[0])
+					o_sdahnd_serial_data <= ~ o_sdahnd_serial_data;
+				
+				counter <= counter +1 ;
+				
+					if (counter == 'd9)
+						begin
+						o_ddrccc_mode_done <= 'b1;
+						//o_sdahnd_serial_data<= 'b0;
+						end
+					else 
+						o_ddrccc_mode_done <= 'b0;
+				
+			end	
 		  end
+	end
 		  
 			  ////////////////////////////////////////////
 			  
 			exit_Pattern: begin
 			  
-		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
+		 /* if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 		    begin    
 		     if ( (counter == value) & (!reset_counter_flag))
 		       begin
@@ -477,9 +544,70 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 		    counter <= 0;
 		    reset_counter_flag <= 0;
 		    value <= 0;
-		    end
-		    
+		    end*/
+	
+	
+	
+	
+	if(last_crc_bit)
+	 begin
+		 if (counter == 'd14)
+			begin
+				//counter <= 'd4;
+				o_sdahnd_serial_data <= 'b0;
+			end
+			
+		  
+		  else 
+			begin
+				if(!counter[0])
+					o_sdahnd_serial_data <= ~ o_sdahnd_serial_data;
+				
+				counter <= counter +1 ;
+				
+					if (counter == 'd13)
+						begin
+						o_ddrccc_mode_done <= 'b1;
+						//o_sdahnd_serial_data<= 'b0;
+						end
+					else 
+						o_ddrccc_mode_done <= 'b0;
+				
+			end		  
 		end
+	 
+	 else 	
+		begin 
+			 if (counter == 'd16)
+			begin
+				//counter <= 'd4;
+				o_sdahnd_serial_data <= 'b0;
+			end
+			
+		  
+		  else 
+			begin
+				if(!counter[0])
+					o_sdahnd_serial_data <= ~ o_sdahnd_serial_data;
+				
+				counter <= counter +1 ;
+				
+					if (counter == 'd15)
+						begin
+						o_ddrccc_mode_done <= 'b1;
+						//o_sdahnd_serial_data<= 'b0;
+						end
+					else 
+						o_ddrccc_mode_done <= 'b0;
+				
+			end		  
+		end
+		
+	 end
+		
+		endcase
+		end
+	end
 		
 
 	

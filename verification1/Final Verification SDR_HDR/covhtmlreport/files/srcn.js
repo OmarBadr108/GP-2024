@@ -1,0 +1,2 @@
+var g_data = ["","pkg.sv","SDR_HDR_TB_FINAL.sv","SDR_HDR_TOP.sv","new_i3c_engine.v","sdr_mode.v","i2c_legacy_mode.v","dynamic_address_assignment.v","hot_join.v","IBI.v","controller_crh.v","i3c_timer_fsm.v","controller_tx.v","bits_counter.v","controller_RX.v","frame_counter.v","sda_handling.v","open_drain_behav_model.v","tri_state_buf_n.v","push_pull_behav_model.v","tri_state_buf.v","scl_generation.v","scl_staller.v","reg_file_new.v","clk_divider.v","ENTHDR.v","HDR_Engine.v","gen_mux.v"];
+processSrcNamesData(g_data);

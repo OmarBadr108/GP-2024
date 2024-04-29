@@ -1,0 +1,36 @@
+m255
+K4
+z2
+!s11f vlog 2021.1 2021.01, Jan 19 2021
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dD:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/verification1
+vsdr_hdr_transition_top
+DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+!s110 1713680634
+!i10b 1
+!s100 JV;H[6[7LTgZ8]lj7SQ?e0
+I::;WTge]kY_VcTE60f;Uj0
+S1
+R0
+w1713504943
+8SDR_HDR_TOP.sv
+FSDR_HDR_TOP.sv
+!i122 2
+L0 36 1115
+VDg1SIo80bB@j0V0VzS_@n1
+OL;L;2021.1;73
+r1
+!s85 0
+31
+!s108 1713680634.000000
+!s107 SDR_HDR_TB_FINAL.sv|SDR_HDR_TOP.sv|
+!s90 -reportprogress|300|-coveropt|3|+cover|+acc|SDR_HDR_TOP.sv|SDR_HDR_TB_FINAL.sv|
+!i113 0
+!s102 -coveropt 3 +cover
+o-coveropt 3 +cover +acc -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+tCvgOpt 0

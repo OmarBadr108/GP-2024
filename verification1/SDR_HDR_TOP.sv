@@ -51,7 +51,7 @@ module sdr_hdr_transition_top (
 
 
     
-    input  wire          i_hdr_en            , // enable signal for the hdr mode
+    //input  wire          i_hdr_en            , // enable signal for the hdr mode
     input  wire          i_ccc_done          ,
     input  wire          i_ddr_mode_done     ,
 
