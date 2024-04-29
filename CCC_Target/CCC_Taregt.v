@@ -43,7 +43,13 @@ input wire [15:0] i_regf_MWL ,
 input wire [15:0] i_regf_MRL ,
 input wire [7:0]  i_CCC_value ,
 input wire [7:0]  i_Def_byte ,
+<<<<<<< Updated upstream
 input wire        i_rx_error
+=======
+input wire        i_rx_error , //error in special preamble after restart CMND word or parity 
+
+input wire        premable,
+>>>>>>> Stashed changes
 
 output reg 		  o_tx_en ,
 output reg [4:0]  o_tx_mode ,
@@ -61,14 +67,21 @@ output reg 		  o_regf_rd_en
 
 // internal signals 
 reg [4:0] current_state , next_state ;
-
-
+reg case_ccc;
+reg [2:0] byte_no ;
 
 
 // Local Parameters of States
 localparam [4:0] IDLE = 5'd0 ;
 localparam [4:0] PRE_CMD = 5'd1 ;
 localparam [4:0] CHECK_CCC = 5'd2 ;
+<<<<<<< Updated upstream
+=======
+localparam [4:0] DEF_DATA = 5'd3 ;
+localparam [4:0] CHECK_PARITY = 5'd4 ;
+localparam [4:0] DATA= 5'd5 ;
+
+>>>>>>> Stashed changes
 
 
 
@@ -82,7 +95,20 @@ localparam [4:0] zero_preamble = 5'd0 ;
 localparam [4:0] ccc_value = 5'd1 ;
 
 
+<<<<<<< Updated upstream
 ///////////////////////////state transition ///////////////////////
+=======
+/////////////////////////////////////////parameters of regf
+localparam [7:0] first_byte_MWL = 8'd0;
+localparam [7:0] second_byte_MWL = 8'd1;
+localparam [7:0] first_byte_MRL = 8'd2;
+localparam [7:0] second_byte_MRL = 8'd3;
+
+
+
+
+/////////////////////////// state transition ///////////////////////
+>>>>>>> Stashed changes
     always @(posedge i_sys_clk or negedge i_sys_rst) begin
         if (!i_sys_rst) begin
             current_state <= IDLE ;
@@ -103,6 +129,7 @@ always@(*)begin
     o_regf_rd_en       = 1'b0 ;
     o_regf_addr        = 8'b0 ;
     o_engine_done      = 1'b0 ;
+    byte_no            = 3'd0 ;
 
         case (current_state)
 
@@ -121,12 +148,24 @@ always@(*)begin
 
 			PRE_CMD : begin
                 if (i_engine_en) begin 
+<<<<<<< Updated upstream
                 	if (i_rx_mode_done) begin //flag true when the data is 0 preamble
                 		o_rx_en = 1'b0 ;
                 		o_tx_en = 1'b1 ;
                 		o_tx_mode = one_preamble ;
+=======
+                	if (i_rx_mode_done && premable) begin 
+                		o_rx_en = 1'b0 ;
+                		o_tx_en = 1'b1 ;
+                		o_tx_mode = zero_preamble ;  //accept send 0 or reject send 1 with Ma8raby
+>>>>>>> Stashed changes
                 		next_state = ACK ;
                 	end
+                    else if (i_rx_mode_done && !preamble) begin
+                        o_rx_en = 1'b0 ;
+                        o_engine_done      = 1'b1 ;
+                        next_state = IDLE ;
+                    end
                 	else
                 		next_state = PRE_CMD ;
                 else
@@ -136,16 +175,53 @@ always@(*)begin
             	if (i_tx_mode_done) begin
             		o_tx_en = 1'b0 ;
             		o_rx_en = 1'b1 ;
+<<<<<<< Updated upstream
             		o_rx_mode = ccc_value ;
             		next_state = CHECK_CCC ;
             	end
+=======
+                    if (case_ccc) begin
+                        o_rx_mode = deser_def ; //used to deser data of DATA WRD
+                        o_regf_wr_en = 1'b1 ;
+
+                        if (i_CCC_value ==0x09)
+                            o_regf_addr = first_byte_MWL ; //address of MWL 
+                        else if (i_CCC_value ==0x0A) 
+                            o_regf_addr = first_byte_MRL ; //address of MRL 
+                        //else if (i_CCC_value == )
+                        next_state = DATA ;
+                    end
+                    else begin
+                        o_rx_mode = ccc_value ;
+                        next_state = CHECK_CCC ;
+                    end
+                end 
+                else if (i_tx_mode_done /*rejects*/) begin
+                    o_engine_done = 1'b1 ;
+                    next_state = IDLE ;
+                end
+>>>>>>> Stashed changes
             	else
             		next_state = ACK ;
 
             end
             CHECK_CCC : begin
+<<<<<<< Updated upstream
             	if (i_CCC_value== 0x00) begin //ENEC_BC
             		/* code */
+=======
+            if (i_rx_mode_done) begin
+            	if (i_CCC_value== 8'h00 || i_CCC_value== 8'h01 || i_CCC_value== 8'h80 || i_CCC_value== 8'h81 || 
+                i_CCC_value== 8'h09 || i_CCC_value== 8'h0A || i_CCC_value== 8'h89 || i_CCC_value== 8'h8B ||
+                i_CCC_value== 8'h8A || i_CCC_value== 8'h8C || i_CCC_value== 8'h90 || i_CCC_value== 8'h2A ||
+                i_CCC_value== 8'h9A || i_CCC_value== 8'h8D || i_CCC_value== 8'h8E || i_CCC_value== 8'h8F ) begin //8'h00 ENEC_BC
+
+            		o_rx_en = 1'b1 ;
+                    o_regf_addr = 8'd00 ; //address to save def in useless address
+                    o_regf_wr_en = 1'b1 ;
+                    o_rx_mode = deser_def ; //DEFbyte deserializing
+                    next_state = DEF_DATA ;
+>>>>>>> Stashed changes
             	end
             	else if (i_CCC_value== 0x01) begin //DISEC_BC
             		/* code */
@@ -196,8 +272,77 @@ always@(*)begin
             		/* code */
             	end
             	else
+<<<<<<< Updated upstream
             		next_state = CHECK_CCC ;
+=======
+                    o_engine_done = 1'b1 ;
+            		next_state = IDLE ;
+                end
+            else
+                next_state = CHECK_CCC ;
+            end
+            DEF_DATA : begin
+                o_regf_wr_en = 1'b0;
+                if (i_rx_mode_done) begin
+                    
+                        o_rx_en = 1'b1 ;
+                        o_rx_mode = check_parity ;
+                        next_state = CHECK_PARITY ;
+                end 
+                else
+                    next_state = DEF_DATA ;
+
+            end
+
+            CHECK_PARITY : begin
+                if (i_rx_mode_done && !i_rx_error) begin
+                    o_rx_en = 1'b1 ;
+                    if (/*i_CCC_value == 8'h00 || i_CCC_value== 8'h01 || i_CCC_value== 8'h09 || i_CCC_value== 8'h0A || i_CCC_value== 8'h2A====BC*/ ) begin
+                        o_rx_mode = preamble ;
+                        next_state = PRE_CMD ;
+                        case_ccc = 1'b1;
+                    end
+                    
+                end 
+                else if (i_rx_mode_done && i_rx_error) begin
+                    o_engine_done = 1'b1 ;
+                    next_state = IDLE ;
+                end 
+                else 
+                    next_state = CHECK_PARITY ;
+            end 
+            DATA : begin
+                if (i_rx_mode_done) begin
+                    if (i_CCC_value ==0x09 && (byte_no==3'd2) ) begin 
+                        next_state = /*preamble of CRC*/ ;
+                        byte_no = 3'd0 ;
+                    end
+                    else if (i_CCC_value==0x09 ) begin
+                        o_rx_en = 1'b1 ;
+                        o_regf_wr_en = 1'b1;
+                        o_regf_addr = second_byte_MWL ; //second 8 after 
+                        byte_no = 3'd2 ;
+                        next_state = DATA ;
+                        
+                    end
+                    else if (i_CCC_value == 0x0A  begin
+                        /* code */
+                    end
+                    end
+                end
+                else
+                    next_state = DATA ;
+
+
+
+
+>>>>>>> Stashed changes
             end 
 
 
 
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
