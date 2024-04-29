@@ -43,13 +43,9 @@ input wire [15:0] i_regf_MWL ,
 input wire [15:0] i_regf_MRL ,
 input wire [7:0]  i_CCC_value ,
 input wire [7:0]  i_Def_byte ,
-<<<<<<< Updated upstream
-input wire        i_rx_error
-=======
-input wire        i_rx_error , //error in special preamble after restart CMND word or parity 
+input wire        i_rx_error , //error in special preamble after restart CMND word or parity or crc value or token crc
 
 input wire        premable,
->>>>>>> Stashed changes
 
 output reg 		  o_tx_en ,
 output reg [4:0]  o_tx_mode ,
@@ -75,13 +71,11 @@ reg [2:0] byte_no ;
 localparam [4:0] IDLE = 5'd0 ;
 localparam [4:0] PRE_CMD = 5'd1 ;
 localparam [4:0] CHECK_CCC = 5'd2 ;
-<<<<<<< Updated upstream
-=======
 localparam [4:0] DEF_DATA = 5'd3 ;
 localparam [4:0] CHECK_PARITY = 5'd4 ;
 localparam [4:0] DATA= 5'd5 ;
+localparam [4:0] SPECIAL_PREAMBLE = 5'd6 ;
 
->>>>>>> Stashed changes
 
 
 
@@ -93,11 +87,10 @@ localparam [4:0] one_preamble = 5'd0 ;
 //Local Parameters of RX modes
 localparam [4:0] zero_preamble = 5'd0 ;
 localparam [4:0] ccc_value = 5'd1 ;
+localparam [4:0] deser_def = 5'd2 ;
+localparam [4:0] check_parity = 5'd3 ;
+localparam [4:0] special_preamble = 5'd4 ;
 
-
-<<<<<<< Updated upstream
-///////////////////////////state transition ///////////////////////
-=======
 /////////////////////////////////////////parameters of regf
 localparam [7:0] first_byte_MWL = 8'd0;
 localparam [7:0] second_byte_MWL = 8'd1;
@@ -108,7 +101,6 @@ localparam [7:0] second_byte_MRL = 8'd3;
 
 
 /////////////////////////// state transition ///////////////////////
->>>>>>> Stashed changes
     always @(posedge i_sys_clk or negedge i_sys_rst) begin
         if (!i_sys_rst) begin
             current_state <= IDLE ;
@@ -136,9 +128,10 @@ always@(*)begin
         	IDLE : begin
 
  				if (i_engine_en) begin 
-                    next_state = PRE_CMD ;
+                    
                     o_rx_en    = 1'b1 ; 
                     o_rx_mode  = zero_preamble ; 
+
                 end
                 else begin 
                     next_state = IDLE ;
@@ -148,17 +141,10 @@ always@(*)begin
 
 			PRE_CMD : begin
                 if (i_engine_en) begin 
-<<<<<<< Updated upstream
-                	if (i_rx_mode_done) begin //flag true when the data is 0 preamble
-                		o_rx_en = 1'b0 ;
-                		o_tx_en = 1'b1 ;
-                		o_tx_mode = one_preamble ;
-=======
                 	if (i_rx_mode_done && premable) begin 
                 		o_rx_en = 1'b0 ;
                 		o_tx_en = 1'b1 ;
                 		o_tx_mode = zero_preamble ;  //accept send 0 or reject send 1 with Ma8raby
->>>>>>> Stashed changes
                 		next_state = ACK ;
                 	end
                     else if (i_rx_mode_done && !preamble) begin
@@ -172,14 +158,10 @@ always@(*)begin
                 	next_state = IDLE ;
             end 
             ACK : begin
-            	if (i_tx_mode_done) begin
+            	if (i_tx_mode_done /*accepts*/) begin
             		o_tx_en = 1'b0 ;
             		o_rx_en = 1'b1 ;
-<<<<<<< Updated upstream
-            		o_rx_mode = ccc_value ;
-            		next_state = CHECK_CCC ;
-            	end
-=======
+
                     if (case_ccc) begin
                         o_rx_mode = deser_def ; //used to deser data of DATA WRD
                         o_regf_wr_en = 1'b1 ;
@@ -200,16 +182,11 @@ always@(*)begin
                     o_engine_done = 1'b1 ;
                     next_state = IDLE ;
                 end
->>>>>>> Stashed changes
             	else
             		next_state = ACK ;
 
             end
             CHECK_CCC : begin
-<<<<<<< Updated upstream
-            	if (i_CCC_value== 0x00) begin //ENEC_BC
-            		/* code */
-=======
             if (i_rx_mode_done) begin
             	if (i_CCC_value== 8'h00 || i_CCC_value== 8'h01 || i_CCC_value== 8'h80 || i_CCC_value== 8'h81 || 
                 i_CCC_value== 8'h09 || i_CCC_value== 8'h0A || i_CCC_value== 8'h89 || i_CCC_value== 8'h8B ||
@@ -221,60 +198,57 @@ always@(*)begin
                     o_regf_wr_en = 1'b1 ;
                     o_rx_mode = deser_def ; //DEFbyte deserializing
                     next_state = DEF_DATA ;
->>>>>>> Stashed changes
             	end
-            	else if (i_CCC_value== 0x01) begin //DISEC_BC
-            		/* code */
+            	/*else if (i_CCC_value== 0x01) begin //DISEC_BC
+            		/* code 
             	end
             	else if (i_CCC_value== 0x80) begin //ENEC_Dir
-            		/* code */
+            		/* code 
             	end
             	else if (i_CCC_value== 0x81) begin //DISEC_Dir
-            		/* code */
+            		/* code 
             	end
             	else if (i_CCC_value== 0x80) begin //ENEC_Dir
-            		/* code */
+            		/* code 
             	end
             	else if (i_CCC_value== 0x09) begin //SETMWL_BC
-            		/* code */
+            		/* code 
             	end
             	else if (i_CCC_value== 0x0A) begin //SETMRL_BC
-            		/* code */
+            		/* code 
             	end
             	else if (i_CCC_value== 0x89) begin //SETMWL_Dir
-            		/* code */
+            		/* code 
             	end
             	else if (i_CCC_value== 0x8B) begin //GETMWL_Dir
-            		/* code */
+            		/* code 
             	end
             	else if (i_CCC_value== 0x8A) begin //SETMRL_Dir
-            		/* code */
+            		/* code 
             	end
             	else if (i_CCC_value== 0x8C) begin //GETMRL_Dir
-            		/* code */
+            		/* code 
             	end
             	else if (i_CCC_value== 0x90) begin //GETSTATUS_Dir format 1
-            		/* code */
+            		/* code 
             	end
             	else if (i_CCC_value== 0x2A) begin //RSTACT_BC
-            		/* code */
+            		/* code 
             	end
             	else if (i_CCC_value== 0x9A) begin //RSTACT_Dir
-            		/* code */
+            		/* code 
             	end
             	else if (i_CCC_value== 0x8D) begin //GETPID_Dir
-            		/* code */
+            		/* code 
             	end
             	else if (i_CCC_value== 0x8E) begin //GETBCR_Dir
-            		/* code */
+            		/* code 
             	end
             	else if (i_CCC_value== 0x8F) begin //GETDCR_Dir
-            		/* code */
-            	end
+            		/* code 
+            	end*/
             	else
-<<<<<<< Updated upstream
-            		next_state = CHECK_CCC ;
-=======
+                begin 
                     o_engine_done = 1'b1 ;
             		next_state = IDLE ;
                 end
@@ -297,10 +271,17 @@ always@(*)begin
             CHECK_PARITY : begin
                 if (i_rx_mode_done && !i_rx_error) begin
                     o_rx_en = 1'b1 ;
-                    if (/*i_CCC_value == 8'h00 || i_CCC_value== 8'h01 || i_CCC_value== 8'h09 || i_CCC_value== 8'h0A || i_CCC_value== 8'h2A====BC*/ ) begin
-                        o_rx_mode = preamble ;
-                        next_state = PRE_CMD ;
-                        case_ccc = 1'b1;
+                    if (/*i_CCC_value == 8'h00 || i_CCC_value== 8'h01 || i_CCC_value== 8'h09 || i_CCC_value== 8'h0A || i_CCC_value== 8'h2A====BC*/ ) begin /////BCCCCC
+                        if (case_ccc) begin 
+                            o_rx_mode = special_preamble ;
+                            next_state = SPECIAL_PREAMBLE ;
+                        end 
+
+                        else begin
+                            o_rx_mode = preamble ;
+                            next_state = PRE_CMD ;
+                            case_ccc = 1'b1;
+                        end 
                     end
                     
                 end 
@@ -314,8 +295,11 @@ always@(*)begin
             DATA : begin
                 if (i_rx_mode_done) begin
                     if (i_CCC_value ==0x09 && (byte_no==3'd2) ) begin 
-                        next_state = /*preamble of CRC*/ ;
                         byte_no = 3'd0 ;
+                        o_rx_en = 1'b1 ;
+                        o_rx_mode = check_parity ;
+                        next_state = CHECK_PARITY ;
+                        
                     end
                     else if (i_CCC_value==0x09 ) begin
                         o_rx_en = 1'b1 ;
@@ -325,24 +309,58 @@ always@(*)begin
                         next_state = DATA ;
                         
                     end
-                    else if (i_CCC_value == 0x0A  begin
-                        /* code */
+                    else if (i_CCC_value == 0x0A (byte_no==3'd2) ) begin
+                        next_state = /*preamble of CRC*/ ;
+                        byte_no = 3'd0 ;
                     end
+                    else if (i_CCC_value==0x0A ) begin
+                        o_rx_en = 1'b1 ;
+                        o_regf_wr_en = 1'b1;
+                        o_regf_addr = second_byte_MRL ;
+                        byte_no = 3'd2 ;
+                        next_state = DATA ;
+                    end
+                    else begin
+                        o_engine_done = 1'b1 ;
+                        next_state = IDLE ;
                     end
                 end
                 else
                     next_state = DATA ;
 
+            end 
+            SPECIAL_PREAMBLE : begin 
+                if (i_rx_mode_done) begin
+                   o_rx_en = 1'b1 ;
+                   o_rx_mode = token_crc ;
+                   next_state = TOKEN_CRC ;
+                end 
+                else
+                    next_state = SPECIAL_PREAMBLE ;
 
-
-
->>>>>>> Stashed changes
             end 
 
-
-
-<<<<<<< Updated upstream
-=======
-
-
->>>>>>> Stashed changes
+            TOKEN_CRC : begin
+                if (i_rx_mode_done & !i_rx_error) begin
+                   o_rx_en = 1'b1 ;
+                   o_rx_mode = crc_value ;
+                   next_state = CRC_VALUE ;
+                end
+                else if (i_rx_mode_done & i_rx_error) begin
+                    o_engine_done = 1'b1 ;
+                    next_state = IDLE ;
+                end
+                else
+                    next_state = TOKEN_CRC ;
+            end
+            CRC_VALUE : begin
+                if (i_rx_mode_done && !i_rx_error) begin
+                   o_rx_en = 1'b0 ;
+                   next_state = IDLE ;
+                end
+                else if (i_rx_mode_done & i_rx_error) begin
+                    o_engine_done = 1'b1 ;
+                    next_state = IDLE ;
+                end 
+                else
+                    next_state = CRC_VALUE ;
