@@ -182,8 +182,9 @@ R4
 R5
 n@_opt2
 R6
+R1
 vbits_counter
-Z7 !s110 1714334480
+Z7 !s110 1714374656
 !i10b 1
 !s100 <`mUi0b_K?RJ35@=Eb4Iz2
 IcD=:[n?kUTM:O`CQcHaIb3
@@ -191,19 +192,19 @@ R1
 w1714057605
 8bits_counter.v
 Fbits_counter.v
-!i122 220
+!i122 240
 L0 3 61
 Z8 VDg1SIo80bB@j0V0VzS_@n1
 Z9 OL;L;2021.1;73
 r1
 !s85 0
 31
-Z10 !s108 1714334479.000000
-Z11 !s107 testing_mux.v|stalller.v|scl_generation.v|Tx.v|Rx.v|reg_file.v|FRAME_COUNTER.v|bits_counter.v|CCC_Handler_tb_final.sv|CCC_Handler.v|package.sv|
-Z12 !s90 -reportprogress|300|package.sv|CCC_Handler.v|CCC_Handler_tb_final.sv|bits_counter.v|FRAME_COUNTER.v|reg_file.v|Rx.v|Tx.v|scl_generation.v|stalller.v|testing_mux.v|+cover|-covercells|
+Z10 !s108 1714374656.000000
+!s107 testing_mux.v|stalller.v|scl_generation.v|Tx.v|Rx.v|reg_file.v|FRAME_COUNTER.v|bits_counter.v|CCC_Handler_tb_final.sv|CCC_Handler.v|package.sv|
+Z11 !s90 -reportprogress|300|package.sv|CCC_Handler.v|CCC_Handler_tb_final.sv|bits_counter.v|FRAME_COUNTER.v|reg_file.v|Rx.v|Tx.v|scl_generation.v|stalller.v|testing_mux.v|+cover|-covercells|
 !i113 0
-Z13 !s102 +cover -covercells
-Z14 o+cover -covercells -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z12 !s102 +cover -covercells
+Z13 o+cover -covercells -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
 R5
 vCCC_Handler
 R7
@@ -214,7 +215,7 @@ R1
 w1714321609
 8CCC_Handler.v
 FCCC_Handler.v
-!i122 220
+!i122 240
 L0 33 994
 R8
 R9
@@ -222,11 +223,11 @@ r1
 !s85 0
 31
 R10
+Z14 !s107 testing_mux.v|stalller.v|scl_generation.v|Tx.v|Rx.v|reg_file.v|FRAME_COUNTER.v|bits_counter.v|CCC_Handler_tb_final.sv|CCC_Handler.v|package.sv|
 R11
-R12
 !i113 0
+R12
 R13
-R14
 R5
 n@c@c@c_@handler
 XCCC_HANDLER_PACKAGE
@@ -237,10 +238,10 @@ R7
 IT59b7ALl03R`OhBI;k?zL1
 S1
 R1
-w1714321017
+w1714334775
 8package.sv
 Fpackage.sv
-!i122 220
+!i122 240
 Z16 L0 1 0
 VT59b7ALl03R`OhBI;k?zL1
 R9
@@ -248,11 +249,11 @@ r1
 !s85 0
 31
 R10
-R11
-R12
-!i113 0
-R13
 R14
+R11
+!i113 0
+R12
+R13
 R5
 n@c@c@c_@h@a@n@d@l@e@r_@p@a@c@k@a@g@e
 vCCC_Handler_tb
@@ -272,16 +273,16 @@ R1
 Z18 w1714334464
 Z19 8CCC_Handler_tb_final.sv
 Z20 FCCC_Handler_tb_final.sv
-!i122 220
+!i122 240
 L0 3 3844
 R9
 31
 R10
-R11
-R12
-!i113 0
-R13
 R14
+R11
+!i113 0
+R12
+R13
 R5
 n@c@c@c_@handler_tb
 XCCC_Handler_tb_final_sv_unit
@@ -300,16 +301,16 @@ R1
 R18
 R19
 R20
-!i122 220
+!i122 240
 R16
 R9
 31
 R10
-R11
-R12
-!i113 0
-R13
 R14
+R11
+!i113 0
+R12
+R13
 R5
 n@c@c@c_@handler_tb_final_sv_unit
 vframe_counter
@@ -321,7 +322,7 @@ R1
 w1714057610
 8FRAME_COUNTER.v
 FFRAME_COUNTER.v
-!i122 220
+!i122 240
 L0 4 85
 R8
 R9
@@ -329,11 +330,11 @@ r1
 !s85 0
 31
 R10
-R11
-R12
-!i113 0
-R13
 R14
+R11
+!i113 0
+R12
+R13
 R5
 vmux
 R7
@@ -344,7 +345,7 @@ R1
 w1711373421
 8testing_mux.v
 Ftesting_mux.v
-!i122 220
+!i122 240
 L0 1 16
 R8
 R9
@@ -352,11 +353,11 @@ r1
 !s85 0
 31
 R10
-R11
-R12
-!i113 0
-R13
 R14
+R11
+!i113 0
+R12
+R13
 R5
 vreg_file
 R7
@@ -367,7 +368,7 @@ R1
 w1713034854
 8reg_file.v
 Freg_file.v
-!i122 220
+!i122 240
 L0 33 309
 R8
 R9
@@ -375,11 +376,11 @@ r1
 !s85 0
 31
 R10
-R11
-R12
-!i113 0
-R13
 R14
+R11
+!i113 0
+R12
+R13
 R5
 vRX
 R7
@@ -390,7 +391,7 @@ R1
 w1711066327
 8Rx.v
 FRx.v
-!i122 220
+!i122 240
 L0 33 361
 R8
 R9
@@ -398,11 +399,11 @@ r1
 !s85 0
 31
 R10
-R11
-R12
-!i113 0
-R13
 R14
+R11
+!i113 0
+R12
+R13
 R5
 n@r@x
 vscl_generation
@@ -414,7 +415,7 @@ R1
 w1708522074
 8scl_generation.v
 Fscl_generation.v
-!i122 220
+!i122 240
 L0 34 134
 R8
 R9
@@ -422,11 +423,11 @@ r1
 !s85 0
 31
 R10
-R11
-R12
-!i113 0
-R13
 R14
+R11
+!i113 0
+R12
+R13
 R5
 vscl_staller
 R7
@@ -437,7 +438,7 @@ R1
 w1714076366
 8stalller.v
 Fstalller.v
-!i122 220
+!i122 240
 L0 1 35
 R8
 R9
@@ -445,11 +446,11 @@ r1
 !s85 0
 31
 R10
-R11
-R12
-!i113 0
-R13
 R14
+R11
+!i113 0
+R12
+R13
 R5
 vtx
 R7
@@ -460,7 +461,7 @@ R1
 w1714076213
 8Tx.v
 FTx.v
-!i122 220
+!i122 240
 L0 1 485
 R8
 R9
@@ -468,9 +469,9 @@ r1
 !s85 0
 31
 R10
-R11
-R12
-!i113 0
-R13
 R14
+R11
+!i113 0
+R12
+R13
 R5

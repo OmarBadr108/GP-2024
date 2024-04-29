@@ -1,4 +1,4 @@
-module T_engine (
+module Target_engine (
 	input wire 		 i_sys_clk ,
 	input wire 		 i_sys_rst ,
 	input wire 		 i_rstdet_RESTART , 
