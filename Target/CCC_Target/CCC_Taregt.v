@@ -43,7 +43,7 @@ input wire [15:0] i_regf_MWL ,
 input wire [15:0] i_regf_MRL ,
 input wire [7:0]  i_CCC_value ,
 input wire [7:0]  i_Def_byte ,
-input wire        i_rx_error , //error in special preamble after restart CMND word or parity or crc value or token crc
+input wire        i_rx_error , //error in special preamble after restart CMND word or parity or crc value or token crc or my addrest_or_not
 
 input wire        premable,
 
@@ -51,6 +51,7 @@ output reg 		  o_tx_en ,
 output reg [4:0]  o_tx_mode ,
 output reg 		  o_rx_en ,
 output reg [4:0]  o_rx_mode ,
+output reg        o_detector_en ,
 output reg 		  o_engine_done ,
 output reg [7:0]  o_regf_addr ,
 output reg 		  o_regf_wr_en ,
@@ -90,6 +91,8 @@ localparam [4:0] ccc_value = 5'd1 ;
 localparam [4:0] deser_def = 5'd2 ;
 localparam [4:0] check_parity = 5'd3 ;
 localparam [4:0] special_preamble = 5'd4 ;
+localparam [4:0] deser_zeros = 5'd5 ;
+localparam [4:0] deser_addr = 5'd6 ;
 
 /////////////////////////////////////////parameters of regf
 localparam [7:0] useless_addr_def_byte = 8'b1111_1111;
@@ -124,6 +127,7 @@ always@(*)begin
     o_engine_done      = 1'b0 ;
     byte_no            = 3'd0 ;
     case_ccc           = 1'b0 ;
+    direc_ccc          = 1'b0 ;
 
         case (current_state)
 
@@ -133,6 +137,7 @@ always@(*)begin
                     
                     o_rx_en    = 1'b1 ; 
                     o_rx_mode  = preamble ; 
+                    next_state = PRE_CMD ;
 
                 end
                 else begin 
@@ -143,7 +148,12 @@ always@(*)begin
 
 			PRE_CMD : begin
                 if (i_engine_en) begin 
-                	if (i_rx_mode_done && premable) begin 
+                    if (i_rx_mode_done && !preamble && i_restart_done) begin ///w/r bit 
+                        o_rx_en = 1'b1 ;
+                        o_rx_mode = deser_zeros ;
+                        next_state = DESER_ZEROS ;
+                    end
+                	else if (i_rx_mode_done && premable) begin 
                 		o_rx_en = 1'b0 ;
                 		o_tx_en = 1'b1 ;
                 		o_tx_mode = zero_preamble ;  //accept send 0 or reject send 1 with Ma8raby
@@ -194,8 +204,8 @@ always@(*)begin
                 i_CCC_value== 8'h09 || i_CCC_value== 8'h0A || i_CCC_value== 8'h89 || i_CCC_value== 8'h8B ||
                 i_CCC_value== 8'h8A || i_CCC_value== 8'h8C || i_CCC_value== 8'h90 || i_CCC_value== 8'h2A ||
                 i_CCC_value== 8'h9A || i_CCC_value== 8'h8D || i_CCC_value== 8'h8E || i_CCC_value== 8'h8F ) begin //8'h00 ENEC_BC
-
-            		o_rx_en = 1'b1 ;
+                    //in case of direct flag direct_ccc= 1
+            		o_rx_en = 1'b1 ; //we need to set direct_ccc flag =1 here******************************
                     o_regf_addr = useless_addr_def_byte; ; //address to save def in useless address
                     o_regf_wr_en = 1'b1 ;
                     o_rx_mode = deser_def ; //DEFbyte deserializing
@@ -273,18 +283,18 @@ always@(*)begin
             CHECK_PARITY : begin
                 if (i_rx_mode_done && !i_rx_error) begin
                     o_rx_en = 1'b1 ;
-                    if (/*i_CCC_value == 8'h00 || i_CCC_value== 8'h01 || i_CCC_value== 8'h09 || i_CCC_value== 8'h0A || i_CCC_value== 8'h2A====BC*/ ) begin /////BCCCCC
-                        if (case_ccc) begin 
+                    //if (/*i_CCC_value == 8'h00 || i_CCC_value== 8'h01 || i_CCC_value== 8'h09 || i_CCC_value== 8'h0A || i_CCC_value== 8'h2A====BC*/ ) begin /////BCCCCC
+                        if (case_ccc || direc_ccc) begin 
                             o_rx_mode = special_preamble ;
                             next_state = SPECIAL_PREAMBLE ;
-                        end 
+                        end
 
                         else begin
                             o_rx_mode = preamble ;
                             next_state = PRE_CMD ;
-                            case_ccc = 1'b1;
+                            case_ccc = 1'b1; //first timee to set this flag=1
                         end 
-                    end
+                    //end
                     
                 end 
                 else if (i_rx_mode_done && i_rx_error) begin
@@ -297,7 +307,7 @@ always@(*)begin
             DATA : begin
                 if (i_rx_mode_done) begin
                     if (i_CCC_value ==0x09 && (byte_no==3'd2) ) begin 
-                        byte_no = 3'd0 ;
+                        byte_no = 3'd0 ;  
                         o_rx_en = 1'b1 ;
                         o_rx_mode = check_parity ;
                         next_state = CHECK_PARITY ;
@@ -311,7 +321,7 @@ always@(*)begin
                         next_state = DATA ;
                         
                     end
-                    else if (i_CCC_value == 0x0A (byte_no==3'd2) ) begin
+                    else if (i_CCC_value == 0x0A && (byte_no==3'd2) ) begin
                         next_state = /*preamble of CRC*/ ;
                         byte_no = 3'd0 ;
                     end
@@ -355,14 +365,57 @@ always@(*)begin
                 else
                     next_state = TOKEN_CRC ;
             end
-            CRC_VALUE : begin ///eh fr2 7asl error wla l2 f case crc_value??????
+            CRC_VALUE : begin ///eh fr2 7asl error wla l2 f case crc_value??????************
                 if (i_rx_mode_done && !i_rx_error) begin
+                    case_ccc = 1'b0 ;
                    o_rx_en = 1'b0 ;
-                   next_state = IDLE ;
+                   next_state = RESTART_EXIT ; //must n't go to idle it must support end procedure************
                 end
-                else if (i_rx_mode_done & i_rx_error) begin
+                else if (i_rx_mode_done && i_rx_error) begin
+                    case_ccc = 1'b0 ;
                     o_engine_done = 1'b1 ;
                     next_state = IDLE ;
-                end 
+                end
+                else if (i_rx_mode_done && !i_rx_error && direc_ccc ) begin
+                    o_rx_en = 1'b0 ;
+                    o_detector_en = 1'b1 ;
+                    next_state = RESTART_EXIT ;
+                end
                 else
                     next_state = CRC_VALUE ;
+
+            RESTART_EXIT : begin
+                if (i_restart_done) begin
+                        o_rx_en = 1'b1 ;
+                        o_rx_mode = preamble ;
+                        next_state = PRE_CMD ;
+                end
+                //else if (i_exit_done)
+
+
+
+            end
+            DESER_ZEROS : begin
+                if (i_rx_mode_done) begin
+                    o_rx_en = 1'b1 ;
+                    o_rx_mode = deser_addr ;
+                    next_state = DESER_ADDR ;
+                end
+                else
+                    next_state = DESER_ZEROS ;
+
+
+            end
+            DESER_ADDR : begin
+                if (i_rx_mode_done && !i_rx_error) begin //error is sent when rx know it is my address or not
+                    o_rx_en = 1'b1 ;
+                    o_rx_mode = check_parity ;
+                    next_state = CHECK_PARITY ; //////***********************////////////
+                end
+                else begin
+                    o_rx_en = 1'b0 ;
+                    o_engine_done = 1'b1 ;
+                end
+
+
+            end  
