@@ -85,13 +85,14 @@ localparam [4:0] one_preamble = 5'd0 ;
 
 
 //Local Parameters of RX modes
-localparam [4:0] zero_preamble = 5'd0 ;
+localparam [4:0] preamble = 5'd0 ;
 localparam [4:0] ccc_value = 5'd1 ;
 localparam [4:0] deser_def = 5'd2 ;
 localparam [4:0] check_parity = 5'd3 ;
 localparam [4:0] special_preamble = 5'd4 ;
 
 /////////////////////////////////////////parameters of regf
+localparam [7:0] useless_addr_def_byte = 8'b1111_1111;
 localparam [7:0] first_byte_MWL = 8'd0;
 localparam [7:0] second_byte_MWL = 8'd1;
 localparam [7:0] first_byte_MRL = 8'd2;
@@ -122,6 +123,7 @@ always@(*)begin
     o_regf_addr        = 8'b0 ;
     o_engine_done      = 1'b0 ;
     byte_no            = 3'd0 ;
+    case_ccc           = 1'b0 ;
 
         case (current_state)
 
@@ -130,7 +132,7 @@ always@(*)begin
  				if (i_engine_en) begin 
                     
                     o_rx_en    = 1'b1 ; 
-                    o_rx_mode  = zero_preamble ; 
+                    o_rx_mode  = preamble ; 
 
                 end
                 else begin 
@@ -194,7 +196,7 @@ always@(*)begin
                 i_CCC_value== 8'h9A || i_CCC_value== 8'h8D || i_CCC_value== 8'h8E || i_CCC_value== 8'h8F ) begin //8'h00 ENEC_BC
 
             		o_rx_en = 1'b1 ;
-                    o_regf_addr = 8'd00 ; //address to save def in useless address
+                    o_regf_addr = useless_addr_def_byte; ; //address to save def in useless address
                     o_regf_wr_en = 1'b1 ;
                     o_rx_mode = deser_def ; //DEFbyte deserializing
                     next_state = DEF_DATA ;
@@ -353,7 +355,7 @@ always@(*)begin
                 else
                     next_state = TOKEN_CRC ;
             end
-            CRC_VALUE : begin
+            CRC_VALUE : begin ///eh fr2 7asl error wla l2 f case crc_value??????
                 if (i_rx_mode_done && !i_rx_error) begin
                    o_rx_en = 1'b0 ;
                    next_state = IDLE ;
