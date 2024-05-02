@@ -52,7 +52,7 @@ always @(posedge i_sys_clk or negedge i_rst_n) begin
 end
 
 always @(negedge i_sys_clk) begin 
-    if ((o_cnt_bit_count == 'd9 || o_cnt_bit_count == 'd19) && (!i_scl_pos_edge && !i_scl_neg_edge)) begin
+    if ((o_cnt_bit_count == 'd6 || o_cnt_bit_count == 'd16) && (!i_scl_pos_edge && !i_scl_neg_edge)) begin
         o_frcnt_toggle = 1'b1 ;
     end
     else begin 

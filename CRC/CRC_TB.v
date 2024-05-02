@@ -1,6 +1,6 @@
 module CRC_TB ();
-	reg i_sys_clk_tb,    // Clock
-	  	i_sys_rst_tb, // Clock Enable
+	reg i_sys_clk_tb, 
+	  	i_sys_rst_tb, 
 		i_input_valid_tb,
 		i_enable_tb,
 		i_end_byte_tb;

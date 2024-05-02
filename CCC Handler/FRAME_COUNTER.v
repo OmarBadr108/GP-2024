@@ -33,28 +33,32 @@ reg [15:0] count = 16'd0 ;
                     // stay here for 20 bits
                 end 
                 else begin 
-                    if ((i_cnt_bit_count == 'd9 || i_cnt_bit_count == 'd19 ) && i_bitcnt_toggle) begin 
+                    if ((i_cnt_bit_count == 'd6 || i_cnt_bit_count == 'd16) && i_bitcnt_toggle) begin 
                         count = count - 1 ;
+                        if (count == 16'd0) begin 
+                            o_cccnt_last_frame = 1'b1 ;
+                            // stay here for 20 bits
+                        end
                     end 
                 end 
             end 
             else begin                                      // Disabled to load the count value
                 o_cccnt_last_frame = 1'b0 ;
-                if (i_ccc_Direct_Broadcast_n) begin               // Direct
+                if (i_ccc_Direct_Broadcast_n) begin         // Direct
                     if (!i_regf_CMD_ATTR) begin             // regular 
-                        count = i_regf_DATA_LEN + 5 ;       // 8 + 8 + CRC word + RESTART + 8 
+                        count = i_regf_DATA_LEN + 1 ;       // 8 + 8 + CRC word + RESTART + 8 
                     end 
                     else begin                              // immediate 
                         case (i_regf_DTT) 
                             3'd0 : count = 1 ;
-                            3'd1 : count = 6 ;
-                            3'd2 : count = 7 ;
-                            3'd3 : count = 8 ;
-                            3'd4 : count = 9 ;
+                            3'd1 : count = 2 ;
+                            3'd2 : count = 3 ;
+                            3'd3 : count = 4 ;
+                            3'd4 : count = 5 ;
 
-                            3'd5 : count = 1 ;
-                            3'd6 : count = 6 ;
-                            3'd7 : count = 7 ;
+                            3'd5 : count = 2 ;
+                            3'd6 : count = 3 ;
+                            3'd7 : count = 4 ;
                         endcase 
                     end 
                 end 
@@ -71,9 +75,9 @@ reg [15:0] count = 16'd0 ;
                             3'd3 : count = 4 ;
                             3'd4 : count = 5 ;
 
-                            3'd5 : count = 1 ;
-                            3'd6 : count = 2 ;
-                            3'd7 : count = 3 ;
+                            3'd5 : count = 2 ;
+                            3'd6 : count = 3 ;
+                            3'd7 : count = 4 ;
                         endcase
                     end 
                 end

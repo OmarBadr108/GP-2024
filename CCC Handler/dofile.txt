@@ -1,9 +1,8 @@
 vlib work
-vlog CCC_Handler.v CCC_Handler_tb_final.sv bits_counter.v FRAME_COUNTER.v reg_file.v Rx.v Tx.v scl_generation.v stalller.v testing_mux.v package.sv +cover -covercells
+vlog package.sv CCC_Handler.v CCC_Handler_tb_final.sv bits_counter.v FRAME_COUNTER.v reg_file.v Rx.v Tx.v scl_generation.v stalller.v testing_mux.v +cover -covercells
 vsim -voptargs=+acc work.CCC_Handler_tb -cover
-add wave *
-add wave -position insertpoint  \
-sim:/CCC_Handler_tb/DUT0/next_state \
-sim:/CCC_Handler_tb/DUT0/current_state
+
+do ./wave.wcfg \
+# Save coverage data and run the simulation
 coverage save CCC_Handler.ucdb -onexit
 run -all
