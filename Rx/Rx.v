@@ -48,7 +48,6 @@ output  reg  [7:0]        o_regfcrc_rx_data_out,
 output  reg               o_ddrccc_rx_mode_done,
 output  reg               o_ddrccc_pre,
 output  reg               o_ddrccc_error,
-output  reg  [1:0]        o_ccc_crc_pre,              // added output signal to ccc block
 output  reg               o_crc_en,                 
 output  reg               o_crc_data_valid,
 output  reg               o_ddrccc_error_done
@@ -85,7 +84,9 @@ reg [7:0] o_regfcrc_rx_data_out_temp;
 reg [3:0] token_value_temp;
 reg [1:0] parity_value_temp;
 reg [4:0] CRC_value_temp;
+reg [1:0] crc_pre_temp;
 wire [1:0] parity_value_calc;
+wire [1:0] crc_pre_calc;
 
 wire SCL_edges; 
 
@@ -98,6 +99,8 @@ wire SCL_edges;
 assign count_done = (count==7)? 1'b1:1'b0 ;
 
 assign SCL_edges = (i_sclgen_scl_pos_edge || i_sclgen_scl_neg_edge);
+
+assign crc_pre_calc = 2'b01;
 
 
 ////////////////////////////// Registering data bytes for parity check ////////////////////////////////////
@@ -146,7 +149,6 @@ begin
     o_regfcrc_rx_data_out <= 8'd0;  
     o_ddrccc_rx_mode_done <= 1'b0;
     o_ddrccc_pre          <= 1'bz; //should be editted
-    o_ccc_crc_pre         <= 2'b0;
     o_ddrccc_error        <= 1'b0;
     o_crc_en              <= 1'b0;   
     count                 <= 'b0;
@@ -196,18 +198,23 @@ begin
 
                             if(SCL_edges)
                                 begin
-                                  o_ccc_crc_pre ['d1 - count] <= i_sdahnd_rx_sda;
+                                  crc_pre_temp ['d1 - count] <= i_sdahnd_rx_sda;
                                 end
                             else if(count == 'd1)
                                 begin
                                     o_ddrccc_rx_mode_done <= 'b1;
                                     count <= 'b0;
+
+                              if(crc_pre_calc != crc_pre_temp)
+                                    o_ddrccc_error<=1'b1;
+                                  else
+                                    o_ddrccc_error<=1'b0;
                                 end
 
                             else
                                 begin
                                   count <= count + 1;
-                                    
+                                  crc_pre_temp['d1 - count] <= i_sdahnd_rx_sda;  
                                 end
                             
                         end                    

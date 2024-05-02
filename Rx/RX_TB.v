@@ -20,7 +20,7 @@ wire                o_ddrccc_error_tb			;
 wire                o_crc_en_tb        		    ;         
 wire 			    o_crc_data_valid_tb         ; 
 wire                o_ddrccc_error_done_tb      ;
-wire	[1:0]			o_ccc_crc_pre				;
+
 
 parameter CLK_PERIOD  = 20;
 integer i; 
@@ -292,7 +292,6 @@ RX U0 (
 	.o_ddrccc_error				(o_ddrccc_error_tb)			,
 	.o_crc_en					(o_crc_en_tb)       ,
 	.o_crc_data_valid           (o_crc_data_valid_tb)    ,
-	.o_ccc_crc_pre               (o_ccc_crc_pre),                      // added signal for ccc block
 	.o_ddrccc_error_done        ( o_ddrccc_error_done_tb)      
 
 );
