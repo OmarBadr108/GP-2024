@@ -17,10 +17,10 @@ wire    [7:0]       o_regfcrc_rx_data_out_tb	;
 wire                o_ddrccc_rx_mode_done_tb	;
 wire                o_ddrccc_pre_tb				;
 wire                o_ddrccc_error_tb			;
-wire                o_crc_en_tb        		;         
-wire 					  o_crc_data_valid_tb      ; 
-wire                o_ddrccc_error_done_tb   ;
-
+wire                o_crc_en_tb        		    ;         
+wire 			    o_crc_data_valid_tb         ; 
+wire                o_ddrccc_error_done_tb      ;
+wire	[1:0]			o_ccc_crc_pre				;
 
 parameter CLK_PERIOD  = 20;
 integer i; 
@@ -30,8 +30,8 @@ wire    			    i_sclgen_scl_tb         	;
 wire    			    i_sclgen_scl_pos_edge_tb	;
 wire    			    i_sclgen_scl_neg_edge_tb	;
 
-reg					i_sdr_scl_gen_pp_od_tb      ;
-reg					i_scl_gen_stall_tb          ;
+reg						i_sdr_scl_gen_pp_od_tb      ;
+reg						i_scl_gen_stall_tb          ;
 reg 					i_sdr_ctrl_scl_idle_tb		;
 reg 					i_timer_cas_tb				;
 
@@ -57,6 +57,26 @@ initial
 	    //--------------RESET---------------//
 	    reset();
 
+
+	    //--------------------------------------TEST CASE 0 : Receiving 2 CRC preamble bits  ----------------------------------//
+	  /*  #(7*CLK_PERIOD);
+
+	    @(posedge i_sys_clk_tb)
+
+	    i_ddrccc_rx_en_tb   = 1'b1; 
+	    i_ddrccc_rx_mode_tb = 4'b0001;  // Preamble state to get the ack bit
+
+
+	    i_sdahnd_rx_sda_tb  =  'b0;       // driving sda low (ACK)
+	    #(2*CLK_PERIOD)
+	    i_sdahnd_rx_sda_tb  =  'b1;
+
+	    //check the value of preamble
+	    #(2*CLK_PERIOD)
+	    if(U0.o_ccc_crc_pre == 2'b01)
+	    	$display("correct data");
+	    else
+	    	$display("wrong data"); */
 
 	    //--------------------------------------TEST CASE 1 : Normal Transaction >> Read ----------------------------------//
 
@@ -140,7 +160,7 @@ initial
 
 	    //------- --5.1 CRC PREAMBLE----------//
 
-	    @(negedge o_ddrccc_rx_mode_done_tb)
+	 /*   @(negedge o_ddrccc_rx_mode_done_tb)
 	    i_ddrccc_rx_en_tb   = 1'b1; 
 	    i_ddrccc_rx_mode_tb = 4'b0000;   //preamble
        
@@ -149,7 +169,21 @@ initial
 
 	    @(negedge o_ddrccc_rx_mode_done_tb)
 	    i_sdahnd_rx_sda_tb = 1'b1;
-	    i_ddrccc_rx_mode_tb = 4'b0000;   
+	    i_ddrccc_rx_mode_tb = 4'b0000;  */
+
+	    //------- --5.11 CRC PREAMBLE : check 2-bits through one state only----------//
+
+       @(negedge o_ddrccc_rx_mode_done_tb)
+	    i_ddrccc_rx_en_tb   = 1'b1; 
+	    i_ddrccc_rx_mode_tb = 4'b0001;   //crc preamble
+       
+       //#(CLK_PERIOD)
+	    i_sdahnd_rx_sda_tb = 1'b0; 
+
+	    #(2*CLK_PERIOD)
+	    i_sdahnd_rx_sda_tb = 1'b1;
+
+
 	    //----------- 5.2 CHECK TOKEN---------//
 
 	    @(negedge o_ddrccc_rx_mode_done_tb)
@@ -257,8 +291,9 @@ RX U0 (
 	.o_ddrccc_pre				(o_ddrccc_pre_tb)			,
 	.o_ddrccc_error				(o_ddrccc_error_tb)			,
 	.o_crc_en					(o_crc_en_tb)       ,
-	.o_crc_data_valid       (o_crc_data_valid_tb)    ,
-	.o_ddrccc_error_done   ( o_ddrccc_error_done_tb)      
+	.o_crc_data_valid           (o_crc_data_valid_tb)    ,
+	.o_ccc_crc_pre               (o_ccc_crc_pre),                      // added signal for ccc block
+	.o_ddrccc_error_done        ( o_ddrccc_error_done_tb)      
 
 );
 

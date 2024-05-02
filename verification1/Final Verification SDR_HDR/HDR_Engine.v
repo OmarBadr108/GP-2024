@@ -96,7 +96,13 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
           IDLE : begin
             if (i_i3cengine_hdrengine_en) 
              begin
-                      if(i_CP) 
+
+            // register the configuration values from regfile
+              i_CP_temp   <= i_CP;
+              i_TOC_temp  <= i_TOC;
+              i_MODE_temp <= i_MODE;
+
+                      if(i_CP_temp) 
                         begin
                              o_ccc_en        <= 1'b1 ;
                              next_state      <= CCC ;
@@ -147,7 +153,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
 if (i_i3cengine_hdrengine_en) begin
 
           
-            if((i_TOC && i_ccc_done)||(i_MODE != 'd6)) begin     // ||(i_MODE != 'd6) assuming mode will not be changed unless an exit pattern was sent before it. -laila
+            if((i_TOC_temp && i_ccc_done)||(i_MODE_temp != 'd6)) begin     // ||(i_MODE != 'd6) assuming mode will not be changed unless an exit pattern was sent before it. -laila
                   o_ccc_en    <= 1'b0 ;
                   o_i3cengine_hdrengine_done      <= 1'b1 ;
                   next_state <= IDLE;             
@@ -155,13 +161,19 @@ if (i_i3cengine_hdrengine_en) begin
 
 
             end
-            else if ((!i_TOC && i_ccc_done) && (i_MODE == 'd6)) begin
+            else if ((!i_TOC_temp && i_ccc_done) && (i_MODE_temp == 'd6)) begin
               ccc_done                      <= 1'b0 ; //******signal 3mltha 3shan a3rf arg3 ll ddrmode*//////
               o_ccc_en                      <= 1'b0 ;
               o_regf_addr_special           <= 12'd1000;
               o_i3cengine_hdrengine_done    <= 1'b0 ;
               ///tid puts on output when the command is done
-                  if(!i_CP) 
+              
+            // register the configuration values from regfile
+              i_CP_temp   <= i_CP;
+              i_TOC_temp  <= i_TOC;
+              i_MODE_temp <= i_MODE;
+
+                  if(!i_CP_temp) 
                   begin
                     ccc_done   <= 1'b1 ;
                     o_regf_addr_special <= 12'd450; //go to special address to get dummy value
@@ -176,7 +188,7 @@ if (i_i3cengine_hdrengine_en) begin
                     end
 
                   ////****/////
-                  if(i_ccc_done && ccc_done && !i_CP ) begin
+                  if(i_ccc_done && ccc_done && !i_CP_temp ) begin
                     o_regf_addr_special           <= 12'd1000;
                     o_ccc_en   <= 1'b0 ;
                     o_ddrmode_en <= 1'b1 ;
@@ -232,17 +244,23 @@ if (i_i3cengine_hdrengine_en) begin
 
 
           
-            if ((i_TOC && i_ddr_mode_done)||(i_MODE != 'd6)) begin
+            if ((i_TOC_temp && i_ddr_mode_done)||(i_MODE_temp != 'd6)) begin
               o_ddrmode_en    <= 1'b0 ;
               o_i3cengine_hdrengine_done      <= 1'b1 ;
               next_state <= IDLE;
               //tid puts on output when it is done
             end
-            else if ((!i_TOC && i_ddr_mode_done) && (i_MODE == 'd6)) begin
+            else if ((!i_TOC_temp && i_ddr_mode_done) && (i_MODE_temp == 'd6)) begin
               o_ddrmode_en    <= 1'b0 ;
               o_i3cengine_hdrengine_done    <= 1'b0 ;
               //tid puts on output when it is done
-                  if (!i_CP) begin
+
+          // register the new configuration values from regfile
+              i_CP_temp   <= i_CP;
+              i_TOC_temp  <= i_TOC;
+              i_MODE_temp <= i_MODE;
+
+                  if (!i_CP_temp) begin
                     o_ddrmode_en <= 1'b1 ;
                     next_state   <= DDR_MODE ;
                      o_tx_en_sel            <=DDR_SEL;  

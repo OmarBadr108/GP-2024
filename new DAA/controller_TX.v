@@ -43,6 +43,8 @@ module controller_tx (
     input   wire  [2:0]    i_ser_mode          ,
     input   wire  [7:0]    i_ser_regf_data     ,
     input   wire           i_timer_cas         , // input from timer block for start condition
+
+    input   wire           i_timer_bus_free_pure, //202444444444
     output  reg            o_ser_sda_low       ,//added by mostafa 
     output  reg            o_stop_pattern      , // output to i3c_timer block
     output  reg            o_start_pattern     , // output to i3c_timer block
@@ -72,7 +74,7 @@ module controller_tx (
 
   //-- internal wires declaration ---------------------------------------------
 reg last_bit_flag ;
-
+reg parity_counter;
 
   //-- transmitter ------------------------------------------------
 
@@ -169,13 +171,17 @@ reg last_bit_flag ;
                               else
                                 o_ser_mode_done <= 1'b0; */
                                  //unused-wrong implementation
-
                               if (!i_ser_scl)
                                 begin
                                   o_ser_s_data    <= ~^i_ser_regf_data ;
+                                  //o_ser_mode_done    <= 1'b1 ;
                                 end
                                 else
                                   o_ser_mode_done    <= 1'b1 ;
+
+                            //  if(i_ser_scl) begin
+                            //    o_ser_mode_done    <= 1'b1 ;
+                             // end
 
 
                               //for push-pull
@@ -190,12 +196,22 @@ reg last_bit_flag ;
                               o_ser_mode_done <= 1'b0;
                               o_ser_to_parity_transition <= 1'b0;
                               o_ser_sda_low <= 1'b0 ;
+
+                              o_stop_pattern  <= 1'b1 ;
+
                               if (i_ser_scl)
                                 begin
-                                  o_stop_pattern  <= 1'b1 ;
+                                  //o_stop_pattern  <= 1'b1 ;
                                   o_ser_s_data    <= 1'b1 ;
+                                  //o_ser_mode_done <= 1'b1 ;
+                                end 
+
+
+                              if(i_timer_bus_free_pure)
+                              begin
                                   o_ser_mode_done <= 1'b1 ;
-                                end
+                                  o_stop_pattern  <= 1'b0 ;
+                              end
                             end
               CTRL_ACK    : begin
                               o_start_pattern <= 1'b0 ;
@@ -282,5 +298,4 @@ reg last_bit_flag ;
 
 endmodule
 `default_nettype wire
-
 

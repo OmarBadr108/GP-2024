@@ -10,7 +10,7 @@
 
 
 
-//`include "pkg.sv"
+
 // package contains all the randomized input values with their constraints
 import pkg ::*;
 
@@ -18,50 +18,50 @@ module SDR_HDR_TB_FINAL ();
 
 	//--------------------------------------------- 1.Testbench signals-----------------------------------//
 	// Clock and reset signals
-    reg          i_clk_tb           		;
-    reg          i_rst_n_tb         		;  
+    reg          i_clk_tb           								;
+    reg          i_rst_n_tb         								;  
     
     // Design Inputs   
-    reg          i_controller_en_tb     	;        
-    reg          i_i3c_i2c_sel_tb 			;
-    //reg          i_hdr_en_tb				   ; // enable signal for the hdr mode
-    reg          i_ccc_en_dis_hj_tb			;
+    reg          i_controller_en_tb     						;        
+    reg          i_i3c_i2c_sel_tb 			  					;
+    reg          i_ccc_en_dis_hj_tb		 	  					;
 
-    reg   [7:0]  i_regf_config_tb            ;
-    reg          i_data_config_mux_sel_tb    ;  //1: to write configurations to the controller ,     0:i3c blocks to access reg file  
-    reg   [11:0] i_regf_wr_address_config_tb ;
-    reg          i_regf_wr_en_config_tb      ;
-    reg          i_regf_rd_en_config_tb      ;
+    reg   [7:0]  i_regf_config_tb            				;
+    reg          i_data_config_mux_sel_tb    				;  //1: to write configurations to the controller ,     0:i3c blocks to access reg file  
+    reg   [11:0] i_regf_wr_address_config_tb 				;
+    reg          i_regf_wr_en_config_tb      				;
+    reg          i_regf_rd_en_config_tb      				;
 
-    reg          i_ccc_done_tb            ; // done signal from CCC block
-    reg          i_ddr_mode_done_tb    	; // done signal from ddr block
+    reg          i_ccc_done_tb              				; // done signal from CCC block
+    reg          i_ddr_mode_done_tb    	    				; // done signal from ddr block
 
-    wire         sda_tb                		;
+    wire         sda_tb                	   					;
 
    
-    // Design Output
-    wire         o_sdr_rx_valid_tb     	  ; // output to host >> valid data are loaded
-    wire         o_ctrl_done_tb        	  ; // sdr block done signal
-    wire         scl_tb                	  ;
-    wire         o_ddrmode_enable_tb        ; // enable for the ddr block
-    wire         o_ccc_enable_tb            ; // enable for the CCC block
-    wire  [11:0] o_regf_address_special_tb  ; // regf special address
+    // Design Outputs
+    wire         o_sdr_rx_valid_tb     	    				; // output to host >> valid data are loaded
+    wire         o_ctrl_done_tb        	    				; // sdr block done signal
+    wire         scl_tb                	    				;
+    wire         o_ddrmode_enable_tb        				; // enable for the ddr block
+    wire         o_ccc_enable_tb            				; // enable for the CCC block
+    wire  [11:0] o_regf_address_special_tb  				; // regf special address
 
 
 //------------------------------------------------Internal Wires----------------------------------------//
-    logic               sda_drive             ;
-    bit frame_ended;
-    event event_a;
 
+    logic               sda_drive             ;
+    bit 								frame_ended						;
+    logic 							i_tx_exit_restart			;
 
 //------------------------------------------------2.Clock Generetaion----------------------------------------//
 
-//always #(CLK_PERIOD/2) i_clk_tb = ~i_clk_tb;
-initial begin
-	i_clk_tb = 'b0;
-	while(running == 1)
-		#(CLK_PERIOD/2) i_clk_tb = ~i_clk_tb;
-end
+
+initial 
+	begin
+			i_clk_tb = 'b0;
+			while(running == 1)
+				#(CLK_PERIOD/2) i_clk_tb = ~i_clk_tb;
+	end
 
 //------------------------------------------------3.Tasks and Covergroups-----------------------------------//
     
@@ -72,63 +72,28 @@ end
 covergroup CovPort();
   
   // 1.checking input values coverage after randomization
-  CP1: coverpoint cg.i_controller_en {
-    bins zero = {0};
-    bins one =  {1};
-  }
 
-  CP2: coverpoint cg.i_i3c_i2c_sel {
-    bins zero = {0};
-    bins one  = {1};
-  }
   CP3: coverpoint i_data_config_mux_sel_tb {
   	 bins zero  = {0};
   	 bins one   = {1};
   }
 
-  CP4: coverpoint cg.RAND_TOC {
+  CP4: coverpoint DUT.u_hdr_engine.i_TOC {
   	 bins zero  = {0};
   	 bins one   = {1};
   }
 
-  CP5: coverpoint cg.RAND_CP {
+  CP5: coverpoint DUT.u_hdr_engine.i_CP {
   	 bins zero  = {0};
   	 bins one   = {1};
   }
 
-
- EN_I3C_MUX : cross CP1,CP2,CP3 {
-   bins write_config = binsof(CP1.one) && binsof(CP2.one) && binsof(CP3.one);   // to ensure that all configurations are written
-   bins write_data = binsof(CP1.one) && binsof(CP2.one) && binsof(CP3.zero); // to start writing data instead of configuration
-   bins en_i2c = binsof(CP1.one) && binsof(CP2.zero) && binsof(CP3.zero);
-   ignore_bins not_important = EN_I3C_MUX with (CP1 == 0); 
- } 
-
-/*
+ 
  ENGINE_CASES: cross CP4,CP5,CP9 {
- 	 //bins CP0_TOC0_DDR1_CCC0 = binsof(CP4.zero) && binsof(CP5.zero) && binsof(CP7.one) && binsof(CP8.zero);
- 	 //bins CP0_TOC0_DDR0_CCC1 = binsof(CP4.zero) && binsof(CP5.zero) && binsof(CP7.zero) && binsof(CP8.one);
-//
- 	 //bins CP0_TOC1_DDR1_CCC0 = binsof(CP4.zero) && binsof(CP5.one) && binsof(CP7.one) && binsof(CP8.zero);
- 	 //bins CP0_TOC1_DDR0_CCC1 = binsof(CP4.zero) && binsof(CP5.one) && binsof(CP7.zero) && binsof(CP8.one);
-//
-   //bins CP1_TOC0_DDR1_CCC0 = binsof(CP4.one) && binsof(CP5.zero) && binsof(CP7.one) && binsof(CP8.zero);
- 	 //bins CP1_TOC0_DDR0_CCC1 = binsof(CP4.one) && binsof(CP5.zero) && binsof(CP7.zero) && binsof(CP8.one);
-//
- 	 //bins CP1_TOC1_DDR1_CCC0 = binsof(CP4.one) && binsof(CP5.one) && binsof(CP7.one) && binsof(CP8.zero);
-   //bins CP1_TOC1_DDR0_CCC1 = binsof(CP4.one) && binsof(CP5.one) && binsof(CP7.zero) && binsof(CP8.one);
- }
- */
- ENGINE_CASES: cross CP3,CP4,CP5,CP9 {
- 		bins CP0_TOC0_read = binsof(CP5.zero)&& binsof(CP4.zero) && binsof(CP3.zero) && binsof(CP9.one);
- 		bins CP0_TOC1_read = binsof(CP5.zero)&& binsof(CP4.one)  && binsof(CP3.zero) && binsof(CP9.one);
- 		bins CP1_TOC0_read = binsof(CP5.one) && binsof(CP4.zero) && binsof(CP3.zero) && binsof(CP9.one);
- 		bins CP1_TOC1_read = binsof(CP5.one) && binsof(CP4.one)  && binsof(CP3.zero) && binsof(CP9.one);
-
- 		bins CP0_TOC0_write = binsof(CP5.zero)&& binsof(CP4.zero) && binsof(CP3.one) && binsof(CP9.one);
- 		bins CP0_TOC1_write = binsof(CP5.zero)&& binsof(CP4.one)  && binsof(CP3.one) && binsof(CP9.one);
- 		bins CP1_TOC0_write = binsof(CP5.one) && binsof(CP4.zero) && binsof(CP3.one) && binsof(CP9.one);
- 		bins CP1_TOC1_write = binsof(CP5.one) && binsof(CP4.one)  && binsof(CP3.one) && binsof(CP9.one);
+ 		bins CP0_TOC0 = binsof(CP5.zero)&& binsof(CP4.zero) && binsof(CP9.one);
+ 		bins CP0_TOC1 = binsof(CP5.zero)&& binsof(CP4.one)  && binsof(CP9.one);
+ 		bins CP1_TOC0 = binsof(CP5.one) && binsof(CP4.zero) && binsof(CP9.one);
+ 		bins CP1_TOC1 = binsof(CP5.one) && binsof(CP4.one)  && binsof(CP9.one);
  
     ignore_bins not_important = ENGINE_CASES with (CP9 == 0);
  } 
@@ -136,26 +101,6 @@ covergroup CovPort();
 
   
   // 2. checking output coverage
-  // 2.1 ENTHDR states coverage check
-  /*
-  CP6: coverpoint DUT.u_enthdr.state {
-    bins  t1 = (IDLE       => BROADCAST);
-    bins  t2 = (BROADCAST  => ACK);
-    bins  t3 = (ACK        => ENTHDR_DDR);
-    bins  t4 = (ENTHDR_DDR => PARITY);
-    bins  t5 = (PARITY     => IDLE);
-    //bins flow = (IDLE       => BROADCAST => ACK        => ENTHDR_DDR)
-  } */ 
-
-  CP7: coverpoint i_ddr_mode_done_tb {
-  	 bins zero  = {0};
-  	 bins one   = {1};
-  }
-
-  CP8: coverpoint i_ccc_done_tb {
-  	 bins zero  = {0};
-  	 bins one   = {1};
-  }
 
   CP9: coverpoint DUT.u_hdr_engine.i_i3cengine_hdrengine_en {
   	 bins zero  = {0};
@@ -166,38 +111,39 @@ endgroup : CovPort
   //create handle from this covergroup
 CovPort xyz;
 
+
+//<<<---------------------------------Tasks---------------------------------------->>>//
+//Testbench tasks are: 1.run / 2.reset / 3.initialize / 4.check_output / 5.write_configurations/ 6.send_ack
+
 task run ();
 begin
-	//bit send_enthdr;
+	
 	int i;
-  for (i =0 ; i < 800; i++) 
+  for (i =0 ; i < 100; i++) 
    	begin
+
+   		// initial values 
   	  i_ddr_mode_done_tb = 1'b0;
   	  i_ccc_done_tb = 1'b0;
-	 		cg = new();
-	 		cg.randomize();
-    
-                  
-	 			if (i == 'b0)    // put initial value for the mux to be 1 to write configuration in the first loop
+			i_controller_en_tb = 1'b0;
+ 
+
+//configurations should be written either initially at the start of the transmission 
+//or during the process when it sees that the tx mode is currently in restart or exit mode
+
+// put initial value for the mux to be 1 to write configuration in the first loop         
+	 			if (i == 1'b0)    
 	 				begin
-	 					 cg.i_data_config_mux_sel = 1'b1;
-	 					 cg.i_regf_wr_en_config = 1'b1;   	
+	 					 write_configurations();
+	 					 xyz.sample(); 
 	 				end
     
-    
-	     if(cg.i_data_config_mux_sel == 1'b1 && cg.i_regf_wr_en_config) // write configurations if : initially sel = 1 or randomized value of the sel is 1
-	 				begin
-	 		 				write_configurations();
-	 		 				//cg.i_data_config_mux_sel      = 1'b0        ;
-	 				end
-	 
-	 	    i_controller_en_tb            = cg.i_controller_en  			;               
-        i_i3c_i2c_sel_tb              = cg.i_i3c_i2c_sel     			;           
-        i_data_config_mux_sel_tb      = cg.i_data_config_mux_sel        ;                    
-        i_regf_wr_en_config_tb        = cg.i_regf_wr_en_config          ;   
-        i_regf_rd_en_config_tb        = cg.i_regf_rd_en_config          ;    
-        //i_ccc_done_tb                 = cg.i_ccc_done          			;
-        //i_ddr_mode_done_tb            = cg.i_ddr_mode_done     			;
+// change input values to be ready for normal operations in hdr mode
+
+	 			i_i3c_i2c_sel_tb              = 1'b1;
+			  i_controller_en_tb 						= 1'b1;
+	 			i_data_config_mux_sel_tb      = 1'b0;
+
 	 
        
               //<---------------------- Checking Output ----------------------------->//
@@ -210,115 +156,259 @@ begin
         
         if(send_enthdr) begin
         	check_output(); // function that reads the sda line and compares it with the correct CCC
+        	#(4*CLK_PERIOD)
+        	xyz.sample();
 
 
   																		 // Test Case 2//
-				   // Normal transaction(CP=0) with exit pattern(TOC=1) after it followed by stop bit.//
+				   // Normal transaction(CP=0) with exit pattern(TOC=1) after it followed by stop bit.//         
 
-        if(!DUT.u_hdr_engine.i_CP && DUT.u_hdr_engine.i_TOC && DUT.u_i3c_engine.o_hdrengine_en)
+        if(!DUT.u_hdr_engine.i_CP_temp && DUT.u_hdr_engine.i_TOC_temp && DUT.u_i3c_engine.o_hdrengine_en)
         	begin
         		//check that ddr block is enabled and then the engine returns to sdr mode and sends stop bit
-        		//->event_a;
-        		#(100000*CLK_PERIOD)
+
+        		#(1000*CLK_PERIOD)
+        		   //start writing configurations before the ddr block finishes
+        		write_configurations();
+
+        		#(100*CLK_PERIOD)
+
+
         		i_ddr_mode_done_tb = 1'b1;
+        		#(2*CLK_PERIOD)
+        		i_ddr_mode_done_tb = 1'b0;
 
-
+        		@(posedge DUT.u_i3c_engine.i_tx_mode_done)  // to check that hdrengine done is enabled and return to sdr mode
+        		i_controller_en_tb = 1'b0;
+        		send_enthdr        = 1'b0;
+        		#(20*CLK_PERIOD);
+        		xyz.sample();
+        		continue;
         	end
 
 
       																// Test Case 3//
-      						// CCC(CP=1) with exit pattern(TOC=1) after it followed by stop bit.//
-        if(DUT.u_hdr_engine.i_CP && DUT.u_hdr_engine.i_TOC && DUT.u_i3c_engine.o_hdrengine_en)
+      						// CCC(CP=1) with exit pattern(TOC=1) after it followed by stop bit.// 
+
+        else if(DUT.u_hdr_engine.i_CP_temp && DUT.u_hdr_engine.i_TOC_temp && DUT.u_i3c_engine.o_hdrengine_en)
         	begin
         		//check that ccc block is enabled and then the engine returns to sdr mode and sends stop bit
-        		//->event_a;
-        		#(100000*CLK_PERIOD)
+        		#(1000*CLK_PERIOD)
+        		   //start writing configurations before the ddr block finishes
+        		write_configurations();
+
+        		#(100*CLK_PERIOD)
+
+
         		i_ccc_done_tb = 1'b1;
+        		#(2*CLK_PERIOD)
+        		i_ccc_done_tb = 1'b0;
+
+        		@(posedge DUT.u_i3c_engine.i_tx_mode_done)  // to check that hdrengine done is enabled and return to sdr mode
+        		i_controller_en_tb = 1'b0;
+        		send_enthdr        = 1'b0;
+        		#(20*CLK_PERIOD);
+        		xyz.sample();
+        		continue;
 
         	end
 
        																// Test Case 4//
        				// Normal Transaction(CP=0) with restart pattern(TOC=0) after it block is enabled again.//
 
-        if(!DUT.u_hdr_engine.i_CP && !DUT.u_hdr_engine.i_TOC && DUT.u_i3c_engine.o_hdrengine_en)
+        else if(!DUT.u_hdr_engine.i_CP_temp && !DUT.u_hdr_engine.i_TOC_temp && DUT.u_i3c_engine.o_hdrengine_en)
         	begin
-        		//check that ddr block is enabled and
-        		//->event_a;
+
+
+        //check that ddr block is enabled and then the engine returns to sdr mode and sends stop bit
+
+        		#(1000*CLK_PERIOD)
+        		   //start writing configurations before the ddr block finishes
+        		write_configurations();
+						        		
+
         		#(100*CLK_PERIOD)
+
         		i_ddr_mode_done_tb = 1'b1;
-        		#(100*CLK_PERIOD)
-        		i_ddr_mode_done_tb = 1'b1;
-        		//DUT.u_hdr_engine.i_TOC = 1'b1;
-        	end
+        		#(2*CLK_PERIOD)
+        		i_ddr_mode_done_tb = 1'b0;
 
-       														// Test Case 5//
-       			// CCC(CP=1) with restart pattern(TOC=0) after it block is enabled again.//
+        		xyz.sample();
+        		
+        		if(DUT.u_hdr_engine.i_CP_temp && DUT.u_hdr_engine.i_TOC_temp)
+        				begin
+        	  		
+        				#(1000*CLK_PERIOD)
+        				   //start writing configurations before the ddr block finishes
+        				write_configurations();
 
-        if(DUT.u_hdr_engine.i_CP && !DUT.u_hdr_engine.i_TOC && DUT.u_i3c_engine.o_hdrengine_en)
-        	begin
-        		//check that ddr block is enabled and
-        		//->event_a;
-        		#(100000*CLK_PERIOD)
-        		i_ccc_done_tb = 1'b1;        		
-        		#(100000*CLK_PERIOD)
-        		i_ccc_done_tb = 1'b1;
-        		//cg.RAND_TOC = 1'b1;
-        	end   
+        				#(100*CLK_PERIOD)
 
 
+        				i_ccc_done_tb = 1'b1;
+        				#(2*CLK_PERIOD)
+        				i_ccc_done_tb = 1'b0;
+
+        				@(posedge DUT.u_i3c_engine.i_tx_mode_done)  // to check that hdrengine done is enabled and return to sdr mode
+        				i_controller_en_tb = 1'b0;
+        				send_enthdr        = 1'b0;
+        				#(20*CLK_PERIOD);
+        				xyz.sample();
+        				continue;
+        				end
+        		
+
+        		else if(!DUT.u_hdr_engine.i_CP_temp && DUT.u_hdr_engine.i_TOC_temp) 
+        			begin
+        				#(1000*CLK_PERIOD)
+        				   //start writing configurations before the ddr block finishes
+        				write_configurations();
+
+        				#(100*CLK_PERIOD)
 
 
+        				i_ddr_mode_done_tb = 1'b1;
+        				#(2*CLK_PERIOD)
+        				i_ddr_mode_done_tb = 1'b0;
 
+        				@(posedge DUT.u_i3c_engine.i_tx_mode_done)  // to check that hdrengine done is enabled and return to sdr mode
+        		i_controller_en_tb = 1'b0;
+        		send_enthdr        = 1'b0;
+        		#(20*CLK_PERIOD);
+        		xyz.sample();
+        			end
+
+        			else begin
+        				reset();
+        				continue;
+        			end
 
         end
-                	#(CLK_PERIOD);	
+        else if(DUT.u_hdr_engine.i_CP_temp && !DUT.u_hdr_engine.i_TOC_temp && DUT.u_i3c_engine.o_hdrengine_en)
+        	begin
+
+
+        //check that ddr block is enabled and then the engine returns to sdr mode and sends stop bit
+
+        		#(1000*CLK_PERIOD)
+        		   //start writing configurations before the ddr block finishes
+        		write_configurations();
+						        		
+
+        		#(100*CLK_PERIOD)
+
+        		i_ccc_done_tb = 1'b1;
+        		#(2*CLK_PERIOD)
+        		i_ccc_done_tb = 1'b0;
+
+        		xyz.sample();
+        		
+        		if(DUT.u_hdr_engine.i_CP_temp && DUT.u_hdr_engine.i_TOC_temp)
+        				begin
+        	  		
+        				#(1000*CLK_PERIOD)
+        				   //start writing configurations before the ddr block finishes
+        				write_configurations();
+
+        				#(100*CLK_PERIOD)
+
+
+        				i_ccc_done_tb = 1'b1;
+        				#(2*CLK_PERIOD)
+        				i_ccc_done_tb = 1'b0;
+
+        				@(posedge DUT.u_i3c_engine.i_tx_mode_done)  // to check that hdrengine done is enabled and return to sdr mode
+        		i_controller_en_tb = 1'b0;
+        		send_enthdr        = 1'b0;
+        		#(20*CLK_PERIOD);
+        		xyz.sample();
+        		continue;
+        				end
+        		
+
+        else if(!DUT.u_hdr_engine.i_CP_temp && DUT.u_hdr_engine.i_TOC_temp) 
+        			begin
+        				#(1000*CLK_PERIOD)
+        				   //start writing configurations before the ddr block finishes
+        				write_configurations();
+
+        				#(100*CLK_PERIOD)
+
+
+        				i_ddr_mode_done_tb = 1'b1;
+        				#(2*CLK_PERIOD)
+        				i_ddr_mode_done_tb = 1'b0;
+
+        				@(posedge DUT.u_i3c_engine.i_tx_mode_done)  // to check that hdrengine done is enabled and return to sdr mode
+        				i_controller_en_tb = 1'b0;
+        				send_enthdr        = 1'b0;
+        				#(20*CLK_PERIOD);
+        				xyz.sample();
+        				continue;
+        			end
+
+        			else begin
+        				reset();
+        				continue;
+        			end
+
+        		end
+
+        end
+          #(CLK_PERIOD);	
         	xyz.sample();
 
 	
       end
-
-
-     end
+     end 
  
 	endtask
 
 task write_configurations();
 	begin
-		     // DWORD0
-	 #(2*CLK_PERIOD)																		    			; 
+
+// 1.randomize
+cg = new();
+cg.randomize();
+
+//2.write randomized values
+	// DWORD0
+		i_data_config_mux_sel_tb = 1'b1;
+	 	i_regf_wr_en_config_tb = 1'b1;
+	 #(2*CLK_PERIOD)																		    																									; 
 		i_regf_config_tb     = { cg.RAND_CMD[0] , cg.RAND_TID , cg.RAND_CMD_ATTR }  												    ;
-    	i_regf_wr_address_config_tb = config_location 															;
+    	i_regf_wr_address_config_tb = config_location 																												;
     	    
-      #(2*CLK_PERIOD)  																		; 
-		i_regf_config_tb     = { cg.RAND_CP , cg.RAND_CMD[7:1] } 															    ;
-    	i_regf_wr_address_config_tb = config_location + 'd1 														;
+      #(2*CLK_PERIOD)  																																											; 
+		i_regf_config_tb     = { cg.RAND_CP , cg.RAND_CMD[7:1] } 															    							;
+    	i_regf_wr_address_config_tb = config_location + 'd1 																									;
 
-      #(2*CLK_PERIOD)  																		; 
-		i_regf_config_tb     = { cg.RAND_DTT[0] , cg.RAND_RESERVED , cg.RAND_DEV_INDEX }  											    ;		    
-    	i_regf_wr_address_config_tb = config_location + 'd2 														;
+      #(2*CLK_PERIOD)  																																											; 
+		i_regf_config_tb     = { cg.RAND_DTT[0] , cg.RAND_RESERVED , cg.RAND_DEV_INDEX }  											;		    
+    	i_regf_wr_address_config_tb = config_location + 'd2 																									;
 
-      #(2*CLK_PERIOD)  																		; 
-		i_regf_config_tb     = { cg.RAND_TOC , cg.RAND_WROC , cg.RAND_RnW ,cg.RAND_MODE , cg.RAND_DTT[2:1]} 										;
-    	i_regf_wr_address_config_tb = config_location + 'd3 														;
+      #(2*CLK_PERIOD)  																																											; 
+		i_regf_config_tb     = { cg.RAND_TOC , cg.RAND_WROC , cg.RAND_RnW ,cg.RAND_MODE , cg.RAND_DTT[2:1]} 		;
+    	i_regf_wr_address_config_tb = config_location + 'd3 																									;
 
       // DWORD 1
-       #(2*CLK_PERIOD) ;  																		; 
-		i_regf_config_tb     = cg.RAND_DEF_BYTE     																;
-    	i_regf_wr_address_config_tb  = config_location + 'd4 														;	
+       #(2*CLK_PERIOD)  																																									  ; 
+		i_regf_config_tb     = cg.RAND_DEF_BYTE     																														;
+    	i_regf_wr_address_config_tb  = config_location + 'd4 																									;		
 
-       #(2*CLK_PERIOD) ; 																		; 
-		i_regf_config_tb     = cg.RAND_DATA_TWO     																;
-    	i_regf_wr_address_config_tb  = config_location + 'd5 														;
+       #(2*CLK_PERIOD)  																																										; 
+		i_regf_config_tb     = cg.RAND_DATA_TWO     																														;
+    	i_regf_wr_address_config_tb  = config_location + 'd5 																									;
 
-       #(2*CLK_PERIOD) ; 																		; 
-		i_regf_config_tb     = cg.RAND_DATA_THREE     																;
-    	i_regf_wr_address_config_tb  = config_location + 'd6 														;
+       #(2*CLK_PERIOD); 																		 
+		i_regf_config_tb     = cg.RAND_DATA_THREE     																													;
+    	i_regf_wr_address_config_tb  = config_location + 'd6 																									;
 
-       #(2*CLK_PERIOD) ; 																		; 
-		i_regf_config_tb     = cg.RAND_DATA_FOUR     																;
-    	i_regf_wr_address_config_tb  = config_location + 'd7 														;
+       #(2*CLK_PERIOD)  																																										; 
+		i_regf_config_tb     = cg.RAND_DATA_FOUR     																														;
+    	i_regf_wr_address_config_tb  = config_location + 'd7 																									;
   
-        #(CLK_PERIOD) ;
+        #(CLK_PERIOD) 																																											;
 	end
 endtask : write_configurations
 
@@ -339,37 +429,35 @@ task check_output ();
 			data_check[i] <= //sda
 		end
 */
-for(int i=0; i < 8 ; i++)   //receive first 8 bits of 7E and write bit
- 	begin  
-	   @(posedge scl_tb)
-	   	BROADCAST['d7 - i] = sda_tb;
- 	end
+			for(int i=0; i < 8 ; i++)   //receive first 8 bits of 7E and write bit
+			 	begin  
+				   @(posedge scl_tb)
+				   	BROADCAST['d7 - i] = sda_tb;
+			 	end
 
-@(negedge scl_tb)
-if(BROADCAST == EXPECTED_BROADCAST)
- begin
-		$display("Broadcast frame is received");
-		send_ack();
- end
+			@(negedge scl_tb)
+			if(BROADCAST == EXPECTED_BROADCAST)
+			 begin
+					$display("Broadcast frame is received");
+					send_ack();
+			 end
 
-for(int i=0; i < 9 ; i++)   //receive first 8 bits of 7E and write bit
- 	begin  
-	   @(posedge scl_tb)
-	   	ENTHDR0['d8 - i] = sda_tb;
- 	end
- //@(negedge scl_tb)
+			for(int i=0; i < 9 ; i++)   //receive first 8 bits of 7E and write bit
+			 	begin  
+				   @(posedge scl_tb)
+				   	ENTHDR0['d8 - i] = sda_tb;
+			 	end
+ 
 
-if(ENTHDR0 == EXPECTED_ENTHDR0) begin
-	$display("ENTHDR frame is received");
+			if(ENTHDR0 == EXPECTED_ENTHDR0) begin
+				$display("ENTHDR frame is received");
 
-	@(negedge scl_tb)
-	#(CLK_PERIOD)
-	frame_ended = 1'b1;
-	#(CLK_PERIOD)
-	frame_ended = 1'b0;
+				@(negedge scl_tb)
+				#(CLK_PERIOD)
+				frame_ended = 1'b1;
+				#(CLK_PERIOD)
+				frame_ended = 1'b0;
 
-	//@(frame_ended.triggered);
-	//$display($time,"\tEvent triggered");
 
 end	   		
 
@@ -458,7 +546,7 @@ property p3 ;
 	(!DUT.u_hdr_engine.i_CP && DUT.u_i3c_engine.o_hdrengine_en && !DUT.u_hdr_engine.i_TOC && ~i_data_config_mux_sel_tb) 
 	|->  ##2 DUT.u_hdr_engine.o_ddrmode_en
 endproperty
-	assert property(p3); /*$display("Flags1 are correct %t",$time); else $error("Error in flags1 %t",$time);*/
+	assert property(p3); /* $display("Flags1 are correct %t",$time); else $error("Error in flags1 %t",$time); */
 	cover property(p3);
 
 
@@ -476,60 +564,41 @@ endproperty
 
 
 	 																							//---TEST CASE 5---//
- 												  // IF CP = 0(N.T.) &&TOC=1 (EXIT)&& ddr_done = 1--> ENGINE DONE=1 //
+ 												  // IF CP = 0(N.T.) && TOC=1 (EXIT) && ddr_done = 1--> ENGINE DONE=1 //
  
 property p5 ;
 	@(posedge i_clk_tb) disable iff(!i_rst_n_tb)
-	 ($rose(i_ddr_mode_done_tb) && DUT.u_i3c_engine.o_hdrengine_en &&DUT.u_hdr_engine.i_TOC && ~i_data_config_mux_sel_tb) 
+	 ($rose(i_ddr_mode_done_tb) && DUT.u_i3c_engine.o_hdrengine_en && DUT.u_hdr_engine.i_TOC_temp) 
 	 |->  ##1 DUT.u_hdr_engine.o_i3cengine_hdrengine_done
 endproperty
-	assert property(p5); //$display("CCC Block is enabled"); else $error("Error in CCC flag");
+	assert property(p5) $display("Engine done is enabled"); else $error("Error in engine done flag");
 	cover property(p5);
-	 																							//---TEST CASE 5---//
-/* 												  // IF CP = 1(CCC) &&TOC=1 (EXIT)&& CCC_done = 1--> ENGINE DONE=1 //
+	 																							//---TEST CASE 6---//
+ 												  // IF CP = 1(CCC) &&TOC=1 (EXIT)&& CCC_done = 1--> ENGINE DONE=1 //
 property p6 ;
 	@(posedge i_clk_tb) disable iff(!i_rst_n_tb)
-	 ($rose(i_ccc_done_tb) && DUT.u_i3c_engine.o_hdrengine_en &&DUT.u_hdr_engine.i_TOC) 
+	 ($rose(i_ccc_done_tb) && DUT.u_i3c_engine.o_hdrengine_en &&DUT.u_hdr_engine.i_TOC_temp) 
     |->  ##1 DUT.u_hdr_engine.o_i3cengine_hdrengine_done
 endproperty
 	assert property(p6); //$display("CCC Block is enabled"); else $error("Error in CCC flag");
 	cover property(p6); 
 
-	 																							//---TEST CASE 6---//
- 												  // IF CP = 0(N.T.) &&TOC=0 (RESTART)&& ddr_done = 1-->ddr is enabled again //
+ 																							//---TEST CASE 7---//
+ 												  // IF CP = 1(CCC) &&TOC=0 (RESTART)&& ccc_done = 1-->ccc is enabled again //
 property p7 ;
 	@(posedge i_clk_tb) disable iff(!i_rst_n_tb)
-	( !DUT.u_hdr_engine.i_CP&& DUT.u_i3c_engine.o_hdrengine_en && i_ddr_mode_done_tb&&!DUT.u_hdr_engine.i_TOC) 
-	|->  ##2 DUT.u_hdr_engine.o_ddrmode_en
+	( DUT.u_hdr_engine.i_CP && DUT.u_i3c_engine.o_hdrengine_en && i_ccc_done_tb && !DUT.u_hdr_engine.i_TOC_temp ) 
+	|->  ##2 DUT.u_hdr_engine.o_ccc_en
 endproperty
 	assert property(p7); //$display("CCC Block is enabled"); else $error("Error in CCC flag");
-	cover property(p7); */
-	 																							//---TEST CASE 7---//
- 												  // IF CP = 1(CCC) &&TOC=0 (RESTART)&& ccc_done = 1-->ccc is enabled again //  												    												  												             
-/*
-property p2 ;
-	@(posedge i_clk_tb) frame_ended |->  ##3 DUT.u_enthdr.o_i3cengine_done
-endproperty
-	assert property(p2) $display("Flags2 are correct"); else $error("Error in flags2");
-	cover property(p2);	
+	cover property(p7); 
 
 
- property p3 ;
- 	@ (event_a.triggered) DUT.u_hdr_engine.o_ddrmode_en 
- endproperty
- assert property(p3) $display("ddr_en is correct"); else $error("Error in ddr_en");
- 
-
-                                                  // Test Case 2//
-  assert property (
- 	 @(posedge i_clk_tb) (i_ddr_mode_done_tb && cg.i_regf_config_tb) |-> DUT.u_hdr_engine.o_i3cengine_hdrengine_done  
- 	 );
-*/
 //------------------------------------------------Initial Block-----------------------------------//
 
   
-    // locally driven value
-    assign sda_tb   = sda_drive 			;
+// locally driven value
+assign sda_tb   = sda_drive 			;
 
 initial begin
 	xyz = new();

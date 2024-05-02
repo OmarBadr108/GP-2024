@@ -48,6 +48,7 @@ output  reg  [7:0]        o_regfcrc_rx_data_out,
 output  reg               o_ddrccc_rx_mode_done,
 output  reg               o_ddrccc_pre,
 output  reg               o_ddrccc_error,
+output  reg  [1:0]        o_ccc_crc_pre,              // added output signal to ccc block
 output  reg               o_crc_en,                 
 output  reg               o_crc_data_valid,
 output  reg               o_ddrccc_error_done
@@ -62,7 +63,8 @@ output  reg               o_ddrccc_error_done
 
 /////////////////////////////////rx modes/////////////////////////////////
 localparam [3:0]     
-                     PREAMBLE            = 4'b0000  ,            
+                     PREAMBLE            = 4'b0000  ,
+                     CRC_PREAMBLE        = 4'b0001  ,  
                      DESERIALIZING_BYTE  = 4'b0011  ,                   
                      CHECK_TOKEN         = 4'b0101  ,
                      CHECK_PAR_VALUE     = 4'b0110  ,
@@ -144,6 +146,7 @@ begin
     o_regfcrc_rx_data_out <= 8'd0;  
     o_ddrccc_rx_mode_done <= 1'b0;
     o_ddrccc_pre          <= 1'bz; //should be editted
+    o_ccc_crc_pre         <= 2'b0;
     o_ddrccc_error        <= 1'b0;
     o_crc_en              <= 1'b0;   
     count                 <= 'b0;
@@ -185,6 +188,29 @@ begin
                             o_ddrccc_pre          <= i_sdahnd_rx_sda;
                             end
                         end
+
+
+
+    CRC_PREAMBLE:       begin
+                            o_ddrccc_rx_mode_done <= 'b0;
+
+                            if(SCL_edges)
+                                begin
+                                  o_ccc_crc_pre ['d1 - count] <= i_sdahnd_rx_sda;
+                                end
+                            else if(count == 'd1)
+                                begin
+                                    o_ddrccc_rx_mode_done <= 'b1;
+                                    count <= 'b0;
+                                end
+
+                            else
+                                begin
+                                  count <= count + 1;
+                                    
+                                end
+                            
+                        end                    
 
 
       DESERIALIZING_BYTE: begin

@@ -415,7 +415,7 @@ module sdr_hdr_transition_top (
    //wire                 ddr_pp_od;
    wire                  scl_ddr_pp_od                 ;
    wire                  scl_ccc_pp_od                 ;
-   assign  scl_ddr_pp_od =1'b0                         ;                         //untill integration
+   assign  scl_ddr_pp_od =1'b0;                         //untill integration
  
    wire                 hdr_sdahand_pp_od_sel;
    wire                 hdr_scl_pp_od_sel;
@@ -749,6 +749,7 @@ controller_tx u_controller_tx (
             .i_ser_scl_neg_edge           (scl_neg_edge)             , //cnflct from tx
             .i_ser_scl_pos_edge           (scl_pos_edge)             ,
             .i_timer_cas                  (timer_cas)                ,
+            .i_timer_bus_free_pure         (timer_bus_free_pure)      , ////20244444444
             .o_ser_sda_low                (crh_sda_low)              ,
             .o_tx_daa_done                (tx_daa_done)              ,
             .o_stop_pattern               (stop_pattern)             ,
