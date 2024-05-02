@@ -2924,17 +2924,12 @@ module CCC_Handler_tb ();
 
 	GETPID_Direct  GETPID_Direct_instance = new();
 
-
-	
-
 // 4-initial block 
 /* IMPORTANT NOTES :
 		1- (General) when driving input to the block which is considered as output of other block u must drive it at posedge not at negdge .
 		2- (specifically for our system) : to predict the time to set the tx mode done u count like that >>
 				(no. of SCL_DDR clk cycle - 1) + 1 sys clk  
-
 */
-
 
 	initial begin 
 		// time zero .. these are all signal to be driven in the test bench 
