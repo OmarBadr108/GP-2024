@@ -1,3 +1,5 @@
+
+
 /*//////////////////////////////////////////////////////////////////////////////////
 ==================================================================================
  MIXEL GP 2024 LIBRARY
@@ -354,8 +356,9 @@ module sdr_hdr_transition_top (
    wire                  regf_rd_en_mode             ; 
    wire                  regf_rd_address_mode        ;
    wire                  scl_pp_od_mode              ;    
-   wire                  ccc_enable                  ,
- 
+   wire                  engine_ccc_enable           ;
+   wire                  engine_ddr_enable           ; 
+
 ///////////////////////////hdr_sdr_mux///////////////////////
    wire                  sda_sel                     ;                // CHOOSE BETWEEN HDR & SDR 
    wire                  regf_rd_en_hdr_mux_out      ; 
@@ -363,6 +366,7 @@ module sdr_hdr_transition_top (
 
    wire                  scl_pp_od_hdr_mux_out       ;
    wire                  scl_pp_od_sdr_mux_out       ;
+   //wire                  scl_gen_stall_mux_out       ; // new by badr
 
    wire                  regf_wr_en_hdr_mux_out      ; 
    wire                  regf_wr_en_sdr_mux_out      ;
@@ -387,8 +391,8 @@ module sdr_hdr_transition_top (
    wire                  ddr_regf_wr_en;                 // out from ddr_block
    wire                  regf_wr_en_hdr_mux_sel;          //out_from hdr_engine 
 
-   wire         [11:0]    ccc_regfaddr;                      // out from ccc_block   
-   wire         [11:0]    ddr_regf_address;                  // out from ddr_block
+   wire         [11:0]    ccc_regf_addr;                      // out from ccc_block   
+   wire         [11:0]    ddr_regf_addr;                  // out from ddr_block
    wire                  regf_rd_address_hdr_mux_sel;          //out_from hdr_engine 
 
    
@@ -396,7 +400,10 @@ module sdr_hdr_transition_top (
    wire                 ddr_tx_en;
    wire                 hdr_tx_en_sel;
    wire                 tx_en_hdr_mux_out;
-   
+
+   wire       [7:0]     cccnt_tx_special_data_mux_out ; // by badr
+   wire                 cccnt_tx_special_data_mux_sel ; // by badr
+
    wire                 ccc_rx_en;
    wire                 ddr_rx_en;
    wire                 hdr_rx_en_sel;
@@ -412,11 +419,9 @@ module sdr_hdr_transition_top (
    wire                 hdr_rx_mode_sel;
    wire        [2:0]    rx_mode_hdr_mux_out;
 
-   //wire                 ccc_pp_od;
-   //wire                 ddr_pp_od;
    wire                  scl_ddr_pp_od                 ;
    wire                  scl_ccc_pp_od                 ;
-   assign  scl_ddr_pp_od =1'b0;                         //untill integration
+   //assign  scl_ddr_pp_od =1'b0;                         //untill integration
  
    wire                 hdr_sdahand_pp_od_sel;
    wire                 hdr_scl_pp_od_sel;
@@ -513,6 +518,7 @@ i3c_engine u_i3c_engine (
             .o_bits_cnt_regf_rx_tx_sel (bits_cnt_regf_rx_tx_sel) ,
             .o_scl_stall_flag_sel      (scl_stall_flag_sel)      ,
             .o_scl_stall_cycles_sel    (scl_stall_cycles_sel)    ,
+            //.o_scl_scl_gen_stall       (scl_gen_stall_sel),                 // 
             .o_controller_done            (o_ctrl_done)          ,
             ////////////////////////HDR///////////////////////////////
             .o_enthdr_en (enthdr_en),
@@ -825,13 +831,13 @@ scl_generation u_scl_generation (
             .i_sdr_ctrl_clk               (sys_clk_50mhz)            ,
             .i_sdr_ctrl_rst_n             (i_sdr_rst_n)              ,
             .i_sdr_scl_gen_pp_od          (scl_pp_od_mux_out)        ,
-            .i_scl_gen_stall              (scl_gen_stall)            ,
+            .i_scl_gen_stall              (scl_gen_stall)            , 
             .i_sdr_ctrl_scl_idle          (sdr_scl_idle_mux_out )    ,
             .i_timer_cas                  (timer_cas)                ,
             .o_scl_pos_edge               (scl_pos_edge)             ,
             .o_scl_neg_edge               (scl_neg_edge)             ,
             .o_scl                        (scl)                     );
-
+/*
 scl_staller u_scl_staller(
 .i_stall_clk(sys_clk_50mhz),
 .i_stall_rst_n(i_sdr_rst_n),
@@ -839,6 +845,7 @@ scl_staller u_scl_staller(
 .i_stall_cycles(scl_stall_cycles_mux_out),
 .o_stall_done(scl_stall_done),
 .o_scl_stall (scl_gen_stall) );
+*/
 
 reg_file u_reg_file (
             .i_regf_clk                   (sys_clk_50mhz)            ,
@@ -924,6 +931,8 @@ hdr_engine u_hdr_engine (
     .o_tx_mode_sel                          (hdr_tx_mode_sel),
     .o_rx_mode_sel                          (hdr_rx_mode_sel),
 
+    .o_cccnt_tx_special_data_mux_sel        (cccnt_tx_special_data_mux_sel), // by badr
+
     .o_regf_rd_en_sel                       (regf_rd_en_hdr_mux_sel),
     .o_regf_wr_en_sel                       (regf_wr_en_hdr_mux_sel),
     .o_regf_addr_sel                        (regf_rd_address_hdr_mux_sel),
@@ -934,8 +943,8 @@ hdr_engine u_hdr_engine (
     .o_hdr_scl_stall_en_sel                 (hdr_scl_stall_en_sel),             
     .o_hdr_scl_stall_cycles_sel             (hdr_scl_stall_cycles_sel),
                                                                                     .o_i3cengine_hdrengine_done             (hdrengine_exit)           ,
-    .o_ddrmode_en                           (o_ddrmode_enable)           ,
-    .o_ccc_en                               (o_ccc_enable)           ,
+    .o_ddrmode_en                           (engine_ddr_enable)           ,
+    .o_ccc_en                               (engine_ccc_enable)           ,
     .o_regf_addr_special                    (engine_configuration_addr)    );
      //output  reg   [7:0]     o_regf_addr_special
 
@@ -1048,40 +1057,47 @@ gen_mux #(1,1) sda_handling_mode_mux (
 
 //////////////////hdr_mux/////////////////////
 
+
+
+
 gen_mux #(1,1) regf_rd_en_hdr_mux (
-            .data_in  ({ ccc_regf_rd_en, ddr_regf_rd_en}),             ////to be added 
+            .data_in  ({ ccc_tx_special_data, ddr_tx_special_data}),            
+            .ctrl_sel (cccnt_tx_special_data_mux_sel)  ,
+            .data_out (cccnt_tx_special_data_mux_out) );
+
+gen_mux #(1,1) regf_rd_en_hdr_mux (
+            .data_in  ({ ccc_regf_rd_en, ddr_regf_rd_en}),            
             .ctrl_sel (regf_rd_en_hdr_mux_sel)  ,
             .data_out (regf_rd_en_hdr_mux_out) );
 
 
-
 gen_mux #(1,1) regf_wr_en_hdr_mux (
-            .data_in  ({ ccc_regf_wr_en, ddr_regf_wr_en}),             ////to be added 
+            .data_in  ({ ccc_regf_wr_en, ddr_regf_wr_en}),             
             .ctrl_sel (regf_wr_en_hdr_mux_sel)  ,
             .data_out (regf_wr_en_hdr_mux_out) );
 
 gen_mux #(12,1) regf_rd_address__hdr_mux (
-            .data_in  ({ ccc_regfaddr, ddr_regf_address}),
+            .data_in  ({ ccc_regf_addr, ddr_regf_addr}),
             .ctrl_sel (regf_rd_address_hdr_mux_sel)  ,
             .data_out (regf_rd_address_hdr_mux_out) );
 
 gen_mux #(1,1) tx_en_hdr_mux (
-            .data_in  ({ccc_tx_en, ddr_tx_en}),             ////to be added out from ccc/ddr blocks
+            .data_in  ({ccc_tx_en, ddr_tx_en}),             
             .ctrl_sel (hdr_tx_en_sel)  ,
             .data_out (tx_en_hdr_mux_out) );
 
 gen_mux #(1,1) rx_en_hdr_mux (
-            .data_in  ({ccc_rx_en, ddr_rx_en}),             ////to be added out from ccc/ddr blocks
+            .data_in  ({ccc_rx_en, ddr_rx_en}),             
             .ctrl_sel (hdr_rx_en_sel)  ,
             .data_out (rx_en_hdr_mux_out) );
 
 gen_mux #(3,1) tx_mode_hdr_mux (
-            .data_in  ({ccc_tx_mode, ddr_tx_mode}),             ////to be added out from ccc/ddr blocks
+            .data_in  ({ccc_tx_mode, ddr_tx_mode}),             
             .ctrl_sel (hdr_tx_mode_sel)  ,
             .data_out (tx_mode_hdr_mux_out) );
 
 gen_mux #(3,1) rx_mode_hdr_mux (
-            .data_in  ({ccc_rx_mode, ddr_rx_mode}),             ////to be added out from ccc/ddr blocks
+            .data_in  ({ccc_rx_mode, ddr_rx_mode}),             
             .ctrl_sel (hdr_rx_mode_sel)  ,
             .data_out (rx_mode_hdr_mux_out) );
 
@@ -1093,29 +1109,29 @@ gen_mux #(3,1) rx_mode_hdr_mux (
             .data_out (scl_pp_od_hdr_mux_out) ); */
 
 gen_mux #(1,1) scl_pp_od_hdr_mux (
-            .data_in  ({scl_ccc_pp_od, scl_ddr_pp_od}),             ////to be added out from ccc/ddr blocks
+            .data_in  ({scl_ccc_pp_od, scl_ddr_pp_od}),             
             .ctrl_sel (hdr_scl_pp_od_sel)  ,
-            .data_out (scl_pp_od_hdr_mux_out) );         
+            .data_out (scl_pp_od_hdr_mux_out) );                
 
 gen_mux #(1,1) bit_cnt_hdr_mux (
-            .data_in  ({ccc_bit_cnt_en, ddr_bit_cnt_en}),             ////to be added out from ccc/ddr blocks
+            .data_in  ({ccc_bit_cnt_en, ddr_bit_cnt_en}),             
             .ctrl_sel (hdr_bit_cnt_en_sel)  ,
             .data_out (hdr_bit_cnt_en_mux_out) );
 
 gen_mux #(1,1) frm_cnt_hdr_mux (
-            .data_in  ({ccc_frm_cnt_en, ddr_frm_cnt_en}),             ////to be added out from ccc/ddr blocks
+            .data_in  ({ccc_frm_cnt_en, ddr_frm_cnt_en}),             
             .ctrl_sel (hdr_frm_cnt_en_sel)  ,
             .data_out (hdr_frm_cnt_en_mux_out) );
 
 gen_mux #(1,1) scl_stall_en_hdr_mux (
-            .data_in  ({ccc_scl_stall_en, ddr_scl_stall_en}),             ////to be added out from ccc/ddr blocks
+            .data_in  ({ccc_scl_stall_en, ddr_scl_stall_en}),             
             .ctrl_sel (hdr_scl_stall_en_sel)  ,
             .data_out (hdr_scl_stall_en_mux_out) );
 
 
 
 gen_mux #(1,1) scl_stall_cycles_hdr_mux (
-            .data_in  ({ccc_scl_stall_cycles, ddr_scl_stall_cycles}),             ////to be added out from ccc/ddr blocks
+            .data_in  ({ccc_scl_stall_cycles, ddr_scl_stall_cycles}),            
             .ctrl_sel (hdr_scl_stall_cycles_sel)  ,
             .data_out (hdr_scl_stall_cycles_mux_out) );
 
@@ -1202,7 +1218,7 @@ wire ddrccc_error_done;
 //----------------------------HDR Frame Counter----------------------------//
 wire [5:0]  cnt_bit_count;
 wire        bitcnt_frcnt_toggle;
-wire        frmcnt_last_frame;
+wire        frmcnt_last_frame_hdr;
 
 //----------------------------HDR Bit Counter----------------------------//
 wire bitcnt_err_rst;
@@ -1211,34 +1227,36 @@ wire bitcnt_err_rst;
 //----------------------------CCC Handler----------------------------//
 wire ccc_DBP;
 wire cccnt_SRE;  
-wire bitcnt_err_rst;
 wire frmcnt_Direct_Broadcast_n;
 wire engine_odd;
+wire ccc_engine_done ;
 
-
-//??
-wire [7:0]  o_txrx_addr_ccc_tb ;
+wire [7:0]  ccc_tx_special_data ;
 wire [3:0]  o_regf_ERR_STATUS_tb ;
    
+//----------------------------SCL staller HDR----------------------------//
+ wire scl_stall_done_hdr ;
+ wire o_scl_stall_hdr ;
 
- 
-
-
-
-
+//--------------------------- DDR ----------------------------//
+wire        ddr_engine_done ;
+wire [7:0]  ddr_tx_special_data ;
+wire        bitcnt_rst ;
+wire        o_regf_abort ;
+wire [3:0]  o_regf_error_type ;
     // DUT instantiation
      
     CCC_Handler CCC_Handler (
         .i_sys_clk              (sys_clk_50mhz),
         .i_sys_rst              (i_sdr_rst_n),
-        .i_engine_en            (ccc_enable),
+        .i_engine_en            (engine_ccc_enable),
         .i_bitcnt_number        (cnt_bit_count),
         .i_tx_mode_done         (tx_hdr_mode_done),
         .i_rx_mode_done         (rx_hdr_mode_done),
         .i_rx_pre               (rx_pre),
-        .i_sclstall_stall_done  (scl_stall_done),
+        .i_sclstall_stall_done  (scl_stall_done_hdr),
         .i_rx_error             (rx_error),
-        .i_frmcnt_last_frame    (frmcnt_last_frame),
+        .i_frmcnt_last_frame    (frmcnt_last_frame_hdr),
 
         .i_i_regf_RnW             (cccnt_RnW),
         .i_i_regf_CMD_ATTR        (cccnt_CMD_ATTR),
@@ -1253,25 +1271,92 @@ wire [3:0]  o_regf_ERR_STATUS_tb ;
         .o_sclstall_en_tb       (ccc_scl_stall_en),
         .o_sclstall_code        (ccc_scl_stall_cycles),
         
-        .o_tx_en                (tx_en_hdr_mux_out), //editted by laila
-        .o_tx_mode              (tx_mode_hdr_mux_out), //editted by laila
-        .o_rx_en                (rx_en_hdr_mux_out), //editted by laila
-        .o_rx_mode              (rx_mode_hdr_mux_out), //editted by laila
-        .o_bitcnt_en            (hdr_bit_cnt_en_mux_out),
-        .o_bitcnt_err_rst       (bitcnt_err_rst),
-        .o_frmcnt_en            (ccc_frm_cnt_en),
-        .o_sdahand_pp_od        (scl_ccc_pp_od),                         
+        .o_tx_en                (ccc_tx_en), //editted by laila - done 
+        .o_tx_mode              (ccc_tx_mode), //editted by laila - done 
+        .o_rx_en                (ccc_rx_en), //editted by laila - done 
+        .o_rx_mode              (ccc_rx_mode), //editted by laila -done 
+
+        .o_bitcnt_en            (ccc_bit_cnt_en), // done 
+        .o_bitcnt_err_rst       (bitcnt_err_rst), // done 
+        .o_frmcnt_en            (ccc_frm_cnt_en), // done 
+        .o_sdahand_pp_od        (scl_ccc_pp_od),      // done                    
 
         .o_frmcnt_Direct_Broadcast_n  (frmcnt_Direct_Broadcast_n),
 
-        .o_regf_wr_en            (regf_wr_en_hdr_mux_out),               
-        .o_regf_rd_en            (regf_rd_en_hdr_mux_out),               
-        .o_regf_addr             (regf_rd_address_hdr_mux_out),          
-                                                        .o_engine_done(ccc_engine_done),
-        .o_txrx_addr_ccc         (o_txrx_addr_ccc_tb),   //??? not an input to regfile
-                                                        .o_engine_odd(engine_odd),
-        .o_regf_ERR_STATUS       (o_regf_ERR_STATUS_tb)    //??? not an input to regfile
+        .o_regf_wr_en            (ccc_regf_wr_en),                
+        .o_regf_rd_en            (ccc_regf_rd_en),             // done   
+        .o_regf_addr             (ccc_regf_addr),           // done 
+        .o_engine_done(ccc_engine_done),                        // done 
+        .o_txrx_addr_ccc         (ccc_tx_special_data),   // done 
+        .o_engine_odd(engine_odd),
+        .o_regf_ERR_STATUS       (o_regf_ERR_STATUS_tb)    //??? not an input to regfile - yes it's output to the interface (response fifo or testbench)
         );
+
+
+
+    DDR_NT DDR_NT (
+        .i_sys_clk(sys_clk_50mhz), // done 
+        .i_sys_rst(i_sdr_rst_n),  // done 
+        .i_engine_en(engine_ddr_enable), // done 
+        .i_regf_toc(cccnt_TOC),
+        .i_regf_dev_index(cccnt_DEV_INDEX),
+        .i_regf_short_read(cccnt_SRE),
+        .i_regf_wroc(cccnt_WROC),
+        .i_regf_wr_rd_bit(cccnt_RnW),
+        .i_regf_cmd_attr(cccnt_CMD_ATTR),   
+        .i_regf_dtt(frmcnt_DTT),             // done 
+
+        .i_tx_mode_done(tx_hdr_mode_done),
+        .o_tx_en(ddr_tx_en),
+        .o_tx_mode(ddr_tx_mode),
+        .o_tx_special_data(ddr_tx_special_data),
+   
+        .i_rx_mode_done(rx_hdr_mode_done),   
+        .i_rx_pre(rx_pre),
+        .i_rx_error(rx_error),
+        .o_rx_en(ddr_rx_en),
+        .o_rx_mode(ddr_rx_mode),
+   
+        .i_frmcnt_last(frmcnt_last_frame_hdr),
+        .o_frmcnt_en(ddr_frm_cnt_en),
+    
+        .i_bitcnt(cnt_bit_count),   // done 
+        .o_bitcnt_en(ddr_bit_cnt_en),
+        .o_bitcnt_rst(bitcnt_rst),
+  
+        .o_sdahand_pp_od(scl_ddr_pp_od),
+   
+        .i_staller_done(scl_stall_done_hdr),
+        .o_sclstall_no_of_cycles(ddr_scl_stall_cycles),  
+        .o_sclstall_en(ddr_scl_stall_en),
+    
+        .o_regf_abort(o_regf_abort),
+        .o_regf_error_type(o_regf_error_type),  
+        .o_regf_wr_en(ddr_regf_wr_en),
+        .o_regf_rd_en(ddr_regf_rd_en), // done
+        .o_regf_addr(ddr_regf_addr),
+        .o_engine_done(ddr_engine_done)
+    );
+
+// sdr staller
+scl_staller u_scl_staller(
+.i_stall_clk(sys_clk_50mhz),
+.i_stall_rst_n(i_sdr_rst_n),
+.i_stall_flag(scl_stall_flag_mux_out),
+.i_stall_cycles(scl_stall_cycles_mux_out),
+.o_stall_done(scl_stall_done),
+.o_scl_stall (scl_gen_stall) );
+
+// hdr staller 
+
+    scl_staller scl_staller_hdr (
+         .i_stall_clk(sys_clk_50mhz), 
+         .i_stall_rst_n(i_sdr_rst_n),
+         .i_stall_flag(hdr_scl_stall_en_mux_out),
+         .i_stall_cycles(hdr_scl_stall_cycles_mux_out),
+         .o_stall_done(scl_stall_done_hdr),
+         .o_scl_stall(o_scl_stall_hdr)
+    );
 
 
     bits_counter bits_counter_hdr (
@@ -1295,12 +1380,8 @@ wire [3:0]  o_regf_ERR_STATUS_tb ;
         .i_regf_DATA_LEN          (frmcnt_data_len),
         .i_regf_DTT               (frmcnt_DTT),
         .i_cnt_bit_count          (cnt_bit_count),
-        .i_ccc_Direct_Broadcast_n (frmcnt_Direct_Broadcast_n), // 
-        .i_scl_pos_edge           (scl_pos_edge),
-        .i_scl_neg_edge           (scl_neg_edge),
         .i_bitcnt_toggle          (bitcnt_frcnt_toggle),
-        //.o_fcnt_last_frame (o_fcnt_last_frame_tb)
-        .o_cccnt_last_frame       (frmcnt_last_frame)                     
+        .o_cccnt_last_frame       (frmcnt_last_frame_hdr)                     
 
     );
 
@@ -1437,15 +1518,7 @@ wire [3:0]  o_regf_ERR_STATUS_tb ;
 
         //wire o_scl_stall_tb ; // mesh mohem at the moment
          
-  /*       scl_staller scl_staller (
-         .i_stall_clk(sys_clk_50mhz), 
-         .i_stall_rst_n(rst_n),
-         .i_stall_flag(o_sclstall_en_tb),
-         .i_stall_cycles(i_stall_cycles),
-         .o_stall_done(i_sclstall_stall_done_tb),
-         .o_scl_stall(o_scl_stall_tb)
-    );*/
-
+    
 
     /*
     // related to regfile (configuration)

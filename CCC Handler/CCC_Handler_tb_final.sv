@@ -147,7 +147,6 @@ module CCC_Handler_tb ();
 
 
 		frame_counter DUT3 (
-		//.i_fcnt_no_frms (i_fcnt_no_frms_tb),
 		.i_fcnt_clk (i_sys_clk_tb),
 		.i_fcnt_rst_n (i_rst_n_tb),
 		.i_fcnt_en (o_frmcnt_en_tb),
@@ -155,11 +154,7 @@ module CCC_Handler_tb ();
 		.i_regf_DATA_LEN (i_regf_DATA_LEN_tb),
 		.i_regf_DTT (i_regf_DTT_tb),
 		.i_cnt_bit_count (o_cnt_bit_count_tb),
-		//.i_ccc_Direct_Broadcast_n(o_frmcnt_Direct_Broadcast_n_tb), 
-		//.i_scl_pos_edge (scl_pos_edge_tb),
-		//.i_scl_neg_edge(scl_neg_edge_tb),
 		.i_bitcnt_toggle(o_frcnt_toggle_tb),
-		//.o_fcnt_last_frame (o_fcnt_last_frame_tb)
 		.o_cccnt_last_frame (i_frmcnt_last_frame_tb)	 	 		 	 
 
 	);
