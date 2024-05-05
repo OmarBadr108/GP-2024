@@ -153,6 +153,7 @@ always @(posedge i_clk or negedge i_rst_n)
             end
 
           POST_STOP_CALCULATIONS:
+          if (i_stop_pattern) begin
             begin 
               count  <= count + 1'b1  ;
 
@@ -220,7 +221,9 @@ always @(posedge i_clk or negedge i_rst_n)
                 end
 
             end
-         
+  end 
+  else 
+    timer_state <= IDLE;
 
           POST_START_CALCULATIONS:
             begin 

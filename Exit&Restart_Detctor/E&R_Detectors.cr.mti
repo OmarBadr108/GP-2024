@@ -1,0 +1,22 @@
+E:/GP/hdr_arch/target/Exit_Detector_TB.v {1 {vlog -work work E:/GP/hdr_arch/target/Exit_Detector_TB.v
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module Exit_Detector_TB
+
+Top level modules:
+	Exit_Detector_TB
+
+} {} {}} E:/GP/hdr_arch/target/Restart_Detector.v {1 {vlog -work work E:/GP/hdr_arch/target/Restart_Detector.v
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module Restart_Detector
+
+Top level modules:
+	Restart_Detector
+
+} {} {}} E:/GP/hdr_arch/target/Exit_Detector.v {1 {vlog -work work E:/GP/hdr_arch/target/Exit_Detector.v
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module Exit_Detector
+
+Top level modules:
+	Exit_Detector
+
+} {} {}}

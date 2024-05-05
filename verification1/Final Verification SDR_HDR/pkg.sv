@@ -1,6 +1,6 @@
 package pkg ;
 
-	parameter CLK_PERIOD        = 20 ; 
+	parameter CLK_PERIOD        = 10 ; 
 	parameter configuration_mux = 1'b1 ;
     parameter Design_mux  	 	= 1'b0 ;
     parameter config_location   = 12'd1000 ;
@@ -17,7 +17,7 @@ package pkg ;
     parameter EXPECTED_ENTHDR0 = 9'b001000000;
 
     bit running 			    = 1'b1;
-    bit send_enthdr;
+    bit send_enthdr = 1'b0;
 class configuration ;
 	// DWORD0
 	rand bit  [2:0] RAND_CMD_ATTR ;
@@ -40,29 +40,29 @@ class configuration ;
 
 
 	// top module inputs
- 	rand bit               i_controller_en  			;               
- 	rand bit               i_i3c_i2c_sel     			;  
+ 	//rand bit               i_controller_en  			;               
+ 	//rand bit               i_i3c_i2c_sel     			;  
  	//rand bit     [7:0]  	i_regf_config      			;         
- 	rand bit               i_data_config_mux_sel       ;                    
+ 	//rand bit               i_data_config_mux_sel       ;                    
  	rand bit               i_regf_wr_en_config         ;   
  	rand bit               i_regf_rd_en_config         ;    
- 	rand bit               i_hdr_en            		;
+ 	//rand bit               i_hdr_en            		;
  	//rand bit               i_ccc_done          		;
  	//rand bit               i_ddr_mode_done     		;
 
 
-constraint controller_en_rand 		    { 
+/*constraint controller_en_rand 		    { 
 
-	i_controller_en inside {0,1};
-}
-constraint i3c_i2c_sel_rand   		    { 
+	i_controller_en dist {1:/95 , 0:/5} ;
+}*/
+/*constraint i3c_i2c_sel_rand   		    { 
 
 	i_i3c_i2c_sel inside {0,1};
-}
-constraint data_config_mux_sel_rand     { 
+}*/
+/*constraint data_config_mux_sel_rand     { 
 
 	i_data_config_mux_sel inside {0,1};
-}
+}*/
 
 constraint regf_wr_en_config_rand     	{
 
@@ -79,11 +79,12 @@ constraint Wr_Rd {
     i_regf_wr_en_config != i_regf_rd_en_config;
 }
 
+/*
 constraint hdr_en_rand  			    { 
 
 	i_hdr_en inside {0,1};
 }
-/*
+
 constraint ccc_done_rand                {
 
  	i_ccc_done inside {0,1};

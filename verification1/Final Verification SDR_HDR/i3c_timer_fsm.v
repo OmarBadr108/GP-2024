@@ -160,6 +160,7 @@ always @(posedge i_clk or negedge i_rst_n)
               if (count == T_CAS)
                 begin: bus_free_pure_condition                 // bus has become in free condition 
                   o_timer_bus_free_pure     <= 1'b1 ;         //  for any pure I3C device who may concern
+                  
                 end   
 
               else if (count == T_CRHPOverlap)                 // bus is ready for new controller handoff

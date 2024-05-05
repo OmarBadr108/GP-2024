@@ -62,7 +62,8 @@ output  reg               o_ddrccc_error_done
 
 /////////////////////////////////rx modes/////////////////////////////////
 localparam [3:0]     
-                     PREAMBLE            = 4'b0000  ,            
+                     PREAMBLE            = 4'b0000  ,
+                     CRC_PREAMBLE        = 4'b0001  ,  
                      DESERIALIZING_BYTE  = 4'b0011  ,                   
                      CHECK_TOKEN         = 4'b0101  ,
                      CHECK_PAR_VALUE     = 4'b0110  ,
@@ -83,7 +84,9 @@ reg [7:0] o_regfcrc_rx_data_out_temp;
 reg [3:0] token_value_temp;
 reg [1:0] parity_value_temp;
 reg [4:0] CRC_value_temp;
+reg [1:0] crc_pre_temp;
 wire [1:0] parity_value_calc;
+wire [1:0] crc_pre_calc;
 
 wire SCL_edges; 
 
@@ -96,6 +99,8 @@ wire SCL_edges;
 assign count_done = (count==7)? 1'b1:1'b0 ;
 
 assign SCL_edges = (i_sclgen_scl_pos_edge || i_sclgen_scl_neg_edge);
+
+assign crc_pre_calc = 2'b01;
 
 
 ////////////////////////////// Registering data bytes for parity check ////////////////////////////////////
@@ -185,6 +190,34 @@ begin
                             o_ddrccc_pre          <= i_sdahnd_rx_sda;
                             end
                         end
+
+
+
+    CRC_PREAMBLE:       begin
+                            o_ddrccc_rx_mode_done <= 'b0;
+
+                            if(SCL_edges)
+                                begin
+                                  crc_pre_temp ['d1 - count] <= i_sdahnd_rx_sda;
+                                end
+                            else if(count == 'd1)
+                                begin
+                                    o_ddrccc_rx_mode_done <= 'b1;
+                                    count <= 'b0;
+
+                              if(crc_pre_calc != crc_pre_temp)
+                                    o_ddrccc_error<=1'b1;
+                                  else
+                                    o_ddrccc_error<=1'b0;
+                                end
+
+                            else
+                                begin
+                                  count <= count + 1;
+                                  crc_pre_temp['d1 - count] <= i_sdahnd_rx_sda;  
+                                end
+                            
+                        end                    
 
 
       DESERIALIZING_BYTE: begin

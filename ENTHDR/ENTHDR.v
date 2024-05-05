@@ -126,7 +126,7 @@ module enthdr (
  
            BROADCAST:  
             begin
-             
+           if (i_i3cengine_en) begin  
              if (i_tx_mode_done && i_scl_neg_edge )  // ****(scl neg edge condition check)
                begin
                 state      <= ACK;
@@ -148,8 +148,11 @@ module enthdr (
                  o_bit_cnt_en  <= 1'b1;
                end
             end
- 
- 
+            else
+            state <= IDLE;
+          end
+          
+
            ACK:         
             begin
  
