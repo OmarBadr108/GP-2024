@@ -102,8 +102,10 @@ module i3c_engine (
     output  reg   [2:0]   o_fcnt_no_frms_sel        ,
     output  reg   [2:0]   o_ser_rx_tx_mux_sel       ,
     output  reg           o_i3c_idle_flag           ,
-    output  reg   [2:0]   o_scl_stall_flag_sel      ,
-    output  reg   [2:0]   o_scl_stall_cycles_sel    ,
+
+    output  reg           o_scl_stall_flag_sel      ,
+    output  reg           o_scl_stall_cycles_sel    ,
+
     output  reg           o_controller_done         ,
     output  reg   [2:0]   o_bits_cnt_regf_rx_tx_sel ,
     
@@ -119,6 +121,9 @@ module i3c_engine (
     output reg           o_regf_data_sdr_hdr_sel,
     output reg           o_regf_rd_address_sdr_hdr_sel,                             
     output reg           o_scl_pp_od_sdr_hdr_sel       
+
+    output  reg           o_scl_stall_flag_sdr_hdr_sel      ,
+    output  reg           o_scl_stall_cycles_sdr_hdr_sel       
 
    /*
     output  reg          o_mode_bit_cnt_en_mux_sel     ,
@@ -218,6 +223,9 @@ always @(posedge i_clk or negedge i_rst_n)
              o_regf_data_sdr_hdr_sel         <= SDR_MODE_SEL;
              o_regf_rd_address_sdr_hdr_sel   <= SDR_MODE_SEL;
              o_scl_pp_od_sdr_hdr_sel         <= SDR_MODE_SEL;
+             o_scl_stall_flag_sdr_hdr_sel            <= SDR_MODE_SEL;
+             o_scl_stall_cycles_sdr_hdr_sel          <= SDR_MODE_SEL;
+             
             case(state)
             IDLE:
                 begin
@@ -745,6 +753,8 @@ always @(posedge i_clk or negedge i_rst_n)
                            o_scl_pp_od_sdr_hdr_sel         <= HDR_MODE_SEL    ; 
                            o_regf_data_sdr_hdr_sel         <= HDR_MODE_SEL    ;
 
+                           o_scl_stall_flag_sdr_hdr_sel            <= HDR_MODE_SEL;
+                           o_scl_stall_cycles_sdr_hdr_sel          <= HDR_MODE_SEL;
 
                            o_scl_pp_od_mux_sel       <= I3C_ENGINE_SEL ;
 
