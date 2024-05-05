@@ -127,10 +127,10 @@ begin
   end
 
   else if ((byte_num == 0) && (count_done))
-   data_paritychecker[15:8] = o_regfcrc_rx_data_out_temp;
+   data_paritychecker[15:8] <= o_regfcrc_rx_data_out_temp;
 
   else if ((byte_num == 1) &&  (count_done))
-   data_paritychecker[7 :0]  = o_regfcrc_rx_data_out_temp;
+   data_paritychecker[7 :0]  <= o_regfcrc_rx_data_out_temp;
 
 
 end
