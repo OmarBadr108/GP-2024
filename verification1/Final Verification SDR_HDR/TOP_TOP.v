@@ -524,7 +524,6 @@ i3c_engine u_i3c_engine (
             .o_enthdr_en (enthdr_en),
             .o_mode_sda_sel  (sda_sel),
                                                                                                     .o_hdrengine_en   (hdrengine_en), 
-
             .o_regf_wr_en_sdr_hdr_sel(regf_wr_en_mode), 
             .o_regf_data_sdr_hdr_sel (regf_data_mode),
             .o_regf_rd_en_sdr_hdr_sel(regf_rd_en_mode), 
@@ -1268,6 +1267,7 @@ wire [3:0]  o_regf_error_type ;
         .i_i_regf_DBP             (ccc_DBP),      
         .i_i_regf_SRE             (cccnt_SRE),
         
+
         .o_sclstall_en_tb       (ccc_scl_stall_en),
         .o_sclstall_code        (ccc_scl_stall_cycles),
         
@@ -1290,6 +1290,27 @@ wire [3:0]  o_regf_error_type ;
         .o_txrx_addr_ccc         (ccc_tx_special_data),   // done 
         .o_engine_odd(engine_odd),
         .o_regf_ERR_STATUS       (o_regf_ERR_STATUS_tb)    //??? not an input to regfile - yes it's output to the interface (response fifo or testbench)
+
+        .o_sclstall_en_tb       (o_sclstall_en_tb),
+        .o_sclstall_code        (i_stall_cycles),
+
+        .o_tx_en                (tx_en_hdr_mux_out), //editted by laila
+        .o_tx_mode              (tx_mode_hdr_mux_out), //editted by laila
+        .o_rx_en                (rx_en_hdr_mux_out), //editted by laila
+        .o_rx_mode              (rx_mode_hdr_mux_out), //editted by laila
+        
+        .o_bitcnt_en            (hdr_bit_cnt_en_mux_out),
+        .o_bitcnt_err_rst       (o_bitcnt_err_rst_tb),
+        .o_frmcnt_en            (cccnt_frmcnt_en),
+        .o_sdahand_pp_od        (i_sdr_scl_gen_pp_od_tb),                        // 
+        .o_frmcnt_Direct_Broadcast_n  (o_frmcnt_Direct_Broadcast_n_tb),
+        .o_regf_wr_en            (regf_wr_en_hdr_mux_out),               //editted by laila
+        .o_regf_rd_en            (regf_rd_en_hdr_mux_out),               //editted by laila
+        .o_regf_addr             (regf_rd_address_hdr_mux_out),          //editted by laila                                               .o_engine_done(ccc_engine_done),
+        .o_txrx_addr_ccc         (o_txrx_addr_ccc_tb),                                              
+        .o_engine_odd_tb         (o_engine_odd_tb),
+        .o_regf_ERR_STATUS       (o_regf_ERR_STATUS_tb)
+
         );
 
 

@@ -259,7 +259,7 @@ module CCC_TOP (
 
 		);
 
-	
+/*	
 		mux  #(.WIDTH(1)) mux_1 (
 			.i_mux_one(my_regf_wr_en_tb),
 			.i_mux_zero(o_regf_wr_en_tb),
@@ -280,7 +280,7 @@ module CCC_TOP (
 			.i_selector(my_regf_addr_tb_selector),
 			.o_mux_out(my_regf_addr_tb_mux_out)
 			);
-
+*/
 
 		reg       i_sdahnd_rx_sda_tb ;
 		reg 	  i_crc_value_tb ;
