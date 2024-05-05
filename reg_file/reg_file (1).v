@@ -32,47 +32,52 @@
 
 module reg_file #(parameter WIDTH = 8 , DEPTH = 2**12 , ADDR = 12 )
 
-	( input  wire			     i_regf_clk  		  ,   // clock , connected to the 50mhz clock , input from controller
-	  input  wire			     i_regf_rst_n	     ,  	// active low reset , input from controller
-	  input  wire			     i_regf_rd_en 	  ,  	// read data enable , input from controller
-	  input  wire			     i_regf_wr_en 	  ,  	// write data enable, pulse at the end of the last bit , input from controller
-	  input  wire [ADDR-1:0]  i_regf_addr  	  ,  	// adress of the reg file , input from controller
-	  input  wire [WIDTH-1:0] i_regf_data_wr	  ,	// data write  , input from rx
+	( input  wire			            i_regf_clk  		            ,   // clock , connected to the 50mhz clock , input from controller
+	  input  wire			            i_regf_rst_n	              ,  	// active low reset , input from controller
+	  input  wire			            i_regf_rd_en 	              ,  	// read data enable , input from controller
+	  input  wire			            i_regf_wr_en 	              ,  	// write data enable, pulse at the end of the last bit , input from controller
+	  input  wire  [ADDR-1:0]     i_regf_addr  	              ,  	// adress of the reg file , input from controller
+	  input  wire  [WIDTH-1:0]    i_regf_data_wr	            ,	  // data write  , input from rx
 
 
 
 /////////////////////////////////////////// HDR //////////////////////////////////////////
-	  input wire  [ADDR-1:0]  i_engine_configuration      ,   // location of configuration it has only 2 values either normal conf = 1000 or dummy conf = 900
+	  input wire  [ADDR-1:0]      i_engine_configuration      ,   // location of configuration it has only 2 values either normal conf = 1000 or dummy conf = 900
 
-	  output reg [15:0]      o_frmcnt_data_len 			      ,
-		output reg [2:0] 		   o_cccnt_CMD_ATTR 			      ,
-		output reg [3:0]	     o_engine_TID 	 			        ,	 	
-		output reg [7:0]		   o_ccc_CMD  	 	 	 	 	        ,
-		output reg [4:0]	     o_cccnt_DEV_INDEX 	 	 	      ,
-		output reg [2:0]		   o_frmcnt_DTT  	   	 	        ,
-		output reg [2:0]		   o_engine_MODE  		 	 	      ,
-		output reg  			     o_cccnt_RnW 	 		 		        ,
-		output reg 				     o_cccnt_WROC 				        ,
-		output reg 				     o_cccnt_TOC 		 	 	 	        ,
-		output reg 				     o_engine_CP  		  	 	      ,
+	  output reg  [15:0]          o_frmcnt_data_len 			    ,
+		output reg  [2:0] 	        o_cccnt_CMD_ATTR 			  	  ,
+		output reg  [3:0]	          o_engine_TID 	 			    		,	 	
+		output reg  [7:0]	          o_ccc_CMD  	 	 	 	 	        ,
+		output reg  [4:0]	          o_cccnt_DEV_INDEX 	 	 	    ,
+		output reg  [2:0]		        o_frmcnt_DTT  	   	 	      ,
+		output reg  [2:0]		        o_engine_MODE  		 	 	      ,
+		output reg  			          o_cccnt_RnW 	 		 		      ,
+		output reg 				          o_cccnt_WROC 				        ,
+		output reg 				          o_cccnt_TOC 		 	 	 	      ,
+		output reg 				          o_engine_CP  		  	 	      ,
+		output reg 	 	 	 		        o_cccnt_DBP  	 	 	 	 	 	 	 	,
+		output reg 	 	 	 		        o_cccnt_SRE  	 	 	 	 	 	 	 	,
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-	  output reg              o_ser_rx_tx		  			   ,
-	  output reg  [WIDTH-1:0] o_regf_data_rd    			   ,	// data read   ,  output to tx
-	  output reg  [WIDTH-1:0] o_regf_num_frames 	 		   ,	
-	  //outputs for crh
-	  output reg  [WIDTH-1:0] o_crh_CRHDLY	 	 	  			,
-	  output reg  [WIDTH-1:0] o_crh_getstatus_data 			,
-	  output reg  [WIDTH-1:0] o_crh_CRCAP2	 	 	  			,
-	  output reg  [WIDTH-1:0] o_crh_PRECR	 	 	  			,
-	  output reg  [WIDTH-1:0] o_crh_cfg_reg	 	  			,
-	  output reg  [WIDTH-1:0] o_crh_tgts_count     			,
-	  output reg  [WIDTH-1:0] o_regf_ibi_cfg 	     			,
-	  output reg  [WIDTH-1:0] o_regf_ibi_payload_size_reg ,
-	  output reg  [WIDTH-1:0] o_i_ibi_tgt_address 			,
-	  output wire [2:0]       o_regf_hj_cfg     				,
-	  output wire             o_regf_hj_support 
+	  output reg                  o_ser_rx_tx		  			      ,
+	  output reg  [WIDTH-1:0]     o_regf_data_rd    			    ,	// data read   ,  output to tx
+	  output reg  [WIDTH-1:0]     o_regf_num_frames 	 		    ,	
+	 
+	  //outputs for crh    
+	  output reg  [WIDTH-1:0]     o_crh_CRHDLY	 	 	  			  ,
+	  output reg  [WIDTH-1:0]     o_crh_getstatus_data 			  ,
+	  output reg  [WIDTH-1:0]     o_crh_CRCAP2	 	 	  			  ,
+	  output reg  [WIDTH-1:0]     o_crh_PRECR	 	 	  			    ,
+	  output reg  [WIDTH-1:0]     o_crh_cfg_reg	 	  			    ,
+	  output reg  [WIDTH-1:0]     o_crh_tgts_count     			  ,
+	  output reg  [WIDTH-1:0]     o_regf_ibi_cfg 	     			  ,
+	  output reg  [WIDTH-1:0]     o_regf_ibi_payload_size_reg ,
+	  output reg  [WIDTH-1:0]     o_i_ibi_tgt_address 			  ,
+	  output wire [2:0]           o_regf_hj_cfg     				  ,
+	  output wire                 o_regf_hj_support 
+	 
 	 );
 
 
@@ -87,29 +92,29 @@ localparam BDCST_WRITE_ADDRESS = 8'd46; //  write for broadcasring location in R
 localparam EVENT_DISABLE_BYTE_ADDRESS=10'd392; //Disable Target Events Command Byte location in RegFile
 
 //////////////////              CONTROLLER ROLE HANDOFF PARAMETERS              /////////////////
- localparam BROADCAST_ADDR_REG_FILE = 12'd46 ; //broadcast address in reg file (7E+w)
- localparam ARBITRATION_ADDR_REG_FILE = 9'd48 ; //arbitration address 
- localparam TARGET_ADDR_REG_FILE =  9'd0   ; 
- localparam GETSTATUS_ADDR_REG_FILE = 9'd387 ; 
- localparam GETMXDS_ADDR_REG_FILE = 9'd381    ; 
- localparam GETCAPS_ADDR_REG_FILE = 9'd384    ; 
- localparam DISEC_ADDR_REG_FILE = 9'd104    ; 
- localparam ENTAS0_ADDR_REG_FILE = 9'd393    ;
- localparam ENTAS1_ADDR_REG_FILE = 9'd394    ;
- localparam ENTAS2_ADDR_REG_FILE = 9'd395    ;
- localparam ENTAS3_ADDR_REG_FILE = 9'd396    ;
- localparam DEFTGTS_ADDR_REG_FILE = 9'd397   ;
- localparam GETACCCR_ADDR_REG_FILE  = 9'd389    ;
- localparam DEF_BYTE_REG_FILE = 9'd382    ;
- localparam CRCAPS1_ADDR_REG_FILE = 9'd385    ;
- localparam CRHDLY1_ADDR_REG_FILE = 9'd383    ; 
- localparam GETSTATUS_LSB_ADDR_REG_FILE = 9'd390    ;
- localparam CRCAPS2_ADDR_REG_FILE  = 9'd386    ;
- localparam PRECR_ADDR_REG_FILE = 9'd388 ; 
- localparam CRH_CFG_REG_FILE = 9'd407 ;
- localparam TGTS_COUNT_REG_FILE = 9'd35 ;
- localparam GETSTATUS_MSB_ADDR_REG_FILE = 9'd408 ;
- localparam DISEC_DATA_ADDR_REG_FILE  =  9'd406   ;
+ localparam BROADCAST_ADDR_REG_FILE        = 9'd46     ; //broadcast address in reg file (7E+w)
+ localparam ARBITRATION_ADDR_REG_FILE      = 9'd48     ; //arbitration address 
+ localparam TARGET_ADDR_REG_FILE           =  9'd0     ; 
+ localparam GETSTATUS_ADDR_REG_FILE        = 9'd387    ; 
+ localparam GETMXDS_ADDR_REG_FILE          = 9'd381    ; 
+ localparam GETCAPS_ADDR_REG_FILE          = 9'd384    ; 
+ localparam DISEC_ADDR_REG_FILE            = 9'd104    ; 
+ localparam ENTAS0_ADDR_REG_FILE           = 9'd393    ;
+ localparam ENTAS1_ADDR_REG_FILE           = 9'd394    ;
+ localparam ENTAS2_ADDR_REG_FILE           = 9'd395    ;
+ localparam ENTAS3_ADDR_REG_FILE           = 9'd396    ;
+ localparam DEFTGTS_ADDR_REG_FILE          = 9'd397    ;
+ localparam GETACCCR_ADDR_REG_FILE         = 9'd389    ;
+ localparam DEF_BYTE_REG_FILE              = 9'd382    ;
+ localparam CRCAPS1_ADDR_REG_FILE          = 9'd385    ;
+ localparam CRHDLY1_ADDR_REG_FILE          = 9'd383    ; 
+ localparam GETSTATUS_LSB_ADDR_REG_FILE    = 9'd390    ;
+ localparam CRCAPS2_ADDR_REG_FILE          = 9'd386    ;
+ localparam PRECR_ADDR_REG_FILE            = 9'd388    ; 
+ localparam CRH_CFG_REG_FILE               = 9'd407    ;
+ localparam TGTS_COUNT_REG_FILE            = 9'd35     ;
+ localparam GETSTATUS_MSB_ADDR_REG_FILE    = 9'd408    ;
+ localparam DISEC_DATA_ADDR_REG_FILE       = 9'd406    ;
 
 
 
@@ -162,23 +167,23 @@ assign o_regf_hj_support  = reg_array[409][0]   ;
  		if (!i_regf_rst_n)
  			begin
  				
- 				/////////////////////////////////////////////      HDR     ///////////////////////////////////////////////////////
- 				// DWORD0 for Dummy configuration .. that's a fixed configurations that doesn't change so it's made on the reset condition
- 				// so whenever is needed to excute this dummy configuration the engine just has to give the input "i_engine_configuration" a value equals "DUMMY_CONFIGURATION" value .. say 'd 900
- 				reg_array[DUMMY_CONFIGURATION]     <= 8'b1000_0001 ;		// 413
- 				reg_array[DUMMY_CONFIGURATION + 1] <= 8'b1000_1111 ;		// 414
- 				reg_array[DUMMY_CONFIGURATION + 2] <= 8'b0000_0000 ;		// 415
- 				reg_array[DUMMY_CONFIGURATION + 3] <= 8'b0001_1000 ;		// 416 
-
-				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
- 				o_regf_data_rd    <= 'b0 ;
- 				o_regf_num_frames <= 'b0 ;     // editted by nour
-				o_regf_ibi_cfg  <= 'b0 ;
- 		   		o_regf_ibi_payload_size_reg <= 'b0 ;
+ 				  /////////////////////////////////////////////      HDR     ///////////////////////////////////////////////////////
+ 				  // DWORD0 for Dummy configuration .. that's a fixed configurations that doesn't change so it's made on the reset condition
+ 				  // so whenever is needed to excute this dummy configuration the engine just has to give the input "i_engine_configuration" a value equals "DUMMY_CONFIGURATION" value .. say 'd 900
+ 				  reg_array[DUMMY_CONFIGURATION]     <= 8'b1000_0001 ;		// 413
+ 				  reg_array[DUMMY_CONFIGURATION + 1] <= 8'b1000_1111 ;		// 414
+ 				  reg_array[DUMMY_CONFIGURATION + 2] <= 8'b0000_0000 ;		// 415
+ 				  reg_array[DUMMY_CONFIGURATION + 3] <= 8'b0001_1000 ;		// 416 
+          
+  				  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  
+  
+  
+ 				  o_regf_data_rd    <= 'b0 ;
+ 				  o_regf_num_frames <= 'b0 ;     // editted by nour
+				  o_regf_ibi_cfg  <= 'b0 ;
+ 		   	  o_regf_ibi_payload_size_reg <= 'b0 ;
  		   		o_i_ibi_tgt_address <= 'b0 ;
 
  				reg_array[TARGET_ADDR_REG_FILE]   <= 8'b10101000   	 ; // Target Address , Address[0] = 0 for TX, 1 for RX
@@ -197,7 +202,7 @@ assign o_regf_hj_support  = reg_array[409][0]   ;
  				reg_array[46]  <= 'b11111100 ; // 7'h7E broadcast address with rnw = 0 *write*
  				reg_array[47]  <= 'b11111101 ; // 7'h7E broadcast address with rnw = 1 *read*
  				reg_array[49]  <= 'b00000111 ; // ENTDAA CCC
- 				reg_array[50]  <= 'b00100000 ; // 2024 : ENTHDR_DDR CCC (20 in hexadecimal)
+
 
  				//////////// Hot-Join Registers ////////////
  				reg_array[401] <= 'b00000000     ;   //ENEC CCC
@@ -261,17 +266,27 @@ assign o_regf_hj_support  = reg_array[409][0]   ;
  		  	/////////////////////////////////////////////      HDR     ///////////////////////////////////////////////////////
  		  		o_frmcnt_data_len <= DWORD_1_Vector [31:16] ;
 
- 		  		o_cccnt_CMD_ATTR  <= DWORD_0_Vector [2:0]   ;
- 		  		o_engine_TID 	 	<= DWORD_0_Vector [6:3]   ;
- 		  		o_ccc_CMD  	 	 	<= DWORD_0_Vector [14:7]  ;
- 		  		o_engine_CP  		<= DWORD_0_Vector [15]    ;
+ 		  		o_cccnt_CMD_ATTR  <= DWORD_0_Vector [2:0]   ; 
+ 		  		o_engine_TID 	 	  <= DWORD_0_Vector [6:3]   ;
+ 		  		o_ccc_CMD  	 	 	  <= DWORD_0_Vector [14:7]  ;
+ 		  		o_engine_CP  		  <= DWORD_0_Vector [15]    ;
  		  		o_cccnt_DEV_INDEX <= DWORD_0_Vector [20:16] ;
- 		  		o_frmcnt_DTT  	   <= DWORD_0_Vector [25:23] ;
- 		  		o_engine_MODE  	<= DWORD_0_Vector [28:26] ;
- 		  		o_cccnt_RnW 	 	<= DWORD_0_Vector [29]    ;
- 		  		o_cccnt_WROC 		<= DWORD_0_Vector [30]    ;
- 		  		o_cccnt_TOC 		<= DWORD_0_Vector [31]    ;
+ 		  		o_frmcnt_DTT  	  <= DWORD_0_Vector [25:23] ;
+ 		  		o_engine_MODE  	  <= DWORD_0_Vector [28:26] ;
+ 		  		o_cccnt_RnW 	 	  <= DWORD_0_Vector [29]    ;
+ 		  		o_cccnt_WROC 		  <= DWORD_0_Vector [30]    ;
+ 		  		o_cccnt_TOC 		  <= DWORD_0_Vector [31]    ;
 
+ 		  		if (DWORD_0_Vector [0] == 1'b1) begin 					  // immediate 
+ 		  			o_frmcnt_DTT  	  <= DWORD_0_Vector [25:23] ;
+ 		  			o_cccnt_DBP 	 	 	<= 1'b0 ;
+ 		  			o_cccnt_SRE 	 	 	<= 1'b0 ;
+ 		  		end
+ 		  		else begin  	 	 	 	 	 	 	 	 	 										// regular 
+ 		  			o_cccnt_DBP 	 	  <= DWORD_0_Vector [25] ;
+ 		  			o_cccnt_SRE 	 	  <= DWORD_0_Vector [24] ;
+ 		  			o_frmcnt_DTT  	  <= 'd0 ;
+ 		  		end  
 
  		  		reg_array [i_engine_configuration - 1] = 8'b0000_0000 ; //zerozzzz location to ba serialized in ZEROS state 
 
