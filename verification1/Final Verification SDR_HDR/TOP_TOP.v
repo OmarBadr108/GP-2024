@@ -931,8 +931,8 @@ hdr_engine u_hdr_engine (
     .o_bit_cnt_en_sel                       (hdr_bit_cnt_en_sel),
     .o_frm_cnt_en_sel                       (hdr_frm_cnt_en_sel),
     .o_sdahand_pp_od_sel                    (hdr_sdahand_pp_od_sel),
-
-
+    .o_hdr_scl_stall_en_sel                 (hdr_scl_stall_en_sel),             
+    .o_hdr_scl_stall_cycles_sel             (hdr_scl_stall_cycles_sel),
                                                                                     .o_i3cengine_hdrengine_done             (hdrengine_exit)           ,
     .o_ddrmode_en                           (o_ddrmode_enable)           ,
     .o_ccc_en                               (o_ccc_enable)           ,
