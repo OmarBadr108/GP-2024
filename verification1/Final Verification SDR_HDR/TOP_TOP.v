@@ -41,7 +41,8 @@ module sdr_hdr_transition_top (
                         input  wire          i_ccc_en_dis_hj     , // (TBD) for enable/disable events to prevent Bus-Initialization or DAA interruptions.
     
     input wire           i_sclgen_rst_n , // new by badr 
-    // input to top module to write configurations
+
+    // Configurations signals
     input wire   [7:0]   i_regf_config  ,
     input wire           i_data_config_mux_sel,  //1: to write configurations to the controller ,     0:i3c blocks to access reg file  
 
@@ -51,7 +52,6 @@ module sdr_hdr_transition_top (
 
 
     
-    //input  wire          i_hdr_en            , // enable signal for the hdr mode
 
     //input  wire          i_ccc_done          ,
     //input  wire          i_ddr_mode_done     ,
@@ -60,8 +60,8 @@ module sdr_hdr_transition_top (
     
 
     //output wire          o_ddrmode_enable       ,
-    //output wire          o_ccc_enable            ,
-    output wire   [11:0] o_regf_address_special  ,
+ 
+    //output wire   [11:0] o_regf_address_special  ,
     output wire          scl                 , // scl bus
                         output wire          o_sdr_rx_valid      , // output to host >> valid data are loaded
                         output wire          o_ctrl_done         ); // sdr block done signal
@@ -349,12 +349,12 @@ module sdr_hdr_transition_top (
    wire       [2:0]      enthdr_rx_mode              ;
    wire                  enthdr_bit_cnt_en           ;
    wire                  ser_hdr_data                ;
-   wire                  regf_wr_en_mode              ; 
+   wire                  regf_wr_en_mode             ; 
    wire                  regf_data_mode              ;
    wire                  regf_rd_en_mode             ; 
    wire                  regf_rd_address_mode        ;
    wire                  scl_pp_od_mode              ;    
-
+   wire                  ccc_enable                  ,
  
 ///////////////////////////hdr_sdr_mux///////////////////////
    wire                  sda_sel                     ;                // CHOOSE BETWEEN HDR & SDR 
@@ -1168,19 +1168,21 @@ gen_mux #(1,1) reg_rd_en_config_data_mux (
     wire       i_bitcnt_en_tb ;
     wire [5:0] o_cnt_bit_count_tb ;
     wire       o_bitcnt_err_rst_tb ;
+
     /////////////////////////// CCC Handler /////////////////////////////
     wire       engine_ccc_en  ,i_sclstall_stall_done_tb  ;
     wire       i_frmcnt_last_frame_tb ;
     wire       o_frmcnt_Direct_Broadcast_n_tb ;
+
     // related to tx
     wire       i_tx_mode_done_tb ,o_tx_en_tb ;
     wire [3:0] o_tx_mode_tb ;
+
     // related to rx
     wire       i_rx_mode_done_tb ,i_rx_pre_tb ,i_rx_error_tb ,o_rx_en_tb ;
     wire [3:0] o_rx_mode_tb ;
+
     // related to regfile (configuration)
-
-
     wire        i_regf_RnW_tb ,i_regf_TOC_tb , i_regf_WROC_tb , i_regf_DBP_tb , i_regf_SRE_tb ;
     wire [2:0]  i_regf_CMD_ATTR_tb ;
     wire [7:0]  i_regf_CMD_tb ;
@@ -1211,7 +1213,7 @@ gen_mux #(1,1) reg_rd_en_config_data_mux (
     CCC_Handler CCC_Handler (
         .i_sys_clk              (sys_clk_50mhz),
         .i_sys_rst              (i_sdr_rst_n),
-        .i_engine_en            (engine_ccc_en),
+        .i_engine_en            (ccc_enable),//(engine_ccc_en),    // connected to hdr engine output signal -Laila
         .i_bitcnt_number        (o_cnt_bit_count_tb),
         .i_tx_mode_done         (i_tx_mode_done_tb),
         .i_rx_mode_done         (i_rx_mode_done_tb),
@@ -1220,37 +1222,38 @@ gen_mux #(1,1) reg_rd_en_config_data_mux (
         .i_rx_error             (i_rx_error_tb),
         .i_frmcnt_last_frame    (i_frmcnt_last_frame_tb),
 
-        .i_i_regf_RnW       (cccnt_RnW),
-        .i_i_regf_CMD_ATTR  (cccnt_CMD_ATTR),
-        .i_i_regf_CMD       (ccc_CMD),
-        .i_i_regf_DEV_INDEX (cccnt_DEV_INDEX),
-        .i_i_regf_TOC       (cccnt_TOC),
-        .i_i_regf_WROC      (cccnt_WROC),
-        .i_i_regf_DTT       (frmcnt_DTT),
+        .i_i_regf_RnW           (cccnt_RnW),
+        .i_i_regf_CMD_ATTR      (cccnt_CMD_ATTR),
+        .i_i_regf_CMD           (ccc_CMD),
+        .i_i_regf_DEV_INDEX     (cccnt_DEV_INDEX),
+        .i_i_regf_TOC           (cccnt_TOC),
+        .i_i_regf_WROC          (cccnt_WROC),
+        .i_i_regf_DTT           (frmcnt_DTT),
 
-        .i_i_regf_DBP       (ccc_DBP),      
-        .i_i_regf_SRE       (cccnt_SRE),
+        .i_i_regf_DBP           (ccc_DBP),      
+        .i_i_regf_SRE           (cccnt_SRE),
         
-        .o_sclstall_en(o_sclstall_en_tb),
-        .o_sclstall_code(i_stall_cycles),
-        .o_tx_en(o_tx_en_tb),
-        .o_tx_mode(o_tx_mode_tb),
-        .o_rx_en(o_rx_en_tb),
-        .o_rx_mode(o_rx_mode_tb),
-        .o_bitcnt_en(i_bitcnt_en_tb),
-        .o_bitcnt_err_rst(o_bitcnt_err_rst_tb),
-        .o_frmcnt_en(cccnt_frmcnt_en),
-        .o_sdahand_pp_od(i_sdr_scl_gen_pp_od_tb),                        // 
+        .o_sclstall_en_tb       (o_sclstall_en_tb),
+        .o_sclstall_code        (i_stall_cycles),
+        
+        .o_tx_en                (tx_en_hdr_mux_out), //editted by laila
+        .o_tx_mode              (tx_mode_hdr_mux_out), //editted by laila
+        .o_rx_en                (rx_en_hdr_mux_out), //editted by laila
+        .o_rx_mode              (rx_mode_hdr_mux_out), //editted by laila
+        .o_bitcnt_en            (hdr_bit_cnt_en_mux_out),
+        .o_bitcnt_err_rst       (o_bitcnt_err_rst_tb),
+        .o_frmcnt_en            (cccnt_frmcnt_en),
+        .o_sdahand_pp_od        (i_sdr_scl_gen_pp_od_tb),                        // 
 
-        .o_frmcnt_Direct_Broadcast_n(o_frmcnt_Direct_Broadcast_n_tb),
+        .o_frmcnt_Direct_Broadcast_n  (o_frmcnt_Direct_Broadcast_n_tb),
 
-        .o_regf_wr_en(o_regf_wr_en_tb),
-        .o_regf_rd_en(o_regf_rd_en_tb),
-        .o_regf_addr(o_regf_addr_tb),
+        .o_regf_wr_en            (regf_wr_en_hdr_mux_out),               //editted by laila
+        .o_regf_rd_en            (regf_rd_en_hdr_mux_out),               //editted by laila
+        .o_regf_addr             (regf_rd_address_hdr_mux_out),          //editted by laila
                                                         .o_engine_done(ccc_engine_done),
-        .o_txrx_addr_ccc(o_txrx_addr_ccc_tb),
+        .o_txrx_addr_ccc         (o_txrx_addr_ccc_tb),
                                                         .o_engine_odd(o_engine_odd_tb),
-        .o_regf_ERR_STATUS(o_regf_ERR_STATUS_tb)
+        .o_regf_ERR_STATUS       (o_regf_ERR_STATUS_tb)
         );
 
 
@@ -1418,10 +1421,10 @@ gen_mux #(1,1) reg_rd_en_config_data_mux (
         .i_sclgen_scl               (scl)                   ,
         .i_sclgen_scl_pos_edge      (scl_pos_edge)           ,
         .i_sclgen_scl_neg_edge      (scl_neg_edge)           ,
-        .i_ddrccc_rx_en             (o_rx_en_tb)                ,
-        .i_sdahnd_rx_sda            (i_sdahnd_rx_sda_tb)        , // to be put on mux in
+        .i_ddrccc_rx_en             (rx_en_hdr_mux_out)                ,
+        .i_sdahnd_rx_sda            (deser_s_data)        , // to be put on mux in
         //.i_bitcnt_rx_bit_count    (i_bitcnt_rx_bit_count_tb)  ,
-        .i_ddrccc_rx_mode           (o_rx_mode_tb)              ,
+        .i_ddrccc_rx_mode           (rx_mode_hdr_mux_out)              ,
         .i_crc_value                (i_crc_value_tb)            ,
         .i_crc_valid                (i_crc_valid_tb)            ,
             
@@ -1438,14 +1441,14 @@ gen_mux #(1,1) reg_rd_en_config_data_mux (
         tx tx (
         .i_sys_clk               (sys_clk_50mhz),
         .i_sys_rst               (rst_n),
-        .i_ddrccc_tx_en          (o_tx_en_tb),
+        .i_ddrccc_tx_en          (tx_en_hdr_mux_out),
         .i_sclgen_scl_pos_edge   (scl_pos_edge),
         .i_sclgen_scl_neg_edge   (scl_neg_edge),
-        .i_ddrccc_tx_mode        (o_tx_mode_tb),
+        .i_ddrccc_tx_mode        (tx_mode_hdr_mux_out),
         .i_regf_tx_parallel_data (i_regf_tx_parallel_data_tb),
         .i_ddrccc_special_data   (i_regf_CMD_tb),
         .i_crc_crc_value         (i_crc_crc_value_tb),
-        .o_sdahnd_serial_data    (SDA),
+        .o_sdahnd_serial_data    (ser_hdr_data),
         .o_ddrccc_mode_done      (i_tx_mode_done_tb),
         .o_crc_parallel_data     (o_crc_parallel_data_tb),
         .o_crc_en                (o_crc_en_tb)
