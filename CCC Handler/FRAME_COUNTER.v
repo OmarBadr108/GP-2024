@@ -1,6 +1,4 @@
 
-
-
 module frame_counter(
     //input  wire  [7:0] i_fcnt_no_frms     ,
     input  wire        i_fcnt_clk         ,

@@ -29,11 +29,6 @@ module CCC_Handler_tb ();
 	// related to regfile (configuration)
 
 
-
-
-
-
-
 	reg  	    i_regf_RnW_tb ,i_regf_TOC_tb , i_regf_WROC_tb , i_regf_DBP_tb , i_regf_SRE_tb ;
 	reg  [2:0]  i_regf_CMD_ATTR_tb ;
 	reg  [7:0]  i_regf_CMD_tb ;
@@ -81,17 +76,15 @@ module CCC_Handler_tb ();
 		.i_rx_error 	 	    (i_rx_error_tb),
 		.i_frmcnt_last_frame 	(i_frmcnt_last_frame_tb),
 
-		.i_regf_RnW(i_regf_RnW_tb),
-		.i_regf_CMD_ATTR(i_regf_CMD_ATTR_tb),
-		.i_regf_CMD(i_regf_CMD_tb),
-		.i_regf_DEV_INDEX(i_regf_DEV_INDEX_tb),
-		.i_regf_TOC(i_regf_TOC_tb),
-		.i_regf_WROC(i_regf_WROC_tb),
-
-		.i_regf_DTT(i_regf_DTT_tb),
-
-		.i_regf_DBP(i_regf_DBP_tb),
-		.i_regf_SRE(i_regf_SRE_tb),
+		.i_i_regf_RnW       (i_regf_RnW_tb),
+		.i_i_regf_CMD_ATTR  (i_regf_CMD_ATTR_tb),
+		.i_i_regf_CMD       (i_regf_CMD_tb),
+		.i_i_regf_DEV_INDEX (i_regf_DEV_INDEX_tb),
+		.i_i_regf_TOC       (i_regf_TOC_tb),
+		.i_i_regf_WROC      (i_regf_WROC_tb),
+		.i_i_regf_DTT       (i_regf_DTT_tb),
+		.i_i_regf_DBP       (i_regf_DBP_tb),
+		.i_i_regf_SRE       (i_regf_SRE_tb),
 		//.i_regf_DATA_LENGTH(),
 		.o_sclstall_en(o_sclstall_en_tb),
 		.o_sclstall_code(i_stall_cycles),
@@ -2010,7 +2003,7 @@ module CCC_Handler_tb ();
 			i_regf_CMD_ATTR_tb  == 3'd0 && i_regf_CMD_tb == 8'h8B && !i_regf_DBP_tb && i_regf_DATA_LEN_tb == 2)
 		{
 			bins first_word_rx_pre = {0};
-			bins second_word_rx_pre = {1};
+			illegal_bins second_word_rx_pre = {1};
 		}
 
 		o_frmcnt_en : coverpoint o_frmcnt_en_tb iff (
@@ -2178,7 +2171,7 @@ module CCC_Handler_tb ();
 			i_regf_CMD_ATTR_tb  == 3'd0 && i_regf_CMD_tb == 8'h8C && !i_regf_DBP_tb && i_regf_DATA_LEN_tb == 2)
 		{
 			bins first_word_rx_pre = {0};
-			bins second_word_rx_pre = {1};
+			illegal_bins second_word_rx_pre = {1};
 		}
 
 		o_frmcnt_en : coverpoint o_frmcnt_en_tb iff (
@@ -2344,7 +2337,7 @@ module CCC_Handler_tb ();
 			i_regf_CMD_ATTR_tb  == 3'd0 && i_regf_CMD_tb == 8'h90 && !i_regf_DBP_tb && i_regf_DATA_LEN_tb == 2)
 		{
 			bins first_word_rx_pre = {0};
-			bins second_word_rx_pre = {1};
+			illegal_bins second_word_rx_pre = {1};
 		}
 
 		o_frmcnt_en : coverpoint o_frmcnt_en_tb iff (
@@ -2508,7 +2501,7 @@ module CCC_Handler_tb ();
 			i_regf_CMD_ATTR_tb  == 3'd0 && i_regf_CMD_tb == 8'h8E && !i_regf_DBP_tb && i_regf_DATA_LEN_tb == 1)
 		{
 			bins first_word_rx_pre = {0};
-			bins second_word_rx_pre = {1};
+			illegal_bins second_word_rx_pre = {1};
 		}
 
 		o_frmcnt_en : coverpoint o_frmcnt_en_tb iff (
@@ -2674,7 +2667,7 @@ module CCC_Handler_tb ();
 			i_regf_CMD_ATTR_tb  == 3'd0 && i_regf_CMD_tb == 8'h8F && !i_regf_DBP_tb && i_regf_DATA_LEN_tb == 1)
 		{
 			bins first_word_rx_pre = {0};
-			bins second_word_rx_pre = {1};
+			illegal_bins second_word_rx_pre = {1};
 		}
 
 		o_frmcnt_en : coverpoint o_frmcnt_en_tb iff (
@@ -3038,7 +3031,6 @@ int cycle_count ;
         		end
         		
         		// Step 5: Randomize until engine_done is set to 1
-       			
 				i_sdahnd_rx_sda_tb = $random();
 				#(2*CLK_PERIOD); // One clock cycle delay
 				wait (o_engine_done_tb) #(2*CLK_PERIOD);
@@ -3047,6 +3039,8 @@ int cycle_count ;
     	end 
     end
 */
+
+
 
 /*
 //////////////////////////////////////////////  Direct set driver /////////////////////////////////
@@ -3057,16 +3051,63 @@ int cycle_count ;
 		end
 	end 
 */
-////////////////////////////  Random Direct driver for GET commands ///////////////////////////
-
-	initial begin 
-		forever #(2*CLK_PERIOD) begin  
-			@(negedge scl_neg_edge_tb or  negedge scl_pos_edge_tb) i_sdahnd_rx_sda_tb = $random() ;
-		end
-	end 
 
 
 
+
+
+
+		// for second preamble and read data 
+//////////////////////////////////////////////  Direct Get driver /////////////////////////////////
+// backup works 100 % el7amdulelah 
+// for second preamble and read data 
+int cycle_count ;
+		 // Simulation logic to create the desired pattern (Broadcast)
+    initial begin	 		
+    	for (i=0 ; i<10000 ; i++) begin
+    		#(2*CLK_PERIOD); // One clock cycle delay	
+    		wait(i_engine_en_tb);
+    		@(negedge scl_neg_edge_tb or  negedge scl_pos_edge_tb)
+        		// Step 1: Randomize for 44 cycles
+        		cycle_count = 37;
+        		while (cycle_count > 0) begin
+        		    i_sdahnd_rx_sda_tb = $random();
+        		    #(CLK_PERIOD); // One clock cycle delay
+        		    cycle_count--;
+        		end
+        		
+        		// Step 2: Hold at zero for 4 cycles
+        		i_sdahnd_rx_sda_tb = 0;
+        		repeat (12) begin
+        		#(CLK_PERIOD); // One clock cycle delay
+        		end
+        		i_sdahnd_rx_sda_tb = 0;
+        		//wait (i_sclstall_stall_done_tb) ;
+        		@(negedge o_crc_en_tb) ;
+        		#(3*CLK_PERIOD) ;
+
+        		//CRC Preamble 
+        		i_sdahnd_rx_sda_tb = 1;
+        		#(2*CLK_PERIOD) ;
+        		i_sdahnd_rx_sda_tb = 0;
+        		#(2*CLK_PERIOD) ;
+
+        		// C token 1100
+        		i_sdahnd_rx_sda_tb = 1;
+        		#(4*CLK_PERIOD) ;
+        		i_sdahnd_rx_sda_tb = 0;
+        		#(4*CLK_PERIOD) ;
+
+				wait (o_engine_done_tb) #(2*CLK_PERIOD);
+				continue ;
+				  
+    	end 
+    end
+
+
+
+
+///////////////////////////////////////////////////// TASKS ///////////////////////////////////////
 	task system_reset ;
 		begin 
 			@(negedge i_sys_clk_tb)
@@ -3651,7 +3692,7 @@ int cycle_count ;
     endsequence
 
     sequence zero_after_delay_1_D_get;
-        special_preamble_seq_1_D_get ##(2*scl_wrt_sys_clk) o_tx_mode_tb == zero;  // still zero even it it was a Direct get CCC
+        special_preamble_seq_1_D_get ##(2 * scl_wrt_sys_clk) o_tx_mode_tb == zero;  // still zero even it it was a Direct get CCC
     endsequence
     
     sequence seven_zeros_seq_1_D_get;
@@ -3737,55 +3778,35 @@ int cycle_count ;
 
     // DATA Word 
     sequence pre_one_2_sec_2_D_get ;
-        parity_calc_3_seq_2_D_get ##(2*scl_wrt_sys_clk) o_tx_mode_tb == one ;
+        parity_calc_3_seq_2_D_get ##(2 * scl_wrt_sys_clk) o_tx_mode_tb == one ;
     endsequence
 
     sequence pre_two_2_sec_2_D_get ;
-        pre_one_2_sec_2_D_get ##(scl_wrt_sys_clk) o_tx_mode_tb == special_preamble ;
+        pre_one_2_sec_2_D_get ##(scl_wrt_sys_clk) o_tx_mode_tb == special_preamble ; // i.e Disabled
     endsequence
 
-    sequence serializing_byte_regf_2_seq_2_D_get ;
-        pre_two_2_sec_2_D_get ##(scl_wrt_sys_clk) o_tx_mode_tb == (o_tx_mode_tb == special_preamble && o_rx_mode_tb == deserializing_byte ) ;
-    endsequence
-
-    sequence serializing_byte_regf_3_seq_2_D_get ;
-        serializing_byte_regf_2_seq_2_D_get ##(8*scl_wrt_sys_clk) (o_tx_mode_tb == special_preamble && o_rx_mode_tb == deserializing_byte ) ;
-    endsequence
-
-    sequence parity_calc_4_seq_2_D_get ;
-        serializing_byte_regf_3_seq_2_D_get ##(8*scl_wrt_sys_clk) (o_tx_mode_tb == special_preamble && o_rx_mode_tb == parity_check) ;
-    endsequence
-
-
-    // second CRC data word 
-    sequence special_preamble_2_sec_2_D_get ;
-        parity_calc_4_seq_2_D_get ##(2*scl_wrt_sys_clk) (o_tx_mode_tb == special_preamble) ;
-    endsequence
-
-    sequence c_token_CRC_seq_2_D_get ;
-        special_preamble_2_sec_2_D_get ##(2*scl_wrt_sys_clk) o_tx_mode_tb == special_preamble  ;
-    endsequence
-
-    sequence value_CRC_seq_2_D_get ;
-        c_token_CRC_seq_2_D_get ##(4*scl_wrt_sys_clk) (o_tx_mode_tb == special_preamble && o_rx_mode_tb == check_value_CRC) ;
-    endsequence
 
     	// for TOC = 0
     	sequence restart_pattern_seq_2_D_get ;
-    	    value_CRC_seq_2_D_get ##(5*scl_wrt_sys_clk) (o_tx_mode_tb == restart_pattern && o_rx_mode_tb == preamble_rx_mode) ;
+    	    pre_two_2_sec_2_D_get ##(30*scl_wrt_sys_clk) o_tx_mode_tb == restart_pattern ;
     	endsequence
+    	// for TOC = 0
     	sequence Direct_get_2_bytes_sec_TOC_0 ;
-    	    restart_pattern_seq_2_D_get ##(13) o_tx_mode_tb == (o_tx_mode_tb == special_preamble && o_rx_mode_tb == preamble_rx_mode)  ;
+    	    restart_pattern_seq_2_D_get ##(11) (o_tx_mode_tb == special_preamble)  ;
     	endsequence
 
 
+
+    	// for TOC = 1
+    	sequence exit_pattern_seq_2_D_get ;
+    	    pre_two_2_sec_2_D_get ##(30*scl_wrt_sys_clk) o_tx_mode_tb == exit_pattern  ;
+    	endsequence
     	// for TOC = 1 
-		sequence exit_pattern_seq_D_get ;
-    	    value_CRC_seq_2_D_get ##(5*scl_wrt_sys_clk) (o_tx_mode_tb == exit_pattern && o_rx_mode_tb == preamble_rx_mode) ;
+		sequence Direct_get_2_bytes_sec_TOC_1 ;
+    	    exit_pattern_seq_2_D_get ##(17) (o_tx_mode_tb == special_preamble) ;
     	endsequence
-    	sequence Direct_get_2_bytes_sec_TOC_1 ;
-    	    exit_pattern_seq_D_get ##(18) (o_tx_mode_tb == special_preamble && o_rx_mode_tb == preamble_rx_mode)  ;
-    	endsequence
+
+
 
 // direct get 
 
@@ -3821,21 +3842,33 @@ int cycle_count ;
 
 
 
+    // GETBCR & GETDCR 
+	property Direct_GETBCR_GETDCR_TOC_0 ;
+        @(posedge i_sys_clk_tb) ($rose(i_engine_en_tb) 								  &&
+        											i_regf_CMD_ATTR_tb  == 3'd0       && 
+        						  (i_regf_CMD_tb == 8'h8F || i_regf_CMD_tb == 8'h8E)  && 
+        					    !i_regf_DBP_tb && i_regf_DATA_LEN_tb == 1             && 
+        						   i_regf_TOC_tb == 0 && i_regf_RnW_tb		    	       ) |-> Direct_get_2_bytes_sec_TOC_0 ;
+    endproperty
+
+    property Direct_GETBCR_GETDCR_TOC_1 ;
+        @(posedge i_sys_clk_tb) ($rose(i_engine_en_tb) 								  &&
+        											i_regf_CMD_ATTR_tb  == 3'd0       && 
+        						  (i_regf_CMD_tb == 8'h8F || i_regf_CMD_tb == 8'h8E)  && 
+        						!i_regf_DBP_tb && i_regf_DATA_LEN_tb == 1             && 
+        						  i_regf_TOC_tb == 1 && i_regf_RnW_tb	    	           ) |-> Direct_get_2_bytes_sec_TOC_1 ;
+    endproperty
 
 
 
+    // Assert the property
+    assert property(Direct_GETBCR_GETDCR_TOC_0)
+                            $display("%t Direct_GETBCR_GETDCR_TOC_0 PASSED ",$time); else
+                            $display("%t Direct_GETBCR_GETDCR_TOC_0 FAILED ",$time);
 
-
-
-
-
-
-
-
-
-
-
-
-
+    // Assert the property
+    assert property(Direct_GETBCR_GETDCR_TOC_1)
+                            $display("%t Direct_GETBCR_GETDCR_TOC_1 PASSED ",$time); else
+                            $display("%t Direct_GETBCR_GETDCR_TOC_1 FAILED ",$time);
 
 endmodule 
