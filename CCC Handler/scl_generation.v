@@ -32,9 +32,9 @@
 
 `default_nettype none
 module scl_generation(
-    input  wire       i_sdr_ctrl_clk          ,  // 50 MHz clock
+    input  wire       i_sdr_ctrl_clk          ,   // 50 MHz clock
     input  wire       i_sdr_ctrl_rst_n        ,
-    input  wire       i_sdr_scl_gen_pp_od     ,  // 1: Push-Pull      // 0: for Open-Drain
+    input  wire       i_sdr_scl_gen_pp_od     ,   // 1: Push-Pull      // 0: for Open-Drain
     input  wire       i_scl_gen_stall         ,  // 1 for stalling
     input  wire       i_sdr_ctrl_scl_idle     ,
     input  wire       i_timer_cas             ,
@@ -74,12 +74,12 @@ always @(posedge i_sdr_ctrl_clk or negedge i_sdr_ctrl_rst_n)
     else
       begin
         case (state)
-          LOW:
-            begin
+          LOW: begin
                 o_scl_neg_edge <= 1'b0;
-               if (i_scl_gen_stall) state <=   LOW  ;
-               else
-                begin
+                if (i_scl_gen_stall) begin
+                 state <=   LOW  ;
+                end
+                else begin
                     if (switch)
                       begin
                         o_scl <=   1'b1 ;
@@ -98,7 +98,10 @@ always @(posedge i_sdr_ctrl_clk or negedge i_sdr_ctrl_rst_n)
           HIGH:
             begin
             o_scl_pos_edge <= 1'b0;
-                if ((switch && !i_sdr_ctrl_scl_idle) || (i_timer_cas) )
+                if (i_scl_gen_stall) begin
+                  state <=   LOW  ;
+                end
+                else if ((switch && !i_sdr_ctrl_scl_idle) || (i_timer_cas) )
                   begin
                     o_scl <=   1'b0 ;
                     state <=   LOW  ;

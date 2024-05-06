@@ -191,7 +191,7 @@ parameter [3:0]
 // SCL staller parameters 
 parameter [4:0] restart_pattern_stall = 5'd12  , // according to restart pattern specs 
                 restart_pattern_stall_special = 5'd11  , // according to restart pattern specs
-                exit_pattern_stall    = 5'd17 ; // according to exit pattern specs 
+                exit_pattern_stall    = 5'd18 ; // according to exit pattern specs 
 
 
 // Error states parameters 

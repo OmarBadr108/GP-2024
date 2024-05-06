@@ -1,0 +1,78 @@
+C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/Normal_Transaction.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/Normal_Transaction.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module ddr_mode
+
+Top level modules:
+	ddr_mode
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/bit_counter.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/bit_counter.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module bits_counter
+
+Top level modules:
+	bits_counter
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/rx.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/rx.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module rx
+
+Top level modules:
+	rx
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/nt_tb.sv {1 {vlog -work work -vopt -sv -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/nt_tb.sv
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module nt_tb
+
+Top level modules:
+	nt_tb
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/mux8.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/mux8.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module mux8
+
+Top level modules:
+	mux8
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/frame_counter.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/frame_counter.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module frame_counter
+
+Top level modules:
+	frame_counter
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/mux1.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/mux1.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module mux1
+
+Top level modules:
+	mux1
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/staller.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/staller.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module scl_staller
+
+Top level modules:
+	scl_staller
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/top.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/top.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module top
+
+Top level modules:
+	top
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/Tx.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/Tx.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module tx
+
+Top level modules:
+	tx
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/scl_generation.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/scl_generation.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module scl_generation
+
+Top level modules:
+	scl_generation
+
+} {} {}}

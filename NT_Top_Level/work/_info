@@ -1,0 +1,288 @@
+m255
+K4
+z2
+!s99 nomlopt
+!s11f vlog 2021.1 2021.01, Jan 19 2021
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler
+T_opt
+!s110 1715028652
+Vmn74;zLOJEmd>bFZ;Ea>53
+04 5 4 work nt_tb fast 0
+=1-3c2c30a457d5-663942ac-1ab-3e64
+!s124 OEM100
+o-quiet -auto_acc_if_foreign -work work +acc
+Z0 tCvgOpt 0
+n@_opt
+OL;O;2021.1;73
+vbits_counter
+Z1 !s110 1715028638
+!i10b 1
+!s100 e7723G2;5=>W>k`nJ@?:k3
+I8?E^G<VSUVgmAWhL@J3:61
+Z2 dC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level
+Z3 w1715016408
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/bit_counter.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/bit_counter.v
+!i122 0
+L0 1 61
+Z4 VDg1SIo80bB@j0V0VzS_@n1
+Z5 OL;L;2021.1;73
+r1
+!s85 0
+31
+Z6 !s108 1715028638.000000
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/bit_counter.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/bit_counter.v|
+!i113 0
+Z7 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R0
+vcrc
+R1
+!i10b 1
+!s100 PRSRenQ?1zXlI54dn[LUH0
+IK6n6`m81mB=dfR8gRDSBP0
+R2
+w1715028339
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/crc.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/crc.v
+!i122 1
+L0 1 119
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/crc.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/crc.v|
+!i113 0
+R7
+R0
+vddr_mode
+R1
+!i10b 1
+!s100 AgRTid4glB7X=]McJ0b8z1
+IBE^bN>aC[]QQlAc44mJ@=1
+R2
+R3
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/Normal_Transaction.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/Normal_Transaction.v
+!i122 5
+L0 1 1345
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/Normal_Transaction.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/Normal_Transaction.v|
+!i113 0
+R7
+R0
+vframe_counter
+R1
+!i10b 1
+!s100 8Tm^^Ojl5I7LIieUXX^R81
+IQVI9jc?6Bkd25LicHK2fM1
+R2
+R3
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/frame_counter.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/frame_counter.v
+!i122 2
+L0 2 55
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/frame_counter.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/frame_counter.v|
+!i113 0
+R7
+R0
+vmux1
+R1
+!i10b 1
+!s100 T<IcGW3kVc0A;X1cHAzXj2
+ITd<<]iC>Z>4emODESW`>E1
+R2
+R3
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/mux1.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/mux1.v
+!i122 3
+L0 1 15
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/mux1.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/mux1.v|
+!i113 0
+R7
+R0
+vmux8
+R1
+!i10b 1
+!s100 Ch2KP:6JH;h7AJ]kcNFn=3
+I1E7?W:SzeMLk4LW3zQ0MJ2
+R2
+R3
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/mux8.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/mux8.v
+!i122 4
+L0 1 16
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/mux8.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/mux8.v|
+!i113 0
+R7
+R0
+vnt_tb
+DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+R1
+!i10b 1
+!s100 Zj`R]P6AFe4`CM8J:hbjT3
+I05;KY321h6TcRM7HC>a<I3
+S1
+R2
+R3
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/nt_tb.sv
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/nt_tb.sv
+!i122 6
+L0 4 178
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/nt_tb.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/nt_tb.sv|
+!i113 0
+o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R0
+vrx
+R1
+!i10b 1
+!s100 ^8ED0VE:j]EO_7MITUiR;3
+IhnW0WmTRU`11cDRC[iAjP2
+R2
+R3
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/rx.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/rx.v
+!i122 7
+L0 1 419
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/rx.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/rx.v|
+!i113 0
+R7
+R0
+vscl_generation
+R1
+!i10b 1
+!s100 PfiSnkmWOJzHeIBCZcEze3
+ICk3gJV]3beL5:Si:A30G@1
+R2
+R3
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/scl_generation.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/scl_generation.v
+!i122 8
+L0 34 138
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/scl_generation.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/scl_generation.v|
+!i113 0
+R7
+R0
+vscl_staller
+R1
+!i10b 1
+!s100 RWjQNN>EHZLB[Y<<SNjE01
+I6UgiA29<z6K3d`RH^gN5V3
+R2
+R3
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/staller.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/staller.v
+!i122 9
+L0 1 43
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/staller.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/staller.v|
+!i113 0
+R7
+R0
+vtop
+R1
+!i10b 1
+!s100 d0L=;?iX1MniF:zBDo>GD3
+I4SBjA>NNGOXUD5VdZzX0I2
+R2
+R3
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/top.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/top.v
+!i122 10
+L0 1 314
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/top.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/top.v|
+!i113 0
+R7
+R0
+vtx
+!s110 1715028639
+!i10b 1
+!s100 nKL`BHB0LFKk=<@iQleR23
+IGkma`j3HP1MdYc`h`2d;61
+R2
+R3
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/Tx.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/Tx.v
+!i122 11
+L0 1 548
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/Tx.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/NT_Top_Level/Tx.v|
+!i113 0
+R7
+R0
