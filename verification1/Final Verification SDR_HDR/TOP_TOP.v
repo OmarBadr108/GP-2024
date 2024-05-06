@@ -828,6 +828,7 @@ scl_generation u_scl_generation (
             .o_scl_pos_edge               (scl_pos_edge)             ,
             .o_scl_neg_edge               (scl_neg_edge)             ,
             .o_scl                        (scl)                     );
+
 /*
 scl_staller u_scl_staller(
 .i_stall_clk(sys_clk_50mhz),
@@ -1051,7 +1052,7 @@ gen_mux #(1,1) sda_handling_mode_mux (
 
 
 
-gen_mux #(1,1) regf_rd_en_hdr_mux (
+gen_mux #(1,1) regf_special_data_hdr_mux (
             .data_in  ({ ccc_tx_special_data, ddr_tx_special_data}),            
             .ctrl_sel (cccnt_tx_special_data_mux_sel)  ,
             .data_out (cccnt_tx_special_data_mux_out) );
@@ -1422,7 +1423,7 @@ scl_staller u_scl_staller(
         .i_sclgen_scl_neg_edge   (scl_neg_edge),
         .i_ddrccc_tx_mode        (tx_mode_hdr_mux_out),
         .i_regf_tx_parallel_data (regf_data_rd),
-        .i_ddrccc_special_data   (ccc_CMD),  // input from regfile?
+        .i_ddrccc_special_data   (cccnt_tx_special_data_mux_out), 
         .i_crc_crc_value         (crc_value),
         .o_sdahnd_serial_data    (ser_hdr_data),
         .o_ddrccc_mode_done      (tx_hdr_mode_done),
