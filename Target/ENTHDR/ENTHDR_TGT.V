@@ -128,7 +128,7 @@ always@(posedge i_sys_clk or negedge i_sys_rst)
  					 end
  					
  					
- 					else if (address_RnW_des=={broadcast_address,1'b0})
+ 					else if ((address_RnW_des=={broadcast_address,1'b0})&&i_scl_neg_edge)
  					     state <= ACK;
  					   
  				     
@@ -139,33 +139,14 @@ always@(posedge i_sys_clk or negedge i_sys_rst)
           ACK:begin
           	  count<=0;
           	  
-
+		 
           	  o_sdahnd_sda<=1'b0;
 
-                if(i_scl_pos_edge)
+                if(i_scl_neg_edge)
 
                 begin
-                 /*tgt_count<=tgt_count+1;
-                 if (!i_scl)
-          	      begin
-          	      o_sdahnd_sda<=1'b0;
-                  end*/
-                  tgt_count<=tgt_count+1;
-                  
-
-              /*  if(i_scl_neg_edge)
-                 begin
-                  o_sdahnd_sda<=1'bz;
-                  state<=ENTHDR;
-                 end
-                 /* 
-                else 
-                 begin
-                  o_sdahnd_sda<=1'b0;
-			   	 state<=ACK;
-                 end
-
-                 */
+               
+                  tgt_count<=tgt_count+1'b1;
 
                 end
                 else if (tgt_count==2'd1)
@@ -188,7 +169,7 @@ always@(posedge i_sys_clk or negedge i_sys_rst)
  		 			   count<= 1'b0;
  		 			  end
 
- 		 			 else if (enthdr_des=={ENTHDR_CMD}) 
+ 		 			 else if ((enthdr_des=={ENTHDR_CMD})&&i_scl_neg_edge)
  		 			   state <= PARITY;
  		 			 
 
