@@ -41,7 +41,7 @@ input                     i_ddrccc_rx_en,
 input                     i_sdahnd_rx_sda,
 //input     [4:0]           i_bitcnt_rx_bit_count,
 input        [3:0]        i_ddrccc_rx_mode,
-input                     i_crc_value,
+input        [4:0]        i_crc_value,
 input                     i_crc_valid,
 
 output  reg  [7:0]        o_regfcrc_rx_data_out,

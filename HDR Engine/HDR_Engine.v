@@ -45,7 +45,9 @@ module hdr_engine (
     output  reg             o_ccc_en                              ,
 
     output  reg   [11:0]     o_regf_addr_special                  ,
-    
+
+    output  reg             o_cccnt_tx_special_data_mux_sel       , // by badr
+
     output  reg             o_tx_en_sel                           ,
     output  reg             o_rx_en_sel                           ,
     output  reg             o_tx_mode_sel                         ,
@@ -132,7 +134,8 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                              o_frm_cnt_en_sel       <=CCC_SEL;
                              o_sdahand_pp_od_sel    <=CCC_SEL; 
                              o_hdr_scl_stall_en_sel <=CCC_SEL ;             
-                             o_hdr_scl_stall_cycles_sel <=CCC_SEL;  
+                             o_hdr_scl_stall_cycles_sel <=CCC_SEL;
+                             o_cccnt_tx_special_data_mux_sel  <=CCC_SEL; // badr  
                          end
                       else 
                         begin
@@ -150,7 +153,8 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                              o_frm_cnt_en_sel       <=DDR_SEL;
                              o_sdahand_pp_od_sel    <=DDR_SEL;  
                              o_hdr_scl_stall_en_sel <=DDR_SEL ;             
-                             o_hdr_scl_stall_cycles_sel <=DDR_SEL;        
+                             o_hdr_scl_stall_cycles_sel <=DDR_SEL;
+                             o_cccnt_tx_special_data_mux_sel  <=DDR_SEL; // badr        
                         end
           end
 
@@ -221,7 +225,8 @@ if (i_i3cengine_hdrengine_en) begin
                      o_frm_cnt_en_sel       <=DDR_SEL;
                      o_sdahand_pp_od_sel    <=DDR_SEL; 
                      o_hdr_scl_stall_en_sel <=DDR_SEL ;             
-                     o_hdr_scl_stall_cycles_sel <=DDR_SEL;                       
+                     o_hdr_scl_stall_cycles_sel <=DDR_SEL;
+                     o_cccnt_tx_special_data_mux_sel  <=DDR_SEL; // badr                       
                   end
                   else begin
                     next_state   <= CCC ;
@@ -237,7 +242,8 @@ if (i_i3cengine_hdrengine_en) begin
                     o_frm_cnt_en_sel       <=CCC_SEL;
                     o_sdahand_pp_od_sel    <=CCC_SEL;
                     o_hdr_scl_stall_en_sel <=CCC_SEL ;             
-                    o_hdr_scl_stall_cycles_sel <=CCC_SEL;                    
+                    o_hdr_scl_stall_cycles_sel <=CCC_SEL;
+                    o_cccnt_tx_special_data_mux_sel  <=CCC_SEL; // badr                    
                     end  
             end
             else
@@ -296,7 +302,8 @@ if (i_i3cengine_hdrengine_en) begin
                      o_frm_cnt_en_sel       <=DDR_SEL;
                      o_sdahand_pp_od_sel    <=DDR_SEL;
                      o_hdr_scl_stall_en_sel <=DDR_SEL ;             
-                     o_hdr_scl_stall_cycles_sel <=DDR_SEL;                       
+                     o_hdr_scl_stall_cycles_sel <=DDR_SEL;
+                     o_cccnt_tx_special_data_mux_sel  <=DDR_SEL; // badr                       
                   end
                   else begin
                     o_ccc_en <= 1'b1 ;
@@ -313,7 +320,8 @@ if (i_i3cengine_hdrengine_en) begin
                      o_frm_cnt_en_sel       <=CCC_SEL;
                      o_sdahand_pp_od_sel    <=CCC_SEL;
                      o_hdr_scl_stall_en_sel <=CCC_SEL ;             
-                     o_hdr_scl_stall_cycles_sel <=CCC_SEL;                       
+                     o_hdr_scl_stall_cycles_sel <=CCC_SEL;
+                     o_cccnt_tx_special_data_mux_sel  <=CCC_SEL; // badr                       
                   end
             end
             else

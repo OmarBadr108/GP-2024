@@ -30,7 +30,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-`default_nettype none
+//`default_nettype none
 module scl_generation(
     input  wire       i_sdr_ctrl_clk          ,  // 50 MHz clock
     input  wire       i_sdr_ctrl_rst_n        ,

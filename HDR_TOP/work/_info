@@ -1,0 +1,373 @@
+m255
+K4
+z2
+Z0 !s99 nomlopt
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+!s11f vlog 2021.1 2021.01, Jan 19 2021
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler
+T_opt
+!s110 1715005506
+V<Kb4RQgRQD59T3R^VLXbz3
+04 10 4 work HDR_TOP_TB fast 0
+=13-48a472837b0b-6638e842-2ac-24cc
+!s124 OEM100
+o-quiet -auto_acc_if_foreign -work work +acc
+Z1 tCvgOpt 0
+n@_opt
+OL;O;2021.1;73
+vbits_counter
+Z2 !s110 1715005501
+!i10b 1
+!s100 <`mUi0b_K?RJ35@=Eb4Iz2
+ImJH54[PNRS<XWdRMJPSG10
+Z3 dC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP
+w1714057605
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/bits_counter.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/bits_counter.v
+!i122 382
+L0 3 61
+Z4 VDg1SIo80bB@j0V0VzS_@n1
+Z5 OL;L;2021.1;73
+r1
+!s85 0
+31
+Z6 !s108 1715005501.000000
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/bits_counter.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/bits_counter.v|
+!i113 0
+Z7 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1
+vCCC_Handler
+R2
+!i10b 1
+!s100 FNzkShUUX`Am1BREmhG@f1
+IG7bMJlCKZfk;ei`zXHH[B3
+R3
+w1714772562
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/CCC_Handler.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/CCC_Handler.v
+!i122 383
+L0 33 1093
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/CCC_Handler.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/CCC_Handler.v|
+!i113 0
+R7
+R1
+n@c@c@c_@handler
+vddr_mode
+!s110 1715000414
+!i10b 1
+!s100 2@UXS4nGz3b3JBfm98oNi2
+I]IQ98dkAPcCeEH4?JkB@R1
+R3
+w1714906520
+Z8 8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/Normal_Transaction.v
+Z9 FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/Normal_Transaction.v
+!i122 95
+Z10 L0 1 1360
+R4
+R5
+r1
+!s85 0
+31
+!s108 1715000414.000000
+Z11 !s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/Normal_Transaction.v|
+Z12 !s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/Normal_Transaction.v|
+!i113 0
+R7
+R1
+vDDR_NT
+Z13 !s110 1715005502
+!i10b 1
+!s100 @4V^mhhdJ3S:9B_6zKXQm1
+ISUDH;iPHHmCDIBPOcl^E61
+R3
+w1715004063
+R8
+R9
+!i122 388
+R10
+R4
+R5
+r1
+!s85 0
+31
+R6
+R11
+R12
+!i113 0
+R7
+R1
+n@d@d@r_@n@t
+vframe_counter
+R2
+!i10b 1
+!s100 8Tm^^Ojl5I7LIieUXX^R81
+I<_zjjMD32M?1Hca1h]R[F1
+R3
+w1714906968
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/FRAME_COUNTER.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/FRAME_COUNTER.v
+!i122 384
+L0 2 55
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/FRAME_COUNTER.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/FRAME_COUNTER.v|
+!i113 0
+R7
+R1
+vgen_mux
+R2
+!i10b 1
+!s100 b>UGD64WiGaOniBNA@bho2
+IQS3VJQj;bk[nTR7=;0J_P0
+R3
+w1715001513
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/gen_mux.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/gen_mux.v
+!i122 385
+L0 23 15
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/gen_mux.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/gen_mux.v|
+!i113 0
+R7
+R1
+vhdr_engine
+R2
+!i10b 1
+!s100 M]nd^S4Qm<5^=BH[CYPcJ2
+IL`8i05HW;JM9:`[E;df;^2
+R3
+w1715001159
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/HDR_Engine.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/HDR_Engine.v
+!i122 386
+L0 32 319
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/HDR_Engine.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/HDR_Engine.v|
+!i113 0
+R7
+R1
+vHDR_TOP
+R2
+!i10b 1
+!s100 LHPHUQ`?<1MBz;bSW9?cB0
+IKRM]`CT@_NzOG1<g4c_d;2
+R3
+w1715005497
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/HDR_TOP.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/HDR_TOP.v
+!i122 387
+L0 1 611
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/HDR_TOP.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/HDR_TOP.v|
+!i113 0
+R7
+R1
+n@h@d@r_@t@o@p
+vHDR_TOP_TB
+DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+R13
+!i10b 1
+!s100 4W3O6AcjXfjY:cK5Tj51X2
+I:fH;@i4NNdQSb>6lnC:W82
+S1
+R3
+w1715001338
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/HDR_TOP_TB.sv
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/HDR_TOP_TB.sv
+!i122 395
+L0 1 159
+R4
+R5
+r1
+!s85 0
+31
+Z14 !s108 1715005502.000000
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/HDR_TOP_TB.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/HDR_TOP_TB.sv|
+!i113 0
+o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R1
+n@h@d@r_@t@o@p_@t@b
+vmux
+R13
+!i10b 1
+!s100 A^cHjWiEEaoCVPNW0zz`W1
+I41jV9LzKW84Vmj6zE[6QW1
+R3
+w1711373421
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/testing_mux.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/testing_mux.v
+!i122 393
+L0 1 16
+R4
+R5
+r1
+!s85 0
+31
+R14
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/testing_mux.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/testing_mux.v|
+!i113 0
+R7
+R1
+vreg_file
+R13
+!i10b 1
+!s100 K4oZ?==n5n90HU:jDH2VN3
+I36FWUZY4dDS0bgcDVjF[k1
+R3
+w1715001455
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/reg_file.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/reg_file.v
+!i122 389
+L0 33 309
+R4
+R5
+r1
+!s85 0
+31
+R14
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/reg_file.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/reg_file.v|
+!i113 0
+R7
+R1
+vRX
+R13
+!i10b 1
+!s100 UQGU0<dVA3LUEFEZPB5A?2
+IY81Md?7<I3X5`Kl4XQ5==0
+R3
+w1715005178
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/Rx.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/Rx.v
+!i122 390
+L0 33 394
+R4
+R5
+r1
+!s85 0
+31
+R14
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/Rx.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/Rx.v|
+!i113 0
+R7
+R1
+n@r@x
+vscl_generation
+R13
+!i10b 1
+!s100 ?F9eDn4LdJ@SD=h8b7a263
+IGm^68P>>D<UhYP;:3aOP20
+R3
+w1715001476
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/scl_generation.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/scl_generation.v
+!i122 391
+L0 34 134
+R4
+R5
+r1
+!s85 0
+31
+R14
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/scl_generation.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/scl_generation.v|
+!i113 0
+R7
+R1
+vscl_staller
+R13
+!i10b 1
+!s100 QKN`9]^8ihD@HP=5Y66YC2
+IWBL0Gc4I;N4G81<Li=ZgL1
+R3
+w1714761504
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/staller.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/staller.v
+!i122 392
+L0 1 43
+R4
+R5
+r1
+!s85 0
+31
+R14
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/staller.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/staller.v|
+!i113 0
+R7
+R1
+vtx
+R13
+!i10b 1
+!s100 VW`hG0VVHlNG0DR0oSd9A1
+ITYQV@YYonE=`<2Hg7gPk]0
+R3
+w1714773715
+8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/Tx.v
+FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/Tx.v
+!i122 394
+L0 1 466
+R4
+R5
+r1
+!s85 0
+31
+R14
+!s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/Tx.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/Tx.v|
+!i113 0
+R7
+R1

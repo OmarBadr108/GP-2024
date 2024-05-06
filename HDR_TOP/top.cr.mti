@@ -1,0 +1,99 @@
+C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/FRAME_COUNTER.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/FRAME_COUNTER.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module frame_counter
+
+Top level modules:
+	frame_counter
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/gen_mux.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/gen_mux.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module gen_mux
+
+Top level modules:
+	gen_mux
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/HDR_Engine.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/HDR_Engine.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module hdr_engine
+
+Top level modules:
+	hdr_engine
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/scl_generation.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/scl_generation.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module scl_generation
+
+Top level modules:
+	scl_generation
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/reg_file.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/reg_file.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module reg_file
+
+Top level modules:
+	reg_file
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/staller.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/staller.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module scl_staller
+
+Top level modules:
+	scl_staller
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/testing_mux.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/testing_mux.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module mux
+
+Top level modules:
+	mux
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/HDR_TOP.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/HDR_TOP.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module HDR_TOP
+
+Top level modules:
+	HDR_TOP
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/bits_counter.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/bits_counter.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module bits_counter
+
+Top level modules:
+	bits_counter
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/Rx.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/Rx.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module RX
+
+Top level modules:
+	RX
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/Tx.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/Tx.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module tx
+
+Top level modules:
+	tx
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/Normal_Transaction.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/Normal_Transaction.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module DDR_NT
+
+Top level modules:
+	DDR_NT
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/CCC_Handler.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/CCC_Handler.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module CCC_Handler
+
+Top level modules:
+	CCC_Handler
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/HDR_TOP_TB.sv {1 {vlog -work work -vopt -sv -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/HDR_TOP/HDR_TOP_TB.sv
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module HDR_TOP_TB
+
+Top level modules:
+	HDR_TOP_TB
+
+} {} {}}
