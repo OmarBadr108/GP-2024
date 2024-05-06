@@ -40,7 +40,7 @@ module sdr_hdr_transition_top (
     input  wire          i_sdr_rst_n         , // asynch neg edge reset
     input  wire          i_controller_en     , // from device configuration of Controller/Target role
     input  wire          i_i3c_i2c_sel       , // sdr/i2c blocks selector
-                        input  wire          i_ccc_en_dis_hj     , // (TBD) for enable/disable events to prevent Bus-Initialization or DAA interruptions.
+        input  wire          i_ccc_en_dis_hj     , // (TBD) for enable/disable events to prevent Bus-Initialization or DAA interruptions.
     
     input wire           i_sclgen_rst_n , // new by badr 
 
@@ -52,21 +52,11 @@ module sdr_hdr_transition_top (
     input wire           i_regf_wr_en_config     ,
     input wire           i_regf_rd_en_config     ,
 
-
-    
-
-    //input  wire          i_ccc_done          ,
-    //input  wire          i_ddr_mode_done     ,
-
     inout  wire          sda                 , // sda line
     
-
-    //output wire          o_ddrmode_enable       ,
- 
-    //output wire   [11:0] o_regf_address_special  ,
     output wire          scl                 , // scl bus
-                        output wire          o_sdr_rx_valid      , // output to host >> valid data are loaded
-                        output wire          o_ctrl_done         ); // sdr block done signal
+        output wire          o_sdr_rx_valid      , // output to host >> valid data are loaded
+        output wire          o_ctrl_done         ); // sdr block done signal
 
 
 //-- top module wires
@@ -231,8 +221,8 @@ module sdr_hdr_transition_top (
    wire                  daa_error                   ;
    wire       [7:0]      daa_regf_wr_data            ;
    wire                  hj_daa_en                   ;
-   wire       daa_stall_flag    ;
-   wire [3:0] daa_stall_cycles  ;
+   wire                  daa_stall_flag    ;
+   wire [3:0]            daa_stall_cycles  ;
 
 
 ////////////////////// Hot-Join wires //////////////////////////////
@@ -332,11 +322,7 @@ module sdr_hdr_transition_top (
 
             
 //////////////////////// clk divider ///////////////////////////////
-   wire                  sys_clk_50mhz     
-
-
-
-             ;
+   wire                  sys_clk_50mhz    ;
 //////////////////////// HDR SIGNALS /////////////////////
    wire                  enthdr_en;
    wire                  hdrengine_en;
