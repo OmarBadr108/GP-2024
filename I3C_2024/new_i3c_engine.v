@@ -120,7 +120,7 @@ module i3c_engine (
 
     output reg           o_regf_data_sdr_hdr_sel,
     output reg           o_regf_rd_address_sdr_hdr_sel,                             
-    output reg           o_scl_pp_od_sdr_hdr_sel       
+    output reg           o_scl_pp_od_sdr_hdr_sel  ,     
 
     output  reg           o_scl_stall_flag_sdr_hdr_sel      ,
     output  reg           o_scl_stall_cycles_sdr_hdr_sel       
