@@ -19,7 +19,7 @@ module HDR_TOP (
 	output reg  i3cengine_hdrengine_done_tb       ,
 	output reg  hdrengine_exit 
 	
-	inout 		sda                               ,
+	inout 		ser_hdr_data                      ,
 	output reg  scl 
 	);
 
@@ -459,7 +459,7 @@ scl_staller u_scl_staller(
         .i_sclgen_scl_neg_edge   (scl_neg_edge),
         .i_ddrccc_tx_mode        (tx_mode_hdr_mux_out),
         .i_regf_tx_parallel_data (regf_data_rd),
-        .i_ddrccc_special_data   (ccc_CMD),  // input from regfile?
+        .i_ddrccc_special_data   (cccnt_tx_special_data_mux_out),  
         .i_crc_crc_value         (crc_value),
         .o_sdahnd_serial_data    (ser_hdr_data),
         .o_ddrccc_mode_done      (tx_hdr_mode_done),
@@ -569,30 +569,29 @@ gen_mux #(5,1) scl_stall_cycles_hdr_mux (
 
 
 
-
+//------------------- higher level of muxes ---------------// 
 //////////////reg_file(Config /data write)///////////////////
 
 gen_mux #(1,1) reg_wr_en_config_data_mux (
-            .data_in  ({i_regf_wr_en_config,}),        
+            .data_in  ({i_regf_wr_en_config,regf_wr_en_hdr_mux_out}),        
             .ctrl_sel (i_data_config_mux_sel)  ,
             .data_out (regf_wr_en_mux_out));
 
+gen_mux #(1,1) reg_rd_en_config_data_mux (
+            .data_in  ({i_regf_rd_en_config,regf_rd_en_hdr_mux_out}),        
+            .ctrl_sel (i_data_config_mux_sel)  ,
+            .data_out (regf_rd_en_mux_out));
 
 gen_mux #(12,1) regf_rd_address_config_data_mux (
-            .data_in  ({i_regf_wr_address_config,}),
+            .data_in  ({i_regf_wr_address_config,regf_rd_address_hdr_mux_out}),
             .ctrl_sel (i_data_config_mux_sel)  ,
             .data_out (regf_rd_address_mux_out) );
 
 gen_mux #(8,1) regf_wr_data_config_data_mux (
-            .data_in  ({i_regf_config , }),
+            .data_in  ({i_regf_config ,regfcrc_rx_data_out }),
             .ctrl_sel (i_data_config_mux_sel)  ,
             .data_out (regf_wr_data_mux_out) );
 
-
-gen_mux #(1,1) reg_rd_en_config_data_mux (
-            .data_in  ({i_regf_rd_en_config,}),        
-            .ctrl_sel (i_data_config_mux_sel)  ,
-            .data_out (regf_rd_en_mux_out));
 
 
 
