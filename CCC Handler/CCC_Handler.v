@@ -35,50 +35,55 @@ input wire        i_sys_clk ,
 input wire        i_sys_rst ,
 input wire        i_engine_en ,                 // depends on CP flag 
 input wire [5:0]  i_bitcnt_number ,
-input wire        i_tx_mode_done , 
-input wire        i_rx_mode_done , 
-input wire        i_rx_pre ,       
-input wire        i_sclstall_stall_done , 
-input wire        i_rx_error ,    
+input wire        i_tx_mode_done ,
+input wire        i_rx_mode_done ,
+input wire        i_rx_pre ,
+input wire        i_sclstall_stall_done ,
+input wire        i_rx_error ,  
 input wire        i_frmcnt_last_frame ,
 
 // configuration Ports coming from regf
 input wire        i_i_regf_RnW       ,          
-input wire [2:0]  i_i_regf_CMD_ATTR  ,  //always on the frame counter
+input wire [2:0]  i_i_regf_CMD_ATTR  ,
 input wire [7:0]  i_i_regf_CMD       ,          // CCC value 
-input wire [4:0]  i_i_regf_DEV_INDEX ,  
-input wire        i_i_regf_TOC       ,  
-input wire        i_i_regf_WROC      ,  
+input wire [4:0]  i_i_regf_DEV_INDEX ,
+input wire        i_i_regf_TOC       , 
+input wire        i_i_regf_WROC      , 
 
 // in case of immidiate command descriptor 
-input wire [2:0]  i_i_regf_DTT       , //always on the frame counter
+input wire [2:0]  i_i_regf_DTT       , 
 
 // in case of regular command descriptor 
 input wire        i_i_regf_DBP       , 
 input wire        i_i_regf_SRE       , 
+//input wire [15:0] i_regf_DATA_LENGTH , // will be removed 
 
 // new for CCC Table 
+//input wire [4:0] i_no_of_targets ,
 
-output reg        o_frmcnt_Direct_Broadcast_n ,         // to be removed 
-output reg        o_sclstall_en      , // muxed btn me and nt
-output reg [4:0]  o_sclstall_code    , // muxed btn me and nt
-output reg        o_tx_en            , // muxed btn me and nt
-output reg [3:0]  o_tx_mode          , // muxed btn me and nt
-output reg        o_rx_en            , // muxed btn me and nt
-output reg [3:0]  o_rx_mode          , // muxed btn me and nt
+output reg        o_frmcnt_Direct_Broadcast_n ,
+output reg        o_sclstall_en      ,
+output reg [4:0]  o_sclstall_code    ,
+output reg        o_tx_en            ,
+output reg [3:0]  o_tx_mode          ,
+output reg        o_rx_en    ,
+output reg [3:0]  o_rx_mode  ,
+
+//output reg        o_rx_en_negedge    ,
+//output reg [3:0]  o_rx_mode_negedge  ,
 
 
-output reg        o_bitcnt_en        , // muxed btn me and nt
-output reg        o_bitcnt_err_rst   ,                  // to be removed 
-output reg        o_frmcnt_en        , // muxed btn me and nt
-output reg        o_sdahand_pp_od    , // muxed btn me and nt
-output reg        o_regf_wr_en       , // muxed btn me and nt
-output reg        o_regf_rd_en       , // muxed btn me and nt
-output reg [11:0] o_regf_addr        , // muxed btn me and nt
-output reg        o_engine_done      , // muxed btn me and nt
-output reg [7:0]  o_txrx_addr_ccc    , // muxed btn me and nt         
-output reg        o_engine_odd       , // muxed btn me and nt       
-output reg [3:0]  o_regf_ERR_STATUS    // muxed btn me and nt        
+output reg        o_bitcnt_en        ,
+output reg        o_bitcnt_err_rst   , 
+output reg        o_frmcnt_en        ,
+output reg        o_sdahand_pp_od    ,
+output reg        o_regf_wr_en       ,
+output reg        o_regf_rd_en       ,
+output reg [11:0] o_regf_addr        , // depends on the depth of the regfile
+output reg        o_engine_done      ,
+output reg [7:0]  o_txrx_addr_ccc    ,         
+output reg        o_engine_odd       ,         
+output reg [3:0]  o_regf_ERR_STATUS            
 );   
 
 
@@ -958,7 +963,7 @@ end
                         //////////////////////////// new /////////////////////////////////////////////
                         if (!Direct_Broadcast_n_del && i_regf_TOC) begin 
                             next_state    = EXIT_PATTERN ;
-                            first_time    = 1'b0 ;
+                            //first_time    = 1'b0 ;
                             o_sclstall_en    = 1'b1 ;
                             o_sclstall_code  = exit_pattern_stall ;
                         end
@@ -966,13 +971,13 @@ end
                             next_state = RESTART_PATTERN ;
                             o_sclstall_en   = 1'b1 ;
                             o_sclstall_code = restart_pattern_stall ;
-                            first_time      = 1'b0 ;
+                            //first_time      = 1'b0 ;
                         end  
                         else if (Direct_Broadcast_n_del && first_time) begin 
                             next_state = RESTART_PATTERN ;
                             o_sclstall_en   = 1'b1 ;
                             o_sclstall_code = restart_pattern_stall ;
-                            first_time    = 1'b0 ;
+                            //first_time    = 1'b0 ;
                         end
                         else if (Direct_Broadcast_n_del && !first_time) begin 
                             if (!i_regf_TOC) begin 
@@ -998,7 +1003,7 @@ end
                     if (i_rx_mode_done && !i_rx_error) begin 
                         if (i_regf_TOC) begin 
                             next_state    = EXIT_PATTERN ;
-                            first_time    = 1'b0 ;
+                            //first_time    = 1'b0 ;
                             o_tx_mode     = exit_pattern ;
                             o_tx_en       = 1'b1 ;
                             o_sclstall_en    = 1'b1 ;
@@ -1008,7 +1013,7 @@ end
                             next_state      = RESTART_PATTERN_SPECIAL ;
                             o_sclstall_en   = 1'b1 ;
                             o_sclstall_code = restart_pattern_stall_special ;
-                            first_time      = 1'b0 ;
+                            //first_time      = 1'b0 ;
                             o_tx_mode       = restart_pattern ;
                             o_tx_en         = 1'b1 ;
                         end
@@ -1021,7 +1026,8 @@ end
 
 
             RESTART_PATTERN_SPECIAL : begin 
-                o_bitcnt_en        = 1'b0 ;
+                first_time      = 1'b0 ;
+                o_bitcnt_en     = 1'b0 ;
                 // access timer and staller and tx to perform restart pattern 
                 o_tx_en         = 1'b1 ;
                 o_tx_mode       = restart_pattern ;
@@ -1041,7 +1047,8 @@ end
 
 
             RESTART_PATTERN : begin 
-                o_bitcnt_en        = 1'b0 ;
+                first_time      = 1'b0 ;
+                o_bitcnt_en     = 1'b0 ;
                 // access timer and staller and tx to perform restart pattern 
                 o_tx_en         = 1'b1 ;
                 o_tx_mode       = restart_pattern ;
@@ -1064,6 +1071,7 @@ end
 
             EXIT_PATTERN : begin 
                 // access timer and staller and tx to perform exit pattern 
+                first_time       = 1'b0 ; // no need but it's ok 
                 o_tx_en          = 1'b1 ;
                 o_tx_mode        = exit_pattern ;
                 o_sclstall_en    = 1'b1 ;

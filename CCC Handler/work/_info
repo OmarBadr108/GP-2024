@@ -228,6 +228,7 @@ R0
 R0
 R0
 R0
+R0
 !s11f vlog 2021.1 2021.01, Jan 19 2021
 13
 !s112 1.1
@@ -259,17 +260,17 @@ n@_opt1
 R6
 R1
 T_opt2
-!s110 1714990888
-V^O?S9S[Yjf:ZZRIjzORS43
+!s110 1715025156
+VeOnO`ng5?MoOBJaXdzY:o1
 R2
-=1-48a472837b0b-6638af28-19f-272c
+=1-3c2c30a457d5-66393504-c-2274
 R3
 R4
 R5
 n@_opt2
 R6
 vbits_counter
-Z7 !s110 1714990878
+Z7 !s110 1715025155
 !i10b 1
 !s100 <`mUi0b_K?RJ35@=Eb4Iz2
 IcD=:[n?kUTM:O`CQcHaIb3
@@ -277,14 +278,14 @@ R1
 w1714057605
 8bits_counter.v
 Fbits_counter.v
-!i122 403
+!i122 415
 L0 3 61
 Z8 VDg1SIo80bB@j0V0VzS_@n1
 Z9 OL;L;2021.1;73
 r1
 !s85 0
 31
-Z10 !s108 1714990878.000000
+Z10 !s108 1715025155.000000
 Z11 !s107 testing_mux.v|staller.v|scl_generation.v|Tx.v|Rx.v|reg_file.v|FRAME_COUNTER.v|bits_counter.v|CCC_Handler_tb_final.sv|CCC_Handler.v|package.sv|
 Z12 !s90 -reportprogress|300|package.sv|CCC_Handler.v|CCC_Handler_tb_final.sv|bits_counter.v|FRAME_COUNTER.v|reg_file.v|Rx.v|Tx.v|scl_generation.v|staller.v|testing_mux.v|+cover|-covercells|
 !i113 0
@@ -300,7 +301,7 @@ R1
 w1714937866
 8CCC_Handler.v
 FCCC_Handler.v
-!i122 403
+!i122 415
 L0 33 1088
 R8
 R9
@@ -326,7 +327,7 @@ R1
 w1714989834
 8package.sv
 Fpackage.sv
-!i122 403
+!i122 415
 Z16 L0 1 0
 V`8zeSFVGkG2C7<jXoH;LQ2
 R9
@@ -350,15 +351,15 @@ R8
 r1
 !s85 0
 !i10b 1
-!s100 4BGTT8hP]n>KeESVo31D01
-I[WK3_6[_0I[6IC4eEzahN3
+!s100 BV@<z@8dPiKhKn^<^2Pk93
+I==0E`O>hlN[nh_C=BHWP?0
 !s105 CCC_Handler_tb_final_sv_unit
 S1
 R1
-Z18 w1714990443
+Z18 w1714993202
 Z19 8CCC_Handler_tb_final.sv
 Z20 FCCC_Handler_tb_final.sv
-!i122 403
+!i122 415
 L0 3 3866
 R9
 31
@@ -386,7 +387,7 @@ R1
 R18
 R19
 R20
-!i122 403
+!i122 415
 R16
 R9
 31
@@ -407,7 +408,7 @@ R1
 w1714906968
 8FRAME_COUNTER.v
 FFRAME_COUNTER.v
-!i122 403
+!i122 415
 L0 2 55
 R8
 R9
@@ -430,7 +431,7 @@ R1
 w1711373421
 8testing_mux.v
 Ftesting_mux.v
-!i122 403
+!i122 415
 L0 1 16
 R8
 R9
@@ -453,7 +454,7 @@ R1
 w1713034854
 8reg_file.v
 Freg_file.v
-!i122 403
+!i122 415
 L0 33 309
 R8
 R9
@@ -476,7 +477,7 @@ R1
 w1714769974
 8Rx.v
 FRx.v
-!i122 403
+!i122 415
 L0 33 394
 R8
 R9
@@ -500,7 +501,7 @@ R1
 w1708522074
 8scl_generation.v
 Fscl_generation.v
-!i122 403
+!i122 415
 L0 34 134
 R8
 R9
@@ -523,7 +524,7 @@ R1
 w1714076366
 8staller.v
 Fstaller.v
-!i122 403
+!i122 415
 L0 1 35
 R8
 R9
@@ -546,7 +547,7 @@ R1
 w1714773715
 8Tx.v
 FTx.v
-!i122 403
+!i122 415
 L0 1 466
 R8
 R9

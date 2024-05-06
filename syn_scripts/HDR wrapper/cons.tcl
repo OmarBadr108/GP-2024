@@ -34,7 +34,7 @@ set_fix_multiple_port_nets -all -buffer_constants -feedthroughs
            #########################################################
                   #### Section 1 : Clock Definition ####
            #########################################################
-set CLK_NAME1 SYS_CLK
+set CLK_NAME1 sys_clk_50mhz
 set CLK_PER1 20
 set CLK_SETUP_SKEW 0.4
 set CLK_HOLD_SKEW 0.2
@@ -43,7 +43,7 @@ set CLK_RISE 0.2
 set CLK_FALL 0.2
 #################################################################################### 
 # 1. Master Clock Definitions
-create_clock -name $CLK_NAME1 -period $CLK_PER1 -waveform "0 [expr $CLK_PER1/2]" [get_ports i_sys_clk]
+create_clock -name $CLK_NAME1 -period $CLK_PER1 -waveform "0 [expr $CLK_PER1/2]" [get_ports sys_clk_50mhz]
  
 # 2. Generated Clock Definitions
 #create_generated_clock -master_clock $CLK_NAME1 -source [get_ports REF_CLK] \
@@ -63,7 +63,7 @@ set_clock_uncertainty -hold $CLK_HOLD_SKEW  [get_clocks $CLK_NAME1]
 set_clock_transition -rise $CLK_RISE  [get_clocks $CLK_NAME1]
 set_clock_transition -fall $CLK_FALL  [get_clocks $CLK_NAME1]
 
-set_dont_touch_network {SYS_CLK RST}
+set_dont_touch_network {sys_clk_50mhz i_sdr_rst_n}
 
 ####################################################################################
            #########################################################
@@ -82,23 +82,16 @@ set_dont_touch_network {SYS_CLK RST}
 #Constrain Input Paths
 set in_delay  [expr 0.2*$CLK_PER1]
 
-set_input_delay $in_delay -clock SYS_CLK [get_port i_engine_en]           
-set_input_delay $in_delay -clock SYS_CLK [get_port i_regf_toc]                         
-set_input_delay $in_delay -clock SYS_CLK [get_port i_regf_dev_index]               
-set_input_delay $in_delay -clock SYS_CLK [get_port i_regf_short_read]                 
-set_input_delay $in_delay -clock SYS_CLK [get_port i_regf_wroc]                        
-set_input_delay $in_delay -clock SYS_CLK [get_port i_regf_wr_rd_bit]              
-set_input_delay $in_delay -clock SYS_CLK [get_port i_regf_cmd_attr]                      
-set_input_delay $in_delay -clock SYS_CLK [get_port i_regf_dtt]               
-set_input_delay $in_delay -clock SYS_CLK [get_port i_regf_tx_parallel_data]   
-set_input_delay $in_delay -clock SYS_CLK [get_port i_crc_crc_value]              
-set_input_delay $in_delay -clock SYS_CLK [get_port i_sdahnd_rx_sda]              
-set_input_delay $in_delay -clock SYS_CLK [get_port i_crc_valid]               
-set_input_delay $in_delay -clock SYS_CLK [get_port i_sdr_ctrl_scl_idle]              
-set_input_delay $in_delay -clock SYS_CLK [get_port i_timer_cas]                  
+set_input_delay $in_delay -clock sys_clk_50mhz [get_port hdrengine_en]           
+set_input_delay $in_delay -clock sys_clk_50mhz [get_port i_sclgen_rst_n_tb]                         
+set_input_delay $in_delay -clock sys_clk_50mhz [get_port i_MODE]               
+set_input_delay $in_delay -clock sys_clk_50mhz [get_port i_regf_config]                 
+set_input_delay $in_delay -clock sys_clk_50mhz [get_port i_data_config_mux_sel]                        
+set_input_delay $in_delay -clock sys_clk_50mhz [get_port i_regf_wr_address_config]              
+set_input_delay $in_delay -clock sys_clk_50mhz [get_port i_regf_wr_en_config]   
 
-set_input_delay $in_delay -clock SYS_CLK [get_port i_ccc_Direct_Broadcast_n]                     
-set_input_delay $in_delay -clock SYS_CLK [get_port i_regf_DATA_LEN]                     
+#inout port is constrained as input ?                   
+set_input_delay $in_delay -clock sys_clk_50mhz [get_port ser_hdr_data]    
 
 
 
@@ -107,43 +100,23 @@ set_input_delay $in_delay -clock SYS_CLK [get_port i_regf_DATA_LEN]
 
 set out_delay [expr 0.2*$CLK_PER1]
 
-set_output_delay $out_delay -clock SYS_CLK [get_port o_regf_wr_en]            
-set_output_delay $out_delay -clock SYS_CLK [get_port o_regf_rd_en]                   
-set_output_delay $out_delay -clock SYS_CLK [get_port o_regf_addr]                    
-set_output_delay $out_delay -clock SYS_CLK [get_port o_engine_done]                    
-set_output_delay $out_delay -clock SYS_CLK [get_port o_regf_abort]                   
-set_output_delay $out_delay -clock SYS_CLK [get_port o_regf_error_type]               
-set_output_delay $out_delay -clock SYS_CLK [get_port o_crc_en]                   
-set_output_delay $out_delay -clock SYS_CLK [get_port o_crc_parallel_data]       
-set_output_delay $out_delay -clock SYS_CLK [get_port o_sdahnd_serial_data]        
-set_output_delay $out_delay -clock SYS_CLK [get_port o_crc_data_valid]            
-set_output_delay $out_delay -clock SYS_CLK [get_port o_regfcrc_rx_data_out]     
-set_output_delay $out_delay -clock SYS_CLK [get_port o_scl]                     
-
-
+set_output_delay $out_delay -clock sys_clk_50mhz [get_port i3cengine_hdrengine_done_tb]            
+set_output_delay $out_delay -clock sys_clk_50mhz [get_port hdrengine_exit]                   
+set_output_delay $out_delay -clock sys_clk_50mhz [get_port scl]  
 
 ####################################################################################
            #########################################################
                   #### Section 4 : Driving cells ####
            #########################################################
 ####################################################################################
-set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_engine_en]
-set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_engine_en]          
-set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_regf_toc]              
-set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_regf_dev_index]        
-set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_regf_short_read]       
-set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_regf_wroc]             
-set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_regf_wr_rd_bit]        
-set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_regf_cmd_attr]         
-set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_regf_dtt]              
-set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_regf_tx_parallel_data] 
-set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_crc_crc_value]         
-set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_sdahnd_rx_sda]         
-set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_crc_valid]             
-set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_sdr_ctrl_scl_idle]     
-set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_timer_cas]             
-set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_ccc_Direct_Broadcast_n]
-set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_regf_DATA_LEN]         
+set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port hdrengine_en]
+set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_sclgen_rst_n_tb]          
+set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_MODE]              
+set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_regf_config]        
+set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_data_config_mux_sel]       
+set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_regf_wr_address_config]             
+set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_regf_wr_en_config]
+   
 
 ####################################################################################
            #########################################################
@@ -152,18 +125,11 @@ set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M
 ####################################################################################
 
 
-set_load 0.5 [get_port o_regf_wr_en]         
-set_load 0.5 [get_port o_regf_rd_en]         
-set_load 0.5 [get_port o_regf_addr]          
-set_load 0.5 [get_port o_engine_done]        
-set_load 0.5 [get_port o_regf_abort]         
-set_load 0.5 [get_port o_regf_error_type]    
-set_load 0.5 [get_port o_crc_en]             
-set_load 0.5 [get_port o_crc_parallel_data]  
-set_load 0.5 [get_port o_sdahnd_serial_data] 
-set_load 0.5 [get_port o_crc_data_valid]     
-set_load 0.5 [get_port o_regfcrc_rx_data_out]
-set_load 0.5 [get_port o_scl]                
+set_load 0.5 [get_port i3cengine_hdrengine_done_tb]         
+set_load 0.5 [get_port hdrengine_exit]         
+set_load 0.5 [get_port scl]          
+
+           
 ####################################################################################
            #########################################################
                  #### Section 6 : Operating Condition ####

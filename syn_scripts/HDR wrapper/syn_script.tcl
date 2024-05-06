@@ -1,7 +1,7 @@
 
 ########################### Define Top Module ############################
                                                    
-set top_module nt_top
+set top_module HDR_TOP
 
 ##################### Define Working Library Directory ######################
                                                    
@@ -22,8 +22,8 @@ puts "###########################################"
 
 #Add the path of the libraries and RTL files to the search_path variable
 
-set PROJECT_PATH /home/IC/Labs/GP/NT_wrapper/rtl
-set LIB_PATH     /home/IC/Labs/GP/NT_wrapper/std_cells
+set PROJECT_PATH /home/IC/Labs/GP/SYSTEM/rtl
+set LIB_PATH     /home/IC/Labs/GP/SYSTEM/std_cells
 
 lappend search_path $LIB_PATH
 lappend search_path $PROJECT_PATH
@@ -61,18 +61,23 @@ puts "###########################################"
 set file_format verilog
 
 #Normal_transaction
+analyze -format $file_format reg_file.v
+analyze -format $file_format HDR_Engine.v
+analyze -format $file_format CCC_Handler.v
 analyze -format $file_format Normal_Transaction.v
-analyze -format $file_format bit_counter.v
-analyze -format $file_format frame_counter.v
-analyze -format $file_format rx.v
+analyze -format $file_format bits_counter.v
+analyze -format $file_format FRAME_COUNTER.v
+analyze -format $file_format Tx.v
+analyze -format $file_format Rx.v
 analyze -format $file_format scl_generation.v
 analyze -format $file_format staller.v
-analyze -format $file_format Tx.v
+
+analyze -format $file_format gen_mux.v
 
 #SYS_TOP
-analyze -format $file_format nt_top.v
+analyze -format $file_format HDR_TOP.v
 
-elaborate -lib WORK nt_top
+elaborate -lib WORK HDR_TOP
 
 ###################### Defining toplevel ###################################
 
@@ -115,7 +120,7 @@ set_svf -off
 #############################################################################
 
 write_file -format verilog -hierarchy -output $top_module.ddc
-write_file -format verilog -hierarchy -output $top_module.v
+write_file -format verilog -hierarchy -output HDR_TOP_syn.v
 write_sdf  $top_module.sdf
 write_sdc  -nosplit $top_module.sdc
 
