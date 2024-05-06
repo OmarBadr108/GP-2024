@@ -1217,10 +1217,10 @@ gen_mux #(1,1) reg_rd_en_config_data_mux (
    // Internal wires  
 
 //----------------------------HDR TX SIGNALS----------------------------//
-wire crc_value;
-wire crc_parallel_data;
-wire crc_en;
-wire tx_hdr_mode_done;
+wire [4:0] crc_value;
+wire [7:0] crc_parallel_data;
+wire       crc_en;
+wire       tx_hdr_mode_done;
 
 //----------------------------HDR RX SIGNALS----------------------------//
 wire crc_valid;
