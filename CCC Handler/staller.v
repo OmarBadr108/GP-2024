@@ -15,7 +15,6 @@ always@(posedge i_stall_clk or negedge i_stall_rst_n)
     begin 
       o_scl_stall <= 1'b0 ;
       count <= 5'b0 ;
-	  o_stall_done <= 1'b0;
     end
   else if(i_stall_flag)
     begin
@@ -27,17 +26,11 @@ always@(posedge i_stall_clk or negedge i_stall_rst_n)
         end        
       else 
         begin      
-            o_scl_stall <= 1'b1 ; 
+            o_stall_done <= 1'b0 ;
             count <= count + 5'b1 ;
         end
     end
-	
-	else 
-	begin
-		o_stall_done <= 1'b0;
-		o_scl_stall <= 1'b0 ;
-	end
-		
   end
     
 endmodule
+

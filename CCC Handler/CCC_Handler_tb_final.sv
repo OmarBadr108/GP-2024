@@ -3037,7 +3037,7 @@ int cycle_count ;
 
 
 
-/*
+
 //////////////////////////////////////////////  Direct set driver /////////////////////////////////
 
 	initial begin 
@@ -3045,14 +3045,13 @@ int cycle_count ;
 			@(negedge scl_neg_edge_tb or  negedge scl_pos_edge_tb) i_sdahnd_rx_sda_tb = 0 ;
 		end
 	end 
-*/
 
 
 
 
 
-
-		// for second preamble and read data 
+/*
+ 
 //////////////////////////////////////////////  Direct Get driver /////////////////////////////////
 // backup works 100 % el7amdulelah 
 // for second preamble and read data 
@@ -3098,7 +3097,7 @@ int cycle_count ;
 				  
     	end 
     end
-
+*/
 
 
 

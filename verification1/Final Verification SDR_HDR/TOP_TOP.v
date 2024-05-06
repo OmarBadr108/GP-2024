@@ -910,9 +910,9 @@ enthdr u_enthdr (
 hdr_engine u_hdr_engine (
     .i_sys_clk                              (sys_clk_50mhz)           , 
     .i_sys_rst_n                            (i_sdr_rst_n)             ,
-                                                                                    .i_i3cengine_hdrengine_en               (hdrengine_en)            , 
+        .i_i3cengine_hdrengine_en               (hdrengine_en)            , 
     .i_ccc_done                             (ccc_engine_done)                ,
-    .i_ddr_mode_done                        ()           ,
+    .i_ddr_mode_done                        (ddr_engine_done)           ,
     .i_TOC                                  (cccnt_TOC)         , //term of completion if 0 restart/ 1 exit needed for exit
     .i_CP                                   (engine_CP)           , // Cmnd present=1 if CCC 0 for Normal Transcation
     .i_MODE                                 (engine_MODE)           ,
@@ -933,7 +933,7 @@ hdr_engine u_hdr_engine (
     .o_sdahand_pp_od_sel                    (hdr_sdahand_pp_od_sel),
     .o_hdr_scl_stall_en_sel                 (hdr_scl_stall_en_sel),             
     .o_hdr_scl_stall_cycles_sel             (hdr_scl_stall_cycles_sel),
-                                                                                    .o_i3cengine_hdrengine_done             (hdrengine_exit)           ,
+        .o_i3cengine_hdrengine_done             (hdrengine_exit)           ,
     .o_ddrmode_en                           (engine_ddr_enable)           ,
     .o_ccc_en                               (engine_ccc_enable)           ,
     .o_regf_addr_special                    (engine_configuration_addr)    );
