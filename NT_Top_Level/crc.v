@@ -1,10 +1,12 @@
 module crc (
     input 		wire 		i_sys_clk,
     input 		wire 		i_sys_rst,
+
     input 		wire 		i_txrx_en,
 	input       wire        i_txrx_data_valid,
 	input 		wire 		i_txrx_last_byte,
     input 		wire [7:0]  i_txrx_data,
+    
     output 		reg  [4:0]  o_txrx_crc_value,
     output 		reg 		o_txrx_crc_valid
 );
