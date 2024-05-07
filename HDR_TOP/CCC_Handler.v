@@ -963,7 +963,7 @@ end
                         //////////////////////////// new /////////////////////////////////////////////
                         if (!Direct_Broadcast_n_del && i_regf_TOC) begin 
                             next_state    = EXIT_PATTERN ;
-                            first_time    = 1'b0 ;
+                            //first_time    = 1'b0 ;
                             o_sclstall_en    = 1'b1 ;
                             o_sclstall_code  = exit_pattern_stall ;
                         end
@@ -971,13 +971,13 @@ end
                             next_state = RESTART_PATTERN ;
                             o_sclstall_en   = 1'b1 ;
                             o_sclstall_code = restart_pattern_stall ;
-                            first_time      = 1'b0 ;
+                            //first_time      = 1'b0 ;
                         end  
                         else if (Direct_Broadcast_n_del && first_time) begin 
                             next_state = RESTART_PATTERN ;
                             o_sclstall_en   = 1'b1 ;
                             o_sclstall_code = restart_pattern_stall ;
-                            first_time    = 1'b0 ;
+                            //first_time    = 1'b0 ;
                         end
                         else if (Direct_Broadcast_n_del && !first_time) begin 
                             if (!i_regf_TOC) begin 
@@ -1003,7 +1003,7 @@ end
                     if (i_rx_mode_done && !i_rx_error) begin 
                         if (i_regf_TOC) begin 
                             next_state    = EXIT_PATTERN ;
-                            first_time    = 1'b0 ;
+                            //first_time    = 1'b0 ;
                             o_tx_mode     = exit_pattern ;
                             o_tx_en       = 1'b1 ;
                             o_sclstall_en    = 1'b1 ;
@@ -1013,7 +1013,7 @@ end
                             next_state      = RESTART_PATTERN_SPECIAL ;
                             o_sclstall_en   = 1'b1 ;
                             o_sclstall_code = restart_pattern_stall_special ;
-                            first_time      = 1'b0 ;
+                            //first_time      = 1'b0 ;
                             o_tx_mode       = restart_pattern ;
                             o_tx_en         = 1'b1 ;
                         end
@@ -1026,7 +1026,8 @@ end
 
 
             RESTART_PATTERN_SPECIAL : begin 
-                o_bitcnt_en        = 1'b0 ;
+                first_time      = 1'b0 ;
+                o_bitcnt_en     = 1'b0 ;
                 // access timer and staller and tx to perform restart pattern 
                 o_tx_en         = 1'b1 ;
                 o_tx_mode       = restart_pattern ;
@@ -1046,7 +1047,8 @@ end
 
 
             RESTART_PATTERN : begin 
-                o_bitcnt_en        = 1'b0 ;
+                first_time      = 1'b0 ;
+                o_bitcnt_en     = 1'b0 ;
                 // access timer and staller and tx to perform restart pattern 
                 o_tx_en         = 1'b1 ;
                 o_tx_mode       = restart_pattern ;
@@ -1069,6 +1071,7 @@ end
 
             EXIT_PATTERN : begin 
                 // access timer and staller and tx to perform exit pattern 
+                first_time       = 1'b0 ; // no need but it's ok 
                 o_tx_en          = 1'b1 ;
                 o_tx_mode        = exit_pattern ;
                 o_sclstall_en    = 1'b1 ;

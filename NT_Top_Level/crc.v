@@ -31,7 +31,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst) begin
 		o_txrx_crc_value <= 'd0;
 		end 
 	
-	else	begin
+	else begin
 		 if (i_txrx_en)
 			begin
 			if (i_txrx_last_byte)
@@ -65,34 +65,12 @@ always @(posedge i_sys_clk or negedge i_sys_rst) begin
 						shift_reg[4] <= feedback;
 						counter <= counter + 'd1;
 						o_txrx_crc_valid <= 'd0;
-					end
-					
-				
-				end
-				
-			end
-			
-			
-		/*else
-				begin
-						counter <= 'd0;
-						o_txrx_crc_valid <= 'd0;
-						shift_reg <= POLY;
-				end*/
-				
-				
-				
-		
-		end
-		
+					end			
+				end				
+			end				
+		end		
 	end
 	
-	
-	
-
-
-
-
 always @(*) begin
  
 	 case (counter) 
@@ -106,14 +84,6 @@ always @(*) begin
 	'd7:	feedback = temp[0] ^ shift_reg[0] ;
 	
 	default : feedback = 'b0;
-	
 	endcase
-	
-	end
-
-
-
-
-
-
+end
 endmodule

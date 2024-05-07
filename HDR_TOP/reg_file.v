@@ -288,7 +288,7 @@ assign o_regf_hj_support  = reg_array[409][0]   ;
  		  			o_frmcnt_DTT  	  <= 'd0 ;
  		  		end  
 
- 		  		reg_array [i_engine_configuration - 1] = 8'b0000_0000 ; //zerozzzz location to ba serialized in ZEROS state 
+ 		  		reg_array [i_engine_configuration - 1] <= 8'b0000_0000 ; //zerozzzz location to ba serialized in ZEROS state 
 
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

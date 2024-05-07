@@ -228,6 +228,9 @@ R0
 R0
 R0
 R0
+R0
+R0
+R0
 !s11f vlog 2021.1 2021.01, Jan 19 2021
 13
 !s112 1.1
@@ -259,17 +262,17 @@ n@_opt1
 R6
 R1
 T_opt2
-!s110 1714990888
-V^O?S9S[Yjf:ZZRIjzORS43
+!s110 1715031829
+VaRRQePkjG_T2_JMPkK4HX2
 R2
-=1-48a472837b0b-6638af28-19f-272c
+=1-3c2c30a457d5-66394f15-230-15b0
 R3
 R4
 R5
 n@_opt2
 R6
 vbits_counter
-Z7 !s110 1714990878
+Z7 !s110 1715031819
 !i10b 1
 !s100 <`mUi0b_K?RJ35@=Eb4Iz2
 IcD=:[n?kUTM:O`CQcHaIb3
@@ -277,14 +280,14 @@ R1
 w1714057605
 8bits_counter.v
 Fbits_counter.v
-!i122 403
+!i122 430
 L0 3 61
 Z8 VDg1SIo80bB@j0V0VzS_@n1
 Z9 OL;L;2021.1;73
 r1
 !s85 0
 31
-Z10 !s108 1714990878.000000
+Z10 !s108 1715031819.000000
 Z11 !s107 testing_mux.v|staller.v|scl_generation.v|Tx.v|Rx.v|reg_file.v|FRAME_COUNTER.v|bits_counter.v|CCC_Handler_tb_final.sv|CCC_Handler.v|package.sv|
 Z12 !s90 -reportprogress|300|package.sv|CCC_Handler.v|CCC_Handler_tb_final.sv|bits_counter.v|FRAME_COUNTER.v|reg_file.v|Rx.v|Tx.v|scl_generation.v|staller.v|testing_mux.v|+cover|-covercells|
 !i113 0
@@ -294,14 +297,14 @@ R5
 vCCC_Handler
 R7
 !i10b 1
-!s100 B^OK>@5O:l_lo1@icfmkf0
-IY:8RGE@IEim^0T<]TJgYN2
+!s100 R1YlV>f6zA@RZlJ2`X`a=2
+I:VKZl1XE:3VRW5I^@058n0
 R1
-w1714937866
+w1715031784
 8CCC_Handler.v
 FCCC_Handler.v
-!i122 403
-L0 33 1088
+!i122 430
+L0 33 1096
 R8
 R9
 r1
@@ -319,16 +322,16 @@ XCCC_HANDLER_PACKAGE
 Z15 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
 R7
 !i10b 1
-!s100 C@8@gnXaXCcYdn=QmKdAk1
-I`8zeSFVGkG2C7<jXoH;LQ2
+!s100 3KJz7H;GdKLeSY6]k`@Ub0
+IdVCoNbA3k:I5=HE^^ijLG3
 S1
 R1
-w1714989834
+w1715031807
 8package.sv
 Fpackage.sv
-!i122 403
+!i122 430
 Z16 L0 1 0
-V`8zeSFVGkG2C7<jXoH;LQ2
+VdVCoNbA3k:I5=HE^^ijLG3
 R9
 r1
 !s85 0
@@ -343,22 +346,22 @@ R5
 n@c@c@c_@h@a@n@d@l@e@r_@p@a@c@k@a@g@e
 vCCC_Handler_tb
 R15
-Z17 DXx4 work 19 CCC_HANDLER_PACKAGE 0 22 `8zeSFVGkG2C7<jXoH;LQ2
+Z17 DXx4 work 19 CCC_HANDLER_PACKAGE 0 22 dVCoNbA3k:I5=HE^^ijLG3
 DXx4 work 28 CCC_Handler_tb_final_sv_unit 0 22 O=^2Yh?bZSEN_O?7IIP]31
 R7
 R8
 r1
 !s85 0
 !i10b 1
-!s100 4BGTT8hP]n>KeESVo31D01
-I[WK3_6[_0I[6IC4eEzahN3
+!s100 BV@<z@8dPiKhKn^<^2Pk93
+I==0E`O>hlN[nh_C=BHWP?0
 !s105 CCC_Handler_tb_final_sv_unit
 S1
 R1
-Z18 w1714990443
+Z18 w1714993202
 Z19 8CCC_Handler_tb_final.sv
 Z20 FCCC_Handler_tb_final.sv
-!i122 403
+!i122 430
 L0 3 3866
 R9
 31
@@ -386,7 +389,7 @@ R1
 R18
 R19
 R20
-!i122 403
+!i122 430
 R16
 R9
 31
@@ -407,7 +410,7 @@ R1
 w1714906968
 8FRAME_COUNTER.v
 FFRAME_COUNTER.v
-!i122 403
+!i122 430
 L0 2 55
 R8
 R9
@@ -430,7 +433,7 @@ R1
 w1711373421
 8testing_mux.v
 Ftesting_mux.v
-!i122 403
+!i122 430
 L0 1 16
 R8
 R9
@@ -453,7 +456,7 @@ R1
 w1713034854
 8reg_file.v
 Freg_file.v
-!i122 403
+!i122 430
 L0 33 309
 R8
 R9
@@ -476,7 +479,7 @@ R1
 w1714769974
 8Rx.v
 FRx.v
-!i122 403
+!i122 430
 L0 33 394
 R8
 R9
@@ -494,14 +497,14 @@ n@r@x
 vscl_generation
 R7
 !i10b 1
-!s100 `Y0Fd4C>ZTJlnmoNMj0Xh0
-IUZI=MEA:E53nd5JhC7`=S2
+!s100 lmF9NH>oAKNO<<e[JNXgj0
+IJSc2TbZShI9Fc`D>a49<31
 R1
-w1708522074
+w1715030305
 8scl_generation.v
 Fscl_generation.v
-!i122 403
-L0 34 134
+!i122 430
+L0 34 137
 R8
 R9
 r1
@@ -523,7 +526,7 @@ R1
 w1714076366
 8staller.v
 Fstaller.v
-!i122 403
+!i122 430
 L0 1 35
 R8
 R9
@@ -546,7 +549,7 @@ R1
 w1714773715
 8Tx.v
 FTx.v
-!i122 403
+!i122 430
 L0 1 466
 R8
 R9
