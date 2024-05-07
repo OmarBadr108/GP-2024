@@ -45,7 +45,7 @@ output reg [4:0] o_sclstall_no_of_cycles,
 output reg       o_sclstall_en,  
 output reg       o_engine_done,
 output reg [7:0] o_tx_special_data,
-output wire       o_en_mux ,
+output wire      o_en_mux ,
 
 //------------ interface output signals ---------//
 output reg       o_regf_abort,

@@ -252,3 +252,170 @@ I3C_TOP DUT (
  );
 
 endmodule
+
+
+
+//-------------------------------------------------------- Drivers for CCC Handler -----------------------------------------------// 
+/* i have three differnet type of sequences : 
+		1- Broadcast
+		2- Direct SET 
+		3- Direct GET 
+*/		 	 	
+
+
+
+
+
+
+/*
+		// for second preamble and read data 
+//////////////////////////////////////////////  Broadcast driver /////////////////////////////////
+// backup works 100 % el7amdulelah 
+// for second preamble and read data 
+int cycle_count ;
+		 // Simulation logic to create the desired pattern (Broadcast)
+    initial begin	 		
+    	for (i=0 ; i<10000 ; i++) begin
+    		#(2*CLK_PERIOD); // One clock cycle delay
+
+
+
+
+
+//------------------------ for direct driving without looping -------------------------------------//
+    		wait(i_engine_en_tb);
+    		@(negedge scl_neg_edge_tb or  negedge scl_pos_edge_tb)
+        		// Step 1: Randomize for 38 cycles
+        		cycle_count = 37;
+        		while (cycle_count > 0) begin
+        		    i_sdahnd_rx_sda_tb = $random();
+        		    #(CLK_PERIOD); // One clock cycle delay
+        		    cycle_count--;
+        		end
+        		
+        		// Step 2: Hold at zero for 7 cycles
+        		i_sdahnd_rx_sda_tb = 0;
+        		repeat (7) begin
+        		#(CLK_PERIOD); // One clock cycle delay
+        		end
+        
+        		// Step 3: Randomize for 38 cycles
+        		cycle_count = 37;
+        		while (cycle_count > 0) begin
+        		    i_sdahnd_rx_sda_tb =  $random();
+        		   	#(CLK_PERIOD); // One clock cycle delay
+       		 		cycle_count--;
+        		end
+        
+        		// Step 4: Hold at one for 4 cycles
+        		i_sdahnd_rx_sda_tb = 1;
+        		repeat (4) begin
+        		    #(CLK_PERIOD); // One clock cycle delay
+        		end
+        		
+        		// Step 5: Randomize until engine_done is set to 1
+				i_sdahnd_rx_sda_tb = $random();
+				#(2*CLK_PERIOD); // One clock cycle delay
+				wait (o_engine_done_tb) #(2*CLK_PERIOD);
+//-----------------------------------------------------------------------------------------------//
+
+
+
+
+
+
+				continue ;
+				  
+    	end 
+    end
+*/
+
+
+
+/*
+//////////////////////////////////////////////  Direct set driver /////////////////////////////////
+
+	initial begin 
+		forever #(2*CLK_PERIOD) begin  
+			@(negedge scl_neg_edge_tb or  negedge scl_pos_edge_tb) i_sdahnd_rx_sda_tb = 0 ;
+		end
+	end 
+*/
+
+
+
+
+/*
+ 
+//////////////////////////////////////////////  Direct Get driver /////////////////////////////////
+// backup works 100 % el7amdulelah 
+// for second preamble and read data 
+int cycle_count ;
+		 // Simulation logic to create the desired pattern (Broadcast)
+    initial begin	 		
+    	for (i=0 ; i<10000 ; i++) begin
+    		#(2*CLK_PERIOD); // One clock cycle delay	
+
+
+
+
+
+    //------------------------ for direct driving without looping -------------------------------------//
+    		wait(i_engine_en_tb);
+    		@(negedge scl_neg_edge_tb or  negedge scl_pos_edge_tb)
+        		// Step 1: Randomize for 38 cycles
+        		cycle_count = 37;
+        		while (cycle_count > 0) begin
+        		    i_sdahnd_rx_sda_tb = $random();
+        		    #(CLK_PERIOD); // One clock cycle delay
+        		    cycle_count--;
+        		end
+        		
+        		// Step 2: Hold at zero for 12 cycles
+        		i_sdahnd_rx_sda_tb = 0;
+        		repeat (12) begin
+        		#(CLK_PERIOD); // One clock cycle delay
+        		end
+        		i_sdahnd_rx_sda_tb = 0;
+        		//wait (i_sclstall_stall_done_tb) ;
+        		@(negedge o_crc_en_tb) ;
+        		#(3*CLK_PERIOD) ;
+
+        		//CRC Preamble 
+        		i_sdahnd_rx_sda_tb = 1;
+        		#(2*CLK_PERIOD) ;
+        		i_sdahnd_rx_sda_tb = 0;
+        		#(2*CLK_PERIOD) ;
+
+        		// C token 1100
+        		i_sdahnd_rx_sda_tb = 1;
+        		#(4*CLK_PERIOD) ;
+        		i_sdahnd_rx_sda_tb = 0;
+        		#(4*CLK_PERIOD) ;
+
+				wait (o_engine_done_tb) #(2*CLK_PERIOD);
+
+//-----------------------------------------------------------------------------------------------//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				
+				continue ;
+				  
+    	end 
+    end
+*/
+
