@@ -66,7 +66,7 @@ module enthdr (
  
  
 
- assign o_pp_od = 1'b0  ; 
+ assign o_pp_od = 1'b1  ; 
 
 
 
@@ -155,8 +155,9 @@ module enthdr (
 
            ACK:         
             begin
- 
-             if(!i_rx_ack_nack && i_scl_neg_edge && i_rx_mode_done ) //if ACK next state is ENTHDR_DDR
+            o_regf_addr         <= 'd50;
+            o_regf_rd_en        <=  1'b1;
+             if(!i_rx_ack_nack && i_rx_mode_done ) //if ACK next state is ENTHDR_DDR  //&& i_scl_neg_edge
                begin
                  state               <= ENTHDR_DDR;
                  o_regf_rd_en        <= 1'b1;  
@@ -185,6 +186,8 @@ module enthdr (
                  o_tx_en       <= 1'b1;
                  o_tx_mode     <= 3'b011;
                  o_bit_cnt_en  <= 1'b1;
+
+                 //o_i3cengine_done <= 1'b1; //editttttttttt
                end
              else
                begin
@@ -200,8 +203,10 @@ module enthdr (
  
            PARITY:     
             begin
+
+              o_i3cengine_done <= 1'b1;
               if(i_tx_mode_done && i_scl_neg_edge)    ///*** T bit completion plus scl falling edge condition should be added
-               begin
+               begin  //( && i_scl_neg_edge)
                  o_i3cengine_done <= 1'b1;
                  state            <= IDLE;
                  o_bit_cnt_en     <= 1'b0;
@@ -209,7 +214,7 @@ module enthdr (
                end
               else
                begin
-                 o_i3cengine_done <= 1'b0;
+                 o_i3cengine_done <= 1'b1;  //0
                  state            <= PARITY;
                  o_bit_cnt_en     <= 1'b1;
                  o_tx_en          <= 1'b1;

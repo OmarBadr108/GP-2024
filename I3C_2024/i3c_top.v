@@ -275,7 +275,7 @@ module I3C_TOP (
    wire                  regf_wr_data_mux_sel        ;
    wire       [2:0]      regf_rd_address_mux_sel     ;
    wire       [2:0]      scl_pp_od_mux_sel           ;
-   wire       [2:0]      tx_en_mux_sel               ;
+   wire       [2:0]      sdr_tx_en_mux_sel               ;
    wire       [2:0]      tx_mode_mux_sel             ;
    wire       [2:0]      rx_en_mux_sel               ;
    wire       [2:0]      rx_mode_mux_sel             ;
@@ -309,7 +309,7 @@ module I3C_TOP (
 
    wire                  scl_pp_od_mux_out           ;
    wire                  rx_en_mux_out               ;
-   wire                  tx_en_mux_out               ;
+   wire                  sdr_tx_en_mux_out               ;
    wire       [2:0]      tx_mode_mux_out             ;
    wire       [2:0]      rx_mode_mux_out             ;
    wire                  bit_cnt_en_mux_out          ;
@@ -439,7 +439,8 @@ module I3C_TOP (
    wire                 hdr_scl_stall_flag_mux_out;
    wire      [4:0]      hdr_scl_stall_cycles_mux_out;
 
-
+   wire tx_en_sel;
+   wire tx_en_mux_out;
 
    ////////////////////////////////// HDR BLOCKS //////////////////////////////////
    
@@ -550,7 +551,7 @@ i3c_engine u_i3c_engine (
             .o_regf_rd_address_mux_sel    (regf_rd_address_mux_sel)  ,
             .o_regf_wr_en_mux_sel         (regf_wr_en_mux_sel)       ,
             .o_scl_pp_od_mux_sel          (scl_pp_od_mux_sel)        ,
-            .o_tx_en_mux_sel              (tx_en_mux_sel)            ,
+            .o_tx_en_mux_sel              (sdr_tx_en_mux_sel)            ,
             .o_fcnt_no_frms_sel           (fcnt_no_frms_sel)         ,
             .o_tx_mode_mux_sel            (tx_mode_mux_sel)          ,
             .o_rx_en_mux_sel              (rx_en_mux_sel)            ,
@@ -568,7 +569,7 @@ i3c_engine u_i3c_engine (
             ////////////////////////HDR///////////////////////////////
             .o_enthdr_en (enthdr_en),
             .o_mode_sda_sel  (sda_sel),
-                                                                                                    .o_hdrengine_en   (hdrengine_en), 
+            .o_tx_en_sel (tx_en_sel),                                                                                        .o_hdrengine_en   (hdrengine_en), 
             .o_regf_wr_en_sdr_hdr_sel(regf_wr_en_mode), 
             .o_regf_data_sdr_hdr_sel (regf_data_mode),
             .o_regf_rd_en_sdr_hdr_sel(regf_rd_en_mode), 
@@ -802,7 +803,7 @@ controller_tx u_controller_tx (
             .i_clk                        (sys_clk_50mhz)            ,
             .i_rst_n                      (i_sdr_rst_n)              ,
             .i_ser_scl                    (scl)                      ,
-            .i_ser_en                     (tx_en_mux_out)            ,
+            .i_ser_en                     (sdr_tx_en_mux_out)            ,
             .i_ser_valid                  (sdr_ctrl_ser_valid)       ,
             .i_ser_count                  (sdr_cnt_bit_count)        ,
             .i_ser_count_done             (sdr_ctrl_cnt_done)        ,
@@ -869,7 +870,7 @@ frame_counter_sdr u_frame_counter_sdr (
 sda_handling u_sda_handling (
             .i_handling_s_data            (ser_s_data_mux_out)               ,       //sda_handling_mode_mux output will repalced here
             .i_handling_sel_pp_od         (scl_pp_od_mux_out)        ,
-            .i_handling_pp_en             (tx_en_mux_out)            , // same enable of the serializer
+            .i_handling_pp_en             (tx_en_mux_out)            , // same enable of the serializer //2024-edit to make it tx_en of hdr or sdr
             .o_handling_s_data            (deser_s_data)             ,
             .sda                          (sda)                     );
 
@@ -1033,8 +1034,8 @@ gen_mux #(1,3) scl_idle_mux (
 
 gen_mux #(1,3) tx_en_mux (
             .data_in  ({ enthdr_tx_en, crh_tx_en, ibi_tx_en , hj_tx_en , daa_tx_en , i3c_tx_en , i2c_tx_en , sdr_tx_en}),
-            .ctrl_sel (tx_en_mux_sel)  ,
-            .data_out (tx_en_mux_out) );
+            .ctrl_sel (sdr_tx_en_mux_sel)  ,
+            .data_out (sdr_tx_en_mux_out) );
 
 gen_mux #(3,3) tx_mode_mux (
             .data_in  ({ enthdr_tx_mode, crh_tx_mode,ibi_tx_mode ,hj_tx_mode , daa_tx_mode , i3c_tx_mode , i2c_tx_mode , sdr_tx_mode}),
@@ -1133,6 +1134,10 @@ gen_mux #(1,1) tx_en_hdr_mux (
             .ctrl_sel (hdr_tx_en_sel)  ,
             .data_out (tx_en_hdr_mux_out) );
 
+
+
+
+
 gen_mux #(1,1) rx_en_hdr_mux (
             .data_in  ({ccc_rx_en, ddr_rx_en}),             
             .ctrl_sel (hdr_rx_en_sel)  ,
@@ -1224,6 +1229,13 @@ gen_mux #(1,1) scl_pp_od_mode_mux (
             .ctrl_sel (scl_pp_od_mode),
             .data_out (scl_pp_od_mux_out)
     );
+
+
+// to choose which tx enable signal will be input to sda handling
+gen_mux #(1,1) tx_en_mode_mux (
+            .data_in  ({tx_en_hdr_mux_out, sdr_tx_en_mux_out}),             
+            .ctrl_sel (tx_en_sel)  ,
+            .data_out (tx_en_mux_out) );
 
 
 //////////////reg_file(Config /data write)///////////////////

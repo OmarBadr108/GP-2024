@@ -146,7 +146,7 @@ reg parity_counter;
                                     o_ser_pp_mode_done <= 1'b0 ;
                                   end
 
-                              if (!i_ser_scl)
+                              if (!i_ser_scl) 
                                 begin
                                   o_ser_s_data    <= i_ser_regf_data[i_ser_count] ;
                                 end

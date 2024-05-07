@@ -172,6 +172,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst)
   if(!i_sys_rst)
    begin
      current_state <= idle ;
+     o_tx_en = 'b0 ; //laila
   /*  o_tx_en = 'b0 ; 
     o_rx_en = 'b0 ;
     o_frmcnt_en = 'b0 ;

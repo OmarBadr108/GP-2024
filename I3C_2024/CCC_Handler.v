@@ -295,6 +295,9 @@ localparam [5:0] CCC_value_hi      = 7'd63 ,
     if (!i_sys_rst) begin
         tmp_shift <= 10'd0 ;
         Direct_Broadcast_n_del <= 1'b0 ;
+
+
+        
     end 
     else begin 
         if (i_engine_en) begin 

@@ -41,7 +41,7 @@ bit frame_ended;
     parameter [2:0] RAND_CMD_ATTR  = 'd0   ;
     parameter [3:0] RAND_TID       = 'd3   ;
     parameter [7:0] RAND_CMD       = 8'h00 ;
-    parameter       RAND_CP        = 0     ;
+    parameter       RAND_CP        = 1     ;
     parameter [4:0] RAND_DEV_INDEX = 'd3   ;
     parameter [1:0] RAND_RESERVED  = 'd0   ;
     parameter [2:0] RAND_DTT       = 'd2   ;
@@ -75,7 +75,7 @@ initial begin
 
 
 			//<-------------------------TEST CASE 1 ----------------------->//
-			//<            Mode --> HDR, TOC = 1, CP = 1 (N.T.)            >//
+			//<            Mode --> HDR, TOC = 1, CP = 1 (CCC)            >//
 
 	i_i3c_i2c_sel_tb     			        = 1'b1;
     i_controller_en_tb 						= 1'b1;
@@ -218,13 +218,15 @@ endtask
 
 task send_ack;
 	begin
-		#(30*CLK_PERIOD)
+		//#(30*CLK_PERIOD)
+		#(2*CLK_PERIOD)
 			if(!scl_tb)       //drive ack when scl is low
 			  begin  	
 					sda_drive = 1'b0; //ack bit
 
 				  @(negedge scl_tb)
-				  #(30*CLK_PERIOD)
+				  //#(30*CLK_PERIOD)
+				  #(2*CLK_PERIOD)
 
 						if(!scl_tb)
 				 			sda_drive = 'bz;     

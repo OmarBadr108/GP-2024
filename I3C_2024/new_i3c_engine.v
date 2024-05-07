@@ -112,6 +112,7 @@ module i3c_engine (
     ///////////////////////hdr//////////////////////////////////
     output  reg          o_enthdr_en                   ,
     output  reg          o_mode_sda_sel                ,
+    output  reg          o_tx_en_sel                   ,
     output  reg          o_hdrengine_en                ,
 
     ///////////////////hdr_sdr_mux_sel////////////////////////
@@ -225,6 +226,7 @@ always @(posedge i_clk or negedge i_rst_n)
              o_scl_pp_od_sdr_hdr_sel         <= SDR_MODE_SEL;
              o_scl_stall_flag_sdr_hdr_sel            <= SDR_MODE_SEL;
              o_scl_stall_cycles_sdr_hdr_sel          <= SDR_MODE_SEL;
+             o_tx_en_sel                             <= SDR_MODE_SEL;
              
             case(state)
             IDLE:
@@ -742,7 +744,7 @@ always @(posedge i_clk or negedge i_rst_n)
                     if (i_enthdr_done)
                         begin
                             o_hdrengine_en            <= 1'b1 ;          
-
+                            o_enthdr_en               <= 1'b0 ;
 
     /// Selectors of muxes that are shared between SDR and HDR to choose the required mode///////
                             
@@ -755,10 +757,12 @@ always @(posedge i_clk or negedge i_rst_n)
 
                            o_scl_stall_flag_sdr_hdr_sel            <= HDR_MODE_SEL;
                            o_scl_stall_cycles_sdr_hdr_sel          <= HDR_MODE_SEL;
+                           o_tx_en_sel                             <= HDR_MODE_SEL;
 
-                           o_scl_pp_od_mux_sel       <= I3C_ENGINE_SEL ;
+                            o_pp_od             <= 1'b1      ; //editt
+                           //o_scl_pp_od_mux_sel       <= I3C_ENGINE_SEL ;
 
-                           o_scl_idle_mux_sel              <= I3C_ENGINE_SEL ;
+                           //o_scl_idle_mux_sel              <= I3C_ENGINE_SEL ;
 
                             state                           <= HDR_ENGINE    ; 
                         end 
@@ -797,6 +801,7 @@ always @(posedge i_clk or negedge i_rst_n)
                     
                     o_regf_rd_address_sdr_hdr_sel   <=SDR_MODE_SEL; 
                     o_scl_pp_od_sdr_hdr_sel         <=SDR_MODE_SEL;
+                    o_tx_en_sel                             <= SDR_MODE_SEL;
 
                     o_hdrengine_en                  <= 1'b0 ;
 
@@ -813,7 +818,13 @@ always @(posedge i_clk or negedge i_rst_n)
                     o_regf_wr_en_sdr_hdr_sel        <=HDR_MODE_SEL;  
                     o_regf_rd_en_sdr_hdr_sel        <=HDR_MODE_SEL; 
                     o_regf_rd_address_sdr_hdr_sel   <=HDR_MODE_SEL; 
-                    o_scl_pp_od_sdr_hdr_sel         <=HDR_MODE_SEL; 
+                    o_scl_pp_od_sdr_hdr_sel         <=HDR_MODE_SEL;
+                    o_regf_data_sdr_hdr_sel         <= HDR_MODE_SEL    ;
+
+                    o_scl_stall_flag_sdr_hdr_sel            <= HDR_MODE_SEL;
+                    o_scl_stall_cycles_sdr_hdr_sel          <= HDR_MODE_SEL;
+                    o_tx_en_sel                             <= HDR_MODE_SEL; 
+
 
 
 o_scl_pp_od_mux_sel       <= I3C_ENGINE_SEL ;
