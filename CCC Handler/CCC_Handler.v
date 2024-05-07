@@ -83,7 +83,8 @@ output reg [11:0] o_regf_addr        , // depends on the depth of the regfile
 output reg        o_engine_done      ,
 output reg [7:0]  o_txrx_addr_ccc    ,         
 output reg        o_engine_odd       ,         
-output reg [3:0]  o_regf_ERR_STATUS            
+output reg [3:0]  o_regf_ERR_STATUS  , 
+output reg        o_en_mux             // for crc muxes btn tx and rx   ( 1 for tx and 0 for rx 
 );   
 
 
@@ -113,16 +114,6 @@ reg        i_regf_WROC      ;
 reg [2:0]  i_regf_DTT       ;
 reg        i_regf_DBP       ;
 reg        i_regf_SRE       ;
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -228,6 +219,14 @@ parameter [7:0]
 always @(*) begin 
     o_frmcnt_Direct_Broadcast_n = Direct_Broadcast_n ;
 end 
+
+//o_en_mux = (first_time)? 1 : (i_regf_RnW)?  0 : 1 ;
+
+always @(*) begin 
+    if (first_time)         o_en_mux = 1'b1 ;
+    else if (!i_regf_RnW)   o_en_mux = 1'b1 ;
+    else                    o_en_mux = 1'b0 ;
+end
 
 /////////////////////////// decoding the device address  ///////////////////////////////////////
 
