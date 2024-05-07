@@ -45,6 +45,8 @@ module scl_generation(
     output reg        o_scl                  );
 
 
+
+
 //-- states encoding in gray ---------------------------------------------
 
 localparam LOW  = 1'b0 ;

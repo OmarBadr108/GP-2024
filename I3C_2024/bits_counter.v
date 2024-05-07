@@ -1,106 +1,63 @@
-//////////////////////////////////////////////////////////////////////////////////
-//==================================================================================
-// MIXEL GP 2023 LIBRARY
-// Copyright (c) 2023 Mixel, Inc.  All Rights Reserved.
-// CONFIDENTIAL AND PROPRIETARY SOFTWARE/DATA OF MIXEL and ASU 2023 GP, INC.
-//
-// Authors: Yaseen Salah , Youssef Noeman
-// Revision: Youssef Noaman , Yaseen Salah , Nour Eldeen Samir 
-//
-// Version : 1.0
-//
-// Create Date:  21:33:27 10/02/2023  
-// Design Name:  bits_counter
-// Module Name:  bits_counter
-//
-//==================================================================================
-//
-//  STATEMENT OF USE
-//
-//  This information contains confidential and proprietary information of MIXEL.
-//  No part of this information may be reproduced, transmitted, transcribed,
-//  stored in a retrieval system, or translated into any human or computer
-//  language, in any form or by any means, electronic, mechanical, magnetic,
-//  optical, chemical, manual, or otherwise, without the prior written permission
-//  of MIXEL.  This information was prepared for Garduation Project purpose and is for
-//  use by MIXEL Engineers only.  MIXEL and ASU 2023 GP reserves the right 
-//  to make changes in the information at any time and without notice.
-//
-//==================================================================================
-//////////////////////////////////////////////////////////////////////////////////
 
-`default_nettype none
+
 module bits_counter(
-    input  wire       i_cnt_en              ,  
-    input  wire       i_ctrl_rx_cnt_en      , // controller is in DATA IN state 
-    input  wire       i_rst_n               ,
-    input  wire       i_bits_cnt_clk        ,
-    input  wire       i_sdr_ctrl_pp_od      , //UNUSED
-    input  wire       i_scl_pos_edge        ,  
-    input  wire       i_scl_neg_edge        ,  
-    input  wire       i_bits_cnt_regf_rx_tx ,  // 0 for TX , 1 for RX
-    output reg        o_cnt_done            ,
-    output wire [2:0] o_cnt_bit_count
+    input  wire       i_sys_clk              ,
+    input  wire       i_rst_n                ,
+    input  wire       i_bitcnt_en            ,  
+    input  wire       i_scl_pos_edge         ,  
+    input  wire       i_scl_neg_edge         , 
+    input  wire       i_cccnt_err_rst        , 
+    output reg        o_frcnt_toggle         ,
+    output reg  [5:0] o_cnt_bit_count = 6'd0
     );
 
-// INTERNAL SIGNALS 
-    reg [2:0] cnt_bit_count ;
-    
-// OUTPUT 
-    assign o_cnt_bit_count = cnt_bit_count;
-    
-// COUNTER CORE
-always @ (posedge i_bits_cnt_clk or negedge i_rst_n)
-    begin : counter
-        if (!i_rst_n)
-            begin 
-                cnt_bit_count <= 3'b111 ;
-                o_cnt_done    <= 1'b0   ;    
-            end
-            
-        else if (i_cnt_en)
-            begin
-                if(i_bits_cnt_regf_rx_tx && i_ctrl_rx_cnt_en) // RX condition 
-                    begin
-                        if (i_scl_neg_edge) 
-                            begin 
-                                if (!cnt_bit_count )
-                                     begin
-                                        cnt_bit_count <= 3'b111 ;
-                                        o_cnt_done    <= 1'b1   ;    
-                                     end
-                                else    
-                                     begin               
-                                        cnt_bit_count <= cnt_bit_count - 1'd1 ;
-                                        o_cnt_done    <= 1'b0                 ;
-                                     end
-                            end
-                    end
-                else                    // TX condition 
-                    begin
-                        if (i_scl_pos_edge) 
-                            begin 
-                                if (!cnt_bit_count )
-                                     begin
-                                        cnt_bit_count <= 3'b111 ;
-                                        o_cnt_done    <= 1'b1   ;    
-                                     end
-                                else    
-                                     begin               
-                                        cnt_bit_count <= cnt_bit_count - 1'd1 ;
-                                        o_cnt_done    <= 1'b0                 ;
-                                     end
-                            end
-                    end        
-            end
-        else
-              begin
-                  cnt_bit_count <= 3'b111 ;
-                  o_cnt_done    <= 1'b0   ;    
-              end
+reg [5:0] err_count = 6'd0 ;
+////////////////////////////////////// there is 2 versions of the bits counter uncomment only one of them ////////////////////////////////////////
 
 
+// sequential version the counter is incremented in the middle of the SCL period 
+
+always @(posedge i_sys_clk or negedge i_rst_n) begin 
+    if(~i_rst_n) begin
+        o_cnt_bit_count <= 0 ;
     end 
+    else begin 
+        if (i_cccnt_err_rst) begin 
+            if (i_scl_neg_edge || i_scl_pos_edge) begin 
+                if (err_count == 6'd37) begin 
+                    err_count <= 6'd0 ;                     // from 0 to 37 it won't reach 38 
+                end
+                else begin 
+                    err_count <= err_count + 1 ; 
+                end  
+            end
+        o_cnt_bit_count <= err_count ;
+        
+        end 
 
-endmodule
-`default_nettype wire
+        else if (i_bitcnt_en) begin 
+            if (i_scl_neg_edge || i_scl_pos_edge) begin 
+                if (o_cnt_bit_count == 6'd19) begin 
+                    o_cnt_bit_count <= 6'd0 ;                     // from 0 to 19 it won't reach 20 
+                end
+                else begin 
+                    o_cnt_bit_count <= o_cnt_bit_count + 1 ; 
+                end  
+            end 
+        end 
+        else begin 
+            o_cnt_bit_count <= 6'd0 ;
+        end 
+    end
+end
+
+always @(negedge i_sys_clk) begin 
+    if ((o_cnt_bit_count == 'd6 || o_cnt_bit_count == 'd16) && (!i_scl_pos_edge && !i_scl_neg_edge)) begin
+        o_frcnt_toggle = 1'b1 ;
+    end
+    else begin 
+        o_frcnt_toggle = 1'b0 ;
+    end 
+end
+
+endmodule 

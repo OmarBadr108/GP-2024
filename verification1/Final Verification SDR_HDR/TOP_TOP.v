@@ -395,15 +395,15 @@ module sdr_hdr_transition_top (
    wire                 hdr_rx_en_sel;
    wire                 rx_en_hdr_mux_out;
 
-   wire        [2:0]    ccc_tx_mode;
-   wire        [2:0]    ddr_tx_mode;
+   wire        [3:0]    ccc_tx_mode;
+   wire        [3:0]    ddr_tx_mode;
    wire                 hdr_tx_mode_sel;
-   wire        [2:0]    tx_mode_hdr_mux_out;
+   wire        [3:0]    tx_mode_hdr_mux_out;
 
-   wire        [2:0]    ccc_rx_mode;
-   wire        [2:0]    ddr_rx_mode;
+   wire        [3:0]    ccc_rx_mode;
+   wire        [3:0]    ddr_rx_mode;
    wire                 hdr_rx_mode_sel;
-   wire        [2:0]    rx_mode_hdr_mux_out;
+   wire        [3:0]    rx_mode_hdr_mux_out;
 
    wire                  scl_ddr_pp_od                 ;
    wire                  scl_ccc_pp_od                 ;
@@ -766,7 +766,7 @@ controller_tx u_controller_tx (
             .o_ser_pp_mode_done           (ser_pp_mode_done)         ,
             .o_ser_to_parity_transition   (ser_to_parity_transition));
 
-bits_counter u_bits_counter (
+bits_counter_sdr u_bits_counter_sdr (
             .i_cnt_en                (bit_cnt_en_mux_out)    ,
             .i_ctrl_rx_cnt_en        (bit_rx_cnt_en_mux_out) ,
             .i_bits_cnt_clk          (sys_clk_50mhz)         ,
@@ -799,7 +799,7 @@ controller_rx u_controller_rx (
             .o_sdr_rx_arbitration_lost    (rx_arbitration_lost)     );
 
 
-frame_counter u_frame_counter (
+frame_counter_sdr u_frame_counter_sdr (
             .i_fcnt_no_frms         (fcnt_no_frms_mux_out) ,
             .i_fcnt_clk             (sys_clk_50mhz)        ,
             .i_fcnt_rst_n           (i_sdr_rst_n)          ,
@@ -1050,9 +1050,10 @@ gen_mux #(1,1) sda_handling_mode_mux (
 //////////////////hdr_mux/////////////////////
 
 
+wire [7:0] ccc_tx_special_data;
+wire [7:0] ddr_tx_special_data;
 
-
-gen_mux #(1,1) regf_special_data_hdr_mux (
+gen_mux #(8,1) regf_special_data_hdr_mux (
             .data_in  ({ ccc_tx_special_data, ddr_tx_special_data}),            
             .ctrl_sel (cccnt_tx_special_data_mux_sel)  ,
             .data_out (cccnt_tx_special_data_mux_out) );
@@ -1083,12 +1084,12 @@ gen_mux #(1,1) rx_en_hdr_mux (
             .ctrl_sel (hdr_rx_en_sel)  ,
             .data_out (rx_en_hdr_mux_out) );
 
-gen_mux #(3,1) tx_mode_hdr_mux (
+gen_mux #(4,1) tx_mode_hdr_mux (
             .data_in  ({ccc_tx_mode, ddr_tx_mode}),             
             .ctrl_sel (hdr_tx_mode_sel)  ,
             .data_out (tx_mode_hdr_mux_out) );
 
-gen_mux #(3,1) rx_mode_hdr_mux (
+gen_mux #(4,1) rx_mode_hdr_mux (
             .data_in  ({ccc_rx_mode, ddr_rx_mode}),             
             .ctrl_sel (hdr_rx_mode_sel)  ,
             .data_out (rx_mode_hdr_mux_out) );
