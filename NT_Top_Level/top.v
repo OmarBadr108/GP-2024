@@ -158,7 +158,7 @@ tx dut1 (
 	.i_regf_read_n_write_bit(i_regf_wr_rd_bit),
 
   
-    .o_crcddrccc_mode_done(tx_mode_done),
+    .o_ddrccc_mode_done(tx_mode_done),
    
 	.o_crc_en(crc_en_tx),
     .o_crc_parallel_data(crc_parallel_data_tx),
@@ -186,7 +186,7 @@ rx dut2 (
 
     
     
-    .o_crcddrccc_rx_mode_done(rx_mode_done),
+    .o_ddrccc_rx_mode_done(rx_mode_done),
     .o_ddrccc_pre(rx_pre),
     .o_ddrccc_error(rx_error),
     
