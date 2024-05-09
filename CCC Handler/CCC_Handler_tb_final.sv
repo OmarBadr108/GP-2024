@@ -174,7 +174,7 @@ module CCC_Handler_tb ();
     );
 
 
-		 wire [7:0]  i_regf_data_wr_tb ;
+		 wire [7:0]  i_rx_regfcrc_data_wr_tb ;
 		 reg  [11:0] i_engine_configuration_tb ;
 		 wire [3:0]  o_engine_TID_tb ;
 		 wire [2:0]  o_engine_MODE_tb ;
@@ -245,7 +245,7 @@ module CCC_Handler_tb ();
 
 		mux #(.WIDTH(8)) DUT7  (
 			.i_mux_one(my_regf_data_wr_tb),
-			.i_mux_zero(i_regf_data_wr_tb),
+			.i_mux_zero(i_rx_regfcrc_data_wr_tb),
 			.i_selector(my_regf_data_wr_tb_selector),
 			.o_mux_out(my_regf_data_wr_tb_mux_out)
 			);
@@ -270,9 +270,9 @@ module CCC_Handler_tb ();
 
 		wire       o_sdahnd_serial_data_tb ;
     	wire [7:0] o_crc_parallel_data_tx_tb ;
-    	wire [7:0] o_crc_parallel_data_rx_tb ;
+    	//wire [7:0] o_crc_parallel_data_rx_tb ; already declared as : i_rx_regfcrc_data_wr_tb
 
-		RX rx_dut (
+		rx rx_dut (
 		.i_sys_clk					(i_sys_clk_tb)				,
 		.i_sys_rst					(i_rst_n_tb)				,
 		.i_sclgen_scl				(o_scl_tb)					,
@@ -285,13 +285,14 @@ module CCC_Handler_tb ();
 		.i_crc_value				(i_crc_value_tb)			,
 		.i_crc_valid				(i_crc_valid_tb)			,
 			
-		.o_regfcrc_rx_data_out		(i_regf_data_wr_tb)			,
+		.o_regfcrc_rx_data_out		(i_rx_regfcrc_data_wr_tb)			,
 		.o_ddrccc_rx_mode_done		(i_rx_mode_done_tb)			,
 		.o_ddrccc_pre				(i_rx_pre_tb)				,
 		.o_ddrccc_error				(i_rx_error_tb)				,
-		.o_crc_en					(o_crc_en_tb)               , // 
-		.o_crc_data_valid           (o_crc_data_valid_rx_tb)       ,
-		.o_ddrccc_error_done   	    (o_ddrccc_error_done_tb)      
+		.o_crc_en					(crc_en_rx)                 , // 
+		.o_crc_data_valid           (o_crc_data_valid_rx_tb)    ,
+		.o_crc_last_byte 			(o_crc_last_byte_rx_tb)
+		//.o_ddrccc_error_done   	    (o_ddrccc_error_done_tb)      
 
 );
     	
@@ -300,19 +301,21 @@ module CCC_Handler_tb ();
     	tx tx_dut (
 		.i_sys_clk 				 (i_sys_clk_tb),
 		.i_sys_rst 				 (i_rst_n_tb),
+
 		.i_ddrccc_tx_en 		 (o_tx_en_tb),
 		.i_sclgen_scl_pos_edge 	 (scl_pos_edge_tb),
 		.i_sclgen_scl_neg_edge 	 (scl_neg_edge_tb),
 		.i_ddrccc_tx_mode 		 (o_tx_mode_tb),
+
 		.i_regf_tx_parallel_data (i_regf_tx_parallel_data_tb),
 		.i_ddrccc_special_data 	 (i_regf_CMD_tb),
 		.i_crc_crc_value 		 (i_crc_value_tb),
-		.i_crc_data_valid  	  	 (i_crc_data_valid_tb), // new 
+		.i_crc_data_valid  	  	 (i_crc_valid_tb), // new 
 		.i_regf_read_n_write_bit (i_regf_RnW_tb), // new
 		.o_sdahnd_serial_data 	 (o_sdahnd_serial_data_tb),
 		.o_ddrccc_mode_done 	 (i_tx_mode_done_tb),
 		.o_crc_parallel_data 	 (o_crc_parallel_data_tx_tb),
-		.o_crc_en 				 (o_crc_en_tb) ,
+		.o_crc_en 				 (crc_en_tx) ,
 		.o_crc_last_byte 		 (o_crc_last_byte_tx_tb), // new
 		.o_crc_data_valid 		 (o_crc_data_valid_tx_tb)	// new
 );
@@ -366,7 +369,7 @@ mux1      mux1_3 (
 mux8      mux1_8 (
 	.en(en_mux),
 	.tx(o_crc_parallel_data_tx_tb),
-	.rx(o_crc_parallel_data_rx_tb),
+	.rx(i_rx_regfcrc_data_wr_tb),
 	.y(mux8_out)
 	
 );
@@ -3002,9 +3005,6 @@ mux8      mux1_8 (
 
 		system_reset(); 
 		i_engine_configuration_tb = 12'd1000 ;
-		//i_crc_value_tb 			  = 'd0 ;
-		i_crc_crc_value_tb 		  = 'd0 ;
-		i_crc_valid_tb 			  = 'd1 ;
 		
 		#(5*CLK_PERIOD);
 		
@@ -3105,7 +3105,7 @@ int cycle_count ;
 
 
 
-/*
+
 //////////////////////////////////////////////  Direct set driver /////////////////////////////////
 
 	initial begin 
@@ -3113,7 +3113,7 @@ int cycle_count ;
 			@(negedge scl_neg_edge_tb or  negedge scl_pos_edge_tb) i_sdahnd_rx_sda_tb = 0 ;
 		end
 	end 
-*/
+
 
 
 
