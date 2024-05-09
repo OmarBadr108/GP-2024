@@ -65,8 +65,8 @@ module ENTHDR_CTRL_TGT_top (
     input  wire i_tgt_engine_en              ,
 
 
-    output wire o_tgt_sdahnd_sda             ,
-    output wire o_tgt_pp_od_sdahand          ,
+    //output wire o_tgt_sdahnd_sda             ,
+    //output wire o_tgt_pp_od_sdahand          ,
     output wire o_tgt_engine_done
 
 
@@ -1173,8 +1173,10 @@ gen_mux #(1,1) reg_rd_en_config_data_mux (
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
+wire tgt_pp_od_sdahand ;
+wire tgt_sda_handle_en ;
+wire tgt_deser_s_data ;
+wire tgt_sdahnd_sda;
 
 ENTHDR_TGT u1_enthdr (
  .i_sys_clk   (sys_clk_50mhz),
@@ -1185,18 +1187,23 @@ ENTHDR_TGT u1_enthdr (
  .i_scl_pos_edge (scl_pos_edge) ,
  .i_scl_neg_edge (scl_neg_edge),
 
- . o_sdahnd_sda (o_tgt_sdahnd_sda) ,
- . o_pp_od      (o_tgt_pp_od_sdahand), 
+ . o_sdahnd_sda (sda) ,
+ . o_pp_od      (tgt_pp_od_sdahand),
+ . o_sda_handle_en(tgt_sda_handle_en), 
  . o_engine_done(o_tgt_engine_done) 
 );
 
 
 
-
-
-
-
-
+/*
+sda_handling u_tgt_sda_handling (
+.i_handling_s_data            (tgt_sdahnd_sda)               ,       //sda_handling_mode_mux output will repalced here
+.i_handling_sel_pp_od         (tgt_pp_od_sdahand)            ,
+.i_handling_pp_en             (tgt_sda_handle_en)            , // same enable of the serializer
+.o_handling_s_data            (tgt_deser_s_data)             ,
+.sda                          (sda)                   
+);
+*/
 
 
 
@@ -1204,5 +1211,4 @@ ENTHDR_TGT u1_enthdr (
 
 endmodule
 `default_nettype wire
-
 
