@@ -736,7 +736,7 @@ end
                 end 
             end 
 
-            PRE_DATA_TWO : begin 
+            PRE_DATA_TWO : begin  //  11  means ok continue , and 10 to be aborted 
                 if (!i_regf_RnW) begin // write
                     o_tx_en   = 1'b0 ;
                     o_rx_en   = 1'b1 ;

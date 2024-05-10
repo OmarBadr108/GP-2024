@@ -77,7 +77,7 @@ initial begin
 
 
 			//<-------------------------TEST CASE 1 ----------------------->//
-			//<            Mode --> HDR, TOC = 1, CP = 1 (CCC) ,Broadcast CCC        >//
+			//<            Mode --> HDR, TOC = 1, CP = 1 (CCC) ,Broadcast CCC :ENEC       >//
 
 	i_i3c_i2c_sel_tb     			        = 1'b1;
     i_controller_en_tb 						= 1'b1;
@@ -92,31 +92,22 @@ initial begin
 
 #(CLK_PERIOD)
 @(negedge DUT.CCC_Handler.o_rx_en )
-	sda_drive = 'b0;
+	sda_drive = 'b1;
   #(4*CLK_PERIOD)
     sda_drive = 'bz;    
 
-		 // Simulation logic to create the desired pattern (Broadcast)
-	 		
-    /*	for (int i=0 ; i<10000 ; i++) begin
-    		#(2*DUT.u_clk_divider.o_clk_out); // One clock cycle delay
 
 
+			//<-------------------------TEST CASE 2 ----------------------->//
+			//<            Mode --> HDR, TOC = 1, CP = 1 (CCC) ,Direct CCC :ENEC       >//
+    RAND_CMD       = 8'h80 ;	
+  
+  // change mux selector to write configurations
+	switch_muxes(configuration);
+	write_configurations();
 
-
-
-//------------------------ for direct driving without looping -------------------------------------//
-    		wait(DUT.CCC_Handler.i_engine_en);
-
-    		@(negedge DUT.u_scl_generation.o_scl_neg_edge or  negedge DUT.u_scl_generation.o_scl_pos_edge)
-        		// Step 1: Randomize for 38 cycles
-        		cycle_count = 37;
-        		while (cycle_count > 0) begin
-        		    sda_drive = $random();
-        		    #(DUT.u_clk_divider.o_clk_out); // One clock cycle delay
-        		    cycle_count--;
-        		end
-end */
+	// change mux selector to give the regfile inputs control to design
+	switch_muxes(Design);		
 
     #5000
     $stop;
@@ -270,6 +261,28 @@ task send_ack;
 endtask
 
 
+
+//-----------------------------DUT Instantiation-------------------------------------//
+I3C_TOP DUT (
+ .i_sdr_clk           		(i_sdr_clk_tb)					, 
+ .i_sdr_rst_n         		(i_sdr_rst_n_tb)				, 
+ .i_controller_en     		(i_controller_en_tb)			, 
+ .i_i3c_i2c_sel       		(i_i3c_i2c_sel_tb)				, 
+ .i_ccc_en_dis_hj     		(i_ccc_en_dis_hj_tb)			, 
+ .i_regf_config             (i_regf_config_tb)				,
+ .i_data_config_mux_sel     (i_data_config_mux_sel_tb)		,    
+ .i_regf_wr_address_config  (i_regf_wr_address_config_tb)	,
+ .i_regf_wr_en_config       (i_regf_wr_en_config_tb)		,
+ .i_regf_rd_en_config       (i_regf_rd_en_config_tb)        ,   
+ .sda                 		(sda_tb)						,
+ .scl                 		(scl_tb)						,
+ .o_sdr_rx_valid      		(o_sdr_rx_valid_tb)				,
+ .o_ctrl_done               (o_ctrl_done_tb)
+ );
+
+endmodule
+
+/*
 task ccc_broadcast_driver();
 	begin
 
@@ -330,34 +343,13 @@ int cycle_count ;
 
 
 
-				continue ; */
+				continue ; 
 				  
     	 
     end
 
 	end
-endtask : ccc_broadcast_driver
-//-----------------------------DUT Instantiation-------------------------------------//
-I3C_TOP DUT (
- .i_sdr_clk           		(i_sdr_clk_tb)					, 
- .i_sdr_rst_n         		(i_sdr_rst_n_tb)				, 
- .i_controller_en     		(i_controller_en_tb)			, 
- .i_i3c_i2c_sel       		(i_i3c_i2c_sel_tb)				, 
- .i_ccc_en_dis_hj     		(i_ccc_en_dis_hj_tb)			, 
- .i_regf_config             (i_regf_config_tb)				,
- .i_data_config_mux_sel     (i_data_config_mux_sel_tb)		,    
- .i_regf_wr_address_config  (i_regf_wr_address_config_tb)	,
- .i_regf_wr_en_config       (i_regf_wr_en_config_tb)		,
- .i_regf_rd_en_config       (i_regf_rd_en_config_tb)        ,   
- .sda                 		(sda_tb)						,
- .scl                 		(scl_tb)						,
- .o_sdr_rx_valid      		(o_sdr_rx_valid_tb)				,
- .o_ctrl_done               (o_ctrl_done_tb)
- );
-
-endmodule
-
-
+endtask : ccc_broadcast_driver */
 
 //-------------------------------------------------------- Drivers for CCC Handler -----------------------------------------------// 
 /* i have three differnet type of sequences : 
