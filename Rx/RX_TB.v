@@ -10,7 +10,7 @@ reg    			    i_ddrccc_rx_en_tb       	;
 reg                 i_sdahnd_rx_sda_tb      	;
 reg     [4:0]       i_bitcnt_rx_bit_count_tb	;
 reg     [3:0]       i_ddrccc_rx_mode_tb     	;
-reg                 i_crc_value_tb				;
+reg     [4:0]           i_crc_value_tb				;
 reg                 i_crc_valid_tb				;
 	
 wire    [7:0]       o_regfcrc_rx_data_out_tb	;
@@ -41,7 +41,11 @@ wire [3:0]  TOKEN     		= 'b0011;
 wire [4:0]  CRC_VALUE 		= 'b10101;
 wire [37:0] ERROR_BITS 		= {38{1'b1}};
 
+  
 
+//1__0__0__0__0__1__0__1__0__0__1__0__1__0__1__1
+//1_____0_____0_____0_____0_____1_____1_____1__
+//___0_____0_____1_____1_____0_____0_____0_____1_____1
 // Clock Generation
  always #(CLK_PERIOD/2) i_sys_clk_tb  = ~ i_sys_clk_tb ;
 
@@ -152,7 +156,7 @@ initial
 	    i_sdahnd_rx_sda_tb = 1'b0; 
 
 	    #(2*CLK_PERIOD)
-	    i_sdahnd_rx_sda_tb = 1'b1;
+	    i_sdahnd_rx_sda_tb = 1'b0;
 
 
 
@@ -207,7 +211,7 @@ initial
 
 	    //#(CLK_PERIOD) 
 	    i_sdahnd_rx_sda_tb = CRC_VALUE[0] ;
-
+	    i_crc_value_tb= 'b10101;
 	    for (i=2 ; i<7 ; i=i+1)  
        	begin
            //@(negedge i_sclgen_scl_tb or posedge i_sclgen_scl_tb)
@@ -291,8 +295,8 @@ RX U0 (
 	.o_ddrccc_pre				(o_ddrccc_pre_tb)			,
 	.o_ddrccc_error				(o_ddrccc_error_tb)			,
 	.o_crc_en					(o_crc_en_tb)       ,
-	.o_crc_data_valid           (o_crc_data_valid_tb)    ,
-	.o_ddrccc_error_done        ( o_ddrccc_error_done_tb)      
+	.o_crc_data_valid           (o_crc_data_valid_tb)    
+	//.o_ddrccc_error_done        ( o_ddrccc_error_done_tb)      
 
 );
 

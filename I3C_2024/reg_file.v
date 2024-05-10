@@ -202,7 +202,7 @@ assign o_regf_hj_support  = reg_array[409][0]   ;
  				reg_array[46]  <= 'b11111100 ; // 7'h7E broadcast address with rnw = 0 *write*
  				reg_array[47]  <= 'b11111101 ; // 7'h7E broadcast address with rnw = 1 *read*
  				reg_array[49]  <= 'b00000111 ; // ENTDAA CCC
-				reg_array[50]  <= 'b0010_0000;
+				reg_array[50]  <= 'b0010_0000; // ENTHDR CCC (DDR VALUE --> 'h20)
 
  				//////////// Hot-Join Registers ////////////
  				reg_array[401] <= 'b00000000     ;   //ENEC CCC

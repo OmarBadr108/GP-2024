@@ -29,6 +29,8 @@ module I3C_TOP_TB ();
 //-----------------------------Internal signals -------------------------------------//
 logic sda_drive;
 bit frame_ended;
+int cycle_count ;
+
 //-----------------------------Parameters-------------------------------------//
     parameter CLK_PERIOD  = 10;
     parameter configuration   = 1'b1 ;
@@ -38,21 +40,21 @@ bit frame_ended;
     parameter EXPECTED_BROADCAST = 8'b11111100; // 'h7E+ R/W bit = 0
     parameter EXPECTED_ENTHDR0 = 9'b001000000;
     
-    parameter [2:0] RAND_CMD_ATTR  = 'd0   ;
-    parameter [3:0] RAND_TID       = 'd3   ;
-    parameter [7:0] RAND_CMD       = 8'h00 ;
-    parameter       RAND_CP        = 1     ;
-    parameter [4:0] RAND_DEV_INDEX = 'd3   ;
-    parameter [1:0] RAND_RESERVED  = 'd0   ;
-    parameter [2:0] RAND_DTT       = 'd2   ;
-    parameter [2:0] RAND_MODE      = 'd6   ;
-    parameter       RAND_RnW       = 1'b0  ; // write   
-    parameter       RAND_WROC      = 1'd0  ;
-    parameter       RAND_TOC       = 1'b1  ;
-    parameter [7:0] RAND_DEF_BYTE  = 'd1   ;
-    parameter [7:0] RAND_DATA_TWO  = 'd2   ;
-    parameter [7:0] RAND_DATA_THREE= 'd3   ;
-    parameter [7:0] RAND_DATA_FOUR = 'd4   ;
+    reg [2:0] RAND_CMD_ATTR  = 'd1   ;
+    reg [3:0] RAND_TID       = 'd3   ;
+    reg [7:0] RAND_CMD       = 8'h00 ;
+    reg       RAND_CP        = 1     ;
+    reg [4:0] RAND_DEV_INDEX = 'd3   ;
+    reg [1:0] RAND_RESERVED  = 'd0   ;
+    reg [2:0] RAND_DTT       = 'd1   ;
+    reg [2:0] RAND_MODE      = 'd6   ;
+    reg       RAND_RnW       = 1'b0  ; // write   
+    reg       RAND_WROC      = 1'd0  ;
+    reg       RAND_TOC       = 1'b1  ;
+    reg [7:0] RAND_DEF_BYTE  = 'd1   ;
+    reg [7:0] RAND_DATA_TWO  = 'd2   ;
+    reg [7:0] RAND_DATA_THREE= 'd3   ;
+    reg [7:0] RAND_DATA_FOUR = 'd4   ;
 
 //----------------------------- Clock Generation-------------------------------------//
 always #(CLK_PERIOD/2) i_sdr_clk_tb = ~i_sdr_clk_tb;
@@ -75,13 +77,57 @@ initial begin
 
 
 			//<-------------------------TEST CASE 1 ----------------------->//
-			//<            Mode --> HDR, TOC = 1, CP = 1 (CCC)            >//
+			//<            Mode --> HDR, TOC = 1, CP = 1 (CCC) ,Broadcast CCC :ENEC       >//
 
 	i_i3c_i2c_sel_tb     			        = 1'b1;
     i_controller_en_tb 						= 1'b1;
 
-    check_output(); //temporary to check output
+    check_output(); //temporary to check enthdr ccc output
 
+// first second preamble for data word
+@(negedge DUT.CCC_Handler.o_rx_en )
+	sda_drive = 'b0;
+  #(4*CLK_PERIOD)
+    sda_drive = 'bz;
+
+// second second preamble for repeated data word
+#(CLK_PERIOD)
+@(negedge DUT.CCC_Handler.o_rx_en )
+	sda_drive = 'b1;
+  #(4*CLK_PERIOD)
+    sda_drive = 'bz;    
+
+@(posedge o_ctrl_done_tb)
+i_controller_en_tb = 1'b0;
+
+
+			//<-------------------------TEST CASE 2 ----------------------->//
+			//<            Mode --> HDR, TOC = 0, CP = 1 (CCC) ,Direct CCC :ENEC       >//
+
+    RAND_CMD       = 8'h80 ;
+    RAND_TOC       = 1'b0  ;	
+  
+  // change mux selector to write configurations
+	switch_muxes(configuration);
+	write_configurations();
+
+	// change mux selector to give the regfile inputs control to design
+	switch_muxes(Design);
+
+	i_i3c_i2c_sel_tb     			        = 1'b1;
+    i_controller_en_tb 						= 1'b1;	
+    check_output(); //temporary to check enthdr ccc output
+
+    // first second preamble for data word
+@(negedge DUT.CCC_Handler.o_rx_en )
+	sda_drive = 'b0;
+  #(4*CLK_PERIOD)
+    sda_drive = 'bz;
+
+
+@(DUT.tx.i_ddrccc_tx_mode == 15)
+DUT.CCC_Handler.i_sclstall_stall_done = 1;
+  
 
     #5000
     $stop;
@@ -233,6 +279,9 @@ task send_ack;
 			  end
 	end
 endtask
+
+
+
 //-----------------------------DUT Instantiation-------------------------------------//
 I3C_TOP DUT (
  .i_sdr_clk           		(i_sdr_clk_tb)					, 
@@ -253,7 +302,74 @@ I3C_TOP DUT (
 
 endmodule
 
+/*
+task ccc_broadcast_driver();
+	begin
 
+// for second preamble and read data 
+//////////////////////////////////////////////  Broadcast driver /////////////////////////////////
+// backup works 100 % el7amdulelah 
+// for second preamble and read data 
+int cycle_count ;
+		 // Simulation logic to create the desired pattern (Broadcast)
+	 		
+    	for (int i=0 ; i<10000 ; i++) begin
+    		#(2*CLK_PERIOD); // One clock cycle delay
+
+
+
+
+
+//------------------------ for direct driving without looping -------------------------------------//
+    		wait(DUT.CCC_Handler.i_engine_en);
+
+    		@(negedge DUT.u_scl_generation.o_scl_neg_edge or  negedge DUT.u_scl_generation.o_scl_pos_edge)
+        		// Step 1: Randomize for 38 cycles
+        		cycle_count = 37;
+        		while (cycle_count > 0) begin
+        		    sda_drive = $random();
+        		    #(CLK_PERIOD); // One clock cycle delay
+        		    cycle_count--;
+        		end
+        		
+/*        		// Step 2: Hold at zero for 7 cycles
+        		sda_drive = 0;
+        		repeat (7) begin
+        		#(CLK_PERIOD); // One clock cycle delay
+        		end
+        
+        		// Step 3: Randomize for 38 cycles
+        		cycle_count = 37;
+        		while (cycle_count > 0) begin
+        		    sda_drive =  $random();
+        		   	#(CLK_PERIOD); // One clock cycle delay
+       		 		cycle_count--;
+        		end
+        
+        		// Step 4: Hold at one for 4 cycles
+        		sda_drive = 1;
+        		repeat (4) begin
+        		    #(CLK_PERIOD); // One clock cycle delay
+        		end
+        		
+        		// Step 5: Randomize until engine_done is set to 1
+				sda_drive = $random();
+				#(2*CLK_PERIOD); // One clock cycle delay
+				wait (DUT.CCC_Handler.o_engine_done) #(2*CLK_PERIOD);
+//-----------------------------------------------------------------------------------------------//
+
+
+
+
+
+
+				continue ; 
+				  
+    	 
+    end
+
+	end
+endtask : ccc_broadcast_driver */
 
 //-------------------------------------------------------- Drivers for CCC Handler -----------------------------------------------// 
 /* i have three differnet type of sequences : 
