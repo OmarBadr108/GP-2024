@@ -125,8 +125,8 @@ i_controller_en_tb = 1'b0;
     sda_drive = 'bz;
 
 
-@(DUT.tx.i_ddrccc_tx_mode == 15)
-DUT.CCC_Handler.i_sclstall_stall_done = 1;
+//@(DUT.tx.i_ddrccc_tx_mode == 15)
+//DUT.CCC_Handler.i_sclstall_stall_done = 1;
   
 
     #5000
