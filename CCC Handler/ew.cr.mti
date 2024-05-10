@@ -1,23 +1,16 @@
-{C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/FRAME_COUNTER.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/FRAME_COUNTER.v}
-QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
--- Compiling module frame_counter
-
-Top level modules:
-	frame_counter
-
-} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/Rx.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/Rx.v}
+{C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/Rx.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/Rx.v}
 QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
 -- Compiling module RX
 
 Top level modules:
 	RX
 
-} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/stalller.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/stalller.v}
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/FRAME_COUNTER.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/FRAME_COUNTER.v}
 QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
--- Compiling module scl_staller
+-- Compiling module frame_counter
 
 Top level modules:
-	scl_staller
+	frame_counter
 
 } {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/testing_mux.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/testing_mux.v}
 QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
@@ -26,6 +19,13 @@ QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
 Top level modules:
 	mux
 
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/stalller.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/stalller.v}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module scl_staller
+
+Top level modules:
+	scl_staller
+
 } {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/Tx.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/Tx.v}
 QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
 -- Compiling module tx
@@ -33,12 +33,12 @@ QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
 Top level modules:
 	tx
 
-} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/bits_counter.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/bits_counter.v}
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/scl_generation.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/scl_generation.v}
 QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
--- Compiling module bits_counter
+-- Compiling module scl_generation
 
 Top level modules:
-	bits_counter
+	scl_generation
 
 } {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/reg_file.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/reg_file.v}
 QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
@@ -47,11 +47,11 @@ QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
 Top level modules:
 	reg_file
 
-} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/scl_generation.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/scl_generation.v}
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/bits_counter.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/bits_counter.v}
 QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
--- Compiling module scl_generation
+-- Compiling module bits_counter
 
 Top level modules:
-	scl_generation
+	bits_counter
 
 } {} {}}

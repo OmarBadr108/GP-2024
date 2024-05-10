@@ -1,0 +1,128 @@
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+ 
+****************************************
+Report : area
+Design : I3C_TOP
+Version: K-2015.06
+Date   : Thu May  9 21:10:10 2024
+****************************************
+
+Library(s) Used:
+
+    scmetro_tsmc_cl013g_rvt_ss_1p08v_125c (File: /home/IC/Labs/GP/I3C_TOP_2024/std_cells/scmetro_tsmc_cl013g_rvt_ss_1p08v_125c.db)
+
+Number of ports:                         1761
+Number of nets:                          5905
+Number of cells:                         3845
+Number of combinational cells:           3107
+Number of sequential cells:               661
+Number of macros/black boxes:               0
+Number of buf/inv:                        558
+Number of references:                      72
+
+Combinational area:              22986.834861
+Buf/Inv area:                     2155.714455
+Noncombinational area:           12953.113510
+Macro/Black Box area:                0.000000
+Net Interconnect area:          464335.685455
+
+Total cell area:                 35939.948371
+Total area:                     500275.633826
+
+Information: This design contains black box (unknown) components. (RPT-8)
+
+Hierarchical area distribution
+------------------------------
+
+                                  Global cell area            Local cell area
+                                  -------------------  ------------------------------ 
+Hierarchical cell                 Absolute    Percent  Combi-      Noncombi-   Black-
+                                  Total       Total    national    national    boxes   Design
+--------------------------------  ----------  -------  ----------  ----------  ------  -------------------------------------
+I3C_TOP                           35939.9484    100.0     27.0641      0.0000  0.0000  I3C_TOP
+CCC_Handler                        6094.1294     17.0   2815.8431   2329.8661  0.0000  CCC_Handler
+CCC_Handler/r204                    474.2101      1.3    474.2101      0.0000  0.0000  CCC_Handler_DW01_inc_1
+CCC_Handler/r205                    474.2101      1.3    474.2101      0.0000  0.0000  CCC_Handler_DW01_inc_0
+RX                                 2912.3325      8.1   1477.9352   1434.3973  0.0000  RX
+bit_cnt_en_mux                       60.0117      0.2     60.0117      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL3_6
+bit_cnt_hdr_mux                      11.7670      0.0     11.7670      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL1_10
+bit_rx_cnt_en_mux                    60.0117      0.2     60.0117      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL3_5
+bits_cnt_regf_rx_tx_mux              60.0117      0.2     60.0117      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL3_3
+bits_counter_hdr                    733.0841      2.0    416.5518    316.5323  0.0000  bits_counter
+fcnt_en_mux                          60.0117      0.2     60.0117      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL3_4
+frame_counter_hdr                  1259.0690      3.5    389.4877    440.0858  0.0000  frame_counter
+frame_counter_hdr/add_38            229.4565      0.6    229.4565      0.0000  0.0000  frame_counter_DW01_inc_0
+frame_counter_hdr/sub_31            200.0390      0.6    200.0390      0.0000  0.0000  frame_counter_DW01_dec_0
+frm_cnt_hdr_mux                      11.7670      0.0     11.7670      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL1_9
+reg_rd_en_config_data_mux            11.7670      0.0     11.7670      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL1_1
+reg_rd_en_mode_mux                   11.7670      0.0     11.7670      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL1_6
+reg_wr_en_config_data_mux            12.9437      0.0     12.9437      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL1_2
+reg_wr_en_mode_mux                   11.7670      0.0     11.7670      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL1_5
+regf_rd_address__hdr_mux            122.3768      0.3    122.3768      0.0000  0.0000  gen_mux_BUS_WIDTH12_SEL1_0
+regf_rd_address_config_data_mux     124.7302      0.3    124.7302      0.0000  0.0000  gen_mux_BUS_WIDTH12_SEL1_1
+regf_rd_address_mode_mux            116.4933      0.3    116.4933      0.0000  0.0000  gen_mux_BUS_WIDTH12_SEL1_2
+regf_rd_address_mux                 518.9247      1.4    518.9247      0.0000  0.0000  gen_mux_BUS_WIDTH12_SEL3
+regf_rd_en_hdr_mux                   11.7670      0.0     11.7670      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL1_15
+regf_rd_en_mux                       60.0117      0.2     60.0117      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL3_0
+regf_special_data_hdr_mux            78.8389      0.2     78.8389      0.0000  0.0000  gen_mux_BUS_WIDTH8_SEL1_3
+regf_wr_data_config_data_mux         82.3690      0.2     82.3690      0.0000  0.0000  gen_mux_BUS_WIDTH8_SEL1_1
+regf_wr_data_mode_mux                78.8389      0.2     78.8389      0.0000  0.0000  gen_mux_BUS_WIDTH8_SEL1_2
+regf_wr_data_mux                     83.5457      0.2     83.5457      0.0000  0.0000  gen_mux_BUS_WIDTH8_SEL1_0
+regf_wr_en_hdr_mux                   11.7670      0.0     11.7670      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL1_14
+regf_wr_en_mux                       60.0117      0.2     60.0117      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL3_11
+rx_en_hdr_mux                        11.7670      0.0     11.7670      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL1_12
+rx_en_mux                            61.1884      0.2     61.1884      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL3_7
+rx_mode_hdr_mux                      42.3612      0.1     42.3612      0.0000  0.0000  gen_mux_BUS_WIDTH4_SEL1_1
+rx_mode_mux                         181.2118      0.5    181.2118      0.0000  0.0000  gen_mux_BUS_WIDTH3_SEL3_1
+scl_idle_mux                         60.0117      0.2     60.0117      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL3_9
+scl_pp_od_hdr_mux                    11.7670      0.0     11.7670      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL1_11
+scl_pp_od_mode_mux                   11.7670      0.0     11.7670      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL1_4
+scl_pp_od_mux                        60.0117      0.2     60.0117      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL3_10
+scl_stall_cycles_hdr_mux             50.5981      0.1     50.5981      0.0000  0.0000  gen_mux_BUS_WIDTH5_SEL1_0
+scl_stall_cycles_mode_mux            50.5981      0.1     50.5981      0.0000  0.0000  gen_mux_BUS_WIDTH5_SEL1_1
+scl_stall_flag_hdr_mux               11.7670      0.0     11.7670      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL1_8
+scl_stall_flag_mode_mux              11.7670      0.0     11.7670      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL1_7
+scl_stall_flag_mux                   60.0117      0.2     60.0117      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL3_2
+sda_handling_mode_mux                11.7670      0.0     11.7670      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL1_0
+tx                                 2120.4134      5.9   1294.3700    826.0434  0.0000  tx
+tx_en_hdr_mux                        11.7670      0.0     11.7670      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL1_13
+tx_en_mode_mux                       11.7670      0.0     11.7670      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL1_3
+tx_en_mux                            61.1884      0.2     61.1884      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL3_8
+tx_mode_hdr_mux                      41.1845      0.1     41.1845      0.0000  0.0000  gen_mux_BUS_WIDTH4_SEL1_0
+tx_mode_mux                         175.3283      0.5    175.3283      0.0000  0.0000  gen_mux_BUS_WIDTH3_SEL3_0
+u_bits_counter_sdr                  197.6856      0.6     94.1360    103.5496  0.0000  bits_counter_sdr
+u_clk_divider                        30.5942      0.1      0.0000     30.5942  0.0000  clk_divider
+u_controller_crh                   6310.6421     17.6   4663.2622   1536.7702  0.0000  controller_crh
+u_controller_crh/add_966            110.6098      0.3    110.6098      0.0000  0.0000  controller_crh_DW01_inc_4
+u_controller_rx                    1159.0495      3.2    618.9442    540.1053  0.0000  controller_rx
+u_controller_tx                     687.1928      1.9    489.5072    197.6856  0.0000  controller_tx
+u_daa                              2494.6040      6.9   1110.8048   1215.5311  0.0000  dynamic_address_assignment
+u_daa/add_375                       168.2681      0.5    168.2681      0.0000  0.0000  dynamic_address_assignment_DW01_inc_0
+u_enthdr                            634.2413      1.8    220.0429    414.1984  0.0000  enthdr
+u_fcnt_en_mux                        60.0117      0.2     60.0117      0.0000  0.0000  gen_mux_BUS_WIDTH1_SEL3_1
+u_hdr_engine                       1213.1777      3.4    520.1014    693.0763  0.0000  hdr_engine
+u_i2c_legacy_mode                  1685.0344      4.7    740.1443    776.6220  0.0000  i2c_legacy_mode
+u_i2c_legacy_mode/r94               168.2681      0.5    168.2681      0.0000  0.0000  i2c_legacy_mode_DW01_inc_0
+u_i3c_timer                        4472.6367     12.4   1780.3471   1548.5372  0.0000  i3c_timer_fsm
+u_i3c_timer/add_214                 402.4314      1.1    402.4314      0.0000  0.0000  i3c_timer_fsm_DW01_add_1
+u_i3c_timer/add_218                 389.4877      1.1    389.4877      0.0000  0.0000  i3c_timer_fsm_DW01_add_0
+u_i3c_timer/r128                    351.8333      1.0    351.8333      0.0000  0.0000  i3c_timer_fsm_DW01_inc_0
+u_scl_generation                    768.3851      2.1    258.8740    325.9459  0.0000  scl_generation
+u_scl_generation/add_142_aco         91.7826      0.3     91.7826      0.0000  0.0000  scl_generation_DW01_inc_1
+u_scl_generation/r67                 91.7826      0.3     91.7826      0.0000  0.0000  scl_generation_DW01_inc_0
+u_scl_staller                       382.4275      1.1    201.2157    181.2118  0.0000  scl_staller
+u_sda_handling                       98.8428      0.3     31.7709      0.0000  0.0000  sda_handling
+u_sda_handling/u_open_drain_behav_model
+                                     18.8272      0.1      4.7068      0.0000  0.0000  open_drain_behav_model
+u_sda_handling/u_open_drain_behav_model/u_tri_state_buf_n
+                                     14.1204      0.0      3.5301     10.5903  0.0000  tri_state_buf_n
+u_sda_handling/u_push_pull_behav_model
+                                     48.2447      0.1     16.4738     10.5903  0.0000  push_pull_behav_model
+u_sda_handling/u_push_pull_behav_model/u_pull_tri_state_buf
+                                     10.5903      0.0      0.0000     10.5903  0.0000  tri_state_buf_1
+u_sda_handling/u_push_pull_behav_model/u_push_tri_state_buf
+                                     10.5903      0.0      0.0000     10.5903  0.0000  tri_state_buf_0
+--------------------------------  ----------  -------  ----------  ----------  ------  -------------------------------------
+Total                                                  22986.8349  12953.1135  0.0000
+
+1

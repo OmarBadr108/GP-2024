@@ -1,0 +1,397 @@
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+ 
+****************************************
+check_design summary:
+Version:     K-2015.06
+Date:        Thu May  9 21:09:47 2024
+****************************************
+
+                   Name                                            Total
+--------------------------------------------------------------------------------
+Inputs/Outputs                                                     57
+    Multiply driven inputs (LINT-6)                                 4
+    Unconnected ports (LINT-28)                                    43
+    Shorted outputs (LINT-31)                                       2
+    Constant outputs (LINT-52)                                      4
+    Externally driven outputs (LINT-64)                             2
+    Port direction conflicts with RTL (LINT-68)                     2
+
+Cells                                                             146
+    Cells with unconnected inputs (LINT-0)                          2
+    Cells do not drive (LINT-1)                                    75
+    Connected to power or ground (LINT-32)                         34
+    Nets connected to multiple pins on same cell (LINT-33)          9
+    Leaf pins connected to undriven nets (LINT-58)                 13
+    Cells have undriven hier pins (LINT-59)                        13
+
+Nets                                                               35
+    Unloaded nets (LINT-2)                                         26
+    Undriven nets (LINT-3)                                          7
+    Net type is unknown (LINT-38)                                   1
+    Multiply driven net with constant driver (LINT-54)              1
+
+Tristate                                                           78
+    A tristate bus has a non tri-state driver (LINT-34)            76
+    Single tristate driver drives an input pin (LINT-63)            2
+--------------------------------------------------------------------------------
+
+Warning: In design 'RX', input pin 'clear' of leaf cell 'o_ddrccc_pre_tri_enable_reg' is not connected to any net.  Logic 0 assumed. (LINT-0)
+Warning: In design 'RX', input pin 'preset' of leaf cell 'o_ddrccc_pre_tri_enable_reg' is not connected to any net.  Logic 0 assumed. (LINT-0)
+Warning: In design 'i2c_legacy_mode', cell 'C699' does not drive any nets. (LINT-1)
+Warning: In design 'i2c_legacy_mode', cell 'C705' does not drive any nets. (LINT-1)
+Warning: In design 'dynamic_address_assignment', cell 'C1379' does not drive any nets. (LINT-1)
+Warning: In design 'dynamic_address_assignment', cell 'C1384' does not drive any nets. (LINT-1)
+Warning: In design 'dynamic_address_assignment', cell 'C1401' does not drive any nets. (LINT-1)
+Warning: In design 'dynamic_address_assignment', cell 'C1405' does not drive any nets. (LINT-1)
+Warning: In design 'dynamic_address_assignment', cell 'C1406' does not drive any nets. (LINT-1)
+Warning: In design 'dynamic_address_assignment', cell 'C1423' does not drive any nets. (LINT-1)
+Warning: In design 'dynamic_address_assignment', cell 'C1426' does not drive any nets. (LINT-1)
+Warning: In design 'controller_crh', cell 'C3540' does not drive any nets. (LINT-1)
+Warning: In design 'controller_crh', cell 'C3653' does not drive any nets. (LINT-1)
+Warning: In design 'controller_crh', cell 'C3654' does not drive any nets. (LINT-1)
+Warning: In design 'controller_crh', cell 'C3661' does not drive any nets. (LINT-1)
+Warning: In design 'controller_crh', cell 'C3662' does not drive any nets. (LINT-1)
+Warning: In design 'controller_crh', cell 'C3663' does not drive any nets. (LINT-1)
+Warning: In design 'controller_crh', cell 'C3671' does not drive any nets. (LINT-1)
+Warning: In design 'controller_crh', cell 'C3672' does not drive any nets. (LINT-1)
+Warning: In design 'controller_crh', cell 'C3678' does not drive any nets. (LINT-1)
+Warning: In design 'controller_crh', cell 'C3694' does not drive any nets. (LINT-1)
+Warning: In design 'controller_crh', cell 'C3695' does not drive any nets. (LINT-1)
+Warning: In design 'controller_crh', cell 'C3696' does not drive any nets. (LINT-1)
+Warning: In design 'controller_crh', cell 'C3728' does not drive any nets. (LINT-1)
+Warning: In design 'controller_crh', cell 'C3830' does not drive any nets. (LINT-1)
+Warning: In design 'controller_crh', cell 'C3834' does not drive any nets. (LINT-1)
+Warning: In design 'controller_crh', cell 'C3838' does not drive any nets. (LINT-1)
+Warning: In design 'controller_crh', cell 'C3843' does not drive any nets. (LINT-1)
+Warning: In design 'i3c_timer_fsm', cell 'C1173' does not drive any nets. (LINT-1)
+Warning: In design 'i3c_timer_fsm', cell 'C1191' does not drive any nets. (LINT-1)
+Warning: In design 'i3c_timer_fsm', cell 'C1202' does not drive any nets. (LINT-1)
+Warning: In design 'i3c_timer_fsm', cell 'C1225' does not drive any nets. (LINT-1)
+Warning: In design 'bits_counter_sdr', cell 'C114' does not drive any nets. (LINT-1)
+Warning: In design 'bits_counter_sdr', cell 'C116' does not drive any nets. (LINT-1)
+Warning: In design 'scl_generation', cell 'C189' does not drive any nets. (LINT-1)
+Warning: In design 'scl_generation', cell 'C192' does not drive any nets. (LINT-1)
+Warning: In design 'scl_generation', cell 'C196' does not drive any nets. (LINT-1)
+Warning: In design 'CCC_Handler', cell 'C2886' does not drive any nets. (LINT-1)
+Warning: In design 'CCC_Handler', cell 'C2887' does not drive any nets. (LINT-1)
+Warning: In design 'CCC_Handler', cell 'C2892' does not drive any nets. (LINT-1)
+Warning: In design 'CCC_Handler', cell 'C2893' does not drive any nets. (LINT-1)
+Warning: In design 'CCC_Handler', cell 'C2933' does not drive any nets. (LINT-1)
+Warning: In design 'CCC_Handler', cell 'C2935' does not drive any nets. (LINT-1)
+Warning: In design 'CCC_Handler', cell 'C2949' does not drive any nets. (LINT-1)
+Warning: In design 'CCC_Handler', cell 'C2951' does not drive any nets. (LINT-1)
+Warning: In design 'CCC_Handler', cell 'C2953' does not drive any nets. (LINT-1)
+Warning: In design 'CCC_Handler', cell 'C2968' does not drive any nets. (LINT-1)
+Warning: In design 'CCC_Handler', cell 'C2969' does not drive any nets. (LINT-1)
+Warning: In design 'CCC_Handler', cell 'C2971' does not drive any nets. (LINT-1)
+Warning: In design 'CCC_Handler', cell 'C2973' does not drive any nets. (LINT-1)
+Warning: In design 'CCC_Handler', cell 'C2977' does not drive any nets. (LINT-1)
+Warning: In design 'CCC_Handler', cell 'C3035' does not drive any nets. (LINT-1)
+Warning: In design 'CCC_Handler', cell 'C3037' does not drive any nets. (LINT-1)
+Warning: In design 'CCC_Handler', cell 'C3040' does not drive any nets. (LINT-1)
+Warning: In design 'CCC_Handler', cell 'C3043' does not drive any nets. (LINT-1)
+Warning: In design 'scl_staller', cell 'C70' does not drive any nets. (LINT-1)
+Warning: In design 'bits_counter', cell 'C196' does not drive any nets. (LINT-1)
+Warning: In design 'bits_counter', cell 'C201' does not drive any nets. (LINT-1)
+Warning: In design 'frame_counter', cell 'C263' does not drive any nets. (LINT-1)
+Warning: In design 'frame_counter', cell 'C283' does not drive any nets. (LINT-1)
+Warning: In design 'RX', cell 'C1409' does not drive any nets. (LINT-1)
+Warning: In design 'RX', cell 'C1414' does not drive any nets. (LINT-1)
+Warning: In design 'RX', cell 'C1422' does not drive any nets. (LINT-1)
+Warning: In design 'RX', cell 'C1434' does not drive any nets. (LINT-1)
+Warning: In design 'RX', cell 'C1446' does not drive any nets. (LINT-1)
+Warning: In design 'RX', cell 'C1457' does not drive any nets. (LINT-1)
+Warning: In design 'RX', cell 'C1485' does not drive any nets. (LINT-1)
+Warning: In design 'tx', cell 'C1733' does not drive any nets. (LINT-1)
+Warning: In design 'tx', cell 'C1748' does not drive any nets. (LINT-1)
+Warning: In design 'tx', cell 'C1756' does not drive any nets. (LINT-1)
+Warning: In design 'tx', cell 'C1773' does not drive any nets. (LINT-1)
+Warning: In design 'tx', cell 'C1790' does not drive any nets. (LINT-1)
+Warning: In design 'tx', cell 'C1806' does not drive any nets. (LINT-1)
+Warning: In design 'tx', cell 'C1814' does not drive any nets. (LINT-1)
+Warning: In design 'tx', cell 'C1822' does not drive any nets. (LINT-1)
+Warning: In design 'tx', cell 'C1834' does not drive any nets. (LINT-1)
+Warning: In design 'tx', cell 'C1842' does not drive any nets. (LINT-1)
+Warning: In design 'I3C_TOP', net 'ser_rx_tx_bits_count_mux_out' driven by pin 'u_fcnt_en_mux/data_out[0]' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'crc_parallel_data[0]' driven by pin 'tx/o_crc_parallel_data[0]' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'crc_parallel_data[1]' driven by pin 'tx/o_crc_parallel_data[1]' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'crc_parallel_data[2]' driven by pin 'tx/o_crc_parallel_data[2]' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'crc_parallel_data[3]' driven by pin 'tx/o_crc_parallel_data[3]' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'crc_parallel_data[4]' driven by pin 'tx/o_crc_parallel_data[4]' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'crc_parallel_data[5]' driven by pin 'tx/o_crc_parallel_data[5]' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'crc_parallel_data[6]' driven by pin 'tx/o_crc_parallel_data[6]' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'crc_parallel_data[7]' driven by pin 'tx/o_crc_parallel_data[7]' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'ddrccc_error_done' driven by pin 'RX/o_ddrccc_error_done' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'crc_data_valid' driven by pin 'RX/o_crc_data_valid' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'crc_en' driven by pin 'tx/o_crc_en' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'scl_stall_done' driven by pin 'u_scl_staller/o_stall_done' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'o_regf_ERR_STATUS_tb[0]' driven by pin 'CCC_Handler/o_regf_ERR_STATUS[0]' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'o_regf_ERR_STATUS_tb[1]' driven by pin 'CCC_Handler/o_regf_ERR_STATUS[1]' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'o_regf_ERR_STATUS_tb[2]' driven by pin 'CCC_Handler/o_regf_ERR_STATUS[2]' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'o_regf_ERR_STATUS_tb[3]' driven by pin 'CCC_Handler/o_regf_ERR_STATUS[3]' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'engine_odd' driven by pin 'CCC_Handler/o_engine_odd' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'frmcnt_Direct_Broadcast_n' driven by pin 'CCC_Handler/o_frmcnt_Direct_Broadcast_n' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'hdr_sdahand_pp_od_sel' driven by pin 'u_hdr_engine/o_sdahand_pp_od_sel' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'timer_newcrlck_i2c' driven by pin 'u_i3c_timer/o_timer_newcrlck_i2c' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'timer_bus_idle' driven by pin 'u_i3c_timer/o_timer_bus_idle' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'timer_bus_aval' driven by pin 'u_i3c_timer/o_timer_bus_aval' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'timer_bus_free_mix_fm_p' driven by pin 'u_i3c_timer/o_timer_bus_free_mix_fm_p' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'timer_bus_free_mix_fm' driven by pin 'u_i3c_timer/o_timer_bus_free_mix_fm' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'u_sda_handling/u_push_pull_behav_model/*Logic1*' driven by pin 'u_sda_handling/u_push_pull_behav_model/U3/**logic_1**' has no loads. (LINT-2)
+Warning: In design 'I3C_TOP', net 'daa_stall_flag' has no drivers.  Logic 0 assumed. (LINT-3)
+Warning: In design 'I3C_TOP', net 'crc_valid' has no drivers.  Logic 0 assumed. (LINT-3)
+Warning: In design 'I3C_TOP', net 'crc_value[0]' has no drivers.  Logic 0 assumed. (LINT-3)
+Warning: In design 'I3C_TOP', net 'crc_value[1]' has no drivers.  Logic 0 assumed. (LINT-3)
+Warning: In design 'I3C_TOP', net 'crc_value[2]' has no drivers.  Logic 0 assumed. (LINT-3)
+Warning: In design 'I3C_TOP', net 'crc_value[3]' has no drivers.  Logic 0 assumed. (LINT-3)
+Warning: In design 'I3C_TOP', net 'crc_value[4]' has no drivers.  Logic 0 assumed. (LINT-3)
+Warning: In design 'I3C_TOP', input port 'i_sdr_rst_n' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'I3C_TOP', input port 'i_controller_en' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'I3C_TOP', input port 'i_i3c_i2c_sel' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'I3C_TOP', input port 'i_ccc_en_dis_hj' drives wired logic; the port direction may have been specified incorrectly. (LINT-6)
+Warning: In design 'I3C_TOP', port 'i_sclgen_rst_n' is not connected to any nets. (LINT-28)
+Warning: In design 'i2c_legacy_mode', port 'i_scl_pos_edge' is not connected to any nets. (LINT-28)
+Warning: In design 'dynamic_address_assignment', port 'i_scl_daa_pos_edge' is not connected to any nets. (LINT-28)
+Warning: In design 'dynamic_address_assignment', port 'o_daa_rx_cnt_en' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_CRHDLY[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_CRHDLY[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_CRHDLY[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_CRHDLY[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_CRHDLY[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_getstatus_data[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_getstatus_data[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_getstatus_data[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_getstatus_data[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_getstatus_data[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_getstatus_data[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_CRCAP2[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_CRCAP2[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_CRCAP2[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_CRCAP2[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_CRCAP2[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_CRCAP2[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_PRECR[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_PRECR[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_PRECR[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_PRECR[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_PRECR[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_PRECR[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_cfg_reg[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_cfg_reg[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_cfg_reg[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_cfg_reg[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_cfg_reg[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_cfg_reg[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_crh', port 'i_crh_cfg_reg[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_tx', port 'i_ser_scl_neg_edge' is not connected to any nets. (LINT-28)
+Warning: In design 'controller_tx', port 'i_ser_valid' is not connected to any nets. (LINT-28)
+Warning: In design 'bits_counter_sdr', port 'i_sdr_ctrl_pp_od' is not connected to any nets. (LINT-28)
+Warning: In design 'enthdr', port 'i_scl_pos_edge' is not connected to any nets. (LINT-28)
+Warning: In design 'CCC_Handler', port 'i_i_regf_CMD_ATTR[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'CCC_Handler', port 'i_i_regf_CMD_ATTR[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'CCC_Handler', port 'i_i_regf_WROC' is not connected to any nets. (LINT-28)
+Warning: In design 'CCC_Handler', port 'i_i_regf_SRE' is not connected to any nets. (LINT-28)
+Warning: In design 'RX', port 'i_sclgen_scl' is not connected to any nets. (LINT-28)
+Warning: In design 'open_drain_behav_model', output port 'o_behav_od' is connected directly to output port 'sda'. (LINT-31)
+Warning: In design 'push_pull_behav_model', output port 'o_sda_push_pull' is connected directly to output port 'sda'. (LINT-31)
+Warning: In design 'I3C_TOP', a pin on submodule 'regf_rd_address_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[35]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'regf_rd_address_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[34]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'regf_rd_address_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[33]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'regf_rd_address_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[32]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'regf_rd_address_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[31]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'regf_rd_address_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[30]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'regf_rd_address_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[29]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'regf_rd_address_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[28]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'regf_rd_address_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[27]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'regf_rd_address_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[26]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'regf_rd_address_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[25]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'regf_rd_address_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[24]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'regf_wr_en_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[7]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'regf_wr_en_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[4]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'scl_idle_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[7]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'scl_idle_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[5]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'scl_idle_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[4]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'scl_idle_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[3]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'scl_idle_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[1]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'rx_en_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[2]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'rx_mode_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[8]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'rx_mode_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[7]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'rx_mode_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[6]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'bit_rx_cnt_en_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[7]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'bit_rx_cnt_en_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[5]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'bit_rx_cnt_en_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[4]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'bit_rx_cnt_en_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[2]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'fcnt_en_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[7]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'fcnt_en_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[5]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'fcnt_en_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[4]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'fcnt_en_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[2]' is connected to logic 0. 
+Warning: In design 'I3C_TOP', a pin on submodule 'bits_cnt_regf_rx_tx_mux' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'data_in[3]' is connected to logic 1. 
+Warning: In design 'open_drain_behav_model', a pin on submodule 'u_tri_state_buf_n' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'i_tri_state_data' is connected to logic 0. 
+Warning: In design 'push_pull_behav_model', a pin on submodule 'u_push_tri_state_buf' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'i_tri_state_data' is connected to logic 0. 
+Warning: In design 'I3C_TOP', the same net is connected to more than one pin on submodule 'regf_rd_address_mux'. (LINT-33)
+   Net '*Logic0*' is connected to pins 'data_in[35]', 'data_in[34]'', 'data_in[33]', 'data_in[32]', 'data_in[31]', 'data_in[30]', 'data_in[29]', 'data_in[28]', 'data_in[27]', 'data_in[26]', 'data_in[25]', 'data_in[24]'.
+Warning: In design 'I3C_TOP', the same net is connected to more than one pin on submodule 'regf_wr_en_mux'. (LINT-33)
+   Net '*Logic0*' is connected to pins 'data_in[7]', 'data_in[4]''.
+Warning: In design 'I3C_TOP', the same net is connected to more than one pin on submodule 'scl_idle_mux'. (LINT-33)
+   Net '*Logic0*' is connected to pins 'data_in[7]', 'data_in[5]'', 'data_in[4]', 'data_in[3]', 'data_in[1]'.
+Warning: In design 'I3C_TOP', the same net is connected to more than one pin on submodule 'rx_mode_mux'. (LINT-33)
+   Net '*Logic0*' is connected to pins 'data_in[8]', 'data_in[7]'', 'data_in[6]'.
+Warning: In design 'I3C_TOP', the same net is connected to more than one pin on submodule 'bit_rx_cnt_en_mux'. (LINT-33)
+   Net '*Logic0*' is connected to pins 'data_in[7]', 'data_in[5]'', 'data_in[4]', 'data_in[2]'.
+Warning: In design 'I3C_TOP', the same net is connected to more than one pin on submodule 'fcnt_en_mux'. (LINT-33)
+   Net '*Logic0*' is connected to pins 'data_in[7]', 'data_in[5]'', 'data_in[4]', 'data_in[2]'.
+Warning: In design 'I3C_TOP', the same net is connected to more than one pin on submodule 'bits_cnt_regf_rx_tx_mux'. (LINT-33)
+   Net 'ser_rx_tx' is connected to pins 'data_in[6]', 'data_in[5]'', 'data_in[4]', 'data_in[2]', 'data_in[1]', 'data_in[0]'.
+Warning: In design 'I3C_TOP', the same net is connected to more than one pin on submodule 'scl_stall_flag_mux'. (LINT-33)
+   Net 'stall_flag' is connected to pins 'data_in[7]', 'data_in[6]'', 'data_in[5]', 'data_in[3]', 'data_in[2]', 'data_in[1]', 'data_in[0]'.
+Warning: In design 'I3C_TOP', the same net is connected to more than one pin on submodule 'u_fcnt_en_mux'. (LINT-33)
+   Net 'ser_rx_tx' is connected to pins 'data_in[7]', 'data_in[6]'', 'data_in[4]', 'data_in[3]', 'data_in[2]', 'data_in[1]', 'data_in[0]'.
+Warning: In design 'I3C_TOP', three-state bus 'regf_wr_en_mux/data_in[4]' has non three-state driver 'U2/**logic_0**'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'fcnt_en_mux/data_out[0]' has non three-state driver 'fcnt_en_mux/C40/Z_0'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'reg_wr_en_config_data_mux/data_out[0]' has non three-state driver 'reg_wr_en_config_data_mux/C10/Z_0'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'regf_rd_address_config_data_mux/data_out[0]' has non three-state driver 'regf_rd_address_config_data_mux/C24/Z_0'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'regf_rd_address_config_data_mux/data_out[1]' has non three-state driver 'regf_rd_address_config_data_mux/C24/Z_1'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'regf_rd_address_config_data_mux/data_out[2]' has non three-state driver 'regf_rd_address_config_data_mux/C24/Z_2'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'regf_rd_address_config_data_mux/data_out[3]' has non three-state driver 'regf_rd_address_config_data_mux/C24/Z_3'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'regf_rd_address_config_data_mux/data_out[4]' has non three-state driver 'regf_rd_address_config_data_mux/C24/Z_4'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'regf_rd_address_config_data_mux/data_out[5]' has non three-state driver 'regf_rd_address_config_data_mux/C24/Z_5'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'regf_rd_address_config_data_mux/data_out[6]' has non three-state driver 'regf_rd_address_config_data_mux/C24/Z_6'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'regf_rd_address_config_data_mux/data_out[7]' has non three-state driver 'regf_rd_address_config_data_mux/C24/Z_7'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'regf_rd_address_config_data_mux/data_out[8]' has non three-state driver 'regf_rd_address_config_data_mux/C24/Z_8'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'regf_rd_address_config_data_mux/data_out[9]' has non three-state driver 'regf_rd_address_config_data_mux/C24/Z_9'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'regf_rd_address_config_data_mux/data_out[10]' has non three-state driver 'regf_rd_address_config_data_mux/C24/Z_10'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'regf_rd_address_config_data_mux/data_out[11]' has non three-state driver 'regf_rd_address_config_data_mux/C24/Z_11'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'regf_wr_data_config_data_mux/data_out[0]' has non three-state driver 'regf_wr_data_config_data_mux/C24/Z_0'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'regf_wr_data_config_data_mux/data_out[1]' has non three-state driver 'regf_wr_data_config_data_mux/C24/Z_1'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'regf_wr_data_config_data_mux/data_out[2]' has non three-state driver 'regf_wr_data_config_data_mux/C24/Z_2'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'regf_wr_data_config_data_mux/data_out[3]' has non three-state driver 'regf_wr_data_config_data_mux/C24/Z_3'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'regf_wr_data_config_data_mux/data_out[4]' has non three-state driver 'regf_wr_data_config_data_mux/C24/Z_4'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'regf_wr_data_config_data_mux/data_out[5]' has non three-state driver 'regf_wr_data_config_data_mux/C24/Z_5'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'regf_wr_data_config_data_mux/data_out[6]' has non three-state driver 'regf_wr_data_config_data_mux/C24/Z_6'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'regf_wr_data_config_data_mux/data_out[7]' has non three-state driver 'regf_wr_data_config_data_mux/C24/Z_7'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'reg_rd_en_config_data_mux/data_out[0]' has non three-state driver 'reg_rd_en_config_data_mux/C10/Z_0'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'frmcnt_last_frame_hdr' has non three-state driver 'frame_counter_hdr/o_cccnt_last_frame_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'rx_error' has non three-state driver 'RX/o_ddrccc_error_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'rx_hdr_mode_done' has non three-state driver 'RX/o_ddrccc_rx_mode_done_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'tx_hdr_mode_done' has non three-state driver 'tx/o_ddrccc_mode_done_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'cnt_bit_count[0]' has non three-state driver 'bits_counter_hdr/o_cnt_bit_count_reg[0]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'cnt_bit_count[1]' has non three-state driver 'bits_counter_hdr/o_cnt_bit_count_reg[1]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'cnt_bit_count[2]' has non three-state driver 'bits_counter_hdr/o_cnt_bit_count_reg[2]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'cnt_bit_count[3]' has non three-state driver 'bits_counter_hdr/o_cnt_bit_count_reg[3]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'cnt_bit_count[4]' has non three-state driver 'bits_counter_hdr/o_cnt_bit_count_reg[4]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'cnt_bit_count[5]' has non three-state driver 'bits_counter_hdr/o_cnt_bit_count_reg[5]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'engine_ddr_enable' has non three-state driver 'u_hdr_engine/o_ddrmode_en_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'engine_configuration_addr[0]' has non three-state driver 'u_hdr_engine/o_regf_addr_special_reg[0]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'engine_configuration_addr[1]' has non three-state driver 'u_hdr_engine/o_regf_addr_special_reg[1]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'engine_configuration_addr[2]' has non three-state driver 'u_hdr_engine/o_regf_addr_special_reg[2]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'engine_configuration_addr[3]' has non three-state driver 'u_hdr_engine/o_regf_addr_special_reg[3]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'engine_configuration_addr[4]' has non three-state driver 'u_hdr_engine/o_regf_addr_special_reg[4]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'engine_configuration_addr[5]' has non three-state driver 'u_hdr_engine/o_regf_addr_special_reg[5]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'engine_configuration_addr[6]' has non three-state driver 'u_hdr_engine/o_regf_addr_special_reg[6]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'engine_configuration_addr[7]' has non three-state driver 'u_hdr_engine/o_regf_addr_special_reg[7]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'engine_configuration_addr[8]' has non three-state driver 'u_hdr_engine/o_regf_addr_special_reg[8]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'engine_configuration_addr[9]' has non three-state driver 'u_hdr_engine/o_regf_addr_special_reg[9]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'engine_configuration_addr[10]' has non three-state driver 'u_hdr_engine/o_regf_addr_special_reg[10]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'engine_configuration_addr[11]' has non three-state driver 'u_hdr_engine/o_regf_addr_special_reg[11]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'ser_pp_mode_done' has non three-state driver 'u_controller_tx/o_ser_pp_mode_done_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'daa_fcnt_no_frms[0]' has non three-state driver 'u_daa/o_daa_fcnt_no_frms_reg[0]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'daa_fcnt_no_frms[1]' has non three-state driver 'u_daa/o_daa_fcnt_no_frms_reg[1]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'daa_fcnt_no_frms[2]' has non three-state driver 'u_daa/o_daa_fcnt_no_frms_reg[2]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'daa_fcnt_no_frms[3]' has non three-state driver 'u_daa/o_daa_fcnt_no_frms_reg[3]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'daa_fcnt_no_frms[4]' has non three-state driver 'u_daa/o_daa_fcnt_no_frms_reg[4]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'daa_fcnt_no_frms[5]' has non three-state driver 'u_daa/o_daa_fcnt_no_frms_reg[5]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'daa_fcnt_no_frms[6]' has non three-state driver 'u_daa/o_daa_fcnt_no_frms_reg[6]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'daa_fcnt_no_frms[7]' has non three-state driver 'u_daa/o_daa_fcnt_no_frms_reg[7]/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'ser_to_parity_transition' has non three-state driver 'u_controller_tx/o_ser_to_parity_transition_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'sdr_rx_rd_abort' has non three-state driver 'u_controller_rx/o_sdr_rx_rd_abort_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'ser_nack_ack' has non three-state driver 'u_controller_rx/o_sdr_rx_nack_ack_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'sdr_ctrl_cnt_done' has non three-state driver 'u_bits_counter_sdr/o_cnt_done_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'hdrengine_exit' has non three-state driver 'u_hdr_engine/o_i3cengine_hdrengine_done_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'enthdr_done' has non three-state driver 'u_enthdr/o_i3cengine_done_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'crh_send_stop' has non three-state driver 'u_controller_crh/o_crh_send_stop_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'crh_done' has non three-state driver 'u_controller_crh/o_crh_done_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'timer_cas' has non three-state driver 'u_i3c_timer/o_timer_cas_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'scl_neg_edge' has non three-state driver 'u_scl_generation/o_scl_neg_edge_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'scl_pos_edge' has non three-state driver 'u_scl_generation/o_scl_pos_edge_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'rx_arbitration_lost' has non three-state driver 'u_controller_rx/sdr_rx_arbitration_lost_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'target_nack' has non three-state driver 'u_i2c_legacy_mode/o_target_nack_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'rx_mode_done' has non three-state driver 'u_controller_rx/o_sdr_rx_mode_done_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'ser_mode_done' has non three-state driver 'u_controller_tx/o_ser_mode_done_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'daa_error' has non three-state driver 'u_daa/o_daa_error_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'daa_done' has non three-state driver 'u_daa/o_daa_mcu_done_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'i2c_done' has non three-state driver 'u_i2c_legacy_mode/o_i2c_mode_done_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'sys_clk_50mhz' has non three-state driver 'u_clk_divider/o_clk_out_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', three-state bus 'scl' has non three-state driver 'u_scl_generation/o_scl_reg/Q'. (LINT-34)
+Warning: In design 'I3C_TOP', net 'crc_en' has multiple drivers (unknown wired-logic type). (LINT-38)
+Warning: In design 'dynamic_address_assignment', output port 'o_daa_pp_od' is connected directly to 'logic 0'. (LINT-52)
+Warning: In design 'enthdr', output port 'o_pp_od' is connected directly to 'logic 1'. (LINT-52)
+Warning: In design 'CCC_Handler', output port 'o_rx_mode[3]' is connected directly to 'logic 0'. (LINT-52)
+Warning: In design 'CCC_Handler', output port 'o_sdahand_pp_od' is connected directly to 'logic 1'. (LINT-52)
+Warning: In design 'I3C_TOP', multiply-driven net 'regf_wr_en_mux/data_in[4]' is driven by constant 0. (LINT-54)
+Warning: In design 'RX', input pin 'B_4' of leaf cell 'ne_361' is connected to undriven net 'i_crc_value[4]'.  (LINT-58)
+Warning: In design 'RX', input pin 'B_3' of leaf cell 'ne_361' is connected to undriven net 'i_crc_value[3]'.  (LINT-58)
+Warning: In design 'RX', input pin 'B_2' of leaf cell 'ne_361' is connected to undriven net 'i_crc_value[2]'.  (LINT-58)
+Warning: In design 'RX', input pin 'B_1' of leaf cell 'ne_361' is connected to undriven net 'i_crc_value[1]'.  (LINT-58)
+Warning: In design 'RX', input pin 'B_0' of leaf cell 'ne_361' is connected to undriven net 'i_crc_value[0]'.  (LINT-58)
+Warning: In design 'RX', input pin 'A' of leaf cell 'B_8' is connected to undriven net 'i_crc_valid'.  (LINT-58)
+Warning: In design 'RX', input pin 'A' of leaf cell 'I_63' is connected to undriven net 'i_crc_valid'.  (LINT-58)
+Warning: In design 'RX', input pin 'B' of leaf cell 'C1446' is connected to undriven net 'i_crc_valid'.  (LINT-58)
+Warning: In design 'tx', input pin 'DATA1_0' of leaf cell 'C1600' is connected to undriven net 'i_crc_crc_value[0]'.  (LINT-58)
+Warning: In design 'tx', input pin 'DATA2_0' of leaf cell 'C1600' is connected to undriven net 'i_crc_crc_value[1]'.  (LINT-58)
+Warning: In design 'tx', input pin 'DATA3_0' of leaf cell 'C1600' is connected to undriven net 'i_crc_crc_value[2]'.  (LINT-58)
+Warning: In design 'tx', input pin 'DATA4_0' of leaf cell 'C1600' is connected to undriven net 'i_crc_crc_value[3]'.  (LINT-58)
+Warning: In design 'tx', input pin 'DATA1_0' of leaf cell 'C1601' is connected to undriven net 'i_crc_crc_value[4]'.  (LINT-58)
+Warning: In design 'I3C_TOP', input pin 'data_in[7]' of hierarchical cell 'bits_cnt_regf_rx_tx_mux' has one or more internal loads, but is not connected to any nets. 'Logic 0' is assumed. (LINT-59)
+Warning: In design 'I3C_TOP', input pin 'data_in[4]' of hierarchical cell 'scl_stall_flag_mux' has one or more internal loads, but is not connected to any nets. 'Logic 0' is assumed. (LINT-59)
+Warning: In design 'I3C_TOP', input pin 'i_crc_value[4]' of hierarchical cell 'RX' has one or more internal loads, but is not connected to any nets. 'Logic 0' is assumed. (LINT-59)
+Warning: In design 'I3C_TOP', input pin 'i_crc_value[3]' of hierarchical cell 'RX' has one or more internal loads, but is not connected to any nets. 'Logic 0' is assumed. (LINT-59)
+Warning: In design 'I3C_TOP', input pin 'i_crc_value[2]' of hierarchical cell 'RX' has one or more internal loads, but is not connected to any nets. 'Logic 0' is assumed. (LINT-59)
+Warning: In design 'I3C_TOP', input pin 'i_crc_value[1]' of hierarchical cell 'RX' has one or more internal loads, but is not connected to any nets. 'Logic 0' is assumed. (LINT-59)
+Warning: In design 'I3C_TOP', input pin 'i_crc_value[0]' of hierarchical cell 'RX' has one or more internal loads, but is not connected to any nets. 'Logic 0' is assumed. (LINT-59)
+Warning: In design 'I3C_TOP', input pin 'i_crc_valid' of hierarchical cell 'RX' has one or more internal loads, but is not connected to any nets. 'Logic 0' is assumed. (LINT-59)
+Warning: In design 'I3C_TOP', input pin 'i_crc_crc_value[4]' of hierarchical cell 'tx' has one or more internal loads, but is not connected to any nets. 'Logic 0' is assumed. (LINT-59)
+Warning: In design 'I3C_TOP', input pin 'i_crc_crc_value[3]' of hierarchical cell 'tx' has one or more internal loads, but is not connected to any nets. 'Logic 0' is assumed. (LINT-59)
+Warning: In design 'I3C_TOP', input pin 'i_crc_crc_value[2]' of hierarchical cell 'tx' has one or more internal loads, but is not connected to any nets. 'Logic 0' is assumed. (LINT-59)
+Warning: In design 'I3C_TOP', input pin 'i_crc_crc_value[1]' of hierarchical cell 'tx' has one or more internal loads, but is not connected to any nets. 'Logic 0' is assumed. (LINT-59)
+Warning: In design 'I3C_TOP', input pin 'i_crc_crc_value[0]' of hierarchical cell 'tx' has one or more internal loads, but is not connected to any nets. 'Logic 0' is assumed. (LINT-59)
+Warning: Net 'rx_pre' has a single tri-state driver.  (LINT-63)
+Warning: Net 'u_sda_handling/u_push_pull_behav_model/u_pull_tri_state_buf/i_tri_state_data' has a single tri-state driver.  (LINT-63)
+Warning: In design 'RX', output port 'o_crc_en' is driven from the outside. (LINT-64)
+Warning: In design 'tx', output port 'o_crc_en' is driven from the outside. (LINT-64)
+Warning: In design 'tx', output port 'o_crc_en' is not being used in accordance with its stated direction. (LINT-68)
+Warning: In design 'RX', output port 'o_crc_en' is not being used in accordance with its stated direction. (LINT-68)
+1

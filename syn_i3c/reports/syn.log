@@ -1,0 +1,1971 @@
+                                        
+                           Design Compiler Graphical 
+                                 DC Ultra (TM)
+                                  DFTMAX (TM)
+                              Power Compiler (TM)
+                                 DesignWare (R)
+                                 DC Expert (TM)
+                               Design Vision (TM)
+                               HDL Compiler (TM)
+                               VHDL Compiler (TM)
+                                  DFT Compiler
+                               Design Compiler(R)
+                                        
+                 Version K-2015.06 for linux64 - May 28, 2015 
+                                        
+                    Copyright (c) 1988 - 2015 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+            or distribution of this software is strictly prohibited.
+Initializing...
+Initializing gui preferences from file  /home/IC/.synopsys_dv_prefs.tcl
+########################### Define Top Module ############################
+set top_module I3C_TOP
+I3C_TOP
+##################### Define Working Library Directory ######################
+define_design_lib work -path ./work
+1
+############################# Formality Setup File ##########################
+#set synopsys_auto_setup true
+set_svf $top_module.svf
+1
+################## Design Compiler Library Files #setup ######################
+puts "###########################################"
+###########################################
+puts "#      #setting Design Libraries          #"
+#      #setting Design Libraries          #
+puts "###########################################"
+###########################################
+#Add the path of the libraries and RTL files to the search_path variable
+set PROJECT_PATH /home/IC/Labs/GP/I3C_TOP_2024/rtl
+/home/IC/Labs/GP/I3C_TOP_2024/rtl
+set LIB_PATH     /home/IC/Labs/GP/I3C_TOP_2024/std_cells
+/home/IC/Labs/GP/I3C_TOP_2024/std_cells
+lappend search_path $LIB_PATH
+. /opt/Synopsys/Synplify2015/libraries/syn /opt/Synopsys/Synplify2015/minpower/syn /opt/Synopsys/Synplify2015/dw/syn_ver /opt/Synopsys/Synplify2015/dw/sim_ver /home/IC/Labs/GP/I3C_TOP_2024/std_cells
+lappend search_path $PROJECT_PATH
+. /opt/Synopsys/Synplify2015/libraries/syn /opt/Synopsys/Synplify2015/minpower/syn /opt/Synopsys/Synplify2015/dw/syn_ver /opt/Synopsys/Synplify2015/dw/sim_ver /home/IC/Labs/GP/I3C_TOP_2024/std_cells /home/IC/Labs/GP/I3C_TOP_2024/rtl
+set SSLIB "scmetro_tsmc_cl013g_rvt_ss_1p08v_125c.db"
+scmetro_tsmc_cl013g_rvt_ss_1p08v_125c.db
+set TTLIB "scmetro_tsmc_cl013g_rvt_tt_1p2v_25c.db"
+scmetro_tsmc_cl013g_rvt_tt_1p2v_25c.db
+set FFLIB "scmetro_tsmc_cl013g_rvt_ff_1p32v_m40c.db"
+scmetro_tsmc_cl013g_rvt_ff_1p32v_m40c.db
+## Standard Cell libraries 
+set target_library [list $SSLIB $TTLIB $FFLIB]
+scmetro_tsmc_cl013g_rvt_ss_1p08v_125c.db scmetro_tsmc_cl013g_rvt_tt_1p2v_25c.db scmetro_tsmc_cl013g_rvt_ff_1p32v_m40c.db
+## Standard Cell & Hard Macros libraries 
+set link_library [list * $SSLIB $TTLIB $FFLIB]  
+* scmetro_tsmc_cl013g_rvt_ss_1p08v_125c.db scmetro_tsmc_cl013g_rvt_tt_1p2v_25c.db scmetro_tsmc_cl013g_rvt_ff_1p32v_m40c.db
+######################## Reading RTL Files #################################
+puts "###########################################"
+###########################################
+puts "#             Reading RTL Files           #"
+#             Reading RTL Files           #
+puts "###########################################"
+###########################################
+set file_format verilog
+verilog
+analyze -format $file_format bits_counter.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/bits_counter.v
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/bits_counter.v:14: The construct 'declaration initial assignment' is not supported in synthesis; it is ignored. (VER-708)
+Presto compilation completed successfully.
+Loading db file '/home/IC/Labs/GP/I3C_TOP_2024/std_cells/scmetro_tsmc_cl013g_rvt_ss_1p08v_125c.db'
+Loading db file '/home/IC/Labs/GP/I3C_TOP_2024/std_cells/scmetro_tsmc_cl013g_rvt_tt_1p2v_25c.db'
+Loading db file '/home/IC/Labs/GP/I3C_TOP_2024/std_cells/scmetro_tsmc_cl013g_rvt_ff_1p32v_m40c.db'
+1
+analyze -format $file_format bits_counter_sdr.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/bits_counter_sdr.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format CCC_Handler.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v:93: The construct 'declaration initial assignment' is not supported in synthesis; it is ignored. (VER-708)
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v:94: The construct 'declaration initial assignment' is not supported in synthesis; it is ignored. (VER-708)
+Presto compilation completed successfully.
+1
+analyze -format $file_format clk_divider.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/clk_divider.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format controller_crh.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/controller_crh.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format controller_RX.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/controller_RX.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format controller_TX.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/controller_TX.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format dynamic_address_assignment.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/dynamic_address_assignment.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format ENTHDR.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/ENTHDR.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format FRAME_COUNTER.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/FRAME_COUNTER.v
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/FRAME_COUNTER.v:15: The construct 'declaration initial assignment' is not supported in synthesis; it is ignored. (VER-708)
+Presto compilation completed successfully.
+1
+analyze -format $file_format frame_counter_sdr.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/frame_counter_sdr.v
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/frame_counter_sdr.v:30: The construct 'declaration initial assignment' is not supported in synthesis; it is ignored. (VER-708)
+Presto compilation completed successfully.
+1
+analyze -format $file_format gen_mux.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/gen_mux.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format HDR_Engine.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/HDR_Engine.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format hot_join.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/hot_join.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format i2c_legacy_mode.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/i2c_legacy_mode.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format i3c_timer_fsm.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/i3c_timer_fsm.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format IBI.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/IBI.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format main_ctrl_unit.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/main_ctrl_unit.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format new_i3c_engine.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/new_i3c_engine.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format Normal_Transaction.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format open_drain_behav_model.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/open_drain_behav_model.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format push_pull_behav_model.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/push_pull_behav_model.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format reg_file.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/reg_file.v
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/reg_file.v:165: Variable 'reg_array' is the target of both blocking and nonblocking assignments in the same always block. (VER-134)
+*** Presto compilation terminated with 1 errors. ***
+0
+analyze -format $file_format Rx.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/Rx.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format scl_generation.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/scl_generation.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format scl_staller.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/scl_staller.v
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/scl_staller.v:10: The construct 'declaration initial assignment' is not supported in synthesis; it is ignored. (VER-708)
+Presto compilation completed successfully.
+1
+analyze -format $file_format sda_handling.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/sda_handling.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format sdr_mode.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/sdr_mode.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format staller.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/staller.v
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/staller.v:10: The construct 'declaration initial assignment' is not supported in synthesis; it is ignored. (VER-708)
+Presto compilation completed successfully.
+1
+analyze -format $file_format timings.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/timings.v
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/timings.v:20: The construct 'compilation unit scope' is not supported in this language. (VER-720)
+*** Presto compilation terminated with 1 errors. ***
+0
+analyze -format $file_format top_for_crh_test.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/top_for_crh_test.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format top_for_hj_test.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/top_for_hj_test.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format tri_state_buf.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/tri_state_buf.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format tri_state_buf_n.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/tri_state_buf_n.v
+Presto compilation completed successfully.
+1
+analyze -format $file_format Tx.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/Tx.v
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/Tx.v:34: The construct 'declaration initial assignment' is not supported in synthesis; it is ignored. (VER-708)
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/Tx.v:35: The construct 'declaration initial assignment' is not supported in synthesis; it is ignored. (VER-708)
+Presto compilation completed successfully.
+1
+#SYS_TOP
+analyze -format $file_format i3c_top.v
+Running PRESTO HDLC
+Compiling source file /home/IC/Labs/GP/I3C_TOP_2024/rtl/i3c_top.v
+Presto compilation completed successfully.
+1
+elaborate -lib WORK I3C_TOP
+Loading db file '/opt/Synopsys/Synplify2015/libraries/syn/gtech.db'
+Loading db file '/opt/Synopsys/Synplify2015/libraries/syn/standard.sldb'
+  Loading link library 'scmetro_tsmc_cl013g_rvt_ss_1p08v_125c'
+  Loading link library 'scmetro_tsmc_cl013g_rvt_tt_1p2v_25c'
+  Loading link library 'scmetro_tsmc_cl013g_rvt_ff_1p32v_m40c'
+  Loading link library 'gtech'
+Running PRESTO HDLC
+Presto compilation completed successfully.
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/i3c_top.v:1076: The width of port data_in on instance bits_cnt_regf_rx_tx_mux of design gen_mux_param_1 is inconsistent with other instantiations of the same design. (ELAB-369)
+Elaborated 1 design.
+Current design is now 'I3C_TOP'.
+Information: Building the design 'i3c_engine'. (HDL-193)
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/new_i3c_engine.v:180: signed to unsigned assignment occurs. (VER-318)
+
+Statistics for case statements in always block at line 184 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/new_i3c_engine.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           231            |     no/auto      |
+|           318            |    auto/auto     |
+===============================================
+
+Inferred memory devices in process
+	in routine i3c_engine line 184 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/new_i3c_engine.v'.
+==============================================================================================
+|           Register Name            |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+==============================================================================================
+|       o_fcnt_no_frms_sel_reg       | Flip-flop |   3   |  Y  | N  | N  | N  | N  | N  | N  |
+|        o_rx_en_mux_sel_reg         | Flip-flop |   3   |  Y  | N  | N  | N  | N  | N  | N  |
+|      o_ser_rx_tx_mux_sel_reg       | Flip-flop |   3   |  Y  | N  | N  | N  | N  | N  | N  |
+|          o_hj_crh_en_reg           | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|   o_bits_cnt_regf_rx_tx_sel_reg    | Flip-flop |   3   |  Y  | N  | N  | N  | N  | N  | N  |
+|        o_tx_en_mux_sel_reg         | Flip-flop |   3   |  Y  | N  | N  | N  | N  | N  | N  |
+|       o_rx_mode_mux_sel_reg        | Flip-flop |   3   |  Y  | N  | N  | N  | N  | N  | N  |
+|       o_fcnt_en_mux_sel_reg        | Flip-flop |   3   |  Y  | N  | N  | N  | N  | N  | N  |
+|      o_regf_rd_en_mux_sel_reg      | Flip-flop |   3   |  Y  | N  | N  | N  | N  | N  | N  |
+|    o_bit_rx_cnt_en_mux_sel_reg     | Flip-flop |   3   |  Y  | N  | N  | N  | N  | N  | N  |
+|   o_regf_rd_address_mux_sel_reg    | Flip-flop |   3   |  Y  | N  | N  | N  | N  | N  | N  |
+|       o_tx_mode_mux_sel_reg        | Flip-flop |   3   |  Y  | N  | N  | N  | N  | N  | N  |
+|      o_scl_pp_od_mux_sel_reg       | Flip-flop |   3   |  Y  | N  | N  | N  | N  | N  | N  |
+|      o_regf_wr_en_mux_sel_reg      | Flip-flop |   3   |  Y  | N  | N  | N  | N  | N  | N  |
+|          o_hj_daa_en_reg           | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|            o_sdr_en_reg            | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|            o_i2c_en_reg            | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|            o_daa_en_reg            | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|            o_hj_en_reg             | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|            o_crh_en_reg            | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|            o_hj_ccc_reg            | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|            o_ibi_en_reg            | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|            o_tx_en_reg             | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|           o_tx_mode_reg            | Flip-flop |   3   |  Y  | N  | Y  | N  | N  | N  | N  |
+|            o_pp_od_reg             | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|       o_controller_done_reg        | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|        o_rx_data_valid_reg         | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|          o_bit_cnt_en_reg          | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|          o_regf_rd_en_reg          | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|        o_i3c_idle_flag_reg         | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|       o_crh_stop_is_sent_reg       | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    arbitrated_adress_ready_reg     | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|      write_adress_to_regf_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    dynamic_address_assigned_reg    | Flip-flop |   1   |  N  | N  | N  | Y  | N  | N  | N  |
+|             state_reg              | Flip-flop |   4   |  Y  | N  | Y  | N  | N  | N  | N  |
+|         o_hdrengine_en_reg         | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|          o_enthdr_en_reg           | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|         o_mode_sda_sel_reg         | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|    o_regf_wr_en_sdr_hdr_sel_reg    | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|    o_regf_rd_en_sdr_hdr_sel_reg    | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|    o_regf_data_sdr_hdr_sel_reg     | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+| o_regf_rd_address_sdr_hdr_sel_reg  | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|    o_scl_pp_od_sdr_hdr_sel_reg     | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|  o_scl_stall_flag_sdr_hdr_sel_reg  | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+| o_scl_stall_cycles_sdr_hdr_sel_reg | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|          o_tx_en_sel_reg           | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|           send_stop_reg            | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|           o_scl_idle_reg           | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|       o_scl_idle_mux_sel_reg       | Flip-flop |   3   |  Y  | N  | N  | N  | N  | N  | N  |
+|      o_bit_cnt_en_mux_sel_reg      | Flip-flop |   3   |  Y  | N  | N  | N  | N  | N  | N  |
+==============================================================================================
+Presto compilation completed successfully.
+Error: Width mismatch on port 'o_scl_stall_flag_sel' of reference to 'i3c_engine' in 'I3C_TOP'. (LINK-3)
+Information: Building the design 'sdr_mode'. (HDL-193)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/sdr_mode.v:158: The statements in this 'always' block are outside the scope of the synthesis policy. Only an 'if' statement is allowed at the top level in this always block. (ELAB-302)
+*** Presto compilation terminated with 1 errors. ***
+Information: Building the design 'i2c_legacy_mode'. (HDL-193)
+
+Statistics for case statements in always block at line 80 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/i2c_legacy_mode.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           107            |     no/auto      |
+|           268            |    auto/auto     |
+===============================================
+
+Inferred memory devices in process
+	in routine i2c_legacy_mode line 80 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/i2c_legacy_mode.v'.
+================================================================================
+|    Register Name     |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+================================================================================
+|     o_pp_od_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|      state_reg       | Flip-flop |   3   |  Y  | N  | Y  | N  | N  | N  | N  |
+|   o_regf_rd_en_reg   | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+| o_i2c_mode_done_reg  | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|   o_regf_addr_reg    | Flip-flop |  12   |  Y  | N  | Y  | N  | N  | N  | N  |
+|  addr_data_ack_reg   | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+| o_rx_data_valid_reg  | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|  o_target_nack_reg   | Flip-flop |   1   |  N  | N  | N  | Y  | N  | N  | N  |
+| i2c_mode_en_prev_reg | Flip-flop |   1   |  N  | N  | N  | Y  | N  | N  | N  |
+|  o_frame_cnt_en_reg  | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|   o_bit_cnt_en_reg   | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+| o_bit_rx_cnt_en_reg  | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|     o_tx_en_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    o_tx_mode_reg     | Flip-flop |   3   |  Y  | N  | Y  | N  | N  | N  | N  |
+|     o_rx_en_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    o_rx_mode_reg     | Flip-flop |   3   |  Y  | N  | Y  | N  | N  | N  | N  |
+================================================================================
+Presto compilation completed successfully.
+Information: Building the design 'dynamic_address_assignment'. (HDL-193)
+
+Statistics for case statements in always block at line 94 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/dynamic_address_assignment.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           123            |     no/auto      |
+===============================================
+
+Inferred memory devices in process
+	in routine dynamic_address_assignment line 94 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/dynamic_address_assignment.v'.
+======================================================================================
+|       Register Name        |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+======================================================================================
+|    o_daa_regf_wr_en_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|     nacks_counter_reg      | Flip-flop |   2   |  Y  | N  | Y  | N  | N  | N  | N  |
+|   o_daa_regf_data_wr_reg   | Flip-flop |   8   |  Y  | N  | Y  | N  | N  | N  | N  |
+|     o_daa_tx_mode_reg      | Flip-flop |   3   |  Y  | N  | Y  | N  | N  | N  | N  |
+|    o_daa_regf_addr_reg     | Flip-flop |  12   |  Y  | N  | Y  | N  | N  | N  | N  |
+|     o_daa_fcnt_en_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+| o_regf_wr_data_mux_sel_reg | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|      o_daa_error_reg       | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|      o_daa_rx_en_reg       | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|   o_daa_bits_cnt_en_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|   o_daa_fcnt_no_frms_reg   | Flip-flop |   8   |  Y  | N  | Y  | N  | N  | N  | N  |
+|      o_daa_tx_en_reg       | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|     o_daa_rx_mode_reg      | Flip-flop |   3   |  Y  | N  | Y  | N  | N  | N  | N  |
+|     o_daa_mcu_done_reg     | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    addresses_count_reg     | Flip-flop |   6   |  Y  | N  | N  | N  | N  | N  | N  |
+|         state_reg          | Flip-flop |   4   |  Y  | N  | Y  | N  | N  | N  | N  |
+|     target_offset_reg      | Flip-flop |   8   |  Y  | N  | Y  | N  | N  | N  | N  |
+|      frames_count_reg      | Flip-flop |   3   |  Y  | N  | Y  | N  | N  | N  | N  |
+|       par_to_ack_reg       | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|       ccc_to_par_reg       | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|        daa_mode_reg        | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    o_daa_regf_rd_en_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+======================================================================================
+Presto compilation completed successfully.
+Information: Building the design 'hot_join'. (HDL-193)
+
+Statistics for case statements in always block at line 109 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/hot_join.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           134            |    auto/auto     |
+|           298            |    auto/auto     |
+|           346            |    auto/auto     |
+===============================================
+
+Inferred memory devices in process
+	in routine hot_join line 109 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/hot_join.v'.
+=========================================================================================
+|         Register Name         |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+=========================================================================================
+|   o_hot_join_regf_addr_reg    | Flip-flop |  10   |  Y  | N  | Y  | N  | N  | N  | N  |
+|           state_reg           | Flip-flop |   3   |  Y  | N  | Y  | N  | N  | N  | N  |
+|  hot_join_cfg_aval_busy_reg   | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|    hot_join_cfg_en_dis_reg    | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|    o_hot_join_tx_mode_reg     | Flip-flop |   3   |  Y  | N  | Y  | N  | N  | N  | N  |
+|     o_hot_join_cnt_en_reg     | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|     o_hot_join_rx_en_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    o_hot_join_rx_mode_reg     | Flip-flop |   3   |  Y  | N  | Y  | N  | N  | N  | N  |
+|    o_hot_join_daa_req_reg     | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|     second_frame_done_reg     | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|     o_hot_join_pp_od_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|      o_hot_join_done_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|   o_hot_join_regf_rd_en_reg   | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+| o_hot_join_ctrl_role_pass_reg | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    o_hot_join_acc_rej_reg     | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|   hot_join_cfg_ack_nack_reg   | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|     o_hot_join_tx_en_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+=========================================================================================
+Presto compilation completed successfully.
+Error: Width mismatch on port 'o_hot_join_regf_addr' of reference to 'hot_join' in 'I3C_TOP'. (LINK-3)
+Information: Building the design 'IBI'. (HDL-193)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/IBI.v:111: The statements in this 'always' block are outside the scope of the synthesis policy. Only an 'if' statement is allowed at the top level in this always block. (ELAB-302)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/IBI.v:120: The statements in this 'always' block are outside the scope of the synthesis policy. Only an 'if' statement is allowed at the top level in this always block. (ELAB-302)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/IBI.v:133: The statements in this 'always' block are outside the scope of the synthesis policy. Only an 'if' statement is allowed at the top level in this always block. (ELAB-302)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/IBI.v:144: The statements in this 'always' block are outside the scope of the synthesis policy. Only an 'if' statement is allowed at the top level in this always block. (ELAB-302)
+*** Presto compilation terminated with 4 errors. ***
+Information: Building the design 'controller_crh'. (HDL-193)
+
+Statistics for case statements in always block at line 163 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/controller_crh.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           192            |    auto/auto     |
+|           280            |     no/auto      |
+|           351            |     no/auto      |
+|           375            |     no/auto      |
+|           462            |     no/auto      |
+|           640            |     no/auto      |
+|           1106           |     no/auto      |
+|           1150           |     no/auto      |
+===============================================
+
+Inferred memory devices in process
+	in routine controller_crh line 163 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/controller_crh.v'.
+==================================================================================
+|     Register Name      |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+==================================================================================
+|   o_crh_rx_mode_reg    | Flip-flop |   3   |  Y  | N  | Y  | N  | N  | N  | N  |
+|     o_crh_done_reg     | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    o_crh_rx_en_reg     | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    stop_is_sent_reg    | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|     int_state_reg      | Flip-flop |   4   |  Y  | N  | N  | N  | N  | N  | N  |
+|    o_crh_cnt_en_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|  o_crh_rx_cnt_en_reg   | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|  DATA_SENT_COUNT_reg   | Flip-flop |   6   |  Y  | N  | Y  | N  | N  | N  | N  |
+|    o_crh_tx_en_reg     | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|     ACK_COUNT_reg      | Flip-flop |   2   |  Y  | N  | Y  | N  | N  | N  | N  |
+|    dont_repeat_reg     | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|      counter_reg       | Flip-flop |   5   |  Y  | N  | Y  | N  | N  | N  | N  |
+|      counter_reg       | Flip-flop |   1   |  N  | N  | N  | Y  | N  | N  | N  |
+|   PAR_BIT_COUNT_reg    | Flip-flop |   6   |  Y  | N  | Y  | N  | N  | N  | N  |
+|  REP_START_COUNT_reg   | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|   o_crh_tx_mode_reg    | Flip-flop |   3   |  Y  | N  | Y  | N  | N  | N  | N  |
+|  o_crh_timer_set_reg   | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+| o_crh_timer_entasx_reg | Flip-flop |   2   |  Y  | N  | Y  | N  | N  | N  | N  |
+|  o_crh_regf_addr_reg   | Flip-flop |  12   |  Y  | N  | Y  | N  | N  | N  | N  |
+|  o_crh_send_stop_reg   | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|       state_reg        | Flip-flop |   4   |  Y  | N  | Y  | N  | N  | N  | N  |
+|    o_crh_pp_od_reg     | Flip-flop |   1   |  N  | N  | N  | Y  | N  | N  | N  |
+|   o_crh_scl_idle_reg   | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|  o_crh_regf_rd_en_reg  | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|  o_crh_regf_wr_en_reg  | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|   o_crh_fcnt_en_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+==================================================================================
+Presto compilation completed successfully.
+Information: Building the design 'i3c_timer_fsm'. (HDL-193)
+
+Statistics for case statements in always block at line 103 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/i3c_timer_fsm.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           124            |    auto/auto     |
+|           242            |    auto/auto     |
+===============================================
+
+Inferred memory devices in process
+	in routine i3c_timer_fsm line 103 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/i3c_timer_fsm.v'.
+=========================================================================================
+|         Register Name         |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+=========================================================================================
+| o_timer_bus_free_mix_fm_p_reg | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|     o_timer_bus_aval_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|     o_timer_bus_idle_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|   o_timer_newcrlck_i3c_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|  stp_to_idle_trans_time_reg   | Flip-flop |  24   |  Y  | N  | Y  | N  | N  | N  | N  |
+|      idle_flag_pulse_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|           count_reg           | Flip-flop |  24   |  Y  | N  | Y  | N  | N  | N  | N  |
+|      o_timer_crhpol_reg       | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|   o_timer_newcrlck_i2c_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|        timer_state_reg        | Flip-flop |   3   |  Y  | N  | N  | N  | N  | N  | N  |
+|        o_timer_cas_reg        | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|   o_timer_bus_free_pure_reg   | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|  o_timer_bus_free_mix_fm_reg  | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+=========================================================================================
+Presto compilation completed successfully.
+Information: Building the design 'controller_tx'. (HDL-193)
+
+Statistics for case statements in always block at line 81 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/controller_TX.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           100            |    auto/auto     |
+===============================================
+
+Inferred memory devices in process
+	in routine controller_tx line 81 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/controller_TX.v'.
+==========================================================================================
+|         Register Name          |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+==========================================================================================
+| o_ser_to_parity_transition_reg | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|      o_start_pattern_reg       | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|     o_ser_pp_mode_done_reg     | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|       o_stop_pattern_reg       | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|      o_ser_mode_done_reg       | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|       o_tx_daa_done_reg        | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|       o_ser_sda_low_reg        | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|        o_ser_s_data_reg        | Flip-flop |   1   |  N  | N  | N  | Y  | N  | N  | N  |
+==========================================================================================
+Statistics for MUX_OPs
+============================================================
+| block name/line   | Inputs | Outputs | # sel inputs | MB |
+============================================================
+| controller_tx/151 |   8    |    1    |      3       | N  |
+============================================================
+Presto compilation completed successfully.
+Information: Building the design 'bits_counter_sdr'. (HDL-193)
+
+Inferred memory devices in process
+	in routine bits_counter_sdr line 53 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/bits_counter_sdr.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|  cnt_bit_count_reg  | Flip-flop |   3   |  Y  | N  | N  | Y  | N  | N  | N  |
+|   o_cnt_done_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully.
+Information: Building the design 'controller_rx'. (HDL-193)
+
+Statistics for case statements in always block at line 77 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/controller_RX.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            94            |     no/auto      |
+===============================================
+
+Inferred memory devices in process
+	in routine controller_rx line 77 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/controller_RX.v'.
+=======================================================================================
+|        Register Name        |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+=======================================================================================
+|  o_sdr_rx_regf_data_wr_reg  | Flip-flop |   8   |  Y  | N  | Y  | N  | N  | N  | N  |
+|   o_sdr_rx_mode_done_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    o_sdr_rx_rd_abort_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+| sdr_rx_arbitration_lost_reg | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|  o_crh_start_detected_reg   | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|    arbitrated_adress_reg    |   Latch   |   1   |  N  | N  | Y  | N  | -  | -  | -  |
+|    arbitrated_adress_reg    | Flip-flop |   7   |  Y  | N  | Y  | N  | N  | N  | N  |
+|  o_sdr_rx_pp_mode_done_reg  | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    o_sdr_rx_nack_ack_reg    | Flip-flop |   1   |  N  | N  | N  | Y  | N  | N  | N  |
+=======================================================================================
+Presto compilation completed successfully.
+Information: Building the design 'frame_counter_sdr'. (HDL-193)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/frame_counter_sdr.v:42: Clock i_fcnt_en used as data. (ELAB-305)
+*** Presto compilation terminated with 1 errors. ***
+Information: Building the design 'sda_handling'. (HDL-193)
+Presto compilation completed successfully.
+Information: Building the design 'scl_generation'. (HDL-193)
+
+Statistics for case statements in always block at line 65 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/scl_generation.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            80            |    auto/auto     |
+===============================================
+
+Inferred memory devices in process
+	in routine scl_generation line 65 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/scl_generation.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|      state_reg      | Flip-flop |   1   |  N  | N  | N  | Y  | N  | N  | N  |
+|      o_scl_reg      | Flip-flop |   1   |  N  | N  | N  | Y  | N  | N  | N  |
+| o_scl_pos_edge_reg  | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+| o_scl_neg_edge_reg  | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine scl_generation line 123 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/scl_generation.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|     switch_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|      count_reg      | Flip-flop |   6   |  Y  | N  | Y  | N  | N  | N  | N  |
+|      count_reg      | Flip-flop |   1   |  N  | N  | N  | Y  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully.
+Information: Building the design 'reg_file'. (HDL-193)
+Warning: Cannot find the design 'reg_file' in the library 'WORK'. (LBR-1)
+Information: Building the design 'clk_divider'. (HDL-193)
+
+Inferred memory devices in process
+	in routine clk_divider line 38 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/clk_divider.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|    o_clk_out_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully.
+Information: Building the design 'enthdr'. (HDL-193)
+
+Statistics for case statements in always block at line 74 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/ENTHDR.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            99            |    auto/auto     |
+===============================================
+
+Inferred memory devices in process
+	in routine enthdr line 74 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/ENTHDR.v'.
+================================================================================
+|    Register Name     |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+================================================================================
+| o_i3cengine_done_reg | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|   o_regf_addr_reg    | Flip-flop |  12   |  Y  | N  | Y  | N  | N  | N  | N  |
+|    o_tx_mode_reg     | Flip-flop |   3   |  Y  | N  | Y  | N  | N  | N  | N  |
+|    o_rx_mode_reg     | Flip-flop |   3   |  Y  | N  | Y  | N  | N  | N  | N  |
+|   o_bit_cnt_en_reg   | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|      state_reg       | Flip-flop |   3   |  Y  | N  | Y  | N  | N  | N  | N  |
+|   o_regf_rd_en_reg   | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|     o_tx_en_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|     o_rx_en_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+================================================================================
+Presto compilation completed successfully.
+Information: Building the design 'hdr_engine'. (HDL-193)
+
+Statistics for case statements in always block at line 88 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/HDR_Engine.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           110            |     no/auto      |
+===============================================
+
+Inferred memory devices in process
+	in routine hdr_engine line 88 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/HDR_Engine.v'.
+===============================================================================================
+|            Register Name            |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================================
+|            i_CP_temp_reg            | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|        o_bit_cnt_en_sel_reg         | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|         o_regf_addr_sel_reg         | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|        o_regf_wr_en_sel_reg         | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|          o_rx_mode_sel_reg          | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|            ccc_done_reg             | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|   o_hdr_scl_stall_cycles_sel_reg    | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|     o_hdr_scl_stall_en_sel_reg      | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|        o_frm_cnt_en_sel_reg         | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+| o_cccnt_tx_special_data_mux_sel_reg | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|        o_regf_rd_en_sel_reg         | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|           o_rx_en_sel_reg           | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|          o_tx_mode_sel_reg          | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|       o_sdahand_pp_od_sel_reg       | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|   o_i3cengine_hdrengine_done_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|          o_ddrmode_en_reg           | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|            o_ccc_en_reg             | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|       o_regf_addr_special_reg       | Flip-flop |   6   |  Y  | N  | Y  | N  | N  | N  | N  |
+|       o_regf_addr_special_reg       | Flip-flop |   6   |  Y  | N  | N  | Y  | N  | N  | N  |
+|           i_TOC_temp_reg            | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|           i_MODE_temp_reg           | Flip-flop |   2   |  Y  | N  | N  | Y  | N  | N  | N  |
+|           i_MODE_temp_reg           | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|           o_tx_en_sel_reg           | Flip-flop |   1   |  N  | N  | N  | Y  | N  | N  | N  |
+|         o_scl_pp_od_sel_reg         | Flip-flop |   1   |  N  | N  | N  | Y  | N  | N  | N  |
+|           next_state_reg            | Flip-flop |   2   |  Y  | N  | Y  | N  | N  | N  | N  |
+===============================================================================================
+Presto compilation completed successfully.
+Information: Building the design 'gen_mux' instantiated from design 'I3C_TOP' with
+	the parameters "1,3". (HDL-193)
+Presto compilation completed successfully.
+Information: Building the design 'gen_mux' instantiated from design 'I3C_TOP' with
+	the parameters "12,3". (HDL-193)
+Presto compilation completed successfully.
+Information: Building the design 'gen_mux' instantiated from design 'I3C_TOP' with
+	the parameters "8,1". (HDL-193)
+Presto compilation completed successfully.
+Information: Building the design 'gen_mux' instantiated from design 'I3C_TOP' with
+	the parameters "3,3". (HDL-193)
+Presto compilation completed successfully.
+Information: Building the design 'gen_mux' instantiated from design 'I3C_TOP' with
+	the parameters "8,3". (HDL-193)
+Presto compilation completed successfully.
+Error: Width mismatch on port 'data_in' of reference to 'gen_mux' in 'I3C_TOP'. (LINK-3)
+Error: Unable to match ports of cell fcnt_no_frms_mux ('gen_mux') to 'gen_mux_BUS_WIDTH8_SEL3'. (LINK-25)
+Information: Building the design 'gen_mux' instantiated from design 'I3C_TOP' with
+	the parameters "5,3". (HDL-193)
+Presto compilation completed successfully.
+Error: Width mismatch on port 'data_in' of reference to 'gen_mux' in 'I3C_TOP'. (LINK-3)
+Error: Unable to match ports of cell scl_stall_cycles_mux ('gen_mux') to 'gen_mux_BUS_WIDTH5_SEL3'. (LINK-25)
+Information: Building the design 'gen_mux' instantiated from design 'I3C_TOP' with
+	the parameters "1,1". (HDL-193)
+Presto compilation completed successfully.
+Information: Building the design 'gen_mux' instantiated from design 'I3C_TOP' with
+	the parameters "12,1". (HDL-193)
+Presto compilation completed successfully.
+Information: Building the design 'gen_mux' instantiated from design 'I3C_TOP' with
+	the parameters "4,1". (HDL-193)
+Presto compilation completed successfully.
+Information: Building the design 'gen_mux' instantiated from design 'I3C_TOP' with
+	the parameters "5,1". (HDL-193)
+Presto compilation completed successfully.
+Information: Building the design 'CCC_Handler'. (HDL-193)
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v:559: signed to unsigned conversion occurs. (VER-318)
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v:564: signed to unsigned conversion occurs. (VER-318)
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v:571: signed to unsigned conversion occurs. (VER-318)
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v:575: signed to unsigned conversion occurs. (VER-318)
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v:752: signed to unsigned conversion occurs. (VER-318)
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v:756: signed to unsigned conversion occurs. (VER-318)
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v:761: signed to unsigned conversion occurs. (VER-318)
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v:815: signed to unsigned conversion occurs. (VER-318)
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v:819: signed to unsigned conversion occurs. (VER-318)
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v:824: signed to unsigned conversion occurs. (VER-318)
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v:844: signed to unsigned conversion occurs. (VER-318)
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v:884: signed to unsigned conversion occurs. (VER-318)
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v:887: signed to unsigned conversion occurs. (VER-318)
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v:912: signed to unsigned conversion occurs. (VER-318)
+
+Statistics for case statements in always block at line 270 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           271            |    auto/auto     |
+===============================================
+
+Statistics for case statements in always block at line 338 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           356            |     no/auto      |
+===============================================
+
+Inferred memory devices in process
+	in routine CCC_Handler line 294 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v'.
+======================================================================================
+|       Register Name        |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+======================================================================================
+|       tmp_shift_reg        | Flip-flop |  10   |  Y  | N  | Y  | N  | N  | N  | N  |
+| Direct_Broadcast_n_del_reg | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+======================================================================================
+
+Inferred memory devices in process
+	in routine CCC_Handler line 328 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|  current_state_reg  | Flip-flop |   5   |  Y  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine CCC_Handler line 338 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/CCC_Handler.v'.
+=============================================================================
+|     Register Name     | Type  | Width | Bus | MB | AR | AS | SR | SS | ST |
+=============================================================================
+| o_regf_ERR_STATUS_reg | Latch |   4   |  Y  | N  | N  | N  | -  | -  | -  |
+|    o_regf_addr_reg    | Latch |  12   |  Y  | N  | N  | N  | -  | -  | -  |
+| immediate_counter_reg | Latch |  32   |  Y  | N  | N  | N  | -  | -  | -  |
+|   o_engine_odd_reg    | Latch |   1   |  N  | N  | N  | N  | -  | -  | -  |
+|  o_txrx_addr_ccc_reg  | Latch |   8   |  Y  | N  | N  | N  | -  | -  | -  |
+|  regular_counter_reg  | Latch |  32   |  Y  | N  | N  | N  | -  | -  | -  |
+|  i_regf_CMD_ATTR_reg  | Latch |   1   |  N  | N  | N  | N  | -  | -  | -  |
+|    next_state_reg     | Latch |   5   |  Y  | N  | N  | N  | -  | -  | -  |
+|    o_frmcnt_en_reg    | Latch |   1   |  N  | N  | N  | N  | -  | -  | -  |
+| controller_abort_reg  | Latch |   1   |  N  | N  | N  | N  | -  | -  | -  |
+|    i_regf_TOC_reg     | Latch |   1   |  N  | N  | N  | N  | -  | -  | -  |
+|    i_regf_DTT_reg     | Latch |   3   |  Y  | N  | N  | N  | -  | -  | -  |
+|    i_regf_RnW_reg     | Latch |   1   |  N  | N  | N  | N  | -  | -  | -  |
+| i_regf_DEV_INDEX_reg  | Latch |   5   |  Y  | N  | N  | N  | -  | -  | -  |
+|    first_time_reg     | Latch |   1   |  N  | N  | N  | N  | -  | -  | -  |
+|    i_regf_DBP_reg     | Latch |   1   |  N  | N  | N  | N  | -  | -  | -  |
+|    i_regf_CMD_reg     | Latch |   8   |  Y  | N  | N  | N  | -  | -  | -  |
+=============================================================================
+Presto compilation completed successfully.
+Information: Building the design 'DDR_NT'. (HDL-193)
+
+Statistics for case statements in always block at line 209 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           213            |    auto/auto     |
+===============================================
+
+Statistics for case statements in always block at line 712 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           738            |     no/auto      |
+|           889            |     no/auto      |
+===============================================
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v:712: Net o_tx_en or a directly connected net may be driven by more than one process or block. (ELAB-405)
+
+Statistics for case statements in always block at line 1281 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           1283           |    auto/auto     |
+===============================================
+
+Inferred memory devices in process
+	in routine DDR_NT line 170 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|  current_state_reg  | Flip-flop |   5   |  Y  | N  | Y  | N  | N  | N  | N  |
+|     o_tx_en_reg     |   Latch   |   1   |  N  | N  | Y  | N  | -  | -  | -  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine DDR_NT line 1340 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|   sysclk_done_reg   | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+| Parity_data_seq_reg | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v:738: Net 'o_tx_en' or a directly connected net is driven by more than one source, and not all drivers are three-state. (ELAB-366)
+*** Presto compilation terminated with 1 errors. ***
+Information: Building the design 'scl_staller'. (HDL-193)
+
+Inferred memory devices in process
+	in routine scl_staller line 12 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/staller.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|  o_stall_done_reg   | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|      count_reg      | Flip-flop |   5   |  Y  | N  | Y  | N  | N  | N  | N  |
+|   o_scl_stall_reg   | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully.
+Information: Building the design 'bits_counter'. (HDL-193)
+
+Inferred memory devices in process
+	in routine bits_counter line 20 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/bits_counter.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|    err_count_reg    | Flip-flop |   6   |  Y  | N  | N  | N  | N  | N  | N  |
+| o_cnt_bit_count_reg | Flip-flop |   6   |  Y  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine bits_counter line 54 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/bits_counter.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+| o_frcnt_toggle_reg  | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully.
+Information: Building the design 'frame_counter'. (HDL-193)
+
+Statistics for case statements in always block at line 18 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/FRAME_COUNTER.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            41            |    auto/auto     |
+===============================================
+
+Inferred memory devices in process
+	in routine frame_counter line 18 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/FRAME_COUNTER.v'.
+==================================================================================
+|     Register Name      |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+==================================================================================
+|       count_reg        | Flip-flop |  16   |  Y  | N  | Y  | N  | N  | N  | N  |
+| o_cccnt_last_frame_reg | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+==================================================================================
+Presto compilation completed successfully.
+Information: Building the design 'RX'. (HDL-193)
+
+Statistics for case statements in always block at line 143 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Rx.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           175            |    auto/auto     |
+===============================================
+
+Inferred memory devices in process
+	in routine RX line 121 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Rx.v'.
+==================================================================================
+|     Register Name      |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+==================================================================================
+| data_paritychecker_reg | Flip-flop |  16   |  Y  | N  | Y  | N  | N  | N  | N  |
+==================================================================================
+
+Inferred memory devices in process
+	in routine RX line 143 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Rx.v'.
+==========================================================================================
+|         Register Name          |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+==========================================================================================
+| o_regfcrc_rx_data_out_temp_reg | Flip-flop |   8   |  Y  | N  | N  | N  | N  | N  | N  |
+|      token_value_temp_reg      | Flip-flop |   4   |  Y  | N  | N  | N  | N  | N  | N  |
+|        crc_pre_temp_reg        | Flip-flop |   2   |  Y  | N  | N  | N  | N  | N  | N  |
+|     parity_value_temp_reg      | Flip-flop |   2   |  Y  | N  | N  | N  | N  | N  | N  |
+|   o_regfcrc_rx_data_out_reg    | Flip-flop |   8   |  Y  | N  | Y  | N  | N  | N  | N  |
+|   o_ddrccc_rx_mode_done_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|        o_ddrccc_pre_reg        | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|  o_ddrccc_pre_tri_enable_reg   | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|       o_ddrccc_error_reg       | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|          o_crc_en_reg          | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|          byte_num_reg          | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|      o_crc_data_valid_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    o_ddrccc_error_done_reg     | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|           count_reg            | Flip-flop |   6   |  Y  | N  | Y  | N  | N  | N  | N  |
+|       CRC_value_temp_reg       | Flip-flop |   5   |  Y  | N  | N  | N  | N  | N  | N  |
+==========================================================================================
+
+Inferred tri-state devices in process
+	in routine RX line 143 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Rx.v'.
+====================================================
+|  Register Name   |       Type       | Width | MB |
+====================================================
+| o_ddrccc_pre_tri | Tri-State Buffer |   1   | N  |
+====================================================
+Presto compilation completed successfully.
+Information: Building the design 'tx'. (HDL-193)
+
+Statistics for case statements in always block at line 66 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Tx.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            85            |     no/auto      |
+===============================================
+
+Inferred memory devices in process
+	in routine tx line 66 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Tx.v'.
+====================================================================================
+|      Register Name       |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+====================================================================================
+| o_sdahnd_serial_data_reg | Flip-flop |   1   |  N  | N  | N  | Y  | N  | N  | N  |
+|     parity_flag_reg      | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|   first_byte_full_reg    | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|       o_crc_en_reg       | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|  reset_counter_flag_reg  | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+| o_crc_parallel_data_reg  | Flip-flop |   8   |  Y  | N  | Y  | N  | N  | N  | N  |
+|          D1_reg          | Flip-flop |   8   |  Y  | N  | N  | N  | N  | N  | N  |
+|          D2_reg          | Flip-flop |   8   |  Y  | N  | N  | N  | N  | N  | N  |
+|      rd_wr_flag_reg      | Flip-flop |   1   |  N  | N  | N  | N  | N  | N  | N  |
+|       counter_reg        | Flip-flop |   4   |  Y  | N  | Y  | N  | N  | N  | N  |
+|  o_ddrccc_mode_done_reg  | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+====================================================================================
+Presto compilation completed successfully.
+Information: Building the design 'open_drain_behav_model'. (HDL-193)
+Presto compilation completed successfully.
+Information: Building the design 'push_pull_behav_model'. (HDL-193)
+
+Inferred tri-state devices in process
+	in routine push_pull_behav_model line 22 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/push_pull_behav_model.v'.
+=================================================
+| Register Name |       Type       | Width | MB |
+=================================================
+|  _1_net__tri  | Tri-State Buffer |   1   | N  |
+=================================================
+Presto compilation completed successfully.
+Information: Building the design 'tri_state_buf_n'. (HDL-193)
+
+Inferred tri-state devices in process
+	in routine tri_state_buf_n line 8 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/tri_state_buf_n.v'.
+===================================================
+|  Register Name  |       Type       | Width | MB |
+===================================================
+| o_tri_state_tri | Tri-State Buffer |   1   | N  |
+===================================================
+Presto compilation completed successfully.
+Information: Building the design 'tri_state_buf'. (HDL-193)
+
+Inferred tri-state devices in process
+	in routine tri_state_buf line 8 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/tri_state_buf.v'.
+===================================================
+|  Register Name  |       Type       | Width | MB |
+===================================================
+| o_tri_state_tri | Tri-State Buffer |   1   | N  |
+===================================================
+Presto compilation completed successfully.
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+1
+###################### Defining toplevel ###################################
+current_design $top_module
+Current design is 'I3C_TOP'.
+{I3C_TOP}
+#################### Liniking All The Design Parts #########################
+puts "###############################################"
+###############################################
+puts "######## Liniking All The Design Parts ########"
+######## Liniking All The Design Parts ########
+puts "###############################################"
+###############################################
+link 
+
+  Linking design 'I3C_TOP'
+  Using the following designs and libraries:
+  --------------------------------------------------------------------------
+  * (35 designs)              /home/IC/Labs/GP/I3C_TOP_2024/I3C_TOP.db, etc
+  scmetro_tsmc_cl013g_rvt_ss_1p08v_125c (library) /home/IC/Labs/GP/I3C_TOP_2024/std_cells/scmetro_tsmc_cl013g_rvt_ss_1p08v_125c.db
+  scmetro_tsmc_cl013g_rvt_tt_1p2v_25c (library) /home/IC/Labs/GP/I3C_TOP_2024/std_cells/scmetro_tsmc_cl013g_rvt_tt_1p2v_25c.db
+  scmetro_tsmc_cl013g_rvt_ff_1p32v_m40c (library) /home/IC/Labs/GP/I3C_TOP_2024/std_cells/scmetro_tsmc_cl013g_rvt_ff_1p32v_m40c.db
+
+Error: Width mismatch on port 'o_scl_stall_flag_sel' of reference to 'i3c_engine' in 'I3C_TOP'. (LINK-3)
+Warning: Unable to resolve reference 'i3c_engine' in 'I3C_TOP'. (LINK-5)
+Information: Building the design 'sdr_mode'. (HDL-193)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/sdr_mode.v:158: The statements in this 'always' block are outside the scope of the synthesis policy. Only an 'if' statement is allowed at the top level in this always block. (ELAB-302)
+*** Presto compilation terminated with 1 errors. ***
+Error: Width mismatch on port 'o_hot_join_regf_addr' of reference to 'hot_join' in 'I3C_TOP'. (LINK-3)
+Warning: Unable to resolve reference 'hot_join' in 'I3C_TOP'. (LINK-5)
+Information: Building the design 'IBI'. (HDL-193)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/IBI.v:111: The statements in this 'always' block are outside the scope of the synthesis policy. Only an 'if' statement is allowed at the top level in this always block. (ELAB-302)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/IBI.v:120: The statements in this 'always' block are outside the scope of the synthesis policy. Only an 'if' statement is allowed at the top level in this always block. (ELAB-302)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/IBI.v:133: The statements in this 'always' block are outside the scope of the synthesis policy. Only an 'if' statement is allowed at the top level in this always block. (ELAB-302)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/IBI.v:144: The statements in this 'always' block are outside the scope of the synthesis policy. Only an 'if' statement is allowed at the top level in this always block. (ELAB-302)
+*** Presto compilation terminated with 4 errors. ***
+Information: Building the design 'frame_counter_sdr'. (HDL-193)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/frame_counter_sdr.v:42: Clock i_fcnt_en used as data. (ELAB-305)
+*** Presto compilation terminated with 1 errors. ***
+Information: Building the design 'reg_file'. (HDL-193)
+Warning: Cannot find the design 'reg_file' in the library 'WORK'. (LBR-1)
+Error: Width mismatch on port 'data_in' of reference to 'gen_mux' in 'I3C_TOP'. (LINK-3)
+Error: Unable to match ports of cell fcnt_no_frms_mux ('gen_mux') to 'gen_mux_BUS_WIDTH8_SEL3'. (LINK-25)
+Error: Width mismatch on port 'data_in' of reference to 'gen_mux' in 'I3C_TOP'. (LINK-3)
+Error: Unable to match ports of cell scl_stall_cycles_mux ('gen_mux') to 'gen_mux_BUS_WIDTH5_SEL3'. (LINK-25)
+Information: Building the design 'DDR_NT'. (HDL-193)
+
+Statistics for case statements in always block at line 209 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           213            |    auto/auto     |
+===============================================
+
+Statistics for case statements in always block at line 712 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           738            |     no/auto      |
+|           889            |     no/auto      |
+===============================================
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v:712: Net o_tx_en or a directly connected net may be driven by more than one process or block. (ELAB-405)
+
+Statistics for case statements in always block at line 1281 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           1283           |    auto/auto     |
+===============================================
+
+Inferred memory devices in process
+	in routine DDR_NT line 170 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|  current_state_reg  | Flip-flop |   5   |  Y  | N  | Y  | N  | N  | N  | N  |
+|     o_tx_en_reg     |   Latch   |   1   |  N  | N  | Y  | N  | -  | -  | -  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine DDR_NT line 1340 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|   sysclk_done_reg   | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+| Parity_data_seq_reg | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v:738: Net 'o_tx_en' or a directly connected net is driven by more than one source, and not all drivers are three-state. (ELAB-366)
+*** Presto compilation terminated with 1 errors. ***
+Warning: Unable to resolve reference 'sdr_mode' in 'I3C_TOP'. (LINK-5)
+Warning: Unable to resolve reference 'IBI' in 'I3C_TOP'. (LINK-5)
+Warning: Unable to resolve reference 'frame_counter_sdr' in 'I3C_TOP'. (LINK-5)
+Warning: Unable to resolve reference 'reg_file' in 'I3C_TOP'. (LINK-5)
+Warning: Unable to resolve reference 'DDR_NT' in 'I3C_TOP'. (LINK-5)
+0
+#################### Liniking All The Design Parts #########################
+puts "###############################################"
+###############################################
+puts "######## checking design consistency ##########"
+######## checking design consistency ##########
+puts "###############################################"
+###############################################
+check_design >> check_design.rpt
+#################### Define Design Constraints #########################
+puts "###############################################"
+###############################################
+puts "############ Design Constraints #### ##########"
+############ Design Constraints #### ##########
+puts "###############################################"
+###############################################
+source -echo ./cons.tcl
+####################################################################################
+# Constraints
+# ----------------------------------------------------------------------------
+#
+# 0. Design Compiler variables
+#
+# 1. Master Clock Definitions
+#
+# 2. Generated Clock Definitions
+#
+# 3. Clock Uncertainties
+#
+# 4. Clock Latencies 
+#
+# 5. Clock Relationships
+#
+# 6. set input/output delay on ports
+#
+# 7. Driving cells
+#
+# 8. Output load
+####################################################################################
+#########################################################
+#### Section 0 : DC Variables ####
+#########################################################
+#################################################################################### 
+# Prevent assign statements in the generated netlist (must be applied before compile command)
+set_fix_multiple_port_nets -all -buffer_constants -feedthroughs
+####################################################################################
+#########################################################
+#### Section 1 : Clock Definition ####
+#########################################################
+set CLK_NAME1 i_sdr_clk
+set CLK_PER1 20
+set CLK_SETUP_SKEW 0.4
+set CLK_HOLD_SKEW 0.2
+set CLK_LAT 0
+set CLK_RISE 0.2
+set CLK_FALL 0.2
+#################################################################################### 
+# 1. Master Clock Definitions
+create_clock -name $CLK_NAME1 -period $CLK_PER1 -waveform "0 [expr $CLK_PER1/2]" [get_ports i_sdr_clk]
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+# 2. Generated Clock Definitions
+#create_generated_clock -master_clock $CLK_NAME1 -source [get_ports REF_CLK] #                       -name "ALU_CLK" [get_port U0_CLK_GATE/GATED_CLK] #                       -divide_by 1
+# 3. Clock Latencies
+set_clock_latency $CLK_LAT [get_clocks $CLK_NAME1]
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+# 4. Clock Uncertainties
+set_clock_uncertainty -setup $CLK_SETUP_SKEW [get_clocks $CLK_NAME1]
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+set_clock_uncertainty -hold $CLK_HOLD_SKEW  [get_clocks $CLK_NAME1]
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+# 4. Clock Transitions
+####################################################################################
+set_clock_transition -rise $CLK_RISE  [get_clocks $CLK_NAME1]
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+set_clock_transition -fall $CLK_FALL  [get_clocks $CLK_NAME1]
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+set_dont_touch_network {i_sdr_clk i_sdr_rst_n}
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+####################################################################################
+#########################################################
+#### Section 2 : Clocks Relationship ####
+#########################################################
+####################################################################################
+#set_clock_groups -asynchronous -group [get_clocks "$CLK_NAME2 TX_CLK RX_CLK"] -group [get_clocks "ALU_CLK $CLK_NAME1"] 
+####################################################################################
+#########################################################
+#### Section 3 : set input/output delay on ports ####
+#########################################################
+####################################################################################
+#Constrain Input Paths
+set in_delay  [expr 0.2*$CLK_PER1]
+set_input_delay $in_delay -clock i_sdr_clk [get_port i_controller_en]           
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+set_input_delay $in_delay -clock i_sdr_clk [get_port i_i3c_i2c_sel]                         
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+set_input_delay $in_delay -clock i_sdr_clk [get_port i_ccc_en_dis_hj]               
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+set_input_delay $in_delay -clock i_sdr_clk [get_port i_sclgen_rst_n]                 
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+set_input_delay $in_delay -clock i_sdr_clk [get_port i_regf_config]                        
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+set_input_delay $in_delay -clock i_sdr_clk [get_port i_data_config_mux_sel]              
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+set_input_delay $in_delay -clock i_sdr_clk [get_port i_regf_wr_address_config]   
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+set_input_delay $in_delay -clock i_sdr_clk [get_port i_regf_wr_en_config]   
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+set_input_delay $in_delay -clock i_sdr_clk [get_port i_regf_rd_en_config]   
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+#inout port is constrained as input ?                   
+set_input_delay $in_delay -clock i_sdr_clk [get_port sda]    
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+#Constrain Output Paths
+set out_delay [expr 0.2*$CLK_PER1]
+set_output_delay $out_delay -clock i_sdr_clk [get_port o_ctrl_done]            
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+set_output_delay $out_delay -clock i_sdr_clk [get_port o_sdr_rx_valid]                   
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+set_output_delay $out_delay -clock i_sdr_clk [get_port scl]  
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+####################################################################################
+#########################################################
+#### Section 4 : Driving cells ####
+#########################################################
+####################################################################################
+set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_controller_en]
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_i3c_i2c_sel]          
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_ccc_en_dis_hj]              
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_sclgen_rst_n]        
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_regf_config]       
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_data_config_mux_sel]             
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_regf_wr_address_config]
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_regf_wr_en_config]             
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+set_driving_cell -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c -lib_cell BUFX2M -pin Y [get_port i_regf_rd_en_config]
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Warning: Design rule attributes from the driving cell will be
+	set on the port. (UID-401)
+####################################################################################
+#########################################################
+#### Section 5 : Output load ####
+#########################################################
+####################################################################################
+set_load 0.5 [get_port o_ctrl_done]         
+set_load 0.5 [get_port o_sdr_rx_valid]         
+set_load 0.5 [get_port scl]          
+####################################################################################
+#########################################################
+#### Section 6 : Operating Condition ####
+#########################################################
+####################################################################################
+# Define the Worst Library for Max(#setup) analysis
+# Define the Best Library for Min(hold) analysis
+set_operating_conditions -min_library "scmetro_tsmc_cl013g_rvt_ff_1p32v_m40c" -min "scmetro_tsmc_cl013g_rvt_ff_1p32v_m40c" -max_library "scmetro_tsmc_cl013g_rvt_ss_1p08v_125c" -max "scmetro_tsmc_cl013g_rvt_ss_1p08v_125c"
+Using operating conditions 'scmetro_tsmc_cl013g_rvt_ss_1p08v_125c' found in library 'scmetro_tsmc_cl013g_rvt_ss_1p08v_125c'.
+Using operating conditions 'scmetro_tsmc_cl013g_rvt_ff_1p32v_m40c' found in library 'scmetro_tsmc_cl013g_rvt_ff_1p32v_m40c'.
+####################################################################################
+#########################################################
+#### Section 7 : wireload Model ####
+#########################################################
+####################################################################################
+set_wire_load_model -name tsmc13_wl10 -library scmetro_tsmc_cl013g_rvt_ss_1p08v_125c
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+####################################################################################
+###################### Mapping and optimization ########################
+puts "###############################################"
+###############################################
+puts "########## Mapping & Optimization #############"
+########## Mapping & Optimization #############
+puts "###############################################"
+###############################################
+compile 
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Information: Evaluating DesignWare library utilization. (UISN-27)
+
+============================================================================
+| DesignWare Building Block Library  |         Version         | Available |
+============================================================================
+| Basic DW Building Blocks           | K-2015.06-DWBB_201506.0 |     *     |
+| Licensed DW Building Blocks        |                         |           |
+============================================================================
+
+
+Information: There are 316 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
+
+
+Warning: Operating condition scmetro_tsmc_cl013g_rvt_ss_1p08v_125c set on design I3C_TOP has different process,
+voltage and temperatures parameters than the parameters at which target library 
+scmetro_tsmc_cl013g_rvt_tt_1p2v_25c is characterized. Delays may be inaccurate as a result. (OPT-998)
+
+  Beginning Pass 1 Mapping
+  ------------------------
+  Processing 'tx'
+  Processing 'RX'
+  Processing 'frame_counter'
+  Processing 'bits_counter'
+  Processing 'scl_staller'
+  Processing 'CCC_Handler'
+Information: The register 'controller_abort_reg' is a constant and will be removed. (OPT-1206)
+  Processing 'gen_mux_BUS_WIDTH1_SEL1_0'
+  Processing 'gen_mux_BUS_WIDTH8_SEL1_0'
+  Processing 'gen_mux_BUS_WIDTH12_SEL1_0'
+  Processing 'gen_mux_BUS_WIDTH5_SEL1_0'
+  Processing 'gen_mux_BUS_WIDTH4_SEL1_0'
+  Processing 'gen_mux_BUS_WIDTH1_SEL3_0'
+  Processing 'gen_mux_BUS_WIDTH3_SEL3_0'
+  Processing 'gen_mux_BUS_WIDTH12_SEL3'
+  Processing 'hdr_engine'
+Information: The register 'o_regf_addr_special_reg[11]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_regf_addr_special_reg[10]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_regf_addr_special_reg[8]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_regf_addr_special_reg[7]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_regf_addr_special_reg[6]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_regf_addr_special_reg[4]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_regf_addr_special_reg[2]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_regf_addr_special_reg[0]' is a constant and will be removed. (OPT-1206)
+  Processing 'enthdr'
+Information: The register 'o_regf_addr_reg[11]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_regf_addr_reg[10]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_regf_addr_reg[9]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_regf_addr_reg[8]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_regf_addr_reg[7]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_regf_addr_reg[6]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_regf_addr_reg[0]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_tx_mode_reg[2]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_rx_mode_reg[2]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_rx_mode_reg[0]' is a constant and will be removed. (OPT-1206)
+  Processing 'clk_divider'
+  Processing 'scl_generation'
+  Processing 'tri_state_buf_0'
+  Processing 'push_pull_behav_model'
+  Processing 'tri_state_buf_n'
+  Processing 'open_drain_behav_model'
+  Processing 'sda_handling'
+  Processing 'controller_rx'
+Information: The register 'arbitrated_adress_reg[7]' is a constant and will be removed. (OPT-1206)
+  Processing 'bits_counter_sdr'
+  Processing 'controller_tx'
+  Processing 'i3c_timer_fsm'
+Information: The register 'timer_state_reg[2]' is a constant and will be removed. (OPT-1206)
+  Processing 'controller_crh'
+Information: The register 'ACK_COUNT_reg[1]' is a constant and will be removed. (OPT-1206)
+Information: The register 'stop_is_sent_reg' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_crh_regf_addr_reg[11]' is a constant and will be removed. (OPT-1206)
+  Processing 'dynamic_address_assignment'
+Information: The register 'par_to_ack_reg' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_daa_fcnt_no_frms_reg[7]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_daa_fcnt_no_frms_reg[6]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_daa_fcnt_no_frms_reg[5]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_daa_fcnt_no_frms_reg[4]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_daa_fcnt_no_frms_reg[2]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_daa_fcnt_no_frms_reg[1]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_daa_fcnt_no_frms_reg[0]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_daa_tx_mode_reg[2]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_daa_regf_data_wr_reg[0]' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_daa_rx_mode_reg[2]' is a constant and will be removed. (OPT-1206)
+Information: The register 'nacks_counter_reg[0]' will be removed. (OPT-1207)
+Information: The register 'nacks_counter_reg[1]' will be removed. (OPT-1207)
+  Processing 'i2c_legacy_mode'
+Information: The register 'o_pp_od_reg' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_target_nack_reg' is a constant and will be removed. (OPT-1206)
+Information: The register 'o_rx_mode_reg[2]' is a constant and will be removed. (OPT-1206)
+  Processing 'I3C_TOP'
+Error: Width mismatch on port 'o_scl_stall_flag_sel' of reference to 'i3c_engine' in 'I3C_TOP'. (LINK-3)
+Warning: Unable to resolve reference 'i3c_engine' in 'I3C_TOP'. (LINK-5)
+Information: Building the design 'sdr_mode'. (HDL-193)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/sdr_mode.v:158: The statements in this 'always' block are outside the scope of the synthesis policy. Only an 'if' statement is allowed at the top level in this always block. (ELAB-302)
+*** Presto compilation terminated with 1 errors. ***
+Error: Width mismatch on port 'o_hot_join_regf_addr' of reference to 'hot_join' in 'I3C_TOP'. (LINK-3)
+Warning: Unable to resolve reference 'hot_join' in 'I3C_TOP'. (LINK-5)
+Information: Building the design 'IBI'. (HDL-193)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/IBI.v:111: The statements in this 'always' block are outside the scope of the synthesis policy. Only an 'if' statement is allowed at the top level in this always block. (ELAB-302)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/IBI.v:120: The statements in this 'always' block are outside the scope of the synthesis policy. Only an 'if' statement is allowed at the top level in this always block. (ELAB-302)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/IBI.v:133: The statements in this 'always' block are outside the scope of the synthesis policy. Only an 'if' statement is allowed at the top level in this always block. (ELAB-302)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/IBI.v:144: The statements in this 'always' block are outside the scope of the synthesis policy. Only an 'if' statement is allowed at the top level in this always block. (ELAB-302)
+*** Presto compilation terminated with 4 errors. ***
+Information: Building the design 'frame_counter_sdr'. (HDL-193)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/frame_counter_sdr.v:42: Clock i_fcnt_en used as data. (ELAB-305)
+*** Presto compilation terminated with 1 errors. ***
+Information: Building the design 'reg_file'. (HDL-193)
+Warning: Cannot find the design 'reg_file' in the library 'WORK'. (LBR-1)
+Error: Width mismatch on port 'data_in' of reference to 'gen_mux' in 'I3C_TOP'. (LINK-3)
+Error: Unable to match ports of cell fcnt_no_frms_mux ('gen_mux') to 'gen_mux_BUS_WIDTH8_SEL3'. (LINK-25)
+Error: Width mismatch on port 'data_in' of reference to 'gen_mux' in 'I3C_TOP'. (LINK-3)
+Error: Unable to match ports of cell scl_stall_cycles_mux ('gen_mux') to 'gen_mux_BUS_WIDTH5_SEL3'. (LINK-25)
+Information: Building the design 'DDR_NT'. (HDL-193)
+
+Statistics for case statements in always block at line 209 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           213            |    auto/auto     |
+===============================================
+
+Statistics for case statements in always block at line 712 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           738            |     no/auto      |
+|           889            |     no/auto      |
+===============================================
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v:712: Net o_tx_en or a directly connected net may be driven by more than one process or block. (ELAB-405)
+
+Statistics for case statements in always block at line 1281 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           1283           |    auto/auto     |
+===============================================
+
+Inferred memory devices in process
+	in routine DDR_NT line 170 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|  current_state_reg  | Flip-flop |   5   |  Y  | N  | Y  | N  | N  | N  | N  |
+|     o_tx_en_reg     |   Latch   |   1   |  N  | N  | Y  | N  | -  | -  | -  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine DDR_NT line 1340 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|   sysclk_done_reg   | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+| Parity_data_seq_reg | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v:738: Net 'o_tx_en' or a directly connected net is driven by more than one source, and not all drivers are three-state. (ELAB-366)
+*** Presto compilation terminated with 1 errors. ***
+Warning: Unable to resolve reference 'sdr_mode' in 'I3C_TOP'. (LINK-5)
+Warning: Unable to resolve reference 'IBI' in 'I3C_TOP'. (LINK-5)
+Warning: Unable to resolve reference 'frame_counter_sdr' in 'I3C_TOP'. (LINK-5)
+Warning: Unable to resolve reference 'reg_file' in 'I3C_TOP'. (LINK-5)
+Warning: Unable to resolve reference 'DDR_NT' in 'I3C_TOP'. (LINK-5)
+
+  Updating timing information
+Information: Updating design information... (UID-85)
+Information: Timing loop detected. (OPT-150)
+	CCC_Handler/U375/A CCC_Handler/U375/Y CCC_Handler/U331/B CCC_Handler/U331/Y CCC_Handler/U360/A CCC_Handler/U360/Y CCC_Handler/U330/B CCC_Handler/U330/Y CCC_Handler/U359/A CCC_Handler/U359/Y CCC_Handler/U322/A CCC_Handler/U322/Y CCC_Handler/first_time_reg/G CCC_Handler/first_time_reg/Q CCC_Handler/U332/B CCC_Handler/U332/Y 
+Information: Timing loop detected. (OPT-150)
+	CCC_Handler/U325/B CCC_Handler/U325/Y CCC_Handler/U344/A CCC_Handler/U344/Y CCC_Handler/U323/A0 CCC_Handler/U323/Y CCC_Handler/U322/C CCC_Handler/U322/Y CCC_Handler/first_time_reg/G CCC_Handler/first_time_reg/Q 
+Warning: Disabling timing arc between pins 'G' and 'Q' on cell 'CCC_Handler/first_time_reg'
+         to break a timing loop. (OPT-314)
+Warning: Disabling timing arc between pins 'G' and 'QN' on cell 'CCC_Handler/first_time_reg'
+         to break a timing loop. (OPT-314)
+
+  Beginning Implementation Selection
+  ----------------------------------
+  Processing 'RX_DW01_cmp6_0'
+  Processing 'RX_DW01_inc_0'
+  Processing 'frame_counter_DW01_inc_0'
+  Processing 'frame_counter_DW01_dec_0'
+  Processing 'bits_counter_DW01_inc_0'
+  Processing 'bits_counter_DW01_inc_1'
+  Processing 'scl_staller_DW01_inc_0'
+  Processing 'scl_staller_DW01_cmp6_0'
+  Processing 'CCC_Handler_DW01_add_0'
+  Processing 'CCC_Handler_DW01_add_1'
+  Processing 'CCC_Handler_DW01_inc_0'
+  Processing 'CCC_Handler_DW01_inc_1'
+  Processing 'CCC_Handler_DW01_add_2'
+  Processing 'CCC_Handler_DW01_add_3'
+  Processing 'scl_generation_DW01_inc_0'
+  Processing 'i3c_timer_fsm_DW01_cmp6_0'
+  Processing 'i3c_timer_fsm_DW01_add_0'
+  Processing 'i3c_timer_fsm_DW01_cmp6_1'
+  Processing 'i3c_timer_fsm_DW01_add_1'
+  Processing 'i3c_timer_fsm_DW01_inc_0'
+  Processing 'controller_crh_DW01_add_0'
+  Processing 'controller_crh_DW01_add_1'
+  Processing 'controller_crh_DW01_inc_0'
+  Processing 'controller_crh_DW01_add_2'
+  Processing 'controller_crh_DW01_cmp6_0'
+  Processing 'controller_crh_DW01_add_3'
+  Processing 'controller_crh_DW01_cmp6_1'
+  Processing 'controller_crh_DW01_add_4'
+  Processing 'controller_crh_DW01_cmp6_2'
+  Processing 'controller_crh_DW01_add_5'
+  Processing 'controller_crh_DW01_cmp6_3'
+  Processing 'controller_crh_DW01_inc_1'
+  Processing 'controller_crh_DW01_inc_2'
+  Processing 'controller_crh_DW01_cmp6_4'
+  Processing 'dynamic_address_assignment_DW01_inc_0'
+  Processing 'dynamic_address_assignment_DW01_add_0'
+  Processing 'dynamic_address_assignment_DW01_add_1'
+  Processing 'i2c_legacy_mode_DW01_inc_0'
+  Building model 'DW01_NAND2'
+  Processing 'DW01_NAND2'
+  Building model 'DW01_inc_width9' (rpl)
+  Processing 'DW01_inc_width9'
+  Building model 'DW01_inc_width12' (rpl)
+  Processing 'DW01_inc_width12'
+  Allocating blocks in 'DW02_mult_A_width6_B_width4'
+  Building model 'DW01_add_width8' (cla)
+  Processing 'DW01_add_width8'
+  Building model 'DW02_mult_A_width6_B_width4' (csa)
+  Processing 'DW02_mult_A_width6_B_width4'
+  Building model 'DW01_add_width8' (rpl)
+  Processing 'DW01_add_width8'
+  Allocating blocks in 'DW02_mult_A_width8_B_width1'
+  Allocating blocks in 'DW01_absval_width8'
+  Building model 'DW01_absval_width8' (cla)
+  Processing 'DW01_absval_width8'
+  Building model 'DW01_inc_width9' (cla)
+  Processing 'DW01_inc_width9'
+  Building model 'DW01_absval_width8' (cla)
+  Processing 'DW01_absval_width8'
+  Building model 'DW01_inc_width9' (cla)
+  Processing 'DW01_inc_width9'
+  Building model 'DW02_mult_A_width8_B_width1' (csa)
+  Processing 'DW02_mult_A_width8_B_width1'
+  Allocating blocks in 'DW02_mult_A_width6_B_width1'
+  Allocating blocks in 'DW01_absval_width6'
+  Building model 'DW01_inc_width6' (cla)
+  Processing 'DW01_inc_width6'
+  Building model 'DW01_absval_width6' (cla)
+  Processing 'DW01_absval_width6'
+  Building model 'DW01_inc_width6' (cla)
+  Processing 'DW01_inc_width6'
+  Building model 'DW01_absval_width6' (cla)
+  Processing 'DW01_absval_width6'
+  Building model 'DW02_mult_A_width6_B_width1' (csa)
+  Processing 'DW02_mult_A_width6_B_width1'
+  Building model 'DW01_inc_width6' (rpl)
+  Processing 'DW01_inc_width6'
+  Processing 'controller_crh_DW01_inc_3'
+  Processing 'controller_crh_DW01_inc_4'
+  Processing 'controller_crh_DW02_mult_0'
+  Processing 'controller_crh_DW01_add_6'
+  Processing 'scl_generation_DW01_inc_1'
+  Processing 'scl_generation_DW02_mult_0'
+  Processing 'dynamic_address_assignment_DW01_add_2'
+  Processing 'dynamic_address_assignment_DW02_mult_0'
+  Processing 'controller_crh_DW01_inc_5'
+  Processing 'controller_crh_DW02_mult_1'
+
+  Beginning Mapping Optimizations  (Medium effort)
+  -------------------------------
+  Mapping Optimization (Phase 1)
+Information: The register 'u_daa/target_offset_reg[0]' is a constant and will be removed. (OPT-1206)
+Information: The register 'u_daa/target_offset_reg[1]' is a constant and will be removed. (OPT-1206)
+Information: The register 'u_daa/target_offset_reg[2]' is a constant and will be removed. (OPT-1206)
+Information: The register 'u_daa/target_offset_reg[3]' is a constant and will be removed. (OPT-1206)
+Information: The register 'u_daa/target_offset_reg[4]' is a constant and will be removed. (OPT-1206)
+Information: The register 'u_daa/target_offset_reg[5]' is a constant and will be removed. (OPT-1206)
+Information: The register 'u_daa/target_offset_reg[6]' is a constant and will be removed. (OPT-1206)
+Information: The register 'u_daa/target_offset_reg[7]' is a constant and will be removed. (OPT-1206)
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:13  532563.4      0.00       0.0      84.8                          
+    0:00:13  532563.4      0.00       0.0      84.8                          
+    0:00:13  532563.4      0.00       0.0      84.8                          
+    0:00:13  532563.4      0.00       0.0      84.8                          
+    0:00:13  532563.4      0.00       0.0      84.8                          
+    0:00:15  502758.8      0.00       0.0      74.3                          
+    0:00:15  502664.7      0.00       0.0      74.2                          
+    0:00:16  502664.7      0.00       0.0      60.4                          
+    0:00:16  502664.7      0.00       0.0      60.4                          
+    0:00:16  502664.7      0.00       0.0      60.4                          
+    0:00:16  502655.3      0.00       0.0      60.4                          
+    0:00:16  502655.3      0.00       0.0      60.4                          
+    0:00:16  502716.1      0.00       0.0      58.4                          
+    0:00:16  502761.6      0.00       0.0      58.3                          
+    0:00:17  502761.6      0.00       0.0      58.3                          
+    0:00:17  502761.6      0.00       0.0      58.3                          
+    0:00:17  502761.6      0.00       0.0      58.3                          
+
+
+
+  Beginning Delay Optimization Phase
+  ----------------------------------
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:17  502761.6      0.00       0.0      58.3                          
+    0:00:17  502761.6      0.00       0.0      58.3                          
+    0:00:17  502761.6      0.00       0.0      58.3                          
+
+
+  Beginning Design Rule Fixing  (max_transition)  (max_capacitance)
+  ----------------------------
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:17  502761.6      0.00       0.0      58.3                          
+    0:00:17  503119.2      0.00       0.0      29.4 u_controller_crh/i_crh_clk
+    0:00:18  504330.2      0.00       0.0       3.0 u_controller_tx/i_clk    
+    0:00:18  504535.7      0.00       0.0       2.8 ser_mode_done            
+    0:00:19  504743.5      0.00       0.0       2.5                          
+
+
+  Beginning Area-Recovery Phase  (cleanup)
+  -----------------------------
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:19  504743.5      0.00       0.0       2.5                          
+    0:00:19  504743.5      0.00       0.0       2.5                          
+    0:00:19  501969.8      0.00       0.0       2.5                          
+    0:00:19  501256.4      0.00       0.0       2.5                          
+    0:00:19  501052.1      0.00       0.0       2.5                          
+    0:00:19  501000.7      0.00       0.0       2.5                          
+    0:00:19  500949.3      0.00       0.0       2.5                          
+    0:00:19  500949.3      0.00       0.0       2.5                          
+    0:00:19  500949.3      0.00       0.0       2.5                          
+    0:00:19  500928.2      0.00       0.0       2.5                          
+    0:00:19  500928.2      0.00       0.0       2.5                          
+    0:00:19  500928.2      0.00       0.0       2.5                          
+    0:00:19  500928.2      0.00       0.0       2.5                          
+    0:00:19  500928.2      0.00       0.0       2.5                          
+    0:00:19  500928.2      0.00       0.0       2.5                          
+    0:00:19  500275.6      0.00       0.0       2.5                          
+Loading db file '/home/IC/Labs/GP/I3C_TOP_2024/std_cells/scmetro_tsmc_cl013g_rvt_ss_1p08v_125c.db'
+Loading db file '/home/IC/Labs/GP/I3C_TOP_2024/std_cells/scmetro_tsmc_cl013g_rvt_tt_1p2v_25c.db'
+Loading db file '/home/IC/Labs/GP/I3C_TOP_2024/std_cells/scmetro_tsmc_cl013g_rvt_ff_1p32v_m40c.db'
+
+
+Note: Symbol # after min delay cost means estimated hold TNS across all active scenarios 
+
+
+  Optimization Complete
+  ---------------------
+1
+##################### Close Formality Setup file ###########################
+set_svf -off
+1
+#############################################################################
+# Write out files
+#############################################################################
+write_file -format verilog -hierarchy -output $top_module.ddc
+Error: Width mismatch on port 'o_scl_stall_flag_sel' of reference to 'i3c_engine' in 'I3C_TOP'. (LINK-3)
+Warning: Unable to resolve reference 'i3c_engine' in 'I3C_TOP'. (LINK-5)
+Information: Building the design 'sdr_mode'. (HDL-193)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/sdr_mode.v:158: The statements in this 'always' block are outside the scope of the synthesis policy. Only an 'if' statement is allowed at the top level in this always block. (ELAB-302)
+*** Presto compilation terminated with 1 errors. ***
+Error: Width mismatch on port 'o_hot_join_regf_addr' of reference to 'hot_join' in 'I3C_TOP'. (LINK-3)
+Warning: Unable to resolve reference 'hot_join' in 'I3C_TOP'. (LINK-5)
+Information: Building the design 'IBI'. (HDL-193)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/IBI.v:111: The statements in this 'always' block are outside the scope of the synthesis policy. Only an 'if' statement is allowed at the top level in this always block. (ELAB-302)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/IBI.v:120: The statements in this 'always' block are outside the scope of the synthesis policy. Only an 'if' statement is allowed at the top level in this always block. (ELAB-302)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/IBI.v:133: The statements in this 'always' block are outside the scope of the synthesis policy. Only an 'if' statement is allowed at the top level in this always block. (ELAB-302)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/IBI.v:144: The statements in this 'always' block are outside the scope of the synthesis policy. Only an 'if' statement is allowed at the top level in this always block. (ELAB-302)
+*** Presto compilation terminated with 4 errors. ***
+Information: Building the design 'frame_counter_sdr'. (HDL-193)
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/frame_counter_sdr.v:42: Clock i_fcnt_en used as data. (ELAB-305)
+*** Presto compilation terminated with 1 errors. ***
+Information: Building the design 'reg_file'. (HDL-193)
+Warning: Cannot find the design 'reg_file' in the library 'WORK'. (LBR-1)
+Error: Width mismatch on port 'data_in' of reference to 'gen_mux' in 'I3C_TOP'. (LINK-3)
+Error: Unable to match ports of cell fcnt_no_frms_mux ('gen_mux') to 'gen_mux_BUS_WIDTH8_SEL3'. (LINK-25)
+Error: Width mismatch on port 'data_in' of reference to 'gen_mux' in 'I3C_TOP'. (LINK-3)
+Error: Unable to match ports of cell scl_stall_cycles_mux ('gen_mux') to 'gen_mux_BUS_WIDTH5_SEL3'. (LINK-25)
+Information: Building the design 'DDR_NT'. (HDL-193)
+
+Statistics for case statements in always block at line 209 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           213            |    auto/auto     |
+===============================================
+
+Statistics for case statements in always block at line 712 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           738            |     no/auto      |
+|           889            |     no/auto      |
+===============================================
+Warning:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v:712: Net o_tx_en or a directly connected net may be driven by more than one process or block. (ELAB-405)
+
+Statistics for case statements in always block at line 1281 in file
+	'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           1283           |    auto/auto     |
+===============================================
+
+Inferred memory devices in process
+	in routine DDR_NT line 170 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|  current_state_reg  | Flip-flop |   5   |  Y  | N  | Y  | N  | N  | N  | N  |
+|     o_tx_en_reg     |   Latch   |   1   |  N  | N  | Y  | N  | -  | -  | -  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine DDR_NT line 1340 in file
+		'/home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|   sysclk_done_reg   | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+| Parity_data_seq_reg | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+Error:  /home/IC/Labs/GP/I3C_TOP_2024/rtl/Normal_Transaction.v:738: Net 'o_tx_en' or a directly connected net is driven by more than one source, and not all drivers are three-state. (ELAB-366)
+*** Presto compilation terminated with 1 errors. ***
+Warning: Unable to resolve reference 'sdr_mode' in 'I3C_TOP'. (LINK-5)
+Warning: Unable to resolve reference 'IBI' in 'I3C_TOP'. (LINK-5)
+Warning: Unable to resolve reference 'frame_counter_sdr' in 'I3C_TOP'. (LINK-5)
+Warning: Unable to resolve reference 'reg_file' in 'I3C_TOP'. (LINK-5)
+Warning: Unable to resolve reference 'DDR_NT' in 'I3C_TOP'. (LINK-5)
+Writing verilog file '/home/IC/Labs/GP/I3C_TOP_2024/I3C_TOP.ddc'.
+Warning: Verilog 'assign' or 'tran' statements are written out. (VO-4)
+Warning: Verilog writer has added 35 nets to module I3C_TOP using SYNOPSYS_UNCONNECTED_ as prefix.  Please use the change_names command to make the correct changes before invoking the verilog writer.  (VO-11)
+1
+write_file -format verilog -hierarchy -output I3C_TOP_syn.v
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Writing verilog file '/home/IC/Labs/GP/I3C_TOP_2024/I3C_TOP_syn.v'.
+Warning: Verilog 'assign' or 'tran' statements are written out. (VO-4)
+Warning: Verilog writer has added 35 nets to module I3C_TOP using SYNOPSYS_UNCONNECTED_ as prefix.  Please use the change_names command to make the correct changes before invoking the verilog writer.  (VO-11)
+1
+write_sdf  $top_module.sdf
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Information: Annotated 'cell' delays are assumed to include load delay. (UID-282)
+Information: Writing timing information to file '/home/IC/Labs/GP/I3C_TOP_2024/I3C_TOP.sdf'. (WT-3)
+Information: Updating design information... (UID-85)
+Information: Timing loop detected. (OPT-150)
+	CCC_Handler/U116/A CCC_Handler/U116/Y CCC_Handler/U55/B CCC_Handler/U55/Y CCC_Handler/U36/A CCC_Handler/U36/Y CCC_Handler/U49/B CCC_Handler/U49/Y CCC_Handler/U30/A CCC_Handler/U30/Y CCC_Handler/U366/A CCC_Handler/U366/Y CCC_Handler/first_time_reg/G CCC_Handler/first_time_reg/Q CCC_Handler/U258/B CCC_Handler/U258/Y 
+Information: Timing loop detected. (OPT-150)
+	CCC_Handler/U332/B CCC_Handler/U332/Y CCC_Handler/U133/A CCC_Handler/U133/Y CCC_Handler/U367/A0 CCC_Handler/U367/Y CCC_Handler/U366/C CCC_Handler/U366/Y CCC_Handler/first_time_reg/G CCC_Handler/first_time_reg/Q 
+Warning: Disabling timing arc between pins 'G' and 'Q' on cell 'CCC_Handler/first_time_reg'
+         to break a timing loop. (OPT-314)
+Warning: Disabling timing arc between pins 'G' and 'QN' on cell 'CCC_Handler/first_time_reg'
+         to break a timing loop. (OPT-314)
+Warning: Design contains black-box components.  These cells will have no timing information. (WT-7)
+1
+write_sdc  -nosplit $top_module.sdc
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+1
+####################### reporting ##########################################
+report_area -hierarchy > area.rpt
+report_power -hierarchy > power.rpt
+report_timing -delay_type min -max_paths 20 > hold.rpt
+report_timing -delay_type max -max_paths 20 > setup.rpt
+report_clock -attributes > clocks.rpt
+report_timing -attributes
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : I3C_TOP
+Version: K-2015.06
+Date   : Thu May  9 21:10:11 2024
+****************************************
+
+Operating Conditions: scmetro_tsmc_cl013g_rvt_ss_1p08v_125c   Library: scmetro_tsmc_cl013g_rvt_ss_1p08v_125c
+Wire Load Model Mode: top
+
+  Startpoint: i_data_config_mux_sel
+              (input port clocked by i_sdr_clk)
+  Endpoint: o_sdr_rx_valid
+            (output port clocked by i_sdr_clk)
+  Path Group: i_sdr_clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  I3C_TOP            tsmc13_wl10           scmetro_tsmc_cl013g_rvt_ss_1p08v_125c
+
+Attributes:
+    d - dont_touch
+    u - dont_use
+   mo - map_only
+   so - size_only
+    i - ideal_net or ideal_network
+  inf - infeasible path
+
+  Point                                                   Incr       Path      Attributes
+  -----------------------------------------------------------------------------------------------
+  clock i_sdr_clk (rise edge)                             0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  input external delay                                    4.00       4.00 r
+  i_data_config_mux_sel (in)                              0.07       4.07 r
+  U8/Y (INVX2M)                                           0.09       4.16 f
+  U7/Y (INVX2M)                                           0.42       4.59 r
+  reg_wr_en_config_data_mux/ctrl_sel[0] (gen_mux_BUS_WIDTH1_SEL1_2)
+                                                          0.00       4.59 r
+  reg_wr_en_config_data_mux/U1/Y (AO2B2X4M)               1.62       6.21 r
+  reg_wr_en_config_data_mux/data_out[0] (gen_mux_BUS_WIDTH1_SEL1_2)
+                                                          0.00       6.21 r
+  o_sdr_rx_valid (out)                                    0.00       6.21 r
+  data arrival time                                                  6.21
+
+  clock i_sdr_clk (rise edge)                            20.00      20.00
+  clock network delay (ideal)                             0.00      20.00
+  clock uncertainty                                      -0.40      19.60
+  output external delay                                  -4.00      15.60
+  data required time                                                15.60
+  -----------------------------------------------------------------------------------------------
+  data required time                                                15.60
+  data arrival time                                                 -6.21
+  -----------------------------------------------------------------------------------------------
+  slack (MET)                                                        9.39
+
+
+1
+report_constraint -all_violators -nosplit > constraints.rpt
+############################################################################
+# DFT Preparation Section
+############################################################################
+set flops_per_chain 100
+100
+set num_flops [sizeof_collection [all_registers -edge_triggered]]
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+436
+set num_chains [expr $num_flops / $flops_per_chain + 1 ]
+5
+################# starting graphical user interface #######################
+#gui_start
+#exit
+dc_shell> 
+Information: Interrupting current command. (INT-2)
+Information: One more interrupt will exit process. (INT-3)
+Information: Process terminated by interrupt. (INT-4)
