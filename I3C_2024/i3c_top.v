@@ -1277,7 +1277,7 @@ gen_mux #(1,1) reg_rd_en_config_data_mux (
         .i_tx_mode_done         (tx_hdr_mode_done),
         .i_rx_mode_done         (rx_hdr_mode_done),
         .i_rx_pre               (rx_pre),
-        .i_sclstall_stall_done  (scl_stall_done_hdr),
+        .i_sclstall_stall_done  (scl_stall_done),
         .i_rx_error             (rx_error),
         .i_frmcnt_last_frame    (frmcnt_last_frame_hdr),
 
@@ -1351,7 +1351,7 @@ gen_mux #(1,1) reg_rd_en_config_data_mux (
   
         .o_sdahand_pp_od(scl_ddr_pp_od),
    
-        .i_staller_done(scl_stall_done_hdr),
+        .i_staller_done(scl_stall_done),
         .o_sclstall_no_of_cycles(ddr_scl_stall_cycles),  
         .o_sclstall_en(ddr_scl_stall_en),
     
@@ -1431,8 +1431,8 @@ scl_staller u_scl_staller(
         .o_ddrccc_pre               (rx_pre)               ,
         .o_ddrccc_error             (rx_error)             ,
         .o_crc_en                   (crc_en)               , // 
-        .o_crc_data_valid           (crc_data_valid)       ,
-        .o_ddrccc_error_done        (ddrccc_error_done)      
+        .o_crc_data_valid           (crc_data_valid)       
+              
 
         );
 
