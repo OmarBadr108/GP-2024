@@ -1,0 +1,65 @@
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+ 
+****************************************
+Report : constraint
+        -all_violators
+Design : I3C_TOP
+Version: K-2015.06
+Date   : Thu May  9 21:10:11 2024
+****************************************
+
+
+   max_transition
+
+                             Required        Actual
+   Net                      Transition     Transition        Slack
+   -----------------------------------------------------------------
+   sys_clk_50mhz                0.76           1.79          -1.03  (VIOLATED)
+       PIN :   tx/U3/A          1.50           1.79          -0.29  (VIOLATED)
+       PIN :   RX/U5/A          1.50           1.79          -0.29  (VIOLATED)
+       PIN :   frame_counter_hdr/U3/A     1.50     1.79      -0.29  (VIOLATED)
+       PIN :   bits_counter_hdr/U3/A     1.50     1.79       -0.29  (VIOLATED)
+       PIN :   u_scl_staller/o_stall_done_reg/CK     0.76     1.79    -1.03 (VIOLATED)
+       PIN :   u_scl_staller/o_scl_stall_reg/CK     0.76     1.79    -1.03 (VIOLATED)
+       PIN :   u_scl_staller/count_reg[1]/CK     0.76     1.79    -1.03 (VIOLATED)
+       PIN :   u_scl_staller/count_reg[0]/CK     0.76     1.79    -1.03 (VIOLATED)
+       PIN :   u_scl_staller/count_reg[2]/CK     0.76     1.79    -1.03 (VIOLATED)
+       PIN :   u_scl_staller/count_reg[3]/CK     0.76     1.79    -1.03 (VIOLATED)
+       PIN :   u_scl_staller/count_reg[4]/CK     0.76     1.79    -1.03 (VIOLATED)
+       PIN :   CCC_Handler/U9/A     1.50       1.79          -0.29  (VIOLATED)
+       PIN :   u_hdr_engine/U27/A     1.50     1.79          -0.29  (VIOLATED)
+       PIN :   u_enthdr/U35/A     1.50         1.79          -0.29  (VIOLATED)
+       PIN :   u_clk_divider/o_clk_out_reg/Q     1.50     1.79    -0.29 (VIOLATED)
+       PIN :   u_scl_generation/U10/A     1.50     1.79      -0.29  (VIOLATED)
+       PIN :   u_controller_rx/U4/A     1.50     1.79        -0.29  (VIOLATED)
+       PIN :   u_bits_counter_sdr/cnt_bit_count_reg[0]/CK     0.76     1.79    -1.03 (VIOLATED)
+       PIN :   u_bits_counter_sdr/cnt_bit_count_reg[2]/CK     0.76     1.79    -1.03 (VIOLATED)
+       PIN :   u_bits_counter_sdr/cnt_bit_count_reg[1]/CK     0.76     1.79    -1.03 (VIOLATED)
+       PIN :   u_bits_counter_sdr/o_cnt_done_reg/CK     0.76     1.79    -1.03 (VIOLATED)
+       PIN :   u_controller_tx/U3/A     1.50     1.79        -0.29  (VIOLATED)
+       PIN :   u_i3c_timer/U4/A     1.50       1.79          -0.29  (VIOLATED)
+       PIN :   u_controller_crh/U19/A     1.50     1.79      -0.29  (VIOLATED)
+       PIN :   u_daa/U38/A      1.50           1.79          -0.29  (VIOLATED)
+       PIN :   u_i2c_legacy_mode/U9/A     1.50     1.79      -0.29  (VIOLATED)
+   o_sdr_rx_valid               1.50           2.50          -1.00  (VIOLATED)
+       PIN :   reg_wr_en_config_data_mux/U1/Y     1.50     2.50    -1.00 (VIOLATED)
+   u_controller_crh/n318 (dont_touch)     1.50     1.80      -0.30  (VIOLATED)
+       PIN :   u_controller_crh/U70/A     1.50     1.80      -0.30  (VIOLATED)
+       PIN :   u_controller_crh/U72/B     1.50     1.80      -0.30  (VIOLATED)
+       PIN :   u_controller_crh/U121/S0     1.50     1.80    -0.30  (VIOLATED)
+       PIN :   u_controller_crh/U558/Y     1.50     1.80     -0.30  (VIOLATED)
+
+   -----------------------------------------------------------------
+   Total                      3                  -2.33  
+
+   max_capacitance
+
+                             Required        Actual
+   Net                      Capacitance    Capacitance       Slack
+   -----------------------------------------------------------------
+   o_sdr_rx_valid               0.37           0.52          -0.15  (VIOLATED)
+
+   -----------------------------------------------------------------
+   Total                      1                  -0.15  
+
+1

@@ -535,3 +535,43 @@ int cycle_count ;
     end
 */
 
+
+	/*
+    parameter scl_wrt_sys_clk = 2 ;
+
+    //////////////////////////////////////////////////// ENTHDR assertion /////////////////////////////////////
+    	// ENTHDR seq
+	// Sequence for special preamble
+    sequence start_sequence ;
+        sda_tb == 1'b1 ;
+    endsequence
+
+    sequence s1;
+        start_sequence ##(6*scl_wrt_sys_clk) sda_tb == 1'b0 ;
+    endsequence
+
+    sequence s2;
+        s1 ##(4*scl_wrt_sys_clk) sda_tb == 1'b1 ;
+    endsequence
+
+    sequence last_bit;
+        s2 ##(scl_wrt_sys_clk) sda_tb == 1'b0;
+    endsequence
+
+    sequence ENTHDR_sec;
+        last_bit ##(6*scl_wrt_sys_clk) sda_tb == 1'b1 ; // this is the first bit in the HDR mode i.e (RnW bit)
+    endsequence
+
+
+
+    // Property to track SDA line ENTHDR frame >> (8'b11111100 then 9'b001000000) then HDR 
+    property ENTHDR  ;
+        @(posedge i_sdr_clk_tb ) (CONDITION_TO_TRIGGER_THE_ASSERTION && (negedge scl_neg_edge_tb or  negedge scl_pos_edge_tb)) |-> ENTHDR_sec ;
+    endproperty
+
+
+    // Assert the property
+    assert property(ENTHDR_sec)
+                            $display("%t ENTHDR_sec PASSED ",$time); else
+                            $display("%t ENTHDR_sec FAILED ",$time);
+*/

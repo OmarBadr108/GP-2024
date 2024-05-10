@@ -463,7 +463,7 @@ end
 
             SECOND_CMD_BYTE : begin  // contains either 7E or any target address 
                 o_tx_en   = 1'b1 ; 
-                if (Direct_Broadcast_n_del && first_time) begin 
+                if (first_time) begin 
 
                     o_tx_mode = serializing_address ;
                     o_txrx_addr_ccc = SEVEN_E ;

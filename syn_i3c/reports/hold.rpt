@@ -1,0 +1,86 @@
+Warning: Design 'I3C_TOP' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay min
+        -max_paths 20
+Design : I3C_TOP
+Version: K-2015.06
+Date   : Thu May  9 21:10:11 2024
+****************************************
+
+Operating Conditions: scmetro_tsmc_cl013g_rvt_ff_1p32v_m40c   Library: scmetro_tsmc_cl013g_rvt_ff_1p32v_m40c
+Wire Load Model Mode: top
+
+  Startpoint: u_clk_divider/o_clk_out_reg
+              (rising edge-triggered flip-flop clocked by i_sdr_clk)
+  Endpoint: u_clk_divider/o_clk_out_reg
+            (rising edge-triggered flip-flop clocked by i_sdr_clk)
+  Path Group: i_sdr_clk
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  I3C_TOP            tsmc13_wl10           scmetro_tsmc_cl013g_rvt_ss_1p08v_125c
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock i_sdr_clk (rise edge)                             0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  u_clk_divider/o_clk_out_reg/CK (DFFRX4M)                0.00       0.00 r
+  u_clk_divider/o_clk_out_reg/QN (DFFRX4M)                0.45       0.45 f
+  u_clk_divider/o_clk_out_reg/D (DFFRX4M)                 0.00       0.45 f
+  data arrival time                                                  0.45
+
+  clock i_sdr_clk (rise edge)                             0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  clock uncertainty                                       0.20       0.20
+  u_clk_divider/o_clk_out_reg/CK (DFFRX4M)                0.00       0.20 r
+  library hold time                                       0.00       0.20
+  data required time                                                 0.20
+  --------------------------------------------------------------------------
+  data required time                                                 0.20
+  data arrival time                                                 -0.45
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.26
+
+
+  Startpoint: i_regf_wr_en_config
+              (input port clocked by i_sdr_clk)
+  Endpoint: o_sdr_rx_valid
+            (output port clocked by i_sdr_clk)
+  Path Group: i_sdr_clk
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  I3C_TOP            tsmc13_wl10           scmetro_tsmc_cl013g_rvt_ss_1p08v_125c
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock i_sdr_clk (rise edge)                             0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  input external delay                                    4.00       4.00 f
+  i_regf_wr_en_config (in)                                0.05       4.05 f
+  reg_wr_en_config_data_mux/data_in[1] (gen_mux_BUS_WIDTH1_SEL1_2)
+                                                          0.00       4.05 f
+  reg_wr_en_config_data_mux/U1/Y (AO2B2X4M)               0.92       4.97 f
+  reg_wr_en_config_data_mux/data_out[0] (gen_mux_BUS_WIDTH1_SEL1_2)
+                                                          0.00       4.97 f
+  o_sdr_rx_valid (out)                                    0.00       4.97 f
+  data arrival time                                                  4.97
+
+  clock i_sdr_clk (rise edge)                             0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  clock uncertainty                                       0.20       0.20
+  output external delay                                  -4.00      -3.80
+  data required time                                                -3.80
+  --------------------------------------------------------------------------
+  data required time                                                -3.80
+  data arrival time                                                 -4.97
+  --------------------------------------------------------------------------
+  slack (MET)                                                        8.77
+
+
+1
