@@ -9,6 +9,7 @@ module ENTHDR_TGT (
 
 	output reg  o_sdahnd_sda ,
 	output wire o_pp_od      , 
+	output reg  o_sda_handle_en,
 	output reg  o_engine_done 
 );
 
@@ -65,6 +66,8 @@ always@(posedge i_sys_clk or negedge i_sys_rst)
         start_detected<=1'b1;
        end
       end
+     else
+      sda_old<=1'b0;
     end
    end
  
@@ -74,15 +77,17 @@ always@(posedge i_sys_clk or negedge i_sys_rst)
      end
    end*/
 
-
+//pullup(o_sdahnd_sda);
 always@(posedge i_sys_clk or negedge i_sys_rst)
  begin
 
      if(!i_sys_rst)
        begin
          state <= IDLE;
-		 o_sdahnd_sda <= 1'bz;
+		 o_sdahnd_sda <= 1'b1;
 		 o_engine_done <=1'b0;
+		 o_sda_handle_en<=1'b1;
+		
        end
      
      else 
@@ -128,8 +133,11 @@ always@(posedge i_sys_clk or negedge i_sys_rst)
  					 end
  					
  					
- 					else if ((address_RnW_des=={broadcast_address,1'b0})&&i_scl_neg_edge)
+ 					else if ((address_RnW_des=={broadcast_address,1'b0})&&i_scl_neg_edge) begin
  					     state <= ACK;
+					     o_sdahnd_sda<=1'b0;
+					     o_sda_handle_en<=1'b1;
+					end
  					   
  				     
  				    else 
@@ -137,27 +145,47 @@ always@(posedge i_sys_clk or negedge i_sys_rst)
 
        		       end
           ACK:begin
-          	  count<=0;
+          	  o_sdahnd_sda<=1'b0;
+		      if(i_scl_neg_edge)
+               begin
+	            o_sdahnd_sda<=1'bz;
+		        state<= ENTHDR; 
+               end
+
+
+
+          	 /* 
           	  
 		 
           	  o_sdahnd_sda<=1'b0;
+          	  o_sda_handle_en<=1'b1;
+	      if(i_scl_pos_edge)
+               begin
+                tgt_count<=tgt_count+1'b1;
+	            o_sdahnd_sda<=1'b0;
+		
+               end
 
-                if(i_scl_neg_edge)
-
-                begin
-               
-                  tgt_count<=tgt_count+1'b1;
-
-                end
-                else if (tgt_count==2'd1)
-                begin
-                 state<= ENTHDR;  
-                 o_sdahnd_sda<=1'bz;          
-                end
-                else begin
-                	state<= ACK;
-                end
-              end
+              if(i_scl_neg_edge)
+               begin
+                //tgt_count<=tgt_count+1'b1;
+	            o_sdahnd_sda<=1'b0;
+		
+               end
+              else if (tgt_count==2'd1)
+               begin
+                state<= ENTHDR;  
+                o_sdahnd_sda<=1'bz;
+                o_sda_handle_en<=1'b0;          
+               end
+     
+              else 
+               begin
+            	state<= ACK;
+     			
+               end*/
+		
+             end
 
           ENTHDR:begin
  					tgt_count<=1'b0;
@@ -189,7 +217,7 @@ always@(posedge i_sys_clk or negedge i_sys_rst)
                      state<=IDLE;
                     end
                    else begin
-                   	 o_engine_done<=1'b0;
+                   o_engine_done<=1'b0;
                      state<=IDLE;
                    end
                   end
@@ -197,7 +225,7 @@ always@(posedge i_sys_clk or negedge i_sys_rst)
        		       state<=PARITY;
          		end
 
-         default:begin
+         /*default:begin
          		 	 o_sdahnd_sda  <= 1'bz;
 		             o_engine_done <=1'b0;
 		             tgt_count     <=0;
@@ -205,7 +233,7 @@ always@(posedge i_sys_clk or negedge i_sys_rst)
 		             enthdr_des     <=0;
 		             address_RnW_des<=0;
 		
-         		 end
+         		 end*/
         endcase
    end
   end

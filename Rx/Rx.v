@@ -1,4 +1,4 @@
-module rx (
+module RX (
 
 input                     i_sys_clk,
 input                     i_sys_rst,
@@ -70,7 +70,8 @@ assign count_done = (count==7)? 1'b1:1'b0 ;
 
 assign SCL_edges = (i_sclgen_scl_pos_edge || i_sclgen_scl_neg_edge);
 
-assign crc_pre_calc = 2'b01;
+
+parameter crc_pre_calc = 2'b01;
 
 
 ////////////////////////////// Registering data bytes for parity check ////////////////////////////////////
@@ -123,7 +124,7 @@ begin
     o_crc_en              <= 1'b0;   
     count                 <= 'b0;
     byte_num              <= 1'b0;
-	en <= 'b0;
+  en <= 'b0;
    o_crc_data_valid      <=  'b0;
  // parity_value_temp     <= 1'b0;
  //   o_ddrccc_error_done   <= 1'b0; 
@@ -141,16 +142,16 @@ begin
    // parity_value_temp     <= 1'b0;
    // o_crc_data_valid      <= 1'b0;
   //  o_ddrccc_error_done   <= 1'b0; 
-	o_crc_en <= 'b0;
-	o_crc_data_valid <= 'b0;
-	o_crc_last_byte <= 'b0;
-	
+  o_crc_en <= 'b0;
+  o_crc_data_valid <= 'b0;
+  o_crc_last_byte <= 'b0;
+  
    case(i_ddrccc_rx_mode) 
-	
-	
+  
+  
     PREAMBLE :          begin
                           count                   <= 'b0;
-						  
+              
                          if (SCL_edges)
                           begin
                            //o_ddrccc_pre          <= i_sdahnd_rx_sda;
@@ -161,21 +162,21 @@ begin
                           end
                           else 
                           begin
-							if (!en) begin
-								o_crc_en <= 'b1;
-								o_crc_last_byte <= 'b1;
-							end
-							else o_crc_en <= 'b0;
-							
+              if (!en) begin       // to initialize the shift_reg in crc with poly at the beginning
+                o_crc_en <= 'b1;
+                o_crc_last_byte <= 'b1;
+              end
+              else o_crc_en <= 'b0;
+              
                             o_ddrccc_rx_mode_done <= 1'b1;
                             o_ddrccc_pre          <= i_sdahnd_rx_sda;
                             end
                         end
-						
-						
-		 CRC_PREAMBLE:       begin
+            
+            
+     CRC_PREAMBLE:       begin
                             o_ddrccc_rx_mode_done <= 'b0;
-							o_crc_en              <= 1'b0; 
+              o_crc_en              <= 1'b0; 
 
                             if(SCL_edges)
                                 begin
@@ -185,11 +186,12 @@ begin
                                 begin
                                     o_ddrccc_rx_mode_done <= 'b1;
                                     count <= 'b0;
+                
 
-                              if(crc_pre_calc != crc_pre_temp)
-                                    o_ddrccc_error<=1'b1;
-                                  else
+                              if((crc_pre_calc[1] == crc_pre_temp) && (crc_pre_calc[0] == i_sdahnd_rx_sda) )
                                     o_ddrccc_error<=1'b0;
+                                  else
+                                    o_ddrccc_error<=1'b1;
                                 end
 
                             else
@@ -205,12 +207,12 @@ begin
                            
                             o_ddrccc_rx_mode_done <= 1'b0;
                             o_ddrccc_pre <= 'bz;
-							
-							if (!en)
-								o_crc_en <= 'b0;
-							else
-								o_crc_en <= 'b1;
-							
+              
+              if (!en)
+                o_crc_en <= 'b0;
+              else
+                o_crc_en <= 'b1;
+              
                           
                            
                             
@@ -224,7 +226,7 @@ begin
                                   o_crc_data_valid <= 1'b1;
                                   o_regfcrc_rx_data_out <= o_regfcrc_rx_data_out_temp;
                                   byte_num <= 'b1;
-								 // o_crc_en <= 'b0;
+                 // o_crc_en <= 'b0;
                                 end
                                end
 
@@ -235,10 +237,10 @@ begin
                               if(count == 'd7)                    
                                begin
                                   
-								//	o_crc_data_valid <= 'b1;
+                //  o_crc_data_valid <= 'b1;
                                   o_ddrccc_rx_mode_done <= 1'b1;
-								  en <= 'b1;
-								   
+                  en <= 'b1;
+                   
                                 end
 
                             end
@@ -248,7 +250,7 @@ begin
 
     CHECK_TOKEN :       begin
                       
-						 o_crc_en <= 'b1;
+             o_crc_en <= 'b1;
                          o_ddrccc_rx_mode_done <= 1'b0;
 
                          if(SCL_edges)
@@ -275,13 +277,13 @@ begin
                               token_value_temp['d3 - count] <= i_sdahnd_rx_sda;
                               if(count == 'd3) begin
                                 o_ddrccc_rx_mode_done <= 1'b1;
-								o_crc_data_valid <= 'b0;
-								if((token_value_temp [3:1]== 'b110)  && (i_sdahnd_rx_sda== 'b0))
+                o_crc_data_valid <= 'b0;
+                if((token_value_temp [3:1]== 'b110)  && (i_sdahnd_rx_sda== 'b0))
                                   o_ddrccc_error<=1'b0;
                                 else
-                                  o_ddrccc_error<=1'b0;
-								end
-								
+                                  o_ddrccc_error<=1'b1;
+                end
+                
                             
                           end
                         end 
@@ -328,11 +330,7 @@ begin
                                
                                 count <= 'b0; 
 
-                             /*  if(token_value_temp != 4'hC)
-                                  o_ddrccc_error<=1'b1;
-                                else
-                                  o_ddrccc_error<=1'b0;*/
-                                  
+                                                        
 
                               end 
                           
@@ -340,15 +338,15 @@ begin
 
                           else 
                           begin
-                              token_value_temp['d1 - count] <= i_sdahnd_rx_sda;
-                              if(count == 'd1) begin
-                                o_ddrccc_rx_mode_done <= 1'b1;	
-								if((parity_value_temp [1]== parity_value_calc[1] )  && (i_sdahnd_rx_sda== parity_value_calc[0]))
+                              parity_value_temp['d1 - count] <= i_sdahnd_rx_sda;
+                              if(count == 'd1 ) begin
+                                o_ddrccc_rx_mode_done <= 1'b1;  
+                           if((parity_value_temp [1]== parity_value_calc[1] )  && (i_sdahnd_rx_sda== parity_value_calc[0]))
                                   o_ddrccc_error<=1'b0;
                                 else
-                                  o_ddrccc_error<=1'b0;
-								end
-								
+                                  o_ddrccc_error<=1'b1;
+                end
+                
                             
                           end
                         end 
@@ -381,21 +379,21 @@ begin
                            begin
                            CRC_value_temp['d4 - count] <= i_sdahnd_rx_sda;
                            if(count == 'd4) 
-								begin
+                begin
                                   o_ddrccc_rx_mode_done <= 1'b1;
-								  en <= 'b0;
-								  if((CRC_value_temp[4:1] == i_crc_value[4:1] )  && (i_sdahnd_rx_sda ==i_crc_value[0]))    
+                  en <= 'b0;
+                  if((CRC_value_temp[4:1] == i_crc_value[4:1] )  && (i_sdahnd_rx_sda ==i_crc_value[0]))    
                                      o_ddrccc_error<=1'b0;                  //TO BE IDETED// //IMPORTAANNTT//
                                   else
-                                     o_ddrccc_error<=1'b0;
+                                     o_ddrccc_error<=1'b1;
                                  end
-							 
-								 
-							else if (count == 'd0) begin
-								o_crc_last_byte <= 'b1;
-								o_crc_en<=1'b1;
-								end
-								                         
+               
+                 
+              else if (count == 'd0) begin
+                o_crc_last_byte <= 'b1;
+                o_crc_en<=1'b1;
+                end
+                                         
                            end
                          
                         end
