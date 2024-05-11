@@ -180,7 +180,7 @@ parameter [3:0]
 
 
 // SCL staller parameters 
-parameter [4:0] restart_pattern_stall = 5'd12  , // according to restart pattern specs 
+parameter [4:0] restart_pattern_stall = 5'd11  , // according to restart pattern specs 
                 restart_pattern_stall_special = 5'd11  , // according to restart pattern specs
                 exit_pattern_stall    = 5'd18 ; // according to exit pattern specs 
 
@@ -963,31 +963,31 @@ end
                         if (!Direct_Broadcast_n_del && i_regf_TOC) begin 
                             next_state    = EXIT_PATTERN ;
                             //first_time    = 1'b0 ;
-                            o_sclstall_en    = 1'b1 ;
-                            o_sclstall_code  = exit_pattern_stall ;
+                            //o_sclstall_en    = 1'b1 ;
+                            //o_sclstall_code  = exit_pattern_stall ;
                         end
                         else if (!Direct_Broadcast_n_del && !i_regf_TOC) begin 
                             next_state = RESTART_PATTERN ;
-                            o_sclstall_en   = 1'b1 ;
-                            o_sclstall_code = restart_pattern_stall ;
+                            //o_sclstall_en   = 1'b1 ;
+                            //o_sclstall_code = restart_pattern_stall ;
                             //first_time      = 1'b0 ;
                         end  
                         else if (Direct_Broadcast_n_del && first_time) begin 
                             next_state = RESTART_PATTERN ;
-                            o_sclstall_en   = 1'b1 ;
-                            o_sclstall_code = restart_pattern_stall ;
+                            //o_sclstall_en   = 1'b1 ;
+                            //o_sclstall_code = restart_pattern_stall ;
                             //first_time    = 1'b0 ;
                         end
                         else if (Direct_Broadcast_n_del && !first_time) begin 
                             if (!i_regf_TOC) begin 
                                 next_state = RESTART_PATTERN ;
-                                o_sclstall_en   = 1'b1 ;
-                                o_sclstall_code = restart_pattern_stall ;
+                                //o_sclstall_en   = 1'b1 ;
+                                //o_sclstall_code = restart_pattern_stall ;
                             end 
                             else begin
                                 next_state      = EXIT_PATTERN ;
-                                o_sclstall_en   = 1'b1 ;
-                                o_sclstall_code = exit_pattern_stall ;
+                                //o_sclstall_en   = 1'b1 ;
+                                //o_sclstall_code = exit_pattern_stall ;
                             end  
                         end
                     ////////////////////////////////////////////////////////////////////////////////////
@@ -1033,10 +1033,10 @@ end
                 o_sclstall_en   = 1'b1 ;
                 o_sclstall_code = restart_pattern_stall_special ;
 
-                if (i_sclstall_stall_done && i_tx_mode_done && i_frmcnt_last_frame) begin 
+                if (i_sclstall_stall_done  && i_frmcnt_last_frame) begin 
                     next_state = FINISH ;
                 end 
-                else if (i_sclstall_stall_done && i_tx_mode_done && !i_frmcnt_last_frame) begin 
+                else if (i_sclstall_stall_done  && !i_frmcnt_last_frame) begin 
                     next_state = PRE_CMD ;
                 end 
                 else begin 
@@ -1054,10 +1054,10 @@ end
                 o_sclstall_en   = 1'b1 ;
                 o_sclstall_code = restart_pattern_stall ;
 
-                if (i_sclstall_stall_done && i_tx_mode_done && i_frmcnt_last_frame) begin 
+                if (i_sclstall_stall_done  && i_frmcnt_last_frame) begin 
                     next_state = FINISH ;
                 end 
-                else if (i_sclstall_stall_done && i_tx_mode_done && !i_frmcnt_last_frame) begin 
+                else if (i_sclstall_stall_done  && !i_frmcnt_last_frame) begin 
                     next_state = PRE_CMD ;
                 end 
                 else begin 

@@ -36,7 +36,7 @@ localparam [3:0]
 
 
 // SCL staller parameters 
-parameter [4:0] restart_pattern_stall = 5'd12  , // according to restart pattern specs
+parameter [4:0] restart_pattern_stall = 5'd11  , // according to restart pattern specs
 		restart_pattern_stall_special = 5'd11  , // according to restart pattern specs
                 exit_pattern_stall    = 5'd18 ; // according to exit pattern specs 
 
@@ -99,7 +99,7 @@ class configuration ;
    
  
 	constraint CMD_ATTR {
-		RAND_CMD_ATTR inside { 0 } ;
+		RAND_CMD_ATTR inside { 1 } ;
 	}
 	//dist {1:/70 , 0:/30} ;
 	constraint TID {
@@ -108,8 +108,8 @@ class configuration ;
 
 	constraint CMD {
 		RAND_CMD inside {//8'h00 , 8'h01 , 8'h09 , 8'h0A , 8'h1F	 	 	 // broadcast 
-					    //8'h80 , 8'h81 , 8'h89 , 8'h8A  				     // direct set
-					    8'h8B , 8'h8C , 8'h90 , 8'h8E , 8'h8F 
+					    8'h80 , 8'h81 , 8'h89 , 8'h8A  				     // direct set
+					    //8'h8B , 8'h8C , 8'h90 , 8'h8E , 8'h8F 
 					    //,8'h8D	 	 // direct get 		 		 
 						 								   				 } ;	
 	}

@@ -35,16 +35,12 @@ module scl_generation(
     input  wire       i_sdr_ctrl_clk          ,   // 50 MHz clock
     input  wire       i_sdr_ctrl_rst_n        ,
     input  wire       i_sdr_scl_gen_pp_od     ,   // 1: Push-Pull      // 0: for Open-Drain
-
-    input  wire       i_scl_gen_stall         ,   // 1 for stalling
+    input  wire       i_scl_gen_stall         ,  // 1 for stalling
     input  wire       i_sdr_ctrl_scl_idle     ,
     input  wire       i_timer_cas             ,
-    
     output reg        o_scl_pos_edge          ,
     output reg        o_scl_neg_edge          ,
     output reg        o_scl                  );
-
-
 
 
 //-- states encoding in gray ---------------------------------------------
@@ -78,12 +74,12 @@ always @(posedge i_sdr_ctrl_clk or negedge i_sdr_ctrl_rst_n)
     else
       begin
         case (state)
-          LOW:
-            begin
+          LOW: begin
                 o_scl_neg_edge <= 1'b0;
-               if (i_scl_gen_stall) state <=   LOW  ;
-               else
-                begin
+                if (i_scl_gen_stall) begin
+                 state <=   LOW  ;
+                end
+                else begin
                     if (switch)
                       begin
                         o_scl <=   1'b1 ;
@@ -102,7 +98,12 @@ always @(posedge i_sdr_ctrl_clk or negedge i_sdr_ctrl_rst_n)
           HIGH:
             begin
             o_scl_pos_edge <= 1'b0;
-                if ((switch && !i_sdr_ctrl_scl_idle) || (i_timer_cas) )
+                if (i_scl_gen_stall) begin // badr 
+                  o_scl <=   1'b0 ;
+                  state <=   LOW  ;
+                  o_scl_neg_edge <= 1'b1;
+                end
+                else if ((switch && !i_sdr_ctrl_scl_idle) || (i_timer_cas) )
                   begin
                     o_scl <=   1'b0 ;
                     state <=   LOW  ;
@@ -132,10 +133,10 @@ always @(posedge i_sdr_ctrl_clk or negedge i_sdr_ctrl_rst_n)
   // 50 MHz/4 = 12.5 MHz for Push-Pull
     else if (i_sdr_scl_gen_pp_od)
       begin
-          if (count >= 7'd2)               // lw kan by3d already
+          if (count >= 7'd2)
             begin
-              count  <= 7'b1 ;             // restart counting
-              switch <= 1'b1 ;             // flag for only one clk cycle indictes that i have stwitched btn O.D and P.P
+              count  <= 7'b1 ;
+              switch <= 1'b1 ;
             end
           else
             begin
@@ -150,7 +151,7 @@ always @(posedge i_sdr_ctrl_clk or negedge i_sdr_ctrl_rst_n)
           if (count == 7'd62)
             begin
               switch <= 1'b1;
-              count  <= count + 1'b1;
+              count <= count + 1'b1;
             end
           else if (count == 7'd125)
             begin
@@ -170,14 +171,3 @@ always @(posedge i_sdr_ctrl_clk or negedge i_sdr_ctrl_rst_n)
 
 endmodule
 `default_nettype wire
-
-
-
-/*
-if (i_scl_gen_stall) begin
-                  o_scl <=   1'b0 ;
-                  state <=   LOW  ;
-                  o_scl_neg_edge <= 1'b1;
-                end
-                else
-*/
