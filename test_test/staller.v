@@ -1,10 +1,10 @@
 module scl_staller(
-input wire       i_stall_clk    ,
-input wire       i_stall_rst_n  ,
-input wire       i_stall_flag   ,
-input wire [4:0] i_stall_cycles ,
-output reg       o_stall_done   ,
-output reg       o_scl_stall    
+input wire       i_stall_clk ,
+input wire       i_stall_rst_n,
+input wire       i_stall_flag,
+input wire [4:0] i_stall_cycles,
+output reg       o_stall_done,
+output reg       o_scl_stall
     );
     
  reg [4:0] count = 5'b0 ;

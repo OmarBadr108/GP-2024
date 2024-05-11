@@ -1,0 +1,125 @@
+m255
+K4
+z2
+Z0 !s99 nomlopt
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+!s11f vlog 2021.1 2021.01, Jan 19 2021
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z1 dD:/College/Senior-2 semester 1/GP/CCC_TESTING
+T_opt
+!s110 1715443497
+V4o1a@HXA==n@jaQH75jjL0
+Z2 04 17 4 work restart_exit_test fast 0
+=3-145afc03b739-663f9729-1e4-6604
+Z3 !s124 OEM100
+Z4 o-quiet -auto_acc_if_foreign -work work
+Z5 tCvgOpt 0
+n@_opt
+Z6 OL;O;2021.1;73
+R1
+T_opt1
+!s110 1715443915
+V@eCSjiYFfg4RoVVi4K1JD2
+R2
+=1-145afc03b739-663f98cb-88-3374
+R3
+R4
+R5
+n@_opt1
+R6
+R1
+T_opt2
+!s110 1715449795
+V0Kf3JLJmO:K0QQ?7kl6ei3
+R2
+=14-145afc03b739-663fafc2-352-6528
+R3
+o-quiet -auto_acc_if_foreign -work work +acc
+R5
+n@_opt2
+R6
+vrestart_exit_test
+DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+Z7 !s110 1715449790
+!i10b 1
+!s100 kK96<9h]8J]nIVNUf0N>^3
+I6kd1Zhi@:?:_0Kn86KRYU0
+S1
+Z8 dD:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/test_test
+w1715449767
+8D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/test_test/testtt.sv
+FD:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/test_test/testtt.sv
+!i122 56
+L0 1 57
+Z9 VDg1SIo80bB@j0V0VzS_@n1
+Z10 OL;L;2021.1;73
+r1
+!s85 0
+31
+Z11 !s108 1715449790.000000
+!s107 D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/test_test/testtt.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/test_test/testtt.sv|
+!i113 0
+o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R5
+vscl_generation
+R7
+!i10b 1
+!s100 fBFO88K:MDjj;9Ajn;5=a0
+I7_aN:66TMKdmW1c@6<i_]3
+R8
+w1715449413
+8D:\College\Senior-2 semester 1\GP\Github Codes\GP-2024\test_test\scl_generation.v
+FD:\College\Senior-2 semester 1\GP\Github Codes\GP-2024\test_test\scl_generation.v
+!i122 54
+L0 34 139
+R9
+R10
+r1
+!s85 0
+31
+!s108 1715449789.000000
+!s107 D:\College\Senior-2 semester 1\GP\Github Codes\GP-2024\test_test\scl_generation.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:\College\Senior-2 semester 1\GP\Github Codes\GP-2024\test_test\scl_generation.v|
+!i113 0
+Z12 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R5
+vscl_staller
+R7
+!i10b 1
+!s100 TRF10XU8Z1A01nif^jH=G2
+I@5;Rnn7AGhDNQ]D>3Vggh1
+R8
+w1715017739
+8D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/test_test/staller.v
+FD:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/test_test/staller.v
+!i122 55
+L0 1 35
+R9
+R10
+r1
+!s85 0
+31
+R11
+!s107 D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/test_test/staller.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/College/Senior-2 semester 1/GP/Github Codes/GP-2024/test_test/staller.v|
+!i113 0
+R12
+R5
