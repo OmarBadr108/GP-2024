@@ -1033,11 +1033,13 @@ end
                 o_sclstall_en   = 1'b1 ;
                 o_sclstall_code = restart_pattern_stall_special ;
 
-                if (i_sclstall_stall_done  && i_frmcnt_last_frame) begin 
+                if (i_tx_mode_done  && i_frmcnt_last_frame) begin 
                     next_state = FINISH ;
+                    o_sclstall_en   = 1'b0 ;
                 end 
-                else if (i_sclstall_stall_done  && !i_frmcnt_last_frame) begin 
+                else if (i_tx_mode_done  && !i_frmcnt_last_frame) begin 
                     next_state = PRE_CMD ;
+                    o_sclstall_en   = 1'b0 ;
                 end 
                 else begin 
                     next_state = RESTART_PATTERN_SPECIAL ;
@@ -1054,11 +1056,13 @@ end
                 o_sclstall_en   = 1'b1 ;
                 o_sclstall_code = restart_pattern_stall ;
 
-                if (i_sclstall_stall_done  && i_frmcnt_last_frame) begin 
+                if (i_tx_mode_done  && i_frmcnt_last_frame) begin 
                     next_state = FINISH ;
+                    o_sclstall_en   = 1'b0 ;
                 end 
-                else if (i_sclstall_stall_done  && !i_frmcnt_last_frame) begin 
+                else if (i_tx_mode_done  && !i_frmcnt_last_frame) begin 
                     next_state = PRE_CMD ;
+                    o_sclstall_en   = 1'b0 ;
                 end 
                 else begin 
                     next_state = RESTART_PATTERN ;
@@ -1080,6 +1084,7 @@ end
 
                 if (i_tx_mode_done) begin 
                     next_state = FINISH ;
+                    o_sclstall_en   = 1'b0 ;
                 end  
                 else begin 
                     next_state = EXIT_PATTERN ;

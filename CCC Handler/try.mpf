@@ -902,7 +902,7 @@ Resolution = ns
 UserTimeUnit = default
 
 ; Default run length
-RunLength = 100
+RunLength = 100 ns
 
 ; Maximum iterations that can be run without advancing simulation time
 IterationLimit = 10000000
@@ -2297,3 +2297,5 @@ DEBUGDATABASE_DoubleClick = Edit
 DEBUGDATABASE_CustomDoubleClick = 
 DEBUGARCHIVE_DoubleClick = Edit
 DEBUGARCHIVE_CustomDoubleClick = 
+Project_Major_Version = 2021
+Project_Minor_Version = 1
