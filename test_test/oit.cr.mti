@@ -1,0 +1,15 @@
+C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/test_test/testtt.sv {1 {vlog -work work -vopt -sv -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/test_test/testtt.sv
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module restart_exit_test
+
+Top level modules:
+	restart_exit_test
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/test_test/scl_generation.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/test_test/scl_generation.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module scl_generation
+
+Top level modules:
+	scl_generation
+
+} {} {}}
