@@ -1,8 +1,20 @@
-C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/test_test/staller.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/test_test/staller.v
+C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/test_test/testtt.sv {0 {vlog -work work -vopt -sv -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/test_test/testtt.sv
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+** Error: (vlog-13069) C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/test_test/testtt.sv(1): near "1ns": syntax error, unexpected TIME_LITERAL.
+** Error: C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/test_test/testtt.sv(1): (vlog-13205) Syntax error found in the scope following 'timesacle'. Is there a missing '::'?
+
+} {3.0 5.0} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/test_test/staller.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/test_test/staller.v
 QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
 -- Compiling module scl_staller
 
 Top level modules:
 	scl_staller
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/test_test/scl_generation.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/test_test/scl_generation.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module scl_generation
+
+Top level modules:
+	scl_generation
 
 } {} {}}
