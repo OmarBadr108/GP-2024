@@ -98,7 +98,7 @@ always @(posedge i_sdr_ctrl_clk or negedge i_sdr_ctrl_rst_n)
           HIGH:
             begin
             o_scl_pos_edge <= 1'b0;
-                if (i_scl_gen_stall) begin
+                if (i_scl_gen_stall) begin // badr 
                   o_scl <=   1'b0 ;
                   state <=   LOW  ;
                   o_scl_neg_edge <= 1'b1;

@@ -517,13 +517,15 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 			    begin
 			     counter <= counter + 1;
 			     o_sdahnd_serial_data <= !o_sdahnd_serial_data;
-			     if ( counter == 'd7 )
+			     if ( counter == 'd7 )  //6
 			      o_ddrccc_mode_done <= 'b1;
 			    end	  
 			  end
 			 
-	    else if ( counter == 'd8 )
+	    else if ( counter == 'd8 ) begin //7
 			  reset_counter_flag <= 0;
+			  
+		end
 
 		  end
 		
