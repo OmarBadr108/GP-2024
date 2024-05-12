@@ -182,7 +182,7 @@ parameter [3:0]
 // SCL staller parameters 
 parameter [4:0] restart_pattern_stall = 5'd11  , // according to restart pattern specs 
                 restart_pattern_stall_special = 5'd11  , // according to restart pattern specs
-                exit_pattern_stall    = 5'd18 ; // according to exit pattern specs 
+                exit_pattern_stall    = 5'd17 ; // according to exit pattern specs 
 
 
 // Error states parameters 
@@ -962,7 +962,7 @@ end
                         //////////////////////////// new /////////////////////////////////////////////
                         if (!Direct_Broadcast_n_del && i_regf_TOC) begin 
                             next_state    = EXIT_PATTERN ;
-                            //first_time    = 1'b0 ;
+                            //first_time       = 1'b0 ;
                             //o_sclstall_en    = 1'b1 ;
                             //o_sclstall_code  = exit_pattern_stall ;
                         end

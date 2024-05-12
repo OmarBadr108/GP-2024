@@ -243,6 +243,8 @@ R0
 R0
 R0
 R0
+R0
+R0
 !s11f vlog 2021.1 2021.01, Jan 19 2021
 13
 !s112 1.1
@@ -274,18 +276,17 @@ n@_opt1
 R6
 R1
 T_opt2
-!s110 1715472268
-V?e^6B<BDgC6<iP7E[>0`f2
+!s110 1715536834
+VTWXATz2YEzGO]H5zNL0nA2
 R2
-=1-48a472837b0b-6640078b-2a3-42c
+=1-3c2c30a457d5-664103c2-e4-44a0
 R3
 R4
 R5
 n@_opt2
 R6
-R1
 vbits_counter
-Z7 !s110 1715523596
+Z7 !s110 1715536823
 !i10b 1
 !s100 <`mUi0b_K?RJ35@=Eb4Iz2
 IcD=:[n?kUTM:O`CQcHaIb3
@@ -293,14 +294,14 @@ R1
 w1714057605
 8bits_counter.v
 Fbits_counter.v
-!i122 478
+!i122 480
 L0 3 61
 Z8 VDg1SIo80bB@j0V0VzS_@n1
 Z9 OL;L;2021.1;73
 r1
 !s85 0
 31
-Z10 !s108 1715523596.000000
+Z10 !s108 1715536823.000000
 Z11 !s107 mux8.v|mux1.v|crc.v|testing_mux.v|staller.v|scl_generation.v|Tx.v|Rx.v|reg_file.v|FRAME_COUNTER.v|bits_counter.v|CCC_Handler_tb_final.sv|CCC_Handler.v|package.sv|
 Z12 !s90 -reportprogress|300|package.sv|CCC_Handler.v|CCC_Handler_tb_final.sv|bits_counter.v|FRAME_COUNTER.v|reg_file.v|Rx.v|Tx.v|scl_generation.v|staller.v|testing_mux.v|crc.v|mux1.v|mux8.v|+cover|-covercells|
 !i113 0
@@ -310,13 +311,13 @@ R5
 vCCC_Handler
 R7
 !i10b 1
-!s100 hk5XETh2c<C]Bo3>[jNd?2
-I0WMEEj`8F`lKm_^7JJ1<D2
+!s100 0AQWjH4jaYF4Shn9lWo7I3
+I1CUTKZ2P4cohT6VOi]`a03
 R1
-w1715518815
+w1715536805
 8CCC_Handler.v
 FCCC_Handler.v
-!i122 478
+!i122 480
 L0 33 1095
 R8
 R9
@@ -335,16 +336,16 @@ XCCC_HANDLER_PACKAGE
 Z15 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
 R7
 !i10b 1
-!s100 hLhDC^XJbK:bSAl^fF05<1
-I0C4<Dk3LEb;:[YI0_8Do;0
+!s100 jzGP9;RFmU?__;kCbE=MV2
+IISkB_<:G3YYW?AYjnCXF22
 S1
 R1
-w1715471168
+w1715536818
 8package.sv
 Fpackage.sv
-!i122 478
+!i122 480
 Z16 L0 1 0
-V0C4<Dk3LEb;:[YI0_8Do;0
+VISkB_<:G3YYW?AYjnCXF22
 R9
 r1
 !s85 0
@@ -359,7 +360,7 @@ R5
 n@c@c@c_@h@a@n@d@l@e@r_@p@a@c@k@a@g@e
 vCCC_Handler_tb
 R15
-Z17 DXx4 work 19 CCC_HANDLER_PACKAGE 0 22 0C4<Dk3LEb;:[YI0_8Do;0
+Z17 DXx4 work 19 CCC_HANDLER_PACKAGE 0 22 ISkB_<:G3YYW?AYjnCXF22
 DXx4 work 28 CCC_Handler_tb_final_sv_unit 0 22 YUzJ5V@G_z=^;ED;2QnM=0
 R7
 R8
@@ -374,7 +375,7 @@ R1
 Z18 w1715343206
 Z19 8CCC_Handler_tb_final.sv
 Z20 FCCC_Handler_tb_final.sv
-!i122 478
+!i122 480
 L0 3 3934
 R9
 31
@@ -402,7 +403,7 @@ R1
 R18
 R19
 R20
-!i122 478
+!i122 480
 R16
 R9
 31
@@ -423,7 +424,7 @@ R1
 w1715070588
 8crc.v
 Fcrc.v
-!i122 478
+!i122 480
 L0 1 91
 R8
 R9
@@ -446,7 +447,7 @@ R1
 w1714906968
 8FRAME_COUNTER.v
 FFRAME_COUNTER.v
-!i122 478
+!i122 480
 L0 2 55
 R8
 R9
@@ -469,7 +470,7 @@ R1
 w1711373421
 8testing_mux.v
 Ftesting_mux.v
-!i122 478
+!i122 480
 Z21 L0 1 16
 R8
 R9
@@ -492,7 +493,7 @@ R1
 Z22 w1715016408
 8mux1.v
 Fmux1.v
-!i122 478
+!i122 480
 L0 1 15
 R8
 R9
@@ -515,7 +516,7 @@ R1
 R22
 8mux8.v
 Fmux8.v
-!i122 478
+!i122 480
 R21
 R8
 R9
@@ -538,7 +539,7 @@ R1
 w1713034854
 8reg_file.v
 Freg_file.v
-!i122 478
+!i122 480
 L0 33 309
 R8
 R9
@@ -584,7 +585,7 @@ R1
 w1715334822
 R23
 R24
-!i122 478
+!i122 480
 L0 33 416
 R8
 R9
@@ -608,7 +609,7 @@ R1
 w1715471822
 8scl_generation.v
 Fscl_generation.v
-!i122 478
+!i122 480
 L0 34 139
 R8
 R9
@@ -625,14 +626,14 @@ R5
 vscl_staller
 R7
 !i10b 1
-!s100 F9L2Ab3`mlnVgIo=VzLPa2
-IJ;8G8EbjCoa[PN4DZVWNE1
+!s100 b3oQPgP>=lmC>25FLTZlR3
+I4:5C:6=CgA5HTn0dPKRaL3
 R1
-w1715472244
+w1715531782
 8staller.v
 Fstaller.v
-!i122 478
-L0 1 35
+!i122 480
+L0 1 36
 R8
 R9
 r1
@@ -654,7 +655,7 @@ R1
 w1715334833
 8Tx.v
 FTx.v
-!i122 478
+!i122 480
 L0 1 548
 R8
 R9
