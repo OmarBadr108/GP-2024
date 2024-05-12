@@ -341,7 +341,7 @@ end
     o_tx_mode          = 4'b0 ; 
     o_rx_en            = 1'b0 ; 
     o_rx_mode          = 4'b0 ; 
-    o_bitcnt_en        = 1'b1 ; // enabled in all states except for idle state
+    o_bitcnt_en        = 1'b1 ; 
     o_bitcnt_err_rst   = 1'b0 ; 
     o_sdahand_pp_od    = 1'b1 ; // 1 means PP
     o_regf_wr_en       = 1'b0 ;

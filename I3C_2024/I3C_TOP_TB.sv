@@ -302,6 +302,64 @@ I3C_TOP DUT (
 
 endmodule
 
+// DUT.sys_clk_50mhz ;
+
+    parameter scl_pos_wrt_sys_clc = 4 ;         // used in sdr transmission trancking changes every pos edge only of sda 
+    parameter scl_pos_neg_wrt_sys_clc = 2 ;     // used in hdr transmission trancking changes every pos or neg edge of sda 
+
+    //////////////////////////////////////////////////// ENTHDR assertion /////////////////////////////////////
+    sequence start_bit_1 ;
+        (sda_tb == 1'b1 && scl_tb == 1'b1 ); 
+    endsequence 
+
+    sequence start_bit_2 ;
+        start_bit_1 ##(1) (sda_tb == 1'b0 && scl_tb == 1'b1 ); 
+    endsequence 
+
+    sequence start_bit_3 ;
+        start_bit_2 ##(3) (sda_tb == 1'b0 && scl_tb == 1'b0 ); 
+    endsequence
+
+    sequence start_bit_4 ;
+        start_bit_3 ##(1) (sda_tb == 1'b1 && scl_tb == 1'b0 ); 
+    endsequence
+
+    // end of START condition
+    ////////////////////////////////////////////////////////////////////////
+
+    sequence ENTHDR_1 ;                        // first bit of seven E is transmitted above and it's duration is here 
+        start_bit_4 ##(scl_pos_wrt_sys_clc) sda_tb == 1'b1 ;
+    endsequence
+
+    sequence ENTHDR_2 ;                       
+        ENTHDR_1 ##(5*scl_pos_wrt_sys_clc) sda_tb == 1'b0 ;
+    endsequence
+
+    sequence ENTHDR_3 ;
+        ENTHDR_2 ##(4*scl_pos_wrt_sys_clc) sda_tb == 1'b1 ;
+    endsequence
+
+    sequence ENTHDR_4 ;
+        ENTHDR_3 ##(scl_pos_wrt_sys_clc) sda_tb == 1'b0;
+    endsequence
+
+    sequence START_ENTHDR_sec;
+        ENTHDR_4 ##(6*scl_pos_wrt_sys_clc) sda_tb == 1'b1 ; // this is the first bit in the HDR mode i.e (RnW bit)
+    endsequence
+
+
+
+    // Property to track SDA line ENTHDR frame >> (8'b11111100 then 9'b001000000) then HDR 
+    property START_ENTHDR_sec  ;
+        @(posedge (DUT.sys_clk_50mhz)) $rose(i_controller_en_tb) |-> START_ENTHDR_sec ;
+    endproperty
+
+
+    // Assert the property
+    assert property(START_ENTHDR_sec)
+                            $display("%t START_ENTHDR_sec PASSED ",$time); else
+                            $display("%t START_ENTHDR_sec FAILED ",$time);
+
 /*
 task ccc_broadcast_driver();
 	begin
@@ -535,43 +593,3 @@ int cycle_count ;
     end
 */
 
-
-	/*
-    parameter scl_wrt_sys_clk = 2 ;
-
-    //////////////////////////////////////////////////// ENTHDR assertion /////////////////////////////////////
-    	// ENTHDR seq
-	// Sequence for special preamble
-    sequence start_sequence ;
-        sda_tb == 1'b1 ;
-    endsequence
-
-    sequence s1;
-        start_sequence ##(6*scl_wrt_sys_clk) sda_tb == 1'b0 ;
-    endsequence
-
-    sequence s2;
-        s1 ##(4*scl_wrt_sys_clk) sda_tb == 1'b1 ;
-    endsequence
-
-    sequence last_bit;
-        s2 ##(scl_wrt_sys_clk) sda_tb == 1'b0;
-    endsequence
-
-    sequence ENTHDR_sec;
-        last_bit ##(6*scl_wrt_sys_clk) sda_tb == 1'b1 ; // this is the first bit in the HDR mode i.e (RnW bit)
-    endsequence
-
-
-
-    // Property to track SDA line ENTHDR frame >> (8'b11111100 then 9'b001000000) then HDR 
-    property ENTHDR  ;
-        @(posedge i_sdr_clk_tb ) (CONDITION_TO_TRIGGER_THE_ASSERTION && (negedge scl_neg_edge_tb or  negedge scl_pos_edge_tb)) |-> ENTHDR_sec ;
-    endproperty
-
-
-    // Assert the property
-    assert property(ENTHDR_sec)
-                            $display("%t ENTHDR_sec PASSED ",$time); else
-                            $display("%t ENTHDR_sec FAILED ",$time);
-*/
