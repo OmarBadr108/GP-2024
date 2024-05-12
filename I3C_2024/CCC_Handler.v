@@ -182,7 +182,7 @@ parameter [3:0]
 // SCL staller parameters 
 parameter [4:0] restart_pattern_stall = 5'd11  , // according to restart pattern specs 
                 restart_pattern_stall_special = 5'd11  , // according to restart pattern specs
-                exit_pattern_stall    = 5'd18 ;//14 // according to exit pattern specs 
+                exit_pattern_stall    = 5'd17 ; // according to exit pattern specs 
 
 
 // Error states parameters 
@@ -962,7 +962,7 @@ end
                         //////////////////////////// new /////////////////////////////////////////////
                         if (!Direct_Broadcast_n_del && i_regf_TOC) begin 
                             next_state    = EXIT_PATTERN ;
-                            //first_time    = 1'b0 ;
+                            //first_time       = 1'b0 ;
                             //o_sclstall_en    = 1'b1 ;
                             //o_sclstall_code  = exit_pattern_stall ;
                         end
@@ -1033,11 +1033,13 @@ end
                 o_sclstall_en   = 1'b1 ;
                 o_sclstall_code = restart_pattern_stall_special ;
 
-                if (i_sclstall_stall_done  && i_frmcnt_last_frame) begin 
+                if (i_tx_mode_done  && i_frmcnt_last_frame) begin 
                     next_state = FINISH ;
+                    o_sclstall_en   = 1'b0 ;
                 end 
-                else if (i_sclstall_stall_done  && !i_frmcnt_last_frame) begin 
+                else if (i_tx_mode_done  && !i_frmcnt_last_frame) begin 
                     next_state = PRE_CMD ;
+                    o_sclstall_en   = 1'b0 ;
                 end 
                 else begin 
                     next_state = RESTART_PATTERN_SPECIAL ;
@@ -1054,11 +1056,13 @@ end
                 o_sclstall_en   = 1'b1 ;
                 o_sclstall_code = restart_pattern_stall ;
 
-                if (i_sclstall_stall_done  && i_frmcnt_last_frame) begin 
+                if (i_tx_mode_done  && i_frmcnt_last_frame) begin 
                     next_state = FINISH ;
+                    o_sclstall_en   = 1'b0 ;
                 end 
-                else if (i_sclstall_stall_done  && !i_frmcnt_last_frame) begin 
+                else if (i_tx_mode_done  && !i_frmcnt_last_frame) begin 
                     next_state = PRE_CMD ;
+                    o_sclstall_en   = 1'b0 ;
                 end 
                 else begin 
                     next_state = RESTART_PATTERN ;
@@ -1080,6 +1084,8 @@ end
 
                 if (i_tx_mode_done) begin 
                     next_state = FINISH ;
+                    o_sclstall_en   = 1'b0 ;
+                    o_engine_done     = 1'b1 ;
                 end  
                 else begin 
                     next_state = EXIT_PATTERN ;

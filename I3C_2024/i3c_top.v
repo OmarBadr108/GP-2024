@@ -879,7 +879,7 @@ scl_generation u_scl_generation (
             .i_sdr_ctrl_clk               (sys_clk_50mhz)            ,
             .i_sdr_ctrl_rst_n             (i_sdr_rst_n)              ,
             .i_sdr_scl_gen_pp_od          (scl_pp_od_mux_out)        ,
-            .i_scl_gen_stall              (scl_gen_stall)            ,  //testinggg -laila  //(scl_gen_stall)
+            .i_scl_gen_stall              (ccc_scl_stall_en)          ,  //testing laila //(scl_gen_stall) 
             .i_sdr_ctrl_scl_idle          (sdr_scl_idle_mux_out )    ,
             .i_timer_cas                  (timer_cas)                ,
             .o_scl_pos_edge               (scl_pos_edge)             ,
