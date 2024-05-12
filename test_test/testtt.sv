@@ -1,3 +1,4 @@
+timesacle 1ns / 1ps 
 module restart_exit_test ();
 
 reg i_sdr_ctrl_clk = 0  ;     

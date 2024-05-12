@@ -25,6 +25,7 @@ always@(posedge i_stall_clk or negedge i_stall_rst_n)
       else begin      
             o_stall_done <= 1'b0 ;
             count <= count + 5'b1 ;
+            o_scl_stall <= 1'b1 ;
       end
   end
     else begin 
