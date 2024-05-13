@@ -90,21 +90,36 @@ localparam [4:0]  restart_stalling = 'd10,
 
 
 //--------------- tx modes -------------//   
-localparam [3:0]  seven_zeros = 'd0,
+/*localparam [3:0]  seven_zeros = 'd0,
                   Serializing_address = 'd1,              
                   special_preamble_tx = 'd2,  //01
                   one_preamble = 'd3,   // send 1 in pp or od 
                   zero_preamble = 'd4,  // send zero
-				  Serializing_byte = 'd5, 
-				 /* Serializing_second_byte = 'b1010,*/ 
+				  				Serializing_byte = 'd5, 
+				 
                   Calculating_Parity ='d6,
-				  /*Calculating_Parity_Data ='b1000,*/
-				  CRC_value = 'd7,
+				  
+								  CRC_value = 'd7,
                   token_CRC = 'd8,
                   Restart_Pattern = 'd9,
-                  Exit_Pattern = 'd10;
+                  Exit_Pattern = 'd10;*/
+
 				
-				//  Read_Write_bit = 'b1010;
+localparam [3:0]  seven_zeros = 'b0011 , 
+                  Serializing_address =  'b0001,              
+                  special_preamble_tx = 'b0000,  //01
+                  
+                  one_preamble = 'b0010,  // send 1 in pp or od 
+                  zero_preamble = 'b0110, // send zero
+				  				
+				  				Serializing_byte = 'b0111, 
+				 
+                  Calculating_Parity ='b0100,
+				  
+								  CRC_value = 'b1101,
+                  token_CRC = 'b1100, 
+                  Restart_Pattern = 'b1111,
+                  Exit_Pattern = 'b1110;		
 
  
  

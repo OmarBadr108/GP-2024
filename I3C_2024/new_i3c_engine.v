@@ -801,7 +801,7 @@ always @(posedge i_clk or negedge i_rst_n)
                     
                     o_regf_rd_address_sdr_hdr_sel   <=SDR_MODE_SEL; 
                     o_scl_pp_od_sdr_hdr_sel         <=SDR_MODE_SEL;
-                    o_tx_en_sel                             <= SDR_MODE_SEL;
+                    o_tx_en_sel                     <= SDR_MODE_SEL;
 
                     o_hdrengine_en                  <= 1'b0 ;
 
@@ -809,7 +809,7 @@ always @(posedge i_clk or negedge i_rst_n)
                     o_tx_mode           <= 3'b010    ; //stop bit
                     o_pp_od             <= 1'b1      ; 
                     send_stop           <= 1'b0      ;
-                    state                         <= STOP           ; 
+                    state                           <= STOP           ; 
                   end
                  else 
                   begin
@@ -853,6 +853,18 @@ o_scl_pp_od_mux_sel       <= I3C_ENGINE_SEL ;
             
         end
   end
+
+
+
+
+
+/*always@(*)begin
+    if(i_hdrengine_done) begin
+      o_tx_en             <= 1'b1 ;
+    o_tx_mode           <= 3'b010  ;
+    end
+
+end*/
 
 endmodule
 
