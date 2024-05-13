@@ -308,7 +308,7 @@ module CCC_Handler_tb ();
 		.i_ddrccc_tx_mode 		 (o_tx_mode_tb),
 
 		.i_regf_tx_parallel_data (i_regf_tx_parallel_data_tb),
-		.i_ddrccc_special_data 	 (i_regf_CMD_tb),
+		.i_ddrccc_special_data 	 (o_txrx_addr_ccc_tb),
 		.i_crc_crc_value 		 (i_crc_value_tb),
 		.i_crc_data_valid  	  	 (i_crc_valid_tb), // new 
 		.i_regf_read_n_write_bit (i_regf_RnW_tb), // new
@@ -3052,7 +3052,7 @@ mux8      mux1_8 (
 
 
 
-/*
+
 
 		// for second preamble and read data 
 //////////////////////////////////////////////  Broadcast driver /////////////////////////////////
@@ -3101,7 +3101,7 @@ int cycle_count ;
 				  
     	end 
     end
-*/
+
 
 /*
 
@@ -3116,9 +3116,7 @@ int cycle_count ;
 */
 
 
-
-
-
+/*
  
 //////////////////////////////////////////////  Direct Get driver /////////////////////////////////
 // backup works 100 % el7amdulelah 
@@ -3165,7 +3163,7 @@ int cycle_count ;
 				  
     	end 
     end
-
+*/
 
 
 

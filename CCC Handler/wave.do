@@ -6,8 +6,6 @@ add wave -noupdate /CCC_Handler_tb/RAND_DTT
 add wave -noupdate /CCC_Handler_tb/RAND_CP
 add wave -noupdate /CCC_Handler_tb/RAND_CMD_ATTR
 add wave -noupdate /CCC_Handler_tb/RAND_CMD
-add wave -noupdate /CCC_Handler_tb/o_txrx_addr_ccc_tb
-add wave -noupdate /CCC_Handler_tb/o_sdahnd_serial_data_tb
 add wave -noupdate /CCC_Handler_tb/o_sclstall_en_tb
 add wave -noupdate /CCC_Handler_tb/o_scl_stall_tb
 add wave -noupdate /CCC_Handler_tb/o_regf_wr_en_tb
@@ -28,7 +26,6 @@ add wave -noupdate /CCC_Handler_tb/mux1_out2
 add wave -noupdate /CCC_Handler_tb/mux1_out1
 add wave -noupdate /CCC_Handler_tb/i_sys_clk_tb
 add wave -noupdate /CCC_Handler_tb/i_stall_cycles
-add wave -noupdate /CCC_Handler_tb/i_sdahnd_rx_sda_tb
 add wave -noupdate /CCC_Handler_tb/i_sclstall_stall_done_tb
 add wave -noupdate /CCC_Handler_tb/i_rx_regfcrc_data_wr_tb
 add wave -noupdate /CCC_Handler_tb/i_regf_tx_parallel_data_tb
@@ -37,6 +34,7 @@ add wave -noupdate /CCC_Handler_tb/i_regf_RnW_tb
 add wave -noupdate /CCC_Handler_tb/i_regf_DTT_tb
 add wave -noupdate /CCC_Handler_tb/i_regf_DBP_tb
 add wave -noupdate /CCC_Handler_tb/i_regf_DATA_LEN_tb
+add wave -noupdate /CCC_Handler_tb/i_sdahnd_rx_sda_tb
 add wave -noupdate /CCC_Handler_tb/i_regf_CMD_tb
 add wave -noupdate /CCC_Handler_tb/i_regf_CMD_ATTR_tb
 add wave -noupdate /CCC_Handler_tb/i_frmcnt_last_frame_tb
@@ -56,12 +54,16 @@ add wave -noupdate /CCC_Handler_tb/i_rx_pre_tb
 add wave -noupdate /CCC_Handler_tb/i_rx_mode_done_tb
 add wave -noupdate /CCC_Handler_tb/i_rx_error_tb
 add wave -noupdate /CCC_Handler_tb/i_tx_mode_done_tb
+add wave -noupdate -color {Cornflower Blue} /CCC_Handler_tb/o_sdahnd_serial_data_tb
 add wave -noupdate -radix unsigned /CCC_Handler_tb/o_tx_mode_tb
+add wave -noupdate /CCC_Handler_tb/o_txrx_addr_ccc_tb
 add wave -noupdate /CCC_Handler_tb/o_tx_en_tb
 add wave -noupdate -color Gold -radix unsigned /CCC_Handler_tb/CCC_Handler_dut/next_state
 add wave -noupdate -color Gold -radix unsigned /CCC_Handler_tb/CCC_Handler_dut/current_state
+add wave -noupdate -color red /CCC_Handler_tb/tx_dut/A
+add wave -noupdate /CCC_Handler_tb/tx_dut/i_ddrccc_special_data
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {48205777 ns} 0}
+WaveRestoreCursors {{Cursor 1} {15357530 ns} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 185
 configure wave -valuecolwidth 100
@@ -77,4 +79,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {48205196 ns} {48206780 ns}
+WaveRestoreZoom {15357226 ns} {15358810 ns}
