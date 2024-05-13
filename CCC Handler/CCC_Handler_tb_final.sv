@@ -3053,7 +3053,7 @@ mux8      mux1_8 (
 
 
 
-
+/*
 		// for second preamble and read data 
 //////////////////////////////////////////////  Broadcast driver /////////////////////////////////
 // backup works 100 % el7amdulelah 
@@ -3102,8 +3102,8 @@ int cycle_count ;
     	end 
     end
 
+*/
 
-/*
 
 
 //////////////////////////////////////////////  Direct set driver /////////////////////////////////
@@ -3113,7 +3113,7 @@ int cycle_count ;
 			@(negedge scl_neg_edge_tb or  negedge scl_pos_edge_tb) i_sdahnd_rx_sda_tb = 0 ;
 		end
 	end 
-*/
+
 
 
 /*
