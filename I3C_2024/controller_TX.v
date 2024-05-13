@@ -205,6 +205,7 @@ reg parity_counter;
                                   o_ser_s_data    <= 1'b1 ;
                                   //o_ser_mode_done <= 1'b1 ;
                                 end 
+                              
 
 
                               if(i_timer_bus_free_pure)

@@ -874,26 +874,33 @@ sda_handling u_sda_handling (
             .o_handling_s_data            (deser_s_data)             ,
             .sda                          (sda)                     );
 
+// SCL generation block for monitoring and stalling
 scl_generation u_scl_generation (
             .i_sdr_ctrl_clk               (sys_clk_50mhz)            ,
             .i_sdr_ctrl_rst_n             (i_sdr_rst_n)              ,
             .i_sdr_scl_gen_pp_od          (scl_pp_od_mux_out)        ,
-            .i_scl_gen_stall              (scl_gen_stall)            , 
+            .i_scl_gen_stall              (ccc_scl_stall_en)          ,  //testing laila //(scl_gen_stall) 
             .i_sdr_ctrl_scl_idle          (sdr_scl_idle_mux_out )    ,
             .i_timer_cas                  (timer_cas)                ,
             .o_scl_pos_edge               (scl_pos_edge)             ,
             .o_scl_neg_edge               (scl_neg_edge)             ,
             .o_scl                        (scl)                     );
 
-/*
-scl_staller u_scl_staller(
-.i_stall_clk(sys_clk_50mhz),
-.i_stall_rst_n(i_sdr_rst_n),
-.i_stall_flag(scl_stall_flag_mux_out),
-.i_stall_cycles(scl_stall_cycles_mux_out),
-.o_stall_done(scl_stall_done),
-.o_scl_stall (scl_gen_stall) );
-*/
+wire scl_not_stalled;
+wire scl_neg_edge_not_stalled;
+wire scl_pos_edge_not_stalled;
+
+// SCL generation block for tx_hdr and rx_hdr that are never stalled
+scl_generation u_scl_generation_not_stalled (
+            .i_sdr_ctrl_clk               (sys_clk_50mhz)            ,
+            .i_sdr_ctrl_rst_n             (i_sdr_rst_n)              ,
+            .i_sdr_scl_gen_pp_od          (scl_pp_od_mux_out)        ,
+            .i_scl_gen_stall              (1'b0)                     , 
+            .i_sdr_ctrl_scl_idle          (sdr_scl_idle_mux_out )    ,
+            .i_timer_cas                  (timer_cas)                ,
+            .o_scl_pos_edge               (scl_pos_edge_not_stalled)             ,
+            .o_scl_neg_edge               (scl_neg_edge_not_stalled)             ,
+            .o_scl                        (scl_not_stalled)          );
 
 reg_file u_reg_file (
             .i_regf_clk                   (sys_clk_50mhz)            ,
@@ -1416,9 +1423,9 @@ scl_staller u_scl_staller(
         RX RX (
         .i_sys_clk                  (sys_clk_50mhz)               ,
         .i_sys_rst                  (i_sdr_rst_n)             ,
-        .i_sclgen_scl               (scl)                   ,
-        .i_sclgen_scl_pos_edge      (scl_pos_edge)           ,
-        .i_sclgen_scl_neg_edge      (scl_neg_edge)           ,
+        .i_sclgen_scl               (scl_not_stalled)                   ,
+        .i_sclgen_scl_pos_edge      (scl_pos_edge_not_stalled)           ,
+        .i_sclgen_scl_neg_edge      (scl_neg_edge_not_stalled)           ,
         .i_ddrccc_rx_en             (rx_en_hdr_mux_out)                ,
         .i_sdahnd_rx_sda            (deser_s_data)        , // to be put on mux in   //check this signal -Laila
         //.i_bitcnt_rx_bit_count    (i_bitcnt_rx_bit_count_tb)  ,
@@ -1440,8 +1447,8 @@ scl_staller u_scl_staller(
         .i_sys_clk               (sys_clk_50mhz),
         .i_sys_rst               (i_sdr_rst_n),
         .i_ddrccc_tx_en          (tx_en_hdr_mux_out),
-        .i_sclgen_scl_pos_edge   (scl_pos_edge),
-        .i_sclgen_scl_neg_edge   (scl_neg_edge),
+        .i_sclgen_scl_pos_edge   (scl_pos_edge_not_stalled),
+        .i_sclgen_scl_neg_edge   (scl_neg_edge_not_stalled),
         .i_ddrccc_tx_mode        (tx_mode_hdr_mux_out),
         .i_regf_tx_parallel_data (regf_data_rd),
         .i_ddrccc_special_data   (cccnt_tx_special_data_mux_out), 

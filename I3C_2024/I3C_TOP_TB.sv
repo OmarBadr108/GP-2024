@@ -301,7 +301,7 @@ I3C_TOP DUT (
  );
 
 endmodule
-
+/*
 // DUT.sys_clk_50mhz ;
 
     parameter scl_pos_wrt_sys_clc = 4 ;         // used in sdr transmission trancking changes every pos edge only of sda 

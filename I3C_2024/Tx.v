@@ -502,28 +502,38 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 		  
 			  ////////////////////////////////////////////
 			  
-			exit_Pattern: begin
+		exit_Pattern: begin
 			  
 		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 		    begin    
 		     if (!reset_counter_flag)
 		       begin
 		        o_sdahnd_serial_data <= 1;
-            counter <= 'd0;
-            reset_counter_flag <= 1; 
-           end
+                counter <= 'd0;
+                reset_counter_flag <= 1; 
+               end
            
-			   else
+			 else
 			    begin
 			     counter <= counter + 1;
 			     o_sdahnd_serial_data <= !o_sdahnd_serial_data;
-			     if ( counter == 'd7 )
-			      o_ddrccc_mode_done <= 'b1;
+			     if ( counter == 'd7 )  begin  
+			     // o_ddrccc_mode_done <= 'b1;
+			      o_sdahnd_serial_data <= 'b0;
+			end
 			    end	  
 			  end
 			 
-	    else if ( counter == 'd8 )
+	    else if ( counter == 'd8 ) begin //7
 			  reset_counter_flag <= 0;
+			  o_sdahnd_serial_data <= 'b0;
+
+		end
+
+		else if ( counter == 'd7 )  begin  
+			      o_ddrccc_mode_done <= 'b1;
+			      o_sdahnd_serial_data <= 'b0;
+			end
 
 		  end
 		
@@ -534,7 +544,7 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 		
 		else
 		  begin
-		 	  o_sdahnd_serial_data<= 1;
+		 	o_sdahnd_serial_data<= 1;
 			o_ddrccc_mode_done<= 0;
 			o_crc_en<= 0;
 		    counter <= 0;

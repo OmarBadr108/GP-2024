@@ -93,13 +93,10 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
             o_ddrmode_en                    <= 1'b0   ;
             o_ccc_en                        <= 1'b0   ;
             o_regf_addr_special             <= 12'd1000 ;
-            i_CP_temp                       <= 1'b0;
-            i_TOC_temp                      <=1'b0;
-            i_MODE_temp                     <='d6;
+            i_CP_temp   <= 1'b0;
+            i_TOC_temp    <=1'b0;
+            i_MODE_temp   <='d6;
             //current_state                   <= IDLE ;
-
-            o_tx_en_sel                  <= 1'b1; //laila 
-            o_scl_pp_od_sel              <= 1'b1; //laila 
             next_state                   <= IDLE ;
         end
 
@@ -173,12 +170,14 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
 
           CCC : begin
             i_CP_temp   <= i_CP;
-if (i_i3cengine_hdrengine_en) begin
+            if (i_i3cengine_hdrengine_en) begin
 
           
             if((i_TOC_temp && i_ccc_done)||(i_MODE_temp != 'd6)) begin     // ||(i_MODE != 'd6) assuming mode will not be changed unless an exit pattern was sent before it. -laila
                   o_ccc_en    <= 1'b0 ;
-                  o_i3cengine_hdrengine_done      <= 1'b1 ;
+                  //o_i3cengine_hdrengine_done      <= 1'b1 ;
+
+
                   next_state <= IDLE;             
                   ///tid puts on output when the command is done
 
@@ -348,7 +347,17 @@ end
 
 
 
-
 end 
+
+always@(*) begin
+   if((i_TOC_temp && i_ccc_done)||(i_MODE_temp != 'd6))      // ||(i_MODE != 'd6) assuming mode will not be changed unless an exit pattern was sent before it. -laila
+                  o_i3cengine_hdrengine_done = 1'b1 ;
+   else 
+                  o_i3cengine_hdrengine_done = 1'b1 ;
+
+end
 endmodule
+
+
+
 
