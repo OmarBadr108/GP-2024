@@ -64,7 +64,7 @@ reg parity_flag; //to distinguish parity is calculated for cmd or data
 reg first_byte_full; //to distinguish tx is serializing first byte or second byte
 
 
-//111 1110 0
+
 assign A = {i_ddrccc_special_data[6:0],parity_adj} ; 
 assign parity_adj = ( rd_wr_flag ^ (^i_ddrccc_special_data) ) ;
 assign P1 = (parity_flag)? P1_data : P1_cmdword ; 
@@ -230,8 +230,7 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 		  
 		  o_crc_last_byte <= 'b0;
 		  o_crc_en <= 'b1;
-		 // crc_indicator <= 'b1;
-		 // crc_temp <= i_crc_crc_value ;
+		  o_crc_parallel_data <= i_ddrccc_special_data;
 			
 		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 		   begin    

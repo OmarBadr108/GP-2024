@@ -781,18 +781,13 @@ end
                         //o_sdahand_pp_od = open drain ; 
                     end 
 
-                    // rx signals 
-                    o_rx_en   = 1'b1 ;
-                    o_rx_mode = preamble_rx_mode ;
+                    
 
-                    if ((i_rx_mode_done || i_tx_mode_done) && i_rx_pre) begin  // the coming is data still  in this case we may need the bit count number ?
+                    if (i_tx_mode_done) begin  
                         next_state = FIRST_DATA_BYTE ;
                     end
 
-                    else if (i_rx_mode_done && !i_rx_pre) begin // abort by target and crc is following
-                        next_state        = C_TOKEN_STATE ;
-                        o_regf_ERR_STATUS = T_ABORTED ;
-                    end 
+                   
 
                     else begin 
                         next_state = PRE_DATA_TWO ;

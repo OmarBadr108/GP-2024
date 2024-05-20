@@ -22,18 +22,18 @@ output reg        o_crc_data_valid
 
 
 // tx modes needed  
-localparam [3:0]  special_preambles   = 'b0000, //2'b01 
+localparam [3:0]  special_preambles = 'b0000, //2'b01 
                   serializing_address = 'b0001, //address of target
-    			  serializing_zeros   = 'b0011 ,  //7-zeros in the first byte of cmd word        
-                  one 				  = 'b0010, // for representing preamble bit or reading_or_writing bit  
-                  zero 				  = 'b0110, // for representing preamble bit or reading_or_writing bit
-				  serializing_data 	  = 'b0111, //data byte from reg to be serialized
-				  CCC_value 		  = 'b0101 , //special data in case of transmitting CCC
-				  calculating_Parity  = 'b0100, //parity of word serialized either cmd word or data word
-				  token_CRC 		  = 'b1100, //special bits 4'b1100
-				  CRC_value 		  = 'b1101, //CRC value arrived of data serialized
-                  restart_Pattern 	  = 'b1111,
-                  exit_Pattern 		  = 'b1110;
+    				          serializing_zeros = 'b0011 ,  //7-zeros in the first byte of cmd word        
+                  one = 'b0010, // for representing preamble bit or reading_or_writing bit  
+                  zero = 'b0110, // for representing preamble bit or reading_or_writing bit
+				          serializing_data = 'b0111, //data byte from reg to be serialized
+				          CCC_value = 'b0101 , //special data in case of transmitting CCC
+				          calculating_Parity = 'b0100, //parity of word serialized either cmd word or data word
+				          token_CRC = 'b1100, //special bits 4'b1100
+				          CRC_value = 'b1101, //CRC value arrived of data serialized
+                  restart_Pattern = 'b1111,
+                  exit_Pattern = 'b1110;
 
 
 /**special values*/			  
@@ -64,7 +64,7 @@ reg parity_flag; //to distinguish parity is calculated for cmd or data
 reg first_byte_full; //to distinguish tx is serializing first byte or second byte
 
 
-
+//111 1110 0
 assign A = {i_ddrccc_special_data[6:0],parity_adj} ; 
 assign parity_adj = ( rd_wr_flag ^ (^i_ddrccc_special_data) ) ;
 assign P1 = (parity_flag)? P1_data : P1_cmdword ; 
@@ -124,8 +124,7 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 			      o_ddrccc_mode_done <= 'b1;
 				  end
 			      counter <= counter + 1;
-				 // o_crc_data_valid <= 'b0;
-				 
+				 			 
 				 
 			    end
 			    
@@ -212,7 +211,7 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 			    o_sdahnd_serial_data <= special_preamble['d0 - counter] ;
 			    if ( counter == 'd0 ) begin
 			       o_ddrccc_mode_done <= 'b1;
-				   parity_flag <= 0;  // to make P1=P1_cmd &P1=P0_cmd
+				   parity_flag <= 0;  // to make P1=P1_cmd &P0=P0_cmd
 				   end
 			    end
 			    
@@ -229,10 +228,10 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 		 
 		 CCC_value :  begin
 		  
-		  o_crc_last_byte <= 'b1;
+		  o_crc_last_byte <= 'b0;
 		  o_crc_en <= 'b1;
-		  crc_indicator <= 'b1;
-		  crc_temp <= i_crc_crc_value ;
+		 // crc_indicator <= 'b1;
+		 // crc_temp <= i_crc_crc_value ;
 			
 		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 		   begin    
@@ -241,6 +240,7 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
            counter <= 'd0;
            reset_counter_flag <= 1;
            o_sdahnd_serial_data <= i_ddrccc_special_data['d7] ;
+		   o_crc_data_valid <= 'b1;
            end
           
 			  else
@@ -401,10 +401,10 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 				  				  		  
 		token_CRC :	 begin
 
-		 if (crc_indicator)
+		/* if (crc_indicator)
 				crc <= crc_temp;
 		  else 	
-				crc <= i_crc_crc_value;
+				crc <= i_crc_crc_value;*/
 				
 
 		if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
@@ -449,14 +449,14 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 		    begin    
 		     if ( (!reset_counter_flag))
 		       begin
-		        o_sdahnd_serial_data <= crc[4]; 
+		        o_sdahnd_serial_data <= i_crc_crc_value[4]; 
 				counter <= 'd0;
 				reset_counter_flag <= 1;  
            end
 			   else
 			     begin
 			    counter <= counter + 1;
-			    o_sdahnd_serial_data <= crc[(3 - counter)];
+			    o_sdahnd_serial_data <= i_crc_crc_value[(3 - counter)];
 			    if ( counter == 'd3 )
 			      o_ddrccc_mode_done <= 'b1;
 			    end
