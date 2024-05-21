@@ -411,7 +411,7 @@ end
             PRE_CRC_TARGET : begin // target is driving the 2 bits with 2'b01
                 if (i_engine_en) begin
                     o_rx_en   = 1'b1 ; 
-                    o_rx_mode = parity_check ;
+                    o_rx_mode = CRC_PREAMBLE ;
 
                     if ((i_rx_mode_done ) && i_frmcnt_last_frame) begin  // HENAAAAAAAAAAAAAA PUT THE CONDITION AFTER VERIFICATIONS (i_rx_mode_done && ! rx_err)
                         next_state = C_TOKEN_STATE ;

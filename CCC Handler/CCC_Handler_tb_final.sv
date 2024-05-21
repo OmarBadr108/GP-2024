@@ -2815,7 +2815,7 @@ mux8      mux1_8 (
 
 
 
-
+/*
 	//----------------------------------------------- fourteenth GROUP GETPID_D ----------------------------------------//
 
 	covergroup GETPID_Direct @(negedge i_sys_clk_tb);
@@ -2982,7 +2982,7 @@ mux8      mux1_8 (
 	endgroup
 
 	GETPID_Direct  GETPID_Direct_instance = new();
-
+*/
 // 4-initial block 
 /* IMPORTANT NOTES :
 		1- (General) when driving input to the block which is considered as output of other block u must drive it at posedge not at negdge .
@@ -3012,7 +3012,7 @@ mux8      mux1_8 (
 		// initialization of the object 
 		conf_obj = new();
 
-		for (i=0 ; i<10000 ; i++) begin
+		for (i=0 ; i<100000 ; i++) begin
 
 			assert(conf_obj.randomize());  // "lw feh moshkla fel constrains edeny error" deh lazmet el word assert
 			
@@ -3116,7 +3116,7 @@ int cycle_count ;
 */
 
 
- 
+ /*
 //////////////////////////////////////////////  Direct Get driver /////////////////////////////////
 // backup works 100 % el7amdulelah 
 // for second preamble and read data 
@@ -3162,6 +3162,17 @@ int cycle_count ;
 				  
     	end 
     end
+*/
+
+
+
+//////////////////////////////////////////////  General driver /////////////////////////////////
+
+	initial begin 
+		forever #(2*CLK_PERIOD) begin  
+			@(negedge scl_neg_edge_tb or negedge scl_pos_edge_tb) i_sdahnd_rx_sda_tb = $random() ;
+		end
+	end 
 
 
 
@@ -4162,7 +4173,7 @@ int cycle_count ;
 
 
     ////////////////////////// tracking assertions 
-     property Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_0_track ;
+    property Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_0_track ;
         @(posedge i_sys_clk_tb) ($rose(i_engine_en_tb) 								  &&
         											i_regf_CMD_ATTR_tb  == 3'd0       && 
         (i_regf_CMD_tb == 8'h8B || i_regf_CMD_tb == 8'h8C || i_regf_CMD_tb == 8'h90 || i_regf_CMD_tb == 8'h8F || i_regf_CMD_tb == 8'h8E)  && 
@@ -4264,8 +4275,104 @@ int cycle_count ;
 
 
 
+    property Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_0_rx_track ;
+        @(posedge i_sys_clk_tb) ($rose(i_engine_en_tb) 								  &&
+        											i_regf_CMD_ATTR_tb  == 3'd0       && 
+        (i_regf_CMD_tb == 8'h8B || i_regf_CMD_tb == 8'h8C || i_regf_CMD_tb == 8'h90 || i_regf_CMD_tb == 8'h8F || i_regf_CMD_tb == 8'h8E)  && 
+        						!i_regf_DBP_tb && (i_regf_DATA_LEN_tb == 2 || i_regf_DATA_LEN_tb == 1)          && 
+        						 i_regf_TOC_tb == 0 && i_regf_RnW_tb	    	           ) 
+        											|->  
+        // CMD word											
+        (o_rx_mode_tb == preamble_rx_mode 		[*(2*scl_wrt_sys_clk)])  ##1
+        (o_rx_mode_tb == preamble_rx_mode 		[*(scl_wrt_sys_clk)])    ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(7*scl_wrt_sys_clk)])  ##1     	
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(8*scl_wrt_sys_clk)])  ##1     	
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(2*scl_wrt_sys_clk)])  ##1
+     	// DATA word
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(scl_wrt_sys_clk)])    ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(scl_wrt_sys_clk)])    ##1
+     	(o_rx_mode_tb == preamble_rx_mode  		[*(8*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == preamble_rx_mode  		[*(8*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(2*scl_wrt_sys_clk)])  ##1
+     	// CRC word
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(2*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(4*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(5*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(12)])				 ##1
+     	// CMD word
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(2*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(scl_wrt_sys_clk)])    ##1  	// RnW bit = 1 
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(7*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(8*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(2*scl_wrt_sys_clk)])  ##1
+     	// DATA word
+     	(o_rx_mode_tb == preamble_rx_mode  		[*(scl_wrt_sys_clk)])    ##1   // disabled 
+     	(o_rx_mode_tb == preamble_rx_mode 	    [*(3)])  				 ##1   // due to transition between tx and rx  
+     	(o_rx_mode_tb == deserializing_byte 	[*(16*scl_wrt_sys_clk)]) ##1
+     	(o_rx_mode_tb == parity_check 			[*(2*scl_wrt_sys_clk)])  ##1
+     	// CRC word
+     	(o_rx_mode_tb == CRC_PREAMBLE 			[*(2*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == check_c_token_CRC 		[*(4*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == check_value_CRC 		[*(5*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(11)])	 		 	 	 	//  disabled >> restart_pattern
+    
+        			;										 
+    endproperty
+
+    // Assert the property
+    assert property(Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_0_rx_track)
+                            $display("%t Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_0_rx_track PASSED ",$time); else
+                            $display("%t Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_0_rx_track FAILED ",$time);
 
 
+    property Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_1_rx_track ;
+        @(posedge i_sys_clk_tb) ($rose(i_engine_en_tb) 								  &&
+        											i_regf_CMD_ATTR_tb  == 3'd0       && 
+        (i_regf_CMD_tb == 8'h8B || i_regf_CMD_tb == 8'h8C || i_regf_CMD_tb == 8'h90 || i_regf_CMD_tb == 8'h8F || i_regf_CMD_tb == 8'h8E)  && 
+        						!i_regf_DBP_tb && (i_regf_DATA_LEN_tb == 2 || i_regf_DATA_LEN_tb == 1)          && 
+        						 i_regf_TOC_tb == 1 && i_regf_RnW_tb	    	           ) 
+        											|->  
+        // CMD word											
+        (o_rx_mode_tb == preamble_rx_mode 		[*(2*scl_wrt_sys_clk)])  ##1
+        (o_rx_mode_tb == preamble_rx_mode 		[*(scl_wrt_sys_clk)])    ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(7*scl_wrt_sys_clk)])  ##1     	
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(8*scl_wrt_sys_clk)])  ##1     	
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(2*scl_wrt_sys_clk)])  ##1
+     	// DATA word
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(scl_wrt_sys_clk)])    ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(scl_wrt_sys_clk)])    ##1
+     	(o_rx_mode_tb == preamble_rx_mode  		[*(8*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == preamble_rx_mode  		[*(8*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(2*scl_wrt_sys_clk)])  ##1
+     	// CRC word
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(2*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(4*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(5*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(12)])				 ##1
+     	// CMD word
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(2*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(scl_wrt_sys_clk)])    ##1  	// RnW bit = 1 
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(7*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(8*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(2*scl_wrt_sys_clk)])  ##1
+     	// DATA word
+     	(o_rx_mode_tb == preamble_rx_mode  		[*(scl_wrt_sys_clk)])    ##1   // disabled 
+     	(o_rx_mode_tb == preamble_rx_mode 	    [*(3)])  				 ##1   // due to transition between tx and rx  
+     	(o_rx_mode_tb == deserializing_byte 	[*(16*scl_wrt_sys_clk)]) ##1
+     	(o_rx_mode_tb == parity_check 			[*(2*scl_wrt_sys_clk)])  ##1
+     	// CRC word
+     	(o_rx_mode_tb == CRC_PREAMBLE 			[*(2*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == check_c_token_CRC 		[*(4*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == check_value_CRC 		[*(5*scl_wrt_sys_clk)])  ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(17)])	 		 	 	 	//  disabled >> exit_pattern
+    
+        			;										 
+    endproperty
+
+    // Assert the property
+    assert property(Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_1_rx_track)
+                            $display("%t Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_1_rx_track PASSED ",$time); else
+                            $display("%t Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_1_rx_track FAILED ",$time);
 
 
 
