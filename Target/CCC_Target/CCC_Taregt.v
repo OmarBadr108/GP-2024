@@ -331,10 +331,24 @@ always@(*)begin
                         o_regf_addr = second_byte_MWL ; //second 8 after 
                         byte_no = 3'd2 ;
                         next_state = DATA ;
-                        
+                    end 
+                    /*else if (i_CCC_value == 8'h00 & (byte_no==3'd2) ) begin
+                        o_rx_en = 1'b1 ;
+                        o_rx_mode = check_parity ;
+                        next_state = CHECK_PARITY ;
+                        byte_no = 3'd0 ;
                     end
+                    /*else if (i_CCC_value== 8'h00 ) begin
+                        o_rx_en = 1'b1 ;
+                        o_regf_wr_en = 1'b1;
+                        o_regf_addr = second_byte_MRL ;
+                        byte_no = 3'd2 ;
+                        next_state = DATA ;
+                    end*/
                     else if (i_CCC_value == 8'h0A && (byte_no==3'd2) ) begin
-                        next_state = /*preamble of CRC*/ ;
+                        o_rx_en = 1'b1 ;
+                        o_rx_mode = check_parity ;
+                        next_state = CHECK_PARITY ;
                         byte_no = 3'd0 ;
                     end
                     else if (i_CCC_value== 8'h0A ) begin
@@ -395,6 +409,7 @@ always@(*)begin
                 end
                 else
                     next_state = CRC_VALUE ;
+            end 
 
             RESTART_EXIT : begin
                 if (i_restart_done) begin
@@ -410,7 +425,7 @@ always@(*)begin
                     o_rx_mode = deser_addr ;
                     next_state = DESER_ADDR ;
                 end
-                
+
                 else
                     next_state = DESER_ZEROS ;
 
@@ -429,3 +444,6 @@ always@(*)begin
 
 
             end  
+        endcase 
+    end 
+        endmodule 
