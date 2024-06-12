@@ -175,7 +175,7 @@ localparam [4:0]              idle = 'd0,
 //------------------ internal signals decleration -----------------//					 
 reg [6:0] target_addres,broadcast_address;
 reg    [4:0]         current_state , next_state ;
-wire [3:0] count ;
+/wire [3:0] count ;/
 reg parity_data, Parity_data_seq ,sysclk_done,en_sysclk ;
 
 

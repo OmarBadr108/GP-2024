@@ -1,0 +1,880 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"en",
+				"endproperty"
+			],
+			[
+				"p",
+				"posedge"
+			],
+			[
+				"in",
+				"interface"
+			],
+			[
+				"t",
+				"TB"
+			],
+			[
+				"d",
+				"dut"
+			],
+			[
+				"co",
+				"counter_tb"
+			],
+			[
+				"c",
+				"counter"
+			],
+			[
+				"end",
+				"endmodule"
+			],
+			[
+				"coun",
+				"count_ifc"
+			],
+			[
+				"I_CRC",
+				"i_crc_value"
+			],
+			[
+				"pa",
+				"PARITY"
+			],
+			[
+				"ent",
+				"ENTHDR"
+			],
+			[
+				"scl",
+				"i_scl_pos_edge"
+			],
+			[
+				"i_sc",
+				"i_scl_neg_edge"
+			],
+			[
+				"i_scl",
+				"i_scl_neg_edge"
+			],
+			[
+				"a",
+				"ACK"
+			],
+			[
+				"ST",
+				"START"
+			],
+			[
+				"o_tgt",
+				"o_tgt_engine_done"
+			],
+			[
+				"o_tg",
+				"o_tgt_pp_od_sdahand"
+			],
+			[
+				"i_tg",
+				"i_tgt_engine_en_tb"
+			],
+			[
+				"i_rs",
+				"i_sys_rst_n"
+			],
+			[
+				"sc",
+				"scl"
+			],
+			[
+				"i_s",
+				"i_sys_rst"
+			],
+			[
+				"i_",
+				"i_sys_rst"
+			],
+			[
+				"o",
+				"o_engine_done"
+			],
+			[
+				"sd",
+				"i_sda"
+			],
+			[
+				"i",
+				"i_scl"
+			],
+			[
+				"b",
+				"broadcast_address"
+			],
+			[
+				"sda",
+				"i_sda"
+			],
+			[
+				"de",
+				"address_des"
+			],
+			[
+				"sta",
+				"state"
+			],
+			[
+				"st",
+				"start_detected"
+			],
+			[
+				"e",
+				"i_enigne_en"
+			],
+			[
+				"op",
+				"op_cov"
+			],
+			[
+				"ope",
+				"operation_t"
+			],
+			[
+				"int",
+				"initial"
+			],
+			[
+				"al",
+				"alu"
+			],
+			[
+				"r",
+				"running"
+			],
+			[
+				"res",
+				"result"
+			],
+			[
+				"M",
+				"module"
+			],
+			[
+				"mod",
+				"modport"
+			],
+			[
+				"count_",
+				"count_value"
+			],
+			[
+				"cr",
+				"i_crc_value"
+			],
+			[
+				"crc",
+				"CRC_value_temp"
+			],
+			[
+				"O",
+				"o_ddrccc_error"
+			],
+			[
+				"pos",
+				"i_sclgen_scl_pos_edge"
+			],
+			[
+				"ccc",
+				"i_ddrccc_rx_en"
+			],
+			[
+				"sda_",
+				"sda_handling_mode_mux"
+			],
+			[
+				"P_",
+				"P_OUT"
+			],
+			[
+				"P",
+				"PC_OUT"
+			],
+			[
+				"CARRYO",
+				"CARRYOUT"
+			],
+			[
+				"PC",
+				"P_COUT"
+			],
+			[
+				"CA",
+				"CARRY_OUT_IN"
+			],
+			[
+				"sp",
+				"Spin_Timer"
+			],
+			[
+				"rin",
+				"Rinse_Timer"
+			],
+			[
+				"soa",
+				"Soak_Timer"
+			],
+			[
+				"w",
+				"Wash_Timer"
+			],
+			[
+				"s",
+				"Spin_done"
+			],
+			[
+				"ri",
+				"Rinse_done"
+			],
+			[
+				"so",
+				"Soak_done"
+			],
+			[
+				"el",
+				"else"
+			],
+			[
+				"ti",
+				"Timer_Pause"
+			],
+			[
+				"DO",
+				"Door_Closed"
+			],
+			[
+				"St",
+				"Stop"
+			],
+			[
+				"n",
+				"Normal_Wash"
+			],
+			[
+				"Spin_",
+				"spin_done"
+			],
+			[
+				"was",
+				"wash_timer"
+			],
+			[
+				"time",
+				"Timer"
+			],
+			[
+				"AL",
+				"ALUMODE"
+			],
+			[
+				"car",
+				"CARRYOUT"
+			],
+			[
+				"MULT",
+				"MULTSIGOUT"
+			],
+			[
+				"m",
+				"MULTSIGNIN"
+			],
+			[
+				"alu",
+				"ALU_MODE_OUT_w"
+			],
+			[
+				"RSTAL",
+				"RSTALUMODE"
+			],
+			[
+				"CARRY",
+				"CARRYIN"
+			],
+			[
+				"CEC",
+				"CECARRYIN"
+			],
+			[
+				"CARRYCA",
+				"CARRYCASCIN"
+			],
+			[
+				"CAR",
+				"CARRYINSEL"
+			],
+			[
+				"X",
+				"X_MUX_OUT_ALU_IN"
+			],
+			[
+				"rst",
+				"RSTCTRL"
+			],
+			[
+				"C_",
+				"C_OUT"
+			],
+			[
+				"RS",
+				"RSTC"
+			],
+			[
+				"inmode",
+				"INMODE1_W"
+			],
+			[
+				"inmod",
+				"INMODE_W"
+			],
+			[
+				"ce",
+				"CEINMODE"
+			],
+			[
+				"B",
+				"BCOUT"
+			],
+			[
+				"IN",
+				"INMODE"
+			],
+			[
+				"BC",
+				"BCIN"
+			],
+			[
+				"CE",
+				"CEB2"
+			],
+			[
+				"C",
+				"CEB1"
+			],
+			[
+				"R",
+				"RSTB"
+			],
+			[
+				"A",
+				"ACOUT"
+			],
+			[
+				"AC",
+				"ACIN"
+			],
+			[
+				"rs",
+				"RSTD"
+			],
+			[
+				"ca",
+				"CARRY_OUT"
+			],
+			[
+				"carr",
+				"CARRY_OUT"
+			],
+			[
+				"MI",
+				"MULTSIGOUT"
+			],
+			[
+				"P_C",
+				"P_COUT_IN"
+			],
+			[
+				"CARR",
+				"CARRY_OUT"
+			],
+			[
+				"be",
+				"begin\tbegin"
+			],
+			[
+				"x",
+				"X_MUX_OUT"
+			],
+			[
+				"E",
+				"else\telse"
+			],
+			[
+				"OPMO",
+				"OPMODE"
+			],
+			[
+				"OP",
+				"OPMODE"
+			],
+			[
+				"se",
+				"SEL_BCOUT"
+			],
+			[
+				"SEL",
+				"SEL_BCOUT"
+			],
+			[
+				"SE",
+				"SEL_B2"
+			],
+			[
+				"cl",
+				"CLK_PERIOD"
+			],
+			[
+				"S",
+				"sum"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/C/Users/omagh/Documents/GitHub/I3C_2024/DDR_NT2.sv",
+			"settings":
+			{
+				"buffer_size": 28268,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"instal package",
+				"Package Control: Install Package"
+			],
+			[
+				"install ",
+				"Install Package Control"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/D/Omar Maghraby/AUC/Advanced digital/FINAL PROJECT/digital_final/syn/cons/cons.tcl",
+		"/D/Omar Maghraby/AUC/Advanced digital/FINAL PROJECT/digital_final/syn/report/synth_timing.rpt",
+		"/D/Omar Maghraby/AUC/Advanced digital/FINAL PROJECT/digital_final/syn/report/synth_area.rpt",
+		"/D/Omar Maghraby/AUC/Advanced digital/FINAL PROJECT/digital_final/syn/syn.tcl",
+		"/D/Omar Maghraby/AUC/Advanced digital/FINAL PROJECT/digital_final/syn/syn.log",
+		"/C/Users/omagh/Documents/GitHub/Rx/RX_TB.v",
+		"/C/Users/omagh/Documents/GitHub/I3C_2024/DDR_NT2.sv",
+		"/C/Users/omagh/Documents/GitHub/I3C_2024/i3c_top.v",
+		"/C/Users/omagh/Documents/GitHub/I3C_2024/scl_generation.v",
+		"/C/Users/omagh/Documents/GitHub/I3C_2024/I3C_TOP_TB.sv",
+		"/C/Users/omagh/Documents/GitHub/I3C_2024/Tx.v",
+		"/C/Users/omagh/Documents/GitHub/I3C_2024/CCC_Handler.v",
+		"/C/Users/omagh/Documents/GitHub/I3C_2024/HDR_Engine.v",
+		"/C/Users/omagh/Documents/GitHub/ENTHDR/ENTHDR.v",
+		"/C/Users/omagh/Documents/GitHub/I3C_2024/Normal_Transaction.v",
+		"/D/Omar Maghraby/AUC/Verification/SPI/TB.SV",
+		"/D/Omar Maghraby/AUC/Verification/SPI/ELMALEK.SV",
+		"/D/Omar Maghraby/AUC/Verification/SPI/CLK_GEN.SV",
+		"/D/Omar Maghraby/AUC/Verification/SPI/EL3ABD.SV",
+		"/C/Users/omagh/Documents/GitHub/I3C_2024/controller_TX.v",
+		"/C/Users/omagh/Documents/GitHub/I3C_2024/scl_staller.v",
+		"/C/Users/omagh/Documents/GitHub/I3C_2024/new_i3c_engine.v",
+		"/C/Users/omagh/Documents/GitHub/HDR Engine/HDR_Engine.v",
+		"/C/Users/omagh/Documents/GitHub/Target/ENTHDR/ENTHDR_TGT.V",
+		"/C/Users/omagh/Documents/GitHub/new DAA/controller_TX.v",
+		"/C/Users/omagh/Documents/GitHub/ENTHDR/ENTHDR_TB.v",
+		"/C/Users/omagh/Documents/GitHub/I3C_2024/Rx.v",
+		"/C/Users/omagh/Documents/GitHub/reg_file/reg_file (1).v",
+		"/C/Users/omagh/Documents/GitHub/Target/ENTHDR/ENTHDR_CTRL_TGT_TOP.V",
+		"/C/Users/omagh/Documents/GitHub/Target/tx/target_tx.v",
+		"/C/Users/omagh/Documents/GitHub/Target/ENTHDR/ENTHDR_TGT_TB.V",
+		"/C/Users/omagh/Documents/GitHub/Rx/Rx.v",
+		"/C/Users/omagh/Documents/GitHub/Target/TARGET_TOP/TARGET.V",
+		"/C/Users/omagh/Documents/GitHub/Target/NT/NT.V",
+		"/C/Users/omagh/Documents/GitHub/Target/ENTHDR_R/ENTHDR_RES.v",
+		"/C/Users/omagh/Documents/GitHub/Target/target_tx.v",
+		"/C/Users/omagh/Documents/GitHub/new DAA/controller_RX.v",
+		"/C/Users/omagh/Documents/GitHub/verification1/SDR_HDR_TOP.sv",
+		"/D/ASU/Senior 2/Sem2/Verification/alu.sv",
+		"/D/ASU/Senior 2/Sem2/Verification/coverage.sv",
+		"/C/Users/omagh/Documents/GitHub/new DAA/dynamic_address_assignment.v",
+		"/C/Users/omagh/Documents/GitHub/Normal Transaction/Normal Transaction.V",
+		"/C/Users/omagh/Documents/GitHub/CCC Handler/CCC Handler.v",
+		"/C/Users/omagh/Documents/GitHub/Tx/Tx.v",
+		"/C/Users/omagh/Documents/GitHub/Rx/rx_ddr_tb.v",
+		"/C/Users/omagh/Documents/GitHub/i3c top/i3c top.v",
+		"/C/Users/omagh/Documents/GitHub/old DAA/scl_staller.v",
+		"/C/Users/omagh/Documents/GitHub/Tx/Tx_tb",
+		"/C/Users/omagh/Documents/GitHub/Normal Transaction",
+		"/C/Users/omagh/Documents/GitHub/new DAA/reg_file.v",
+		"/C/Users/omagh/Documents/GitHub/New i3c engine/new i3c engine.v",
+		"/C/Users/omagh/Documents/GitHub/new DAA/daa_tb.v",
+		"/C/Users/omagh/Documents/GitHub/old DAA/controller_TX.v",
+		"/C/Users/omagh/Documents/GitHub/old DAA/daa_tb.v",
+		"/D/ASU/Senior 2/GP/HDR RTL Codes/SDR CODES MODIFIED/rtl/controller/mux.v",
+		"/D/ASU/Senior 2/GP/HDR RTL Codes/SDR CODES MODIFIED/rtl/controller/sdr_mode.v",
+		"/D/ASU/Senior 2/GP/HDR RTL Codes/SDR CODES MODIFIED/rtl/controller/controller_TX.v",
+		"/D/ASU/Senior 2/GP/HDR RTL Codes/SDR CODES MODIFIED/rtl/controller/controller_RX.v",
+		"/D/ASU/Senior 2/GP/HDR RTL Codes/SDR CODES MODIFIED/rtl/controller/i3c_top.v",
+		"/D/ASU/Senior 2/GP/HDR RTL Codes/SDR CODES MODIFIED/rtl/controller/bits_counter.v",
+		"/D/ASU/Senior 2/GP/HDR RTL Codes/SDR CODES MODIFIED/rtl/controller/i3c_engine.v",
+		"/D/ASU/Senior 2/GP/HDR RTL Codes/SDR CODES MODIFIED/rtl/controller/scl_generation.v",
+		"/D/ASU/Senior 2/GP/HDR RTL Codes/SDR CODES MODIFIED/rtl/controller/dynamic_address_assignment.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/controller_TX.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/SCL Handling/scl_generation.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/clk_divider.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/frame_counter.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/bits_counter.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/controller_RX.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/reg_file.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/Timer/timings.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/Timer/i3c_timer_fsm.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/SCL Handling/scl_staller.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/i3c_engine.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/gen_mux.v",
+		"/D/Omar Maghraby/Digital IC design/verilog/FINAL SYSTEM/UART/edge_bit_counter.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/Modes/DAA/dynamic_address_assignment.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/TB/daa_tb.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/i3c_top.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/Modes/SDR/sdr_mode2024.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/SDA Handling/push_pull_behav_model.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/SDA Handling/sda_handling.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/SDA Handling/open_drain_behav_model.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/Modes/HJ/hot_join.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/Modes/CRH/controller_crh.v",
+		"/D/ASU/Senior 2/ASIC/ass/sdet.v",
+		"/D/ASU/Senior 2/ASIC/ass/sdet_tb.v",
+		"/D/Omar Maghraby/AUC/DIGITAL/Project_FinalF/13_111_2/CARRY_IN_SEL.V",
+		"/D/Omar Maghraby/AUC/DIGITAL/Project_FinalF/13_111_2/DSP_TOP.v",
+		"/D/Omar Maghraby/AUC/DIGITAL/Project_FinalF/13_111_2/CARRY_IN.V",
+		"/D/ASU/Senior 2/GP/I3C_SDR_CODE/I3C Target (To be done)/target_tx.v",
+		"/D/ASU/Senior 2/GP/I3C_SDR_CODE/I3C Target (To be done)/target_rx.v",
+		"/D/ASU/Senior 2/GP/I3C_SDR_CODE/I3C Target (To be done)/target_hot_join.v",
+		"/D/ASU/Senior 2/GP/I3C_SDR_CODE/I3C Target (To be done)/target_ctrl.v",
+		"/D/ASU/Senior 2/GP/I3C_SDR_CODE/I3C Target (To be done)/target_bits_counter.v",
+		"/D/ASU/Senior 2/GP/I3C_SDR_CODE/I3C Target (To be done)/reg_file_target.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/Modes/IBI/IBI.v",
+		"/D/ASU/Senior 2/GP/I3C Controller/Modes/SDR/sdr_mode.v",
+		"/D/ASU/Senior 2/GP/I3C_SDR_CODE/I3C Target (To be done)/i3c_target_top.v",
+		"/D/ASU/Senior 2/GP/I3C_SDR_CODE/I3C Target (To be done)/hdr_exit_pattern_detector .v",
+		"/D/ASU/Senior 2/GP/Old/I3C Controller/Modes/HJ/hot_join.v",
+		"/D/ASU/Senior 2/GP/Old/I3C Controller/Modes/DAA/mux.v",
+		"/D/ASU/Senior 2/GP/Old/I3C Controller/Modes/CRH/controller_crh.v",
+		"/D/ASU/Senior 2/GP/Old/I3C Controller/Modes/DAA/dynamic_address_assignment.v",
+		"/D/ASU/Senior 2/GP/Old/I3C Controller/SCL Handling/scl_staller.v",
+		"/D/ASU/Senior 2/GP/Old/I3C Controller/SDA Handling/tri_state_buf_n.v",
+		"/D/ASU/Senior 2/GP/Old/I3C Controller/SDA Handling/tri_state_buf.v",
+		"/D/ASU/Senior 2/GP/Old/I3C Controller/SDA Handling/sda_handling.v",
+		"/D/ASU/Senior 2/GP/Old/I3C Controller/reg_file.v",
+		"/D/ASU/Senior 2/GP/Old/I3C Controller/SDA Handling/push_pull_behav_model.v",
+		"/D/ASU/Senior 2/GP/Old/I3C Controller/SDA Handling/open_drain_behav_model.v",
+		"/D/ASU/Senior 2/GP/Old/I3C Controller/SCL Handling/scl_generation.v",
+		"/D/ASU/Senior 2/GP/Old/I3C Controller/Modes/SDR/sdr_mode.v",
+		"/D/ASU/Senior 2/GP/Old/I3C Controller/i3c_engine.v",
+		"/D/Omar Maghraby/AUC/DIGITAL/Project_FinalF/C_PORT.V",
+		"/D/Omar Maghraby/AUC/DIGITAL/Project_FinalF/ALUMODE_REG_B.v",
+		"/D/Omar Maghraby/AUC/DIGITAL/Project_FinalF/A_D_PREADDER.v",
+		"/D/Omar Maghraby/AUC/DIGITAL/Project_FinalF/ALU_BLOCK.v",
+		"/D/Omar Maghraby/AUC/DIGITAL/Project_FinalF/Z_MUX.V",
+		"/D/Omar Maghraby/AUC/DIGITAL/Project_FinalF/YMUX.v",
+		"/D/Omar Maghraby/AUC/DIGITAL/Project_FinalF/XMUX.V",
+		"/D/Omar Maghraby/AUC/DIGITAL/Project_FinalF/PCOUT_REG.V",
+		"/D/Omar Maghraby/AUC/DIGITAL/Project_FinalF/PATTERN_DETECT_TB.v",
+		"/D/Omar Maghraby/AUC/DIGITAL/Project_FinalF/PATTERN_DETECT_REG.v",
+		"/D/Omar Maghraby/AUC/DIGITAL/Project_FinalF/PATTERN_DETECT.v",
+		"/D/Omar Maghraby/AUC/DIGITAL/Project_FinalF/P_OUT.V",
+		"/D/Omar Maghraby/AUC/DIGITAL/Project_FinalF/OPMODEREG_B.V",
+		"/D/Omar Maghraby/AUC/DIGITAL/Project_FinalF/M.v"
+	],
+	"find":
+	{
+		"height": 28.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"Parity_data_seq",
+			"length",
+			"data",
+			"success",
+			"Parity_data_seq",
+			"parity",
+			"waiting",
+			"parity_data",
+			"Parity_data_seq",
+			"parity_data",
+			"Parity_data_seq",
+			"4",
+			"Parity_data_seq",
+			"parity",
+			"parity_data",
+			"Parity_data_seq",
+			"third_stage_first_data_pre",
+			"abort",
+			"ack_waiting",
+			"second_data_byte",
+			"serializing_zeros",
+			"parity",
+			"special_preamble",
+			"special_preamble_tx",
+			"o_tx_mode           <= 3'b010 ",
+			"o_tx_mode",
+			"I3C_ENGINE_SEL",
+			"o_ser",
+			"STOP",
+			"START_BIT",
+			"o_i3cengine_hdrengine_done",
+			"done",
+			"STOP",
+			"i_stall_flag",
+			"i_regf_dev_index",
+			"address",
+			"i_regf_read_n_write_bit",
+			"reserved",
+			"read",
+			"serializing_zeros",
+			"b0011",
+			"seven_zeros",
+			"special_preamble",
+			"special_preambles",
+			"special_preamble_tx",
+			"first_stage_command_Pre",
+			"DDR_NT",
+			"write_configurations",
+			"RAND_CMD",
+			"write_configurations",
+			"ccc_broadcast_driver",
+			"special_preamble_tx",
+			"first_stage_command_Pre",
+			"special_preambles",
+			"crc_pre_calc",
+			"CRC_VALUE",
+			"i_crc_value_tb",
+			"Parity",
+			"TOKEN",
+			"i_crc_value_tb",
+			"error",
+			"tgt_sdahnd_sda",
+			"o_tgt_engine_done",
+			"tgt_sdahnd_sda",
+			"i_handling_pp_en",
+			"push_pull_out",
+			"o_handling_s_data",
+			"i_handling_pp_en",
+			"deser_s_data",
+			"HDR_ENGINE",
+			"i_sdr_clk",
+			"i_hdrengine_done",
+			"hdrengine_exit",
+			"i_hdrengine_done",
+			"sys_clk_50mhz",
+			"deser_s_data",
+			"o_sdr_rx_nack_ack",
+			"ser_nack_ack",
+			"i_rx_ack_nack",
+			"engine_configuration_addr",
+			"i_hdr_en_tb",
+			"i_regf_rd_en_config",
+			"i_sys_clk_tb",
+			"dynamic_address_assignment",
+			"ack",
+			"o_ser_sda_low",
+			"ENTHDR",
+			"scl",
+			"scl_pos_edge",
+			"o_sdahnd_sda",
+			"enthdr",
+			"scl",
+			"i_ccc_done",
+			"i_hdr_en",
+			"i_ccc_done",
+			"i_hdr_en",
+			"i_ccc_done"
+		],
+		"highlight": false,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"scrollbar_highlights": true,
+		"show_context": true,
+		"use_buffer2": true,
+		"use_gitignore": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/C/Users/omagh/Documents/GitHub/I3C_2024/DDR_NT2.sv",
+					"selected": true,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 28268,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/SystemVerilog/SystemVerilog.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 6922.4,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"stack_multiselect": false,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 28.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "bits_counter.sublime-project",
+	"replace":
+	{
+		"height": 52.8
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 241.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

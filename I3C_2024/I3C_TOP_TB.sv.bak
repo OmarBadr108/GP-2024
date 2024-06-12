@@ -149,7 +149,7 @@ i_controller_en_tb = 1'b0;
 
 
     #(3*CLK_PERIOD)
-		  @(posedge DUT.DDR_NT.o_rx_en )
+		   @(posedge DUT.DDR_NT.o_rx_en )
 			sda_drive = 'b0;
 		  #(4*CLK_PERIOD)
 		    sda_drive = 'bz;

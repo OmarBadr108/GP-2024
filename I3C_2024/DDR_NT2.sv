@@ -1,4 +1,4 @@
-module DDR_NT1 (
+module DDR_NT2 (
 
 input        i_sys_clk,
 input        i_sys_rst,
@@ -18,7 +18,7 @@ input [4:0]  i_regf_dev_index,   	// 5’b0: Broadcast  ;  any other value: Dire
 input        i_regf_short_read,  	// 1’b0: ALLOW_SHORT_READ  ; 1’b1: SHORT_READ_IS_ERROR 
 input        i_regf_wroc ,       	//1’b0: NOT_REQUIRED RESPONSE ; 1’b1: REQUIRED RESPONSE
 input        i_regf_wr_rd_bit,   	//  1’b0: WRITE ; 1’b1: READ
-input        i_regf_cmd_attr,     	// 1'b1: Immediate Data Transfer Command ; 1'b0:Regular Transfer Command
+input [2:0]  i_regf_cmd_attr,     	// 1'b1: Immediate Data Transfer Command ; 1'b0:Regular Transfer Command
 input [2:0]  i_regf_dtt,			// Determine The Number of Data Byte
 input [5:0]  i_bitcnt ,
 
@@ -40,12 +40,11 @@ output reg       o_bitcnt_rst,
 output reg       o_sdahand_pp_od,
 output reg       o_regf_wr_en,
 output reg       o_regf_rd_en,
-output reg [9:0] o_regf_addr,
+output reg [11:0] o_regf_addr,
 output reg [4:0] o_sclstall_no_of_cycles,
 output reg       o_sclstall_en,  
 output reg       o_engine_done,
 output reg [7:0] o_tx_special_data,
-output wire       o_en_mux ,
 
 //------------ interface output signals ---------//
 output reg       o_regf_abort,
@@ -120,7 +119,7 @@ localparam [3:0]  seven_zeros = 'b0011 ,
 								  CRC_value = 'b1101,
                   token_CRC = 'b1100, 
                   Restart_Pattern = 'b1111,
-                  Exit_Pattern = 'b1110;	
+                  Exit_Pattern = 'b1110;		
 
  
  
@@ -134,10 +133,10 @@ localparam [3:0]  seven_zeros = 'b0011 ,
 localparam [3:0]     preamble = 'd0, 
                   //   nack_bit = 'd1 ,				 
                      Deserializing_byte = 'd3,                   
-                     Check_token = 'd5,
-                     Check_Parity_value = 'd6,
-                     Check_CRC_value = 'd7,
-                     Error = 'd15;
+                     Check_token = 'd4,
+                     Check_Parity_value = 'd5,
+                     Check_CRC_value = 'd6,
+                     Error = 'd7;
                      
 
 
@@ -175,15 +174,11 @@ localparam [4:0]              idle = 'd0,
 //------------------ internal signals decleration -----------------//					 
 reg [6:0] target_addres,broadcast_address;
 reg    [4:0]         current_state , next_state ;
-wire [3:0] count ;
+/*wire [3:0] count ;*/
 reg parity_data, Parity_data_seq ,sysclk_done,en_sysclk ;
 
 
 localparam specific_address = 'd 1000; // for 8 zeros
-
-
-
-assign o_en_mux = (!i_regf_wr_rd_bit)? 1 : 0;
 
 
 //--------------------------- 1: Sequential Always Block ------------------------------//
@@ -192,6 +187,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst)
   if(!i_sys_rst)
    begin
      current_state <= idle ;
+     o_tx_en = 'b0 ; //laila
   /*  o_tx_en = 'b0 ; 
     o_rx_en = 'b0 ;
     o_frmcnt_en = 'b0 ;
@@ -616,7 +612,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst)
 
 			restart :  begin
 
-		        if (i_tx_mode_done && i_staller_done)
+		        if (i_tx_mode_done /*&& i_staller_done*/)
 		          next_state = idle ;  // return to idle waitng to be enabled
 		        else
 		          next_state = restart ;
@@ -626,24 +622,30 @@ always @(posedge i_sys_clk or negedge i_sys_rst)
 
 			exit :  begin
 
-		        if (i_tx_mode_done && i_staller_done)
+		        if (i_tx_mode_done /*&& i_staller_done*/)
 		          next_state = idle ;
 		        else
 		          next_state = exit ;
 
 		  end 
 		  
-			default : next_state = idle ;
 		  
+		  waiting :  begin 
 		  
-		/*  waiting :  begin 
-		  
-		  if (sysclk_done && i_staller_done)
+		  if (sysclk_done /*&& i_staller_done*/)
 		          next_state = idle ;
 		        else
 		          next_state = waiting ;
 		  
-		  end*/
+		  end
+		  
+		  
+		  default : begin 
+		  
+		  next_state = idle ;
+		  
+			
+		  end 
 		  
 		  
 		/*  parity_0	: begin 
@@ -741,12 +743,10 @@ always @(*)
 	o_regf_abort = 'b0;
 	o_regf_error_type = SUCCESS;  // No error
 	en_sysclk=0;
-	o_tx_mode = 'b0;
-	o_rx_mode = 'b0 ;
-	parity_data = 'b0;
-	o_tx_special_data = 'd0;
-	//next_state = idle;
-	
+	o_tx_special_data = 'd0; 
+	o_tx_mode = special_preamble_tx ;
+	o_rx_mode = preamble ;
+	parity_data ='d0;
 //	o_bitcnt_stop = 'b0;
 
 
@@ -803,10 +803,11 @@ always @(*)
 		   o_frmcnt_en = 'b1 ;
 		
 		  parity_data = 'b0;                  // Calculating_Parity_Command
+		  en_sysclk ='b1;
 		
 		
 		
-		o_tx_special_data = {1'b0,target_addres};         
+		o_tx_special_data = target_addres;         
 		
 		end
 
@@ -884,11 +885,9 @@ always @(*)
 	      if ((!i_rx_pre) && i_rx_mode_done)
 			begin
 			o_regf_error_type = SUCCESS;
-			if (!i_regf_wr_rd_bit) begin 
 			o_tx_en = 'b1;
 			o_tx_mode = Serializing_byte; 		    
 			o_regf_rd_en = 'b1 ;
-			end 
 			end
         else 
 		begin
@@ -900,7 +899,7 @@ always @(*)
 		   
 		 if (!i_regf_wr_rd_bit)
 		 begin
-		  if (i_regf_cmd_attr)              // Immediate Transfer
+		  if (i_regf_cmd_attr[0])              // Immediate Transfer
 			begin 
 			case (i_regf_dtt)
 		//	'd0 : o_regf_addr = 'd0;         // no data 
@@ -998,6 +997,7 @@ always @(*)
    
    parity_data = 'b1;                   // Calculating Parity of Data
    o_frmcnt_en = 'b1 ;
+   en_sysclk ='b1;
   
   if (!i_regf_wr_rd_bit)
       begin
@@ -1189,7 +1189,7 @@ fourth_stage_crc_first_pre     : begin
           o_tx_mode =  CRC_value ;
 		if((i_bitcnt == 'd12) || (i_bitcnt == 'd11))
 			begin 
-			o_sclstall_en = 0;
+			o_sclstall_en = 1;
 			if(!i_regf_toc)
 				o_sclstall_no_of_cycles = restart_stalling;
 			else 
@@ -1213,7 +1213,7 @@ fourth_stage_crc_first_pre     : begin
 				o_regf_error_type = SUCCESS;
 					if((i_bitcnt == 'd12) || (i_bitcnt == 'd11))
 						begin 
-						o_sclstall_en = 0;
+						o_sclstall_en = 1;
 						if(!i_regf_toc)
 							o_sclstall_no_of_cycles = restart_stalling;
 						else 
@@ -1248,13 +1248,13 @@ fourth_stage_crc_first_pre     : begin
           o_tx_en = 'b1;
           o_tx_mode = Restart_Pattern;
           o_sclstall_no_of_cycles = restart_stalling;
-         // o_sclstall_en = 'b1;
+          o_sclstall_en = 'b1;
 		   
 
-		/*	if(i_tx_mode_done )
+			if(i_tx_mode_done )
 			 o_sclstall_en = 'b0;
 		  else 
-			o_sclstall_en = 'b1;*/
+			o_sclstall_en = 'b1;
              end
 
 
@@ -1263,18 +1263,16 @@ fourth_stage_crc_first_pre     : begin
           o_tx_en = 'b1;
           o_tx_mode = Exit_Pattern;
           o_sclstall_no_of_cycles = exit_stalling;
-        //  o_sclstall_en = 'b1;
+          o_sclstall_en = 'b1;
 		 
-		/*	if(i_tx_mode_done )
+			if(i_tx_mode_done )
 			 o_sclstall_en = 'b0;
 		  else 
-			o_sclstall_en = 'b1;*/
+			o_sclstall_en = 'b1;
 
-             end 
+             end     
 
-	
-
-	/*waiting : begin 
+	waiting : begin 
 		o_sclstall_en = 'b0;
 		o_tx_en = 'b1;
 		if(i_regf_toc)
@@ -1285,18 +1283,20 @@ fourth_stage_crc_first_pre     : begin
 		
 		
 		
-		end*/
+		end
+		
+	
 
       endcase
-	  
     end
 
 
    
    //--------------------------- 4: Combinational Always Block For Encoding The Address------------------------------//
    always@(*) begin
+		 
     case (i_regf_dev_index)                     
-        5'd0 : target_addres =     7'd8  ;  
+        5'd0 : target_addres =     7'd8  ;   
         5'd1 : target_addres     =     7'd9  ;  //0001001
         5'd2 : target_addres     =     7'd10 ;
         5'd3 : target_addres     =     7'd11 ;
@@ -1335,10 +1335,12 @@ fourth_stage_crc_first_pre     : begin
         5'd29: target_addres = 7'd37 ;
         5'd30: target_addres = 7'd38 ;
         5'd31: target_addres = 7'd39 ;
+		
+	
     endcase
 
 end 
-//
+/**********************************************/
 /*reg [3:0] count_seq ;
 
 always@ (posedge i_sys_clk or negedge i_sys_rst)

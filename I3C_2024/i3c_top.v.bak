@@ -1326,7 +1326,7 @@ gen_mux #(1,1) reg_rd_en_config_data_mux (
 
 
 
-    DDR_NT2 DDR_NT (
+    DDR_NT1 DDR_NT (
         .i_sys_clk(sys_clk_50mhz), // done 
         .i_sys_rst(i_sdr_rst_n),  // done 
         .i_engine_en(engine_ddr_enable), // done 
