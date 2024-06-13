@@ -4,5 +4,5 @@ vsim -voptargs=+acc work.CCC_Handler_tb -cover
 
 do ./wave.wcfg \
 # Save coverage data and run the simulation
-#coverage save CCC_Handler.ucdb -onexit
+# coverage save CCC_Handler.ucdb -onexit
 run -all

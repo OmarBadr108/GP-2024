@@ -62,18 +62,8 @@ add wave -noupdate -color Gold -radix unsigned /CCC_Handler_tb/CCC_Handler_dut/n
 add wave -noupdate -color Gold -radix unsigned /CCC_Handler_tb/CCC_Handler_dut/current_state
 add wave -noupdate -color red /CCC_Handler_tb/tx_dut/A
 add wave -noupdate /CCC_Handler_tb/tx_dut/i_ddrccc_special_data
-add wave -noupdate /CCC_Handler_tb/o_sdahnd_serial_data_tb
-add wave -noupdate /CCC_Handler_tb/tx_dut/D2
-add wave -noupdate /CCC_Handler_tb/tx_dut/D1
-add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3351/tmp_D1
-add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3351/tmp_D0
-add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3351/P1
-add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3351/P0
-add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3351/o
-add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3351/correct_repeated_data_word
-add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3351/collected_data_wrd
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {234323 ns} 0}
+WaveRestoreCursors {{Cursor 1} {15357530 ns} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 185
 configure wave -valuecolwidth 100
@@ -89,4 +79,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {57347 ns} {63678 ns}
+WaveRestoreZoom {15357226 ns} {15358810 ns}
