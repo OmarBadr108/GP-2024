@@ -448,8 +448,9 @@ module I3C_TOP (
 
 //----------------------------HDR TX SIGNALS----------------------------//
 wire [4:0] crc_value;
-wire [7:0] crc_parallel_data;
-wire       crc_en;
+wire [7:0] tx_crc_parallel_data;
+wire       tx_crc_en;
+
 wire       tx_hdr_mode_done;
 
 //----------------------------HDR RX SIGNALS----------------------------//
@@ -459,6 +460,7 @@ wire rx_pre;
 wire rx_error;
 wire crc_data_valid;
 wire ddrccc_error_done;
+wire       rx_crc_en;
 
 //----------------------------HDR Frame Counter----------------------------//
 wire [5:0]  cnt_bit_count;
@@ -490,6 +492,18 @@ wire        ddr_engine_done ;
 wire        bitcnt_rst ;
 wire        o_regf_abort ;
 wire [3:0]  o_regf_error_type ;
+
+//-----------------------------CRC----------------------------//
+wire crc_en_rx_tx_mux_sel;
+wire crc_en_mux_out;
+
+wire tx_crc_data_valid;
+wire rx_crc_data_valid;
+wire crc_data_valid_mux_out;
+wire crc_data_rx_tx_valid_sel;
+wire       crc_data_tx_rx_mux_sel;
+wire [7:0] crc_data_mux_out;
+
 
 
 assign o_sdr_rx_valid = regf_wr_en_mux_out ;
@@ -879,7 +893,7 @@ scl_generation u_scl_generation (
             .i_sdr_ctrl_clk               (sys_clk_50mhz)            ,
             .i_sdr_ctrl_rst_n             (i_sdr_rst_n)              ,
             .i_sdr_scl_gen_pp_od          (scl_pp_od_mux_out)        ,
-            .i_scl_gen_stall              (ccc_scl_stall_en)          ,  //testing laila //(scl_gen_stall) 
+            .i_scl_gen_stall              (ddr_scl_stall_en)          ,  //testing laila //(scl_gen_stall) 
             .i_sdr_ctrl_scl_idle          (sdr_scl_idle_mux_out )    ,
             .i_timer_cas                  (timer_cas)                ,
             .o_scl_pos_edge               (scl_pos_edge)             ,
@@ -1320,7 +1334,11 @@ gen_mux #(1,1) reg_rd_en_config_data_mux (
         .o_engine_done(ccc_engine_done),                        // done 
         .o_txrx_addr_ccc         (ccc_tx_special_data),   // done 
         .o_engine_odd(engine_odd),
-        .o_regf_ERR_STATUS       (o_regf_ERR_STATUS_tb)    //??? not an input to regfile - yes it's output to the interface (response fifo or testbench)
+        .o_regf_ERR_STATUS       (o_regf_ERR_STATUS_tb) ,   //??? not an input to regfile - yes it's output to the interface (response fifo or testbench)
+
+        .o_crc_en_rx_tx_mux_sel(crc_en_rx_tx_mux_sel),
+        .o_crc_data_rx_tx_valid_sel(crc_data_rx_tx_valid_sel),
+        .o_crc_data_tx_rx_mux_sel(crc_data_tx_rx_mux_sel)
 
         );
 
@@ -1367,7 +1385,10 @@ gen_mux #(1,1) reg_rd_en_config_data_mux (
         .o_regf_wr_en(ddr_regf_wr_en),
         .o_regf_rd_en(ddr_regf_rd_en), // done
         .o_regf_addr(ddr_regf_addr),
-        .o_engine_done(ddr_engine_done)
+        .o_engine_done(ddr_engine_done),
+        .o_crc_en_rx_tx_mux_sel(crc_en_rx_tx_mux_sel),
+        .o_crc_data_rx_tx_valid_sel(crc_data_rx_tx_valid_sel),
+        .o_crc_data_tx_rx_mux_sel(crc_data_tx_rx_mux_sel)
     );
 
 // sdr staller
@@ -1418,7 +1439,7 @@ scl_staller u_scl_staller(
     );
 
 
-
+wire crc_last_byte;
 
         RX RX (
         .i_sys_clk                  (sys_clk_50mhz)               ,
@@ -1437,10 +1458,8 @@ scl_staller u_scl_staller(
         .o_ddrccc_rx_mode_done      (rx_hdr_mode_done)         ,
         .o_ddrccc_pre               (rx_pre)               ,
         .o_ddrccc_error             (rx_error)             ,
-        .o_crc_en                   (crc_en)               , // 
-        .o_crc_data_valid           (crc_data_valid)       
-              
-
+        .o_crc_en                   (rx_crc_en)               , // 
+        .o_crc_data_valid           (rx_crc_data_valid)       
         );
 
         tx tx (
@@ -1455,9 +1474,61 @@ scl_staller u_scl_staller(
         .i_crc_crc_value         (crc_value),
         .o_sdahnd_serial_data    (ser_hdr_data),
         .o_ddrccc_mode_done      (tx_hdr_mode_done),
-        .o_crc_parallel_data     (crc_parallel_data),
-        .o_crc_en                (crc_en)
+        .o_crc_parallel_data     (tx_crc_parallel_data),
+        .o_crc_en                (tx_crc_en),
+        .o_crc_last_byte         (crc_last_byte),
+        .o_crc_data_valid        (tx_crc_data_valid)
         );
+
+
+
+
+  
+
+
+
+crc u_crc (
+            .i_sys_clk(sys_clk_50mhz),
+            .i_sys_rst(i_sdr_rst_n),
+            .i_txrx_en(crc_en_mux_out),   // mux to be an input either from tx or rx
+            .i_txrx_data_valid(crc_data_valid_mux_out), // mux to be an input either from tx or rx
+            .i_txrx_last_byte(crc_last_byte), // mux to be an input either from tx or rx
+            .i_txrx_data(crc_data_mux_out), // mux to be an input either from tx or rx
+            .o_txrx_crc_value(crc_value), // mux to be an input either from tx or rx
+            .o_txrx_crc_valid(crc_valid) // mux to be an input either from tx or rx
+);
+
+
+
+/*gen_mux #(1,1) crc_en_ddr_ccc_sel_mux (
+            .data_in  ({ccc_crc_en,ddr_crc_en}),   
+            .ctrl_sel (crc_en_ccc_ddr_mux_sel)  ,
+            .data_out (crc_en_rx_tx_mux_sel));*/
+
+
+
+
+
+
+
+gen_mux #(1,1) crc_en_tx_rx_mux (
+            .data_in  ({rx_crc_en,tx_crc_en}),   //0:tx ---------//1:rx     
+            .ctrl_sel (crc_en_rx_tx_mux_sel)  ,
+            .data_out (crc_en_mux_out));
+
+
+
+gen_mux #(1,1) crc_data_tx_rx_valid (
+            .data_in  ({rx_crc_data_valid,tx_crc_data_valid}),   //0:tx ---------//1:rx     
+            .ctrl_sel (crc_data_rx_tx_valid_sel)  ,
+            .data_out (crc_data_valid_mux_out));
+
+
+
+gen_mux #(8,1) crc_tx_rx_data_in (
+            .data_in  ({regfcrc_rx_data_out , tx_crc_parallel_data}),
+            .ctrl_sel (crc_data_tx_rx_mux_sel)  ,
+            .data_out (crc_data_mux_out) );
 
 //draft
 /*

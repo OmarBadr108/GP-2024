@@ -451,6 +451,14 @@
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
+		},
+		{
+			"file": "/C/Users/omagh/Documents/GitHub/I3C_2024/I3C_TOP_TB.sv",
+			"settings":
+			{
+				"buffer_size": 17391,
+				"line_ending": "Windows"
+			}
 		}
 	],
 	"build_system": "",
@@ -763,7 +771,6 @@
 				{
 					"buffer": 0,
 					"file": "/C/Users/omagh/Documents/GitHub/I3C_2024/DDR_NT2.sv",
-					"selected": true,
 					"semi_transient": false,
 					"settings":
 					{
@@ -786,6 +793,38 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 6922.4,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/C/Users/omagh/Documents/GitHub/I3C_2024/I3C_TOP_TB.sv",
+					"selected": true,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 17391,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/SystemVerilog/SystemVerilog.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2902.4,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
