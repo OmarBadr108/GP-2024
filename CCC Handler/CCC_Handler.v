@@ -573,7 +573,8 @@ end
                         end 
                     end
 
-                    next_state = FIRST_DATA_BYTE ;
+                    next_state   = FIRST_DATA_BYTE ;
+                    o_regf_rd_en = 1'b1 ;
                 end 
 
                 else if (i_rx_mode_done && i_rx_pre) begin 
@@ -586,6 +587,24 @@ end
                     next_state = PRE_FIRST_DATA_TWO ;
                 end 
 
+
+
+
+                // new 12/6/2024 
+                if (!i_regf_RnW) begin  // write operation 
+                    o_regf_rd_en = 1'b1 ;
+                    if (!i_regf_CMD_ATTR[0]) begin              // if regular command discriptor 
+                        o_regf_addr  = first_location + regular_counter ; // regular counter starts with value 8 to point to the ninth location 
+                    end 
+                    else begin                                  // if immediate
+                        if (Defining_byte) begin 
+                            o_regf_addr = first_location + immediate_counter + 1  ; // for 8 bit width Regfile .. point to sixth location
+                        end 
+                        else begin 
+                            o_regf_addr = first_location + immediate_counter ;        // for 8 bit width Regfile .. point to fourth location
+                        end 
+                    end 
+                end 
             end 
 
 
@@ -597,9 +616,13 @@ end
 
                 if (i_tx_mode_done && Defining_byte) begin   // if a defining byte exists
                     next_state = DEFINING_BYTE ;
+                    o_regf_rd_en = 1'b1 ;
+                    o_regf_addr  = first_location + 4 ;
                 end
                 else if (i_tx_mode_done && !Defining_byte) begin   
                     next_state = ZEROS ;
+                    o_regf_rd_en = 1'b1 ;
+                    o_regf_addr  = first_location - 1 ;
                 end 
                 else begin 
                     next_state = CCC_BYTE ;
@@ -793,6 +816,23 @@ end
                         next_state = PRE_DATA_TWO ;
                     end
                 end 
+
+
+                // new 12/6/2024 
+                if (!i_regf_RnW) begin  // write operation 
+                    o_regf_rd_en = 1'b1 ;
+                    if (!i_regf_CMD_ATTR[0]) begin              // if regular command discriptor 
+                        o_regf_addr  = first_location + regular_counter ; // regular counter starts with value 8 to point to the ninth location 
+                    end 
+                    else begin                                  // if immediate
+                        if (Defining_byte) begin 
+                            o_regf_addr = first_location + immediate_counter + 1  ; // for 8 bit width Regfile .. point to sixth location
+                        end 
+                        else begin 
+                            o_regf_addr = first_location + immediate_counter ;        // for 8 bit width Regfile .. point to fourth location
+                        end 
+                    end 
+                end 
                 
             end 
 
@@ -843,7 +883,8 @@ end
                 // for both read and write 
                 if (i_tx_mode_done && i_frmcnt_last_frame) begin  // to handle odd number of bytes in both regular and immediate
                     next_state   = ZEROS ; 
-                    //o_engine_odd = 1'b1 ;            // to be put in the response discreptor      
+                    o_regf_rd_en = 1'b1 ;
+                    o_regf_addr  = first_location - 1 ;      
                 end
 
                 //// new 3/5/2024
@@ -858,6 +899,14 @@ end
                     next_state = SECOND_DATA_BYTE ; 
                     immediate_counter = immediate_counter + 1 ;
                     regular_counter   = regular_counter + 1 ;
+                    // 12/6/2024
+                    if (!i_regf_CMD_ATTR[0]) begin              
+                        o_regf_addr  = first_location + regular_counter ; 
+                    end 
+                    else begin
+                        o_regf_addr  = first_location + immediate_counter ;
+                    end 
+                    /////////////////
                 end
                 else begin 
                     next_state = FIRST_DATA_BYTE ;

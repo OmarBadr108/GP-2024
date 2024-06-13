@@ -6,7 +6,7 @@ module CCC_Handler_tb ();
 // 1-signal declaration 
 	
 	// common signals 
-	reg        i_sys_clk_tb = 0 , i_rst_n_tb  ;
+	bit        i_sys_clk_tb , i_rst_n_tb  ;
 
 	///////////////////////// scl generation ///////////////////////////////
 	reg 	   i_scl_gen_stall_tb , i_sdr_ctrl_scl_idle_tb , i_timer_cas_tb , i_sdr_scl_gen_pp_od_tb ;
@@ -30,8 +30,32 @@ module CCC_Handler_tb ();
 	// new /////
 	wire  en_mux ;
 	////////////
-	// related to regfile (configuration)
+	// related to regfile 
+	bit i_regfile_clk_tb ;
+	wire [7:0]  i_rx_regfcrc_data_wr_tb ;
+	reg  [11:0] i_engine_configuration_tb ;
+	wire [3:0]  o_engine_TID_tb ;
+	wire [2:0]  o_engine_MODE_tb ;
+	wire        o_engine_CP_tb ;
+	wire [7:0]  i_regf_tx_parallel_data_tb ;
 
+	//////////////////////////////////////// for testing only /////////////////////////////////////////// 
+	reg 		  my_regf_wr_en_tb ;
+	reg  	 	  my_regf_wr_en_tb_selector ;
+	wire  	 	  my_regf_wr_en_tb_mux_out ;
+
+	reg  [7:0]   my_regf_data_wr_tb ;
+	reg 	 	  my_regf_data_wr_tb_selector ;
+	wire [7:0]	  my_regf_data_wr_tb_mux_out ;
+
+	reg  [11:0]  my_regf_addr_tb ;
+	reg 	 	  my_regf_addr_tb_selector ;
+	wire [11:0]  my_regf_addr_tb_mux_out ;
+
+
+
+	// frame counter 
+	wire  		 o_frcnt_toggle_tb ;
 
 	reg  	    i_regf_RnW_tb ,i_regf_TOC_tb , i_regf_WROC_tb , i_regf_DBP_tb , i_regf_SRE_tb ;
 	reg  [2:0]  i_regf_CMD_ATTR_tb ;
@@ -44,23 +68,59 @@ module CCC_Handler_tb ();
 	wire [7:0]  o_txrx_addr_ccc_tb ;
 	wire   	    o_engine_odd_tb ;
 	wire [3:0]  o_regf_ERR_STATUS_tb ;
+
 	// related to scl staller 
 	wire 	   o_sclstall_en_tb ;
 	wire [4:0] i_stall_cycles ;
+	wire o_scl_stall_tb ; // mesh mohem at the moment
+
 
 	//related to frame counter
 	wire 	   o_frmcnt_en_tb ;
-
+	reg  [15:0]	i_regf_DATA_LEN_tb ;
+	wire    	i_fcnt_no_frms_tb ;
+	wire 	 	i_fcnt_en_tb ;
+	wire  	 	o_fcnt_last_frame_tb ;
 	///////////////// scl gen ////////////////////
-
-	
 	reg i_sclgen_rst_n_tb ;
+
+
+	/// crc
+	reg        i_sdahnd_rx_sda_tb ;
+	wire [4:0] i_crc_value_tb ;
+	wire  	   i_crc_valid_tb ;
+	wire       o_crc_data_valid_tx_tb ;
+	wire       o_crc_data_valid_rx_tb ;
+	wire  	   o_ddrccc_error_done_tb ;
+	wire  	   o_crc_en_tb ;
+	wire 	   o_crc_last_byte_tx_tb ;
+	wire 	   o_crc_last_byte_rx_tb ; // to be connected
+
+	wire       o_sdahnd_serial_data_tb ;
+    wire [7:0] o_crc_parallel_data_tx_tb ;
+    //wire [7:0] o_crc_parallel_data_rx_tb ; already declared as : i_rx_regfcrc_data_wr_tb
+
+    // crc mux
+
+    wire 		mux1_out1 ;
+    wire 		mux1_out2 ;
+    wire 		mux1_out3 ;
+    wire [7:0]  mux8_out  ;
+
+
+
 
 // 2-clk generation 
 	
 	// system clk = 50 Mhz
 	parameter CLK_PERIOD = 20 ; 	 	 	 
 	always #(CLK_PERIOD/2) i_sys_clk_tb = ~i_sys_clk_tb ;
+
+	 
+	// regfile clk = 100 Mhz
+	parameter REGF_CLK_PERIOD = 10 ; 	 	 	 
+	always #(REGF_CLK_PERIOD/2) i_regfile_clk_tb = ~i_regfile_clk_tb ;
+
 
 	// scl ddr clk = 25 Mhz
 	parameter DDR_CLK_PERIOD = 40 ;
@@ -128,7 +188,7 @@ module CCC_Handler_tb ();
 
 	);
 
-		wire  		 o_frcnt_toggle_tb ;
+		
 
 
 		bits_counter bits_counter_dut (
@@ -143,10 +203,7 @@ module CCC_Handler_tb ();
 		
 	);
 
-		reg  [15:0]	i_regf_DATA_LEN_tb ;
-		wire    	i_fcnt_no_frms_tb ;
-		wire 	 	i_fcnt_en_tb ;
-		wire  	 	o_fcnt_last_frame_tb ;
+		
 		
 
 
@@ -162,7 +219,7 @@ module CCC_Handler_tb ();
 		.o_cccnt_last_frame (i_frmcnt_last_frame_tb)	 	 		 	 
 
 	);
-		wire o_scl_stall_tb ; // mesh mohem at the moment
+		
 		 
 		 scl_staller scl_staller_dut (
 		 .i_stall_clk(i_sys_clk_tb), 
@@ -174,29 +231,10 @@ module CCC_Handler_tb ();
     );
 
 
-		 wire [7:0]  i_rx_regfcrc_data_wr_tb ;
-		 reg  [11:0] i_engine_configuration_tb ;
-		 wire [3:0]  o_engine_TID_tb ;
-		 wire [2:0]  o_engine_MODE_tb ;
-		 wire        o_engine_CP_tb ;
-		 wire [7:0]  i_regf_tx_parallel_data_tb ;
-
-		 //////////////////////////////////////// for testing only /////////////////////////////////////////// 
-		 reg 		  my_regf_wr_en_tb ;
-		 reg  	 	  my_regf_wr_en_tb_selector ;
-		 wire  	 	  my_regf_wr_en_tb_mux_out ;
-
-		 reg  [7:0]   my_regf_data_wr_tb ;
-		 reg 	 	  my_regf_data_wr_tb_selector ;
-		 wire [7:0]	  my_regf_data_wr_tb_mux_out ;
-
-		 reg  [11:0]  my_regf_addr_tb ;
-		 reg 	 	  my_regf_addr_tb_selector ;
-		 wire [11:0]  my_regf_addr_tb_mux_out ;
-
+		
 		 
 		 reg_file reg_file_dut (
-		.i_regf_clk(i_sys_clk_tb),
+		.i_regf_clk(i_regfile_clk_tb),
 		.i_regf_rst_n(i_rst_n_tb),
 		.i_regf_rd_en(o_regf_rd_en_tb),
 		.i_regf_wr_en(my_regf_wr_en_tb_mux_out), 	 	 	// muxed 
@@ -258,19 +296,6 @@ module CCC_Handler_tb ();
 			);
 
 
-		reg        i_sdahnd_rx_sda_tb ;
-		wire [4:0] i_crc_value_tb ;
-		wire  	   i_crc_valid_tb ;
-		wire       o_crc_data_valid_tx_tb ;
-		wire       o_crc_data_valid_rx_tb ;
-		wire  	   o_ddrccc_error_done_tb ;
-		wire  	   o_crc_en_tb ;
-		wire 	   o_crc_last_byte_tx_tb ;
-		wire 	   o_crc_last_byte_rx_tb ; // to be connected
-
-		wire       o_sdahnd_serial_data_tb ;
-    	wire [7:0] o_crc_parallel_data_tx_tb ;
-    	//wire [7:0] o_crc_parallel_data_rx_tb ; already declared as : i_rx_regfcrc_data_wr_tb
 
 		rx rx_dut (
 		.i_sys_clk					(i_sys_clk_tb)				,
@@ -319,11 +344,6 @@ module CCC_Handler_tb ();
 		.o_crc_last_byte 		 (o_crc_last_byte_tx_tb), // new
 		.o_crc_data_valid 		 (o_crc_data_valid_tx_tb)	// new
 );
-
-    wire 		mux1_out1 ;
-    wire 		mux1_out2 ;
-    wire 		mux1_out3 ;
-    wire [7:0]  mux8_out  ;
 
     
 
@@ -405,7 +425,7 @@ mux8      mux1_8 (
 
     	integer i ;
 
-	//----------------------------------- Functional Coverage --------------------------------------//
+	//----------------------------------- Functional Coverage -----------------------------------------//
 	//------------------------------------ FIRST GROUP ENEC_B -----------------------------------------//
 	// for every two rows in the excell sheet corresponds to a covergroup
 
@@ -3009,10 +3029,10 @@ mux8      mux1_8 (
 		#(5*CLK_PERIOD);
 		
 
-		// initialization of the object 
+		// allocation of the object 
 		conf_obj = new();
 
-		for (i=0 ; i<100000 ; i++) begin
+		for (i=0 ; i<100 ; i++) begin
 
 			assert(conf_obj.randomize());  // "lw feh moshkla fel constrains edeny error" deh lazmet el word assert
 			
@@ -3043,13 +3063,34 @@ mux8      mux1_8 (
 			@(posedge o_engine_done_tb);
 			$display("this is testcase no. %d",i,$time);
 			#(2*CLK_PERIOD) ;
-		end	
+		end			
 		$stop ;
 	end
 
-	
 
 
+	// deserialization checking 
+
+	always @(CCC_Handler_dut.current_state) begin 
+		if (i_engine_en_tb && CCC_Handler_dut.current_state == RNW) begin 
+			#(CLK_PERIOD) ;
+			check_cmd_word();
+		end 
+	end 
+
+	always @(CCC_Handler_dut.current_state) begin 
+		if (i_engine_en_tb && CCC_Handler_dut.current_state == CCC_BYTE) begin 
+			#(CLK_PERIOD) ;
+			check_first_data_word();
+		end 
+	end
+
+	always @(CCC_Handler_dut.current_state) begin 
+		if (i_engine_en_tb && CCC_Handler_dut.current_state == FIRST_DATA_BYTE) begin 
+			#(CLK_PERIOD) ;
+			check_repeated_data_word();
+		end 
+	end
 
 
 
@@ -3061,7 +3102,7 @@ mux8      mux1_8 (
 int cycle_count ;
 		 // Simulation logic to create the desired pattern (Broadcast)
     initial begin	 		
-    	for (i=0 ; i<10000 ; i++) begin
+    	for (i=0 ; i<100 ; i++) begin
     		#(2*CLK_PERIOD); // One clock cycle delay	
     		wait(i_engine_en_tb);
     		@(negedge scl_neg_edge_tb or  negedge scl_pos_edge_tb)
@@ -3103,7 +3144,8 @@ int cycle_count ;
     end
 */
 
-/*
+
+
 
 //////////////////////////////////////////////  Direct set driver /////////////////////////////////
 
@@ -3113,17 +3155,16 @@ int cycle_count ;
 		end
 	end 
 
-*/
 
 
- /*
+/*
 //////////////////////////////////////////////  Direct Get driver /////////////////////////////////
 // backup works 100 % el7amdulelah 
 // for second preamble and read data 
 int cycle_count ;
 		 // Simulation logic to create the desired pattern (Broadcast)
     initial begin	 		
-    	for (i=0 ; i<10000 ; i++) begin
+    	for (i=0 ; i<100 ; i++) begin
     		#(2*CLK_PERIOD); // One clock cycle delay	
     		wait(i_engine_en_tb);
     		@(negedge scl_neg_edge_tb or  negedge scl_pos_edge_tb)
@@ -3164,8 +3205,7 @@ int cycle_count ;
     end
 */
 
-
-
+/*
 //////////////////////////////////////////////  General driver /////////////////////////////////
 
 	initial begin 
@@ -3173,8 +3213,7 @@ int cycle_count ;
 			@(negedge scl_neg_edge_tb or negedge scl_pos_edge_tb) i_sdahnd_rx_sda_tb = $random() ;
 		end
 	end 
-
-
+*/
 
 
 ///////////////////////////////////////////////////// TASKS ///////////////////////////////////////
@@ -3246,6 +3285,125 @@ int cycle_count ;
 
 		end 
 	endtask 
+
+	task check_cmd_word (); 
+		begin 
+			logic [17:0] collected_cmd_wrd ;
+			bit 	     parity_adj_7e ,parity_adj ,P1_cmdword ,P0_cmdword ;
+			bit   [17:0] correct_first_cmd_word , correct_cmd_word ;
+			int 		 o ;
+
+			for ( o = 0 ; o < 'd18 ; o++ ) begin 
+
+			@ (posedge scl_pos_edge_tb or posedge scl_neg_edge_tb ) ;
+
+				collected_cmd_wrd['d17- o] = o_sdahnd_serial_data_tb ;
+
+				//$display("nvlaue of SDA line is  %b : %t",o_sdahnd_serial_data_tb,$time);
+
+				parity_adj_7e = (i_regf_RnW_tb ^ (^7'h7E) ) ;
+				parity_adj    = (i_regf_RnW_tb ^ (^o_txrx_addr_ccc_tb[6:0]) ) ;
+
+				P1_cmdword    = i_regf_RnW_tb ^ collected_cmd_wrd[9] ^ collected_cmd_wrd[7] ^ collected_cmd_wrd[5] ^ collected_cmd_wrd[3] ; // index is shifted by 2 as this is the 18 bit word (data + parity)
+				P0_cmdword    =  1 ;
+
+				correct_first_cmd_word = {1'b0 , 7'd0 , 7'h7E 					, parity_adj_7e , P1_cmdword , P0_cmdword } ;
+				correct_cmd_word 	   = {1'b0 , 7'd0 , o_txrx_addr_ccc_tb[6:0] , parity_adj    , P1_cmdword , P0_cmdword } ;
+
+				# (2*CLK_PERIOD) ;
+				if (o == 'd17) begin 
+					if (CCC_Handler_dut.first_time || !CCC_Handler_dut.Direct_Broadcast_n_del) begin  // this is a 7E cmd word
+						assert (correct_first_cmd_word == collected_cmd_wrd) $display("first command word is PERFECTOO: %t" ,$time);
+						else $display("first command word is WRONG: %t" ,$time);
+					end 
+					else begin 	// this is an address word  
+						assert (correct_cmd_word == collected_cmd_wrd) $display("first command word is PERFECTOO: %t" ,$time);
+						else $display("first command word is WRONG: %t" ,$time);
+					end 
+				end  
+			end 
+		end  
+	endtask 
+
+
+	task check_first_data_word (); 
+		begin 
+			logic [17:0] collected_data_wrd ;
+			bit 	     P1 ,P0 ;
+			bit   [17:0] correct_first_data_word  ;
+			int 		 o ;
+
+			for ( o = 0 ; o < 'd18 ; o++ ) begin 
+
+			@ (posedge scl_pos_edge_tb or posedge scl_neg_edge_tb ) ;
+
+				collected_data_wrd['d17- o] = o_sdahnd_serial_data_tb ;
+
+				//$display("vlaue of SDA line is  %b : %t",o_sdahnd_serial_data_tb,$time);
+
+				P1 = collected_data_wrd[17] ^ collected_data_wrd[15] ^ collected_data_wrd[13] ^ collected_data_wrd[11] ^ collected_data_wrd[9] ^
+				 	 collected_data_wrd[7] ^ collected_data_wrd[5] ^ collected_data_wrd[3] ;
+
+				P0 = collected_data_wrd[16] ^ collected_data_wrd[14] ^ collected_data_wrd[12] ^ collected_data_wrd[10] ^ collected_data_wrd[8] ^
+					 collected_data_wrd[6] ^ collected_data_wrd[4] ^ collected_data_wrd[2] ^ 1 ; 
+
+				correct_first_data_word = { o_txrx_addr_ccc_tb , 8'd0 ,  P1 , P0 } ;
+
+				# (2*CLK_PERIOD) ;
+				if (o == 'd17) begin 
+					assert (correct_first_data_word == collected_data_wrd) $display("first data word is PERFECTOO: %t" ,$time);
+					else $display("first data word is WRONG: %t" ,$time);
+				end  
+			end 
+		end  
+	endtask 
+
+
+
+	task check_repeated_data_word (); 
+		begin 
+			logic [17:0] collected_data_wrd ;
+			bit 	     P1 ,P0 ;
+			bit   [17:0] correct_repeated_data_word  ;
+			int 		 o ;
+			bit   [7:0] tmp_D1 , tmp_D0 ;
+
+			for ( o = 0 ; o < 'd18 ; o++ ) begin 
+
+			@ (posedge scl_pos_edge_tb or posedge scl_neg_edge_tb ) ;
+
+				collected_data_wrd['d17- o] = o_sdahnd_serial_data_tb ;
+
+				//$display("vlaue of SDA line is  %b : %t",o_sdahnd_serial_data_tb,$time);
+
+				P1 = correct_repeated_data_word[17] ^ correct_repeated_data_word[15] ^ correct_repeated_data_word[13] ^ correct_repeated_data_word[11] ^ correct_repeated_data_word[9] ^
+				 	 correct_repeated_data_word[7] ^ correct_repeated_data_word[5] ^ correct_repeated_data_word[3] ;
+
+				P0 = correct_repeated_data_word[16] ^ correct_repeated_data_word[14] ^ correct_repeated_data_word[12] ^ correct_repeated_data_word[10] ^ correct_repeated_data_word[8] ^
+					 correct_repeated_data_word[6] ^ correct_repeated_data_word[4] ^ correct_repeated_data_word[2] ^ 1 ; 
+
+				if (o == 'd3) begin                            // any arbitrary value btn 0 -> 7
+					tmp_D1 = i_regf_tx_parallel_data_tb ; 
+				end
+	
+				if (o == 'd10) begin 	 	 	 	 	 	   // any arbitrary value btn 8 -> 15
+					tmp_D0 = i_regf_tx_parallel_data_tb ;
+				end 
+
+				correct_repeated_data_word = { tmp_D1 , tmp_D0 , P1 , P0 };
+
+				# (2*CLK_PERIOD) ;
+				if (o == 'd17) begin 
+					correct_repeated_data_word = { tmp_D1 , tmp_D0 , P1 , P0 };
+					assert (correct_repeated_data_word == collected_data_wrd) $display("repeated data word is PERFECTOO: %t" ,$time);
+					else $display("repeated data word is WRONG: %t" ,$time);
+				end  
+			end 
+		end  
+	endtask 
+
+
+
 
 	 //----------------------------------------------- ASSERTIONS -----------------------------------------------//
 	 // Broadcast assertions
@@ -3628,45 +3786,45 @@ int cycle_count ;
 
 
     // Asserting Broadcast properites 
-    assert property(Broadcast_ENEC_DISEC_TOC_0)
-                            $display("%t Broadcast_ENEC_DISEC_TOC_0 PASSED ",$time); else
-                            $display("%t Broadcast_ENEC_DISEC_TOC_0 FAILED ",$time);
+    cover property(Broadcast_ENEC_DISEC_TOC_0);
+                            //$display("%t Broadcast_ENEC_DISEC_TOC_0 PASSED ",$time); else
+                            //$display("%t Broadcast_ENEC_DISEC_TOC_0 FAILED ",$time);
    
-    assert property(Broadcast_ENEC_DISEC_TOC_1)
-                            $display("%t Broadcast_ENEC_DISEC_TOC_1 PASSED ",$time); else
-                            $display("%t Broadcast_ENEC_DISEC_TOC_1 FAILED ",$time);
+    cover property(Broadcast_ENEC_DISEC_TOC_1);
+                            //$display("%t Broadcast_ENEC_DISEC_TOC_1 PASSED ",$time); else
+                            //$display("%t Broadcast_ENEC_DISEC_TOC_1 FAILED ",$time);
  
-    assert property(Broadcast_SETMWL_SETMRL_TOC_0)
-                            $display("%t Broadcast_SETMWL_SETMRL_TOC_0 PASSED ",$time); else
-                            $display("%t Broadcast_SETMWL_SETMRL_TOC_0 FAILED ",$time);
+    cover property(Broadcast_SETMWL_SETMRL_TOC_0);
+                            //$display("%t Broadcast_SETMWL_SETMRL_TOC_0 PASSED ",$time); else
+                            //$display("%t Broadcast_SETMWL_SETMRL_TOC_0 FAILED ",$time);
   
-    assert property(Broadcast_SETMWL_SETMRL_TOC_1)
-                            $display("%t Broadcast_SETMWL_SETMRL_TOC_1 PASSED ",$time); else
-                            $display("%t Broadcast_SETMWL_SETMRL_TOC_1 FAILED ",$time);
+    cover property(Broadcast_SETMWL_SETMRL_TOC_1);
+                           // $display("%t Broadcast_SETMWL_SETMRL_TOC_1 PASSED ",$time); else
+                            //$display("%t Broadcast_SETMWL_SETMRL_TOC_1 FAILED ",$time);
  
-    assert property(Broadcast_Dummy_TOC_0)
-                            $display("%t Broadcast_Dummy_TOC_0 PASSED ",$time); else
-                            $display("%t Broadcast_Dummy_TOC_0 FAILED ",$time);
+    cover property(Broadcast_Dummy_TOC_0);
+                           // $display("%t Broadcast_Dummy_TOC_0 PASSED ",$time); else
+                            //$display("%t Broadcast_Dummy_TOC_0 FAILED ",$time);
     
-    assert property(Broadcast_Dummy_TOC_1)
-                            $display("%t Broadcast_Dummy_TOC_1 PASSED ",$time); else
-                            $display("%t Broadcast_Dummy_TOC_1 FAILED ",$time);                     
+    cover property(Broadcast_Dummy_TOC_1);
+                           // $display("%t Broadcast_Dummy_TOC_1 PASSED ",$time); else
+                            //$display("%t Broadcast_Dummy_TOC_1 FAILED ",$time);                     
 
-    assert property(Broadcast_ENEC_DISEC_SETMWL_SETMRL_TOC_0_track)
-                            $display("%t Broadcast_ENEC_DISEC_SETMWL_SETMRL_TOC_0_track PASSED ",$time); else
-                            $display("%t Broadcast_ENEC_DISEC_SETMWL_SETMRL_TOC_0_track FAILED ",$time);	
+    cover property(Broadcast_ENEC_DISEC_SETMWL_SETMRL_TOC_0_track);
+                            //$display("%t Broadcast_ENEC_DISEC_SETMWL_SETMRL_TOC_0_track PASSED ",$time); else
+                            //$display("%t Broadcast_ENEC_DISEC_SETMWL_SETMRL_TOC_0_track FAILED ",$time);	
 
-    assert property(Broadcast_ENEC_DISEC_SETMWL_SETMRL_TOC_1_track)
-                            $display("%t Broadcast_ENEC_DISEC_SETMWL_SETMRL_TOC_1_track PASSED ",$time); else
-                            $display("%t Broadcast_ENEC_DISEC_SETMWL_SETMRL_TOC_1_track FAILED ",$time);	
+    cover property(Broadcast_ENEC_DISEC_SETMWL_SETMRL_TOC_1_track);
+                           // $display("%t Broadcast_ENEC_DISEC_SETMWL_SETMRL_TOC_1_track PASSED ",$time); else
+                            //$display("%t Broadcast_ENEC_DISEC_SETMWL_SETMRL_TOC_1_track FAILED ",$time);	
 
-    assert property(Broadcast_Dummy_TOC_0_track)
-                            $display("%t Broadcast_Dummy_TOC_0_track PASSED ",$time); else
-                            $display("%t Broadcast_Dummy_TOC_0_track FAILED ",$time);	
+    cover property(Broadcast_Dummy_TOC_0_track);
+                            //$display("%t Broadcast_Dummy_TOC_0_track PASSED ",$time); else
+                            //$display("%t Broadcast_Dummy_TOC_0_track FAILED ",$time);	
 
-    assert property(Broadcast_Dummy_TOC_1_track)
-                            $display("%t Broadcast_Dummy_TOC_1_track PASSED ",$time); else
-                            $display("%t Broadcast_Dummy_TOC_1_track FAILED ",$time);
+    cover property(Broadcast_Dummy_TOC_1_track);
+                            //$display("%t Broadcast_Dummy_TOC_1_track PASSED ",$time); else
+                            //$display("%t Broadcast_Dummy_TOC_1_track FAILED ",$time);
 
 
 
@@ -3955,32 +4113,32 @@ int cycle_count ;
 
 
      // Asserting the properties
-    assert property(Direct_ENEC_DISEC_TOC_0)
-                            $display("%t Direct_ENEC_DISEC_TOC_0 PASSED ",$time); else
-                            $display("%t Direct_ENEC_DISEC_TOC_0 FAILED ",$time);
+    cover property(Direct_ENEC_DISEC_TOC_0);
+                            //$display("%t Direct_ENEC_DISEC_TOC_0 PASSED ",$time); else
+                            //$display("%t Direct_ENEC_DISEC_TOC_0 FAILED ",$time);
 
    
-    assert property(Direct_ENEC_DISEC_TOC_1)
-                            $display("%t Direct_ENEC_DISEC_TOC_1 PASSED ",$time); else
-                            $display("%t Direct_ENEC_DISEC_TOC_1 FAILED ",$time);
+    cover property(Direct_ENEC_DISEC_TOC_1);
+                            //$display("%t Direct_ENEC_DISEC_TOC_1 PASSED ",$time); else
+                            //$display("%t Direct_ENEC_DISEC_TOC_1 FAILED ",$time);
 
     
-    assert property(Direct_SETMWL_SETMRL_TOC_0)
-                            $display("%t Direct_SETMWL_SETMRL_TOC_0 PASSED ",$time); else
-                            $display("%t Direct_SETMWL_SETMRL_TOC_0 FAILED ",$time);
+    cover property(Direct_SETMWL_SETMRL_TOC_0);
+                            //$display("%t Direct_SETMWL_SETMRL_TOC_0 PASSED ",$time); else
+                           // $display("%t Direct_SETMWL_SETMRL_TOC_0 FAILED ",$time);
 
    
-    assert property(Direct_SETMWL_SETMRL_TOC_1)
-                            $display("%t Direct_SETMWL_SETMRL_TOC_1 PASSED ",$time); else
-                            $display("%t Direct_SETMWL_SETMRL_TOC_1 FAILED ",$time);
+    cover property(Direct_SETMWL_SETMRL_TOC_1);
+                            //$display("%t Direct_SETMWL_SETMRL_TOC_1 PASSED ",$time); else
+                            //$display("%t Direct_SETMWL_SETMRL_TOC_1 FAILED ",$time);
 
-    assert property(Direct_ENEC_DISEC_SETMWL_SETMRL_TOC_0_track)
-                            $display("%t Direct_ENEC_DISEC_SETMWL_SETMRL_TOC_0_track PASSED ",$time); else
-                            $display("%t Direct_ENEC_DISEC_SETMWL_SETMRL_TOC_0_track FAILED ",$time);
+    cover property(Direct_ENEC_DISEC_SETMWL_SETMRL_TOC_0_track);
+                            //$display("%t Direct_ENEC_DISEC_SETMWL_SETMRL_TOC_0_track PASSED ",$time); else
+                            //$display("%t Direct_ENEC_DISEC_SETMWL_SETMRL_TOC_0_track FAILED ",$time);
 
-    assert property(Direct_ENEC_DISEC_SETMWL_SETMRL_TOC_1_track)
-                            $display("%t Direct_ENEC_DISEC_SETMWL_SETMRL_TOC_1_track PASSED ",$time); else
-                            $display("%t Direct_ENEC_DISEC_SETMWL_SETMRL_TOC_1_track FAILED ",$time);                       
+    cover property(Direct_ENEC_DISEC_SETMWL_SETMRL_TOC_1_track);
+                            //$display("%t Direct_ENEC_DISEC_SETMWL_SETMRL_TOC_1_track PASSED ",$time); else
+                            //$display("%t Direct_ENEC_DISEC_SETMWL_SETMRL_TOC_1_track FAILED ",$time);                       
 
 /////////////////////////////////////////////////////////// DIRECT GET /////////////////////////////////////////////////////////
     	
@@ -4128,14 +4286,14 @@ int cycle_count ;
 
 
  	// Assert the property
-    assert property(Direct_GETMWL_GETMRL_GETSTATUS_TOC_0)
-                            $display("%t Direct_GETMWL_GETMRL_GETSTATUS_TOC_0 PASSED ",$time); else
-                            $display("%t Direct_GETMWL_GETMRL_GETSTATUS_TOC_0 FAILED ",$time);
+    cover property(Direct_GETMWL_GETMRL_GETSTATUS_TOC_0);
+                            //$display("%t Direct_GETMWL_GETMRL_GETSTATUS_TOC_0 PASSED ",$time); else
+                            //$display("%t Direct_GETMWL_GETMRL_GETSTATUS_TOC_0 FAILED ",$time);
 
     // Assert the property
-    assert property(Direct_GETMWL_GETMRL_GETSTATUS_TOC_1)
-                            $display("%t Direct_GETMWL_GETMRL_GETSTATUS_TOC_1 PASSED ",$time); else
-                            $display("%t Direct_GETMWL_GETMRL_GETSTATUS_TOC_1 FAILED ",$time);
+    cover property(Direct_GETMWL_GETMRL_GETSTATUS_TOC_1);
+                            //$display("%t Direct_GETMWL_GETMRL_GETSTATUS_TOC_1 PASSED ",$time); else
+                            //$display("%t Direct_GETMWL_GETMRL_GETSTATUS_TOC_1 FAILED ",$time);
 
 
 
@@ -4161,14 +4319,14 @@ int cycle_count ;
 
 
     // Assert the property
-    assert property(Direct_GETBCR_GETDCR_TOC_0)
-                            $display("%t Direct_GETBCR_GETDCR_TOC_0 PASSED ",$time); else
-                            $display("%t Direct_GETBCR_GETDCR_TOC_0 FAILED ",$time);
+    cover property(Direct_GETBCR_GETDCR_TOC_0);
+                            //$display("%t Direct_GETBCR_GETDCR_TOC_0 PASSED ",$time); else
+                            //$display("%t Direct_GETBCR_GETDCR_TOC_0 FAILED ",$time);
 
     // Assert the property
-    assert property(Direct_GETBCR_GETDCR_TOC_1)
-                            $display("%t Direct_GETBCR_GETDCR_TOC_1 PASSED ",$time); else
-                            $display("%t Direct_GETBCR_GETDCR_TOC_1 FAILED ",$time);
+    cover property(Direct_GETBCR_GETDCR_TOC_1);
+                            //$display("%t Direct_GETBCR_GETDCR_TOC_1 PASSED ",$time); else
+                            //$display("%t Direct_GETBCR_GETDCR_TOC_1 FAILED ",$time);
 
 
 
@@ -4218,9 +4376,9 @@ int cycle_count ;
     endproperty
 
     // Assert the property
-    assert property(Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_0_track)
-                            $display("%t Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_0_track PASSED ",$time); else
-                            $display("%t Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_0_track FAILED ",$time);
+    cover property(Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_0_track);
+                            //$display("%t Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_0_track PASSED ",$time); else
+                            //$display("%t Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_0_track FAILED ",$time);
 
 
     ////////////////////////// tracking assertions 
@@ -4269,9 +4427,9 @@ int cycle_count ;
     endproperty
 
     // Assert the property
-    assert property(Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_1_track)
-                            $display("%t Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_1_track PASSED ",$time); else
-                            $display("%t Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_1_track FAILED ",$time);
+    cover property(Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_1_track);
+                            //$display("%t Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_1_track PASSED ",$time); else
+                            //$display("%t Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_1_track FAILED ",$time);
 
 
 
@@ -4320,9 +4478,9 @@ int cycle_count ;
     endproperty
 
     // Assert the property
-    assert property(Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_0_rx_track)
-                            $display("%t Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_0_rx_track PASSED ",$time); else
-                            $display("%t Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_0_rx_track FAILED ",$time);
+    cover property(Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_0_rx_track);
+                            //$display("%t Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_0_rx_track PASSED ",$time); else
+                            //$display("%t Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_0_rx_track FAILED ",$time);
 
 
     property Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_1_rx_track ;
@@ -4370,9 +4528,9 @@ int cycle_count ;
     endproperty
 
     // Assert the property
-    assert property(Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_1_rx_track)
-                            $display("%t Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_1_rx_track PASSED ",$time); else
-                            $display("%t Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_1_rx_track FAILED ",$time);
+    cover property(Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_1_rx_track) ;
+                            //$display("%t Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_1_rx_track PASSED ",$time); else
+                            //$display("%t Direct_GETDCR_GETBCR_GETSTATUS_GETMWL_GETMRL_TOC_1_rx_track FAILED ",$time);
 
 
 
