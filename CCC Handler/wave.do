@@ -65,13 +65,13 @@ add wave -noupdate /CCC_Handler_tb/tx_dut/i_ddrccc_special_data
 add wave -noupdate /CCC_Handler_tb/o_sdahnd_serial_data_tb
 add wave -noupdate /CCC_Handler_tb/tx_dut/D2
 add wave -noupdate /CCC_Handler_tb/tx_dut/D1
-add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3351/tmp_D1
-add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3351/tmp_D0
-add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3351/P1
-add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3351/P0
-add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3351/o
-add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3351/correct_repeated_data_word
-add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3351/collected_data_wrd
+add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3364/tmp_D1
+add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3364/tmp_D0
+add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3364/P1
+add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3364/P0
+add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3364/o
+add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3364/correct_repeated_data_word
+add wave -noupdate /CCC_Handler_tb/check_repeated_data_word/#ublk#247440018#3364/collected_data_wrd
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {234323 ns} 0}
 quietly wave cursor active 1
@@ -89,4 +89,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {57347 ns} {63678 ns}
+WaveRestoreZoom {476116 ns} {482447 ns}
