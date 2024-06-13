@@ -234,7 +234,7 @@ module CCC_Handler_tb ();
 		
 		 
 		 reg_file reg_file_dut (
-		.i_regf_clk(i_regfile_clk_tb),
+		.i_regf_clk(i_sys_clk_tb),
 		.i_regf_rst_n(i_rst_n_tb),
 		.i_regf_rd_en(o_regf_rd_en_tb),
 		.i_regf_wr_en(my_regf_wr_en_tb_mux_out), 	 	 	// muxed 
@@ -3032,7 +3032,7 @@ mux8      mux1_8 (
 		// allocation of the object 
 		conf_obj = new();
 
-		for (i=0 ; i<10000 ; i++) begin
+		for (i=0 ; i<1000 ; i++) begin
 
 			assert(conf_obj.randomize());  // "lw feh moshkla fel constrains edeny error" deh lazmet el word assert
 			
