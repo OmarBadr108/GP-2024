@@ -145,6 +145,17 @@ end
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+
+
+
+
+
+
+
+
+
+
+
   // Always checking on bit 0 of the frame, but we will only read it in ACK state when the data is Address 
   //assign o_ser_rx_tx  = reg_array[0][0] ; 
 

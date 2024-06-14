@@ -1,0 +1,13 @@
+Sun Jun 09 18:52:49 +0300 2024
+Trace back: can't read "vsimPriv(.main_pane.dataflow.interior.cs.body:grid)": no such element in array
+    while executing
+"set grid $vsimPriv($winname:grid)"
+    (procedure "Wave::ActivateCursor" line 13)
+    invoked from within
+"Wave::ActivateCursor $winname 1"
+    (procedure "Wave::SyncEmbedded" line 20)
+    invoked from within
+"Wave::SyncEmbedded .main_pane.dataflow.interior.cs.body.pw.wf.top.grid.row0,wave.data .main_pane.dataflow.interior.cs.body.pw.wf.top .main_pane.wave.i..."
+    (command bound to event)
+  <2:C:/questasim64_2021.1/win64/tk8.6/bgerror.tcl:106: ::tkerror {can't read "vsimPriv(.main_pane.dataflow.interior.cs.body:grid)": no such element in array}
+  <1:eval:1: ::tk::dialog::error::bgerror {can't read "vsimPriv(.main_pane.dataflow.interior.cs.body:grid)": no such element in array}

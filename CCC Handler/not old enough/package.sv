@@ -137,8 +137,8 @@ class configuration ;
 	}
 
 	constraint CMD {
-		RAND_CMD inside {8'h00 , 8'h01 , 8'h09 , 8'h0A , 8'h1F	 	 	 // broadcast 
-					    //,8'h80 , 8'h81 , 8'h89 , 8'h8A  				 // direct set
+		RAND_CMD inside {//8'h00 , 8'h01 , 8'h09 , 8'h0A , 8'h1F	 	 	 // broadcast 
+					    8'h80 , 8'h81 , 8'h89 , 8'h8A  				 // direct set
 					    //,8'h8B , 8'h8C , 8'h90 , 8'h8E , 8'h8F  	 	 // direct get
 					    //,8'h8D	 	  		 		 	 	 	 	 // GETPID	 
 						 								   		} ;	

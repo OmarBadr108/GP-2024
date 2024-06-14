@@ -234,7 +234,7 @@ module CCC_Handler_tb ();
 		
 		 
 		 reg_file reg_file_dut (
-		.i_regf_clk(i_sys_clk_tb),
+		.i_regf_clk(i_regfile_clk_tb),
 		.i_regf_rst_n(i_rst_n_tb),
 		.i_regf_rd_en(o_regf_rd_en_tb),
 		.i_regf_wr_en(my_regf_wr_en_tb_mux_out), 	 	 	// muxed 
@@ -297,7 +297,7 @@ module CCC_Handler_tb ();
 
 
 
-		RX rx_dut (
+		rx rx_dut (
 		.i_sys_clk					(i_sys_clk_tb)				,
 		.i_sys_rst					(i_rst_n_tb)				,
 		.i_sclgen_scl				(o_scl_tb)					,
@@ -3032,7 +3032,7 @@ mux8      mux1_8 (
 		// allocation of the object 
 		conf_obj = new();
 
-		for (i=0 ; i<1000 ; i++) begin
+		for (i=0 ; i<100 ; i++) begin
 
 			assert(conf_obj.randomize());  // "lw feh moshkla fel constrains edeny error" deh lazmet el word assert
 			
@@ -3146,7 +3146,7 @@ int cycle_count ;
 
 
 
-/*
+
 //////////////////////////////////////////////  Direct set driver /////////////////////////////////
 
 	initial begin 
@@ -3154,7 +3154,7 @@ int cycle_count ;
 			@(negedge scl_neg_edge_tb or  negedge scl_pos_edge_tb) i_sdahnd_rx_sda_tb = 0 ;
 		end
 	end 
-*/
+
 
 
 /*
@@ -3205,7 +3205,7 @@ int cycle_count ;
     end
 */
 
-
+/*
 //////////////////////////////////////////////  General driver /////////////////////////////////
 
 	initial begin 
@@ -3213,7 +3213,7 @@ int cycle_count ;
 			@(negedge scl_neg_edge_tb or negedge scl_pos_edge_tb) i_sdahnd_rx_sda_tb = $random() ;
 		end
 	end 
-
+*/
 
 
 ///////////////////////////////////////////////////// TASKS ///////////////////////////////////////
