@@ -500,9 +500,12 @@ wire crc_en_mux_out;
 wire tx_crc_data_valid;
 wire rx_crc_data_valid;
 wire crc_data_valid_mux_out;
-wire crc_data_rx_tx_valid_sel;
+wire        crc_data_rx_tx_valid_sel;
 wire       crc_data_tx_rx_mux_sel;
 wire [7:0] crc_data_mux_out;
+
+wire crc_last_byte_tx_rx_mux_sel;
+wire crc_last_byte_mux_out;
 
 
 
@@ -1338,8 +1341,8 @@ gen_mux #(1,1) reg_rd_en_config_data_mux (
 
         .o_crc_en_rx_tx_mux_sel(crc_en_rx_tx_mux_sel),
         .o_crc_data_rx_tx_valid_sel(crc_data_rx_tx_valid_sel),
-        .o_crc_data_tx_rx_mux_sel(crc_data_tx_rx_mux_sel)
-
+        .o_crc_data_tx_rx_mux_sel(crc_data_tx_rx_mux_sel),
+        .o_crc_last_byte_tx_rx_mux_sel(crc_last_byte_tx_rx_mux_sel)
         );
 
 
@@ -1388,7 +1391,8 @@ gen_mux #(1,1) reg_rd_en_config_data_mux (
         .o_engine_done(ddr_engine_done),
         .o_crc_en_rx_tx_mux_sel(crc_en_rx_tx_mux_sel),
         .o_crc_data_rx_tx_valid_sel(crc_data_rx_tx_valid_sel),
-        .o_crc_data_tx_rx_mux_sel(crc_data_tx_rx_mux_sel)
+        .o_crc_data_tx_rx_mux_sel(crc_data_tx_rx_mux_sel),
+        .o_crc_last_byte_tx_rx_mux_sel(crc_last_byte_tx_rx_mux_sel)
     );
 
 // sdr staller
@@ -1439,7 +1443,8 @@ scl_staller u_scl_staller(
     );
 
 
-wire crc_last_byte;
+wire tx_crc_last_byte;
+wire rx_crc_last_byte;
 
         RX RX (
         .i_sys_clk                  (sys_clk_50mhz)               ,
@@ -1459,10 +1464,31 @@ wire crc_last_byte;
         .o_ddrccc_pre               (rx_pre)               ,
         .o_ddrccc_error             (rx_error)             ,
         .o_crc_en                   (rx_crc_en)               , // 
-        .o_crc_data_valid           (rx_crc_data_valid)       
+        .o_crc_data_valid           (rx_crc_data_valid),
+        .o_crc_last_byte            (rx_crc_last_byte)
         );
 
-        tx tx (
+       tx tx (
+        .i_sys_clk               (sys_clk_50mhz),
+        .i_sys_rst               (i_sdr_rst_n),
+        .i_ddrccc_tx_en          (tx_en_hdr_mux_out),
+        .i_sclgen_scl_pos_edge   (scl_pos_edge_not_stalled),
+        .i_sclgen_scl_neg_edge   (scl_neg_edge_not_stalled),
+        .i_ddrccc_tx_mode        (tx_mode_hdr_mux_out),
+        .i_regf_tx_parallel_data (regf_data_rd),
+        .i_ddrccc_special_data   (cccnt_tx_special_data_mux_out), 
+        .i_crc_crc_value         (crc_value),
+        .i_crc_data_valid        (crc_valid), // added recently
+        .i_regf_read_n_write_bit (cccnt_RnW), // added recently  -- not sure of this connection
+        .o_sdahnd_serial_data    (ser_hdr_data),
+        .o_ddrccc_mode_done      (tx_hdr_mode_done),
+        .o_crc_parallel_data     (tx_crc_parallel_data),
+        .o_crc_en                (tx_crc_en),
+        .o_crc_last_byte         (tx_crc_last_byte),
+        .o_crc_data_valid        (tx_crc_data_valid)
+        );
+
+    /*    tx tx (
         .i_sys_clk               (sys_clk_50mhz),
         .i_sys_rst               (i_sdr_rst_n),
         .i_ddrccc_tx_en          (tx_en_hdr_mux_out),
@@ -1476,9 +1502,9 @@ wire crc_last_byte;
         .o_ddrccc_mode_done      (tx_hdr_mode_done),
         .o_crc_parallel_data     (tx_crc_parallel_data),
         .o_crc_en                (tx_crc_en),
-        .o_crc_last_byte         (crc_last_byte),
+        .o_crc_last_byte         (tx_crc_last_byte),
         .o_crc_data_valid        (tx_crc_data_valid)
-        );
+        );*/
 
 
 
@@ -1492,7 +1518,7 @@ crc u_crc (
             .i_sys_rst(i_sdr_rst_n),
             .i_txrx_en(crc_en_mux_out),   // mux to be an input either from tx or rx
             .i_txrx_data_valid(crc_data_valid_mux_out), // mux to be an input either from tx or rx
-            .i_txrx_last_byte(crc_last_byte), // mux to be an input either from tx or rx
+            .i_txrx_last_byte(crc_last_byte_mux_out), // mux to be an input either from tx or rx
             .i_txrx_data(crc_data_mux_out), // mux to be an input either from tx or rx
             .o_txrx_crc_value(crc_value), // mux to be an input either from tx or rx
             .o_txrx_crc_valid(crc_valid) // mux to be an input either from tx or rx
@@ -1523,6 +1549,13 @@ gen_mux #(1,1) crc_data_tx_rx_valid (
             .ctrl_sel (crc_data_rx_tx_valid_sel)  ,
             .data_out (crc_data_valid_mux_out));
 
+
+
+
+gen_mux #(1,1) crc_last_byte_tx_rx (
+            .data_in  ({rx_crc_last_byte,tx_crc_last_byte}),   //0:tx ---------//1:rx     
+            .ctrl_sel (crc_last_byte_tx_rx_mux_sel) ,
+            .data_out (crc_last_byte_mux_out));
 
 
 gen_mux #(8,1) crc_tx_rx_data_in (

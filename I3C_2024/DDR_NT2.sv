@@ -45,14 +45,16 @@ output reg [4:0] o_sclstall_no_of_cycles,
 output reg       o_sclstall_en,  
 output reg       o_engine_done,
 output reg [7:0] o_tx_special_data,
-output wire       o_en_mux ,
+
 
 //------------ interface output signals ---------//
 output reg       o_regf_abort,
 output reg [3:0] o_regf_error_type,
-output reg       o_crc_en_rx_tx_mux_sel,
-output reg       o_crc_data_rx_tx_valid_sel,
-output reg       o_crc_data_tx_rx_mux_sel
+
+output wire       o_crc_en_rx_tx_mux_sel,
+output wire       o_crc_data_rx_tx_valid_sel,
+output wire       o_crc_data_tx_rx_mux_sel,
+output wire       o_crc_last_byte_tx_rx_mux_sel
 
 );  
 
@@ -60,17 +62,17 @@ output reg       o_crc_data_tx_rx_mux_sel
 
 
 //------------- types of error ------------//
-localparam [3:0]    SUCCESS = 'd0,
-                    CRC_Error = 'd1,
-                    Parity_Error = 'd2,
-					Frame_Error = 'd3,
-					Address_Header_Error = 'd4,
-					NACK_Error = 'd5,
-                    OVL_Error = 'd6,                // not used
+localparam [3:0]    SUCCESS 			  	= 'd0,
+                    CRC_Error				  = 'd1,
+                    Parity_Error      = 'd2,
+										Frame_Error       = 'd3,
+										Address_Header_Error = 'd4,
+										NACK_Error           = 'd5,
+                    OVL_Error            = 'd6,                // not used
                     I3C_SHORT_READ_Error = 'd7, 
-                    HC_ABORTED_Error  = 'd8,       // by Controller due to internal error (not used)
-					BUS_ABORTED_Error = 'd9 ;       // Aborted due to Early Termination, or Target not completing read or write of data phase of transfer
-
+                    HC_ABORTED_Error     = 'd8,       // by Controller due to internal error (not used)
+										BUS_ABORTED_Error    = 'd9 ;       // Aborted due to Early Termination, or Target not completing read or write of data phase of transfer
+ 
 
 
 
@@ -120,7 +122,7 @@ localparam [3:0]  seven_zeros = 'd3,
  
  // -------------- rx modes ----------------//  
 localparam [3:0]     preamble = 'd0, 
-                  //   nack_bit = 'd1 ,				 
+                  //  nack_bit = 'd1 ,				 
                      Deserializing_byte = 'd3,                   
                      Check_token = 'd5,
                      Check_Parity_value = 'd6,
@@ -164,16 +166,21 @@ localparam [4:0]              idle = 'd0,
 reg [6:0] target_addres,broadcast_address;
 reg    [4:0]         current_state , next_state ;
 /*wire [3:0] count ;*/
-reg parity_data, Parity_data_seq ,sysclk_done,en_sysclk ;
+reg parity_data, Parity_data_seq ,sysclk_done,en_sysclk , first_byte , first_byte_seq;
 reg [11:0] addr ,addr_temp;
 
 
-localparam specific_address = 'd 1000; // for 8 zeros
+localparam specific_address = 'd 999; // for 8 zeros
 
 
 
-assign o_en_mux = (!i_regf_wr_rd_bit)? 1 : 0;
+assign o_crc_en_rx_tx_mux_sel = (i_regf_wr_rd_bit)? 1 : 0;
 
+assign o_crc_data_rx_tx_valid_sel = (i_regf_wr_rd_bit)? 1:0;
+
+assign o_crc_data_tx_rx_mux_sel   = (i_regf_wr_rd_bit)? 1:0;
+
+assign o_crc_last_byte_tx_rx_mux_sel = (i_regf_wr_rd_bit)? 1:0;
 
 //--------------------------- 1: Sequential Always Block ------------------------------//
 always @(posedge i_sys_clk or negedge i_sys_rst)
@@ -230,14 +237,19 @@ always @(posedge i_sys_clk or negedge i_sys_rst)
 		         end
 
 
-		      first_stage_command_Pre :  begin
-
-		        if (i_tx_mode_done)
-		          next_state = Read_Write_bit ;
+		      first_stage_command_Pre :  
+		      begin
+		      	 if (i_engine_en) 
+		         begin
+		         	if (i_tx_mode_done)
+		        	  next_state = Read_Write_bit ;
+		        	else
+		          	next_state = first_stage_command_Pre ;
+		         end
+		        
 		        else
-		          next_state = first_stage_command_Pre ;
-
-		          end
+		        		next_state = idle ;
+		      end
 
 
 		      Read_Write_bit	: begin 
@@ -734,6 +746,7 @@ always @(*)
 	o_rx_mode = 'b0 ;
 	parity_data = 'b0;
 	o_tx_special_data = 'd0;
+	first_byte = 'b0;
 	//next_state = idle;
 	
 //	o_bitcnt_stop = 'b0;
@@ -861,7 +874,7 @@ always @(*)
 	     
 		// o_sdahand_pp_od = 'b0;   //listening to sda
      
-		
+		first_byte ='b1;
 		en_sysclk=1;
 		 o_frmcnt_en = 'b1 ;
 		// wait (sysclk_done) ; // wait is unsynthesizable
@@ -946,9 +959,9 @@ always @(*)
 	else 
 		count_en = 'd1;*/
 		
+	if (first_byte_seq) begin 	
 		
-		
-	if (i_tx_mode_done | i_rx_mode_done) begin     // for increasing address to be ready 
+	if (i_tx_mode_done | i_rx_mode_done | i_bitcnt == 'd9  ) begin     // for increasing address to be ready 
 		
 		if (!i_frmcnt_last)
 		addr = addr_temp + 'd1;
@@ -960,6 +973,28 @@ always @(*)
 	
 	else
 		addr = addr_temp ;
+		
+		end
+		
+		
+		
+	else begin 
+	if (i_tx_mode_done | i_rx_mode_done | i_bitcnt == 'd10  ) begin     // for increasing address to be ready 
+		
+		if (!i_frmcnt_last)
+		addr = addr_temp + 'd1;
+		else
+		addr = specific_address;
+		
+		end
+	
+	
+	else
+		addr = addr_temp ;
+		
+		end
+
+		
 
              end
 			 
@@ -1242,13 +1277,13 @@ fourth_stage_crc_first_pre     : begin
           o_tx_en = 'b1;
           o_tx_mode = Restart_Pattern;
           o_sclstall_no_of_cycles = restart_stalling;
-         // o_sclstall_en = 'b1;
+          o_sclstall_en = 'b1;
 		   
 
-		/*	if(i_tx_mode_done )
+			if(i_tx_mode_done )
 			 o_sclstall_en = 'b0;
-		  else 
-			o_sclstall_en = 'b1;*/
+		  else
+			o_sclstall_en = 'b1;
              end
 
 
@@ -1257,12 +1292,16 @@ fourth_stage_crc_first_pre     : begin
           o_tx_en = 'b1;
           o_tx_mode = Exit_Pattern;
           o_sclstall_no_of_cycles = exit_stalling;
-        //  o_sclstall_en = 'b1;
+         o_sclstall_en = 'b1;
 		 
-		/*	if(i_tx_mode_done )
+			if(i_tx_mode_done )
+				begin
+					o_engine_done= 'b1;
 			 o_sclstall_en = 'b0;
+				end
+				
 		  else 
-			o_sclstall_en = 'b1;*/
+			o_sclstall_en = 'b1;
 
              end 
 
@@ -1361,8 +1400,11 @@ else
 if( current_state != 'd4)
 Parity_data_seq <= parity_data; 
 
+if( current_state != 'd7)
+first_byte_seq <= first_byte;
 
-if( next_state != 'd8)
+
+if( current_state != 'd8 )
 o_regf_addr <= addr; 
 
 if( current_state == 'd6)
@@ -1375,5 +1417,8 @@ if( current_state == 'd10)
 o_regf_addr <= addr_temp ; 
 	end
 end
+
+ 
+
 
 endmodule

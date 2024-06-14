@@ -52,7 +52,7 @@ int cycle_count ;
     reg [2:0] RAND_MODE      = 'd6   ;
     reg       RAND_RnW       = 1'b0  ; // write   
     reg       RAND_WROC      = 1'd0  ;
-    reg       RAND_TOC       = 1'b1  ;
+    reg       RAND_TOC       = 1'b0  ;
     reg [7:0] RAND_DEF_BYTE  = 'd0   ;
     reg [7:0] RAND_DATA_TWO  = 'b1111_0010   ;
     reg [7:0] RAND_DATA_THREE= 'd3   ;
@@ -70,7 +70,7 @@ initial begin
 	initialize();
 	reset();
 	    RAND_CP                       = 0     ;
-      RAND_DTT       								= 'd3   ;
+      RAND_DTT       								= 'd4   ;
 
 	// change mux selector to write configurations
 	switch_muxes(configuration);
@@ -136,7 +136,7 @@ i_controller_en_tb = 1'b0;
 */
 /////////////////////////////////////////////NT Test////////////////////////////////////////////////
 								//<-------------------------TEST CASE 1 ----------------------->//
-										//<            Mode --> HDR, TOC = 1, CP = 0 (NT)       >//
+										//<            write,Mode --> HDR, TOC = 1, CP = 0 (NT)       >//
 
    	i_i3c_i2c_sel_tb     			    = 1'b1;
     i_controller_en_tb 						= 1'b1;
@@ -161,6 +161,12 @@ i_controller_en_tb = 1'b0;
 
 
 
+
+/////////////////////////////////////////////NT Test////////////////////////////////////////////////
+								//<-------------------------TEST CASE 2 ----------------------->//
+										//<            read,Mode --> HDR, TOC = 1, CP = 0 (NT)       >//
+
+			RAND_RnW       = 1'b1  ;
 
     #5000
     $stop;
