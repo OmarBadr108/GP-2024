@@ -1,0 +1,40 @@
+onerror {resume}
+quietly WaveActivateNextPane {} 0
+add wave -noupdate -expand -group BUS -label CLK /target_tb/DUT11/i_sdr_clk
+add wave -noupdate -expand -group BUS -label SCL /target_tb/DUT14/data_out
+add wave -noupdate -expand -group BUS -label SDA_IN /target_tb/DUT12/data_out
+add wave -noupdate -expand -group BUS -label SDA_OUT /target_tb/DUT13/data_out
+add wave -noupdate -expand -group NT -label EN /target_tb/DUT0/i_engine_en
+add wave -noupdate -expand -group NT -label ERROR /target_tb/DUT0/i_rx_error
+add wave -noupdate -expand -group NT -label DONE /target_tb/DUT0/o_engine_done
+add wave -noupdate -expand -group RX -label EN /target_tb/DUT4/i_ddrccc_rx_en
+add wave -noupdate -expand -group RX -label MODE /target_tb/DUT4/i_ddrccc_rx_mode
+add wave -noupdate -expand -group RX -label DONE /target_tb/DUT4/o_ddrccc_rx_mode_done
+add wave -noupdate -expand -group TX -label EN /target_tb/DUT5/i_ddrccc_tx_en
+add wave -noupdate -expand -group TX -label MODE /target_tb/DUT5/i_ddrccc_tx_mode
+add wave -noupdate -expand -group TX -label DONE /target_tb/DUT5/o_ddrccc_tx_mode_done
+add wave -noupdate -expand -group REG_FILE -label RD_EN /target_tb/DUT9/i_regf_rd_en
+add wave -noupdate -expand -group REG_FILE -label WR_EN /target_tb/DUT9/i_regf_wr_en
+add wave -noupdate -expand -group REG_FILE -label ADDRES /target_tb/DUT9/i_regf_addr
+add wave -noupdate -expand -group REG_FILE -label IN_DATA /target_tb/DUT9/i_regf_data_wr
+add wave -noupdate -expand -group REG_FILE -label OUT_DATA /target_tb/DUT9/o_regf_data_rd
+add wave -noupdate -expand -group DETECTORS -label RESTART /target_tb/DUT8/i_rstdet_RESTART
+add wave -noupdate -expand -group DETECTORS -label EXIT /target_tb/DUT8/i_exitdet_EXIT
+TreeUpdate [SetDefaultTree]
+WaveRestoreCursors {{Cursor 1} {14780000000 ps} 0} {{Cursor 2} {2362745614 ps} 0}
+quietly wave cursor active 1
+configure wave -namecolwidth 192
+configure wave -valuecolwidth 100
+configure wave -justifyvalue left
+configure wave -signalnamewidth 1
+configure wave -snapdistance 10
+configure wave -datasetprefix 0
+configure wave -rowmargin 4
+configure wave -childrowmargin 2
+configure wave -gridoffset 0
+configure wave -gridperiod 1
+configure wave -griddelta 40
+configure wave -timeline 0
+configure wave -timelineunits ps
+update
+WaveRestoreZoom {12661683763 ps} {15144121907 ps}
