@@ -1,0 +1,632 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dD:/ASU/Senior 2/GP
+T_opt
+!s110 1714930728
+VCV=V@IUR9M[`f;FWJ@:>N1
+04 13 4 work ENTHDR_TGT_TB fast 0
+=1-7cd30a8203ea-6637c428-27-3da4
+o-quiet -auto_acc_if_foreign -work work +acc
+Z0 tCvgOpt 0
+n@_opt
+OL;O;10.6c;65
+vbits_counter
+Z1 !s110 1714930561
+!i10b 1
+!s100 3iK]CdWLS286TA?cPn4[92
+I7PG]^z2dR8;:c2^8]6zh@3
+Z2 VDg1SIo80bB@j0V0VzS_@n1
+Z3 dD:/ASU/Senior 2/GP/tgt_enthdr test
+Z4 w1708257865
+8D:/ASU/Senior 2/GP/tgt_enthdr test/bits_counter.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/bits_counter.v
+Z5 L0 33
+Z6 OL;L;10.6c;65
+r1
+!s85 0
+31
+!s108 1714930560.000000
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/bits_counter.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/bits_counter.v|
+!i113 0
+Z7 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R0
+vclk_divider
+R1
+!i10b 1
+!s100 dc;1Hz_R[7]nYJN925fTK0
+IC0Jam<]ke8_B>CGZZBW>G3
+R2
+R3
+R4
+8D:/ASU/Senior 2/GP/tgt_enthdr test/clk_divider.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/clk_divider.v
+Z8 L0 32
+R6
+r1
+!s85 0
+31
+Z9 !s108 1714930561.000000
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/clk_divider.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/clk_divider.v|
+!i113 0
+R7
+R0
+vcontroller_crh
+R1
+!i10b 1
+!s100 ^G=DV=H[Y^GXb7D^6XEGF3
+IQ3Gcn`K9`6;jk?1fIXSBZ2
+R2
+R3
+w1711484282
+8D:/ASU/Senior 2/GP/tgt_enthdr test/controller_crh.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/controller_crh.v
+Z10 L0 35
+R6
+r1
+!s85 0
+31
+R9
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/controller_crh.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/controller_crh.v|
+!i113 0
+R7
+R0
+vcontroller_rx
+R1
+!i10b 1
+!s100 T=8LDk`m0548G^_ke8>MR3
+IQC?IQRolBa?EBk2=JbQcn3
+R2
+R3
+R4
+8D:/ASU/Senior 2/GP/tgt_enthdr test/controller_RX.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/controller_RX.v
+Z11 L0 36
+R6
+r1
+!s85 0
+31
+R9
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/controller_RX.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/controller_RX.v|
+!i113 0
+R7
+R0
+vcontroller_tx
+Z12 !s110 1714930562
+!i10b 1
+!s100 AUjLFLnK87<PR0o]U;<953
+I]E4CKoT5QzV:OdfnoU26b1
+R2
+R3
+Z13 w1714859227
+8D:/ASU/Senior 2/GP/tgt_enthdr test/controller_TX.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/controller_TX.v
+R5
+R6
+r1
+!s85 0
+31
+R9
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/controller_TX.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/controller_TX.v|
+!i113 0
+R7
+R0
+vdynamic_address_assignment
+R12
+!i10b 1
+!s100 ne_X9KMlzD>CbMT>57VAb2
+IHm4615KX6NbeEc][nQ7n93
+R2
+R3
+w1711484242
+8D:/ASU/Senior 2/GP/tgt_enthdr test/dynamic_address_assignment.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/dynamic_address_assignment.v
+Z14 L0 34
+R6
+r1
+!s85 0
+31
+Z15 !s108 1714930562.000000
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/dynamic_address_assignment.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/dynamic_address_assignment.v|
+!i113 0
+R7
+R0
+venthdr
+R12
+!i10b 1
+!s100 2=U7F==LH@?f4YmMS]h4O2
+I[[iFKZm?cXQg>OLR`aa6R1
+R2
+R3
+R13
+8D:/ASU/Senior 2/GP/tgt_enthdr test/ENTHDR.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/ENTHDR.v
+R5
+R6
+r1
+!s85 0
+31
+R15
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/ENTHDR.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/ENTHDR.v|
+!i113 0
+R7
+R0
+vENTHDR_CTRL_TGT_top
+R12
+!i10b 1
+!s100 RI:M__i>8i:QT0K?^7ge42
+IFiS>^]ZicCA`n5cJaBg2_2
+R2
+R3
+w1714324838
+8D:/ASU/Senior 2/GP/tgt_enthdr test/ENTHDR_CTRL_TGT_TOP.V
+FD:/ASU/Senior 2/GP/tgt_enthdr test/ENTHDR_CTRL_TGT_TOP.V
+R11
+R6
+r1
+!s85 0
+31
+R15
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/ENTHDR_CTRL_TGT_TOP.V|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/ENTHDR_CTRL_TGT_TOP.V|
+!i113 0
+R7
+R0
+n@e@n@t@h@d@r_@c@t@r@l_@t@g@t_top
+vENTHDR_TGT
+R12
+!i10b 1
+!s100 RiSCUz[0e<B16jki7`<U[2
+Ihc<MMKK04ja487P9m;O[f1
+R2
+R3
+w1714351726
+8D:/ASU/Senior 2/GP/tgt_enthdr test/ENTHDR_TGT.V
+FD:/ASU/Senior 2/GP/tgt_enthdr test/ENTHDR_TGT.V
+L0 1
+R6
+r1
+!s85 0
+31
+R15
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/ENTHDR_TGT.V|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/ENTHDR_TGT.V|
+!i113 0
+R7
+R0
+n@e@n@t@h@d@r_@t@g@t
+vENTHDR_TGT_TB
+R12
+!i10b 1
+!s100 Sddgef?d?FdKmN_k0OQNM0
+I_3Iz4Qo74;[EcFW2n72Zo2
+R2
+R3
+w1714351491
+8D:/ASU/Senior 2/GP/tgt_enthdr test/ENTHDR_TGT_TB.V
+FD:/ASU/Senior 2/GP/tgt_enthdr test/ENTHDR_TGT_TB.V
+L0 4
+R6
+r1
+!s85 0
+31
+R15
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/ENTHDR_TGT_TB.V|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/ENTHDR_TGT_TB.V|
+!i113 0
+R7
+R0
+n@e@n@t@h@d@r_@t@g@t_@t@b
+vframe_counter
+R12
+!i10b 1
+!s100 <]A1D[AY]<Q1NBLoo[Y`z1
+INi4AFW78R?:NZDjzPjAd]3
+R2
+R3
+R4
+8D:/ASU/Senior 2/GP/tgt_enthdr test/frame_counter.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/frame_counter.v
+L0 22
+R6
+r1
+!s85 0
+31
+R15
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/frame_counter.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/frame_counter.v|
+!i113 0
+R7
+R0
+vgen_mux
+Z16 !s110 1714930563
+!i10b 1
+!s100 i`CEMYk:an_6SS8N]lB`70
+IKDhWdSzT^4e`;_XleM`PT3
+R2
+R3
+R4
+8D:/ASU/Senior 2/GP/tgt_enthdr test/mux.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/mux.v
+Z17 L0 23
+R6
+r1
+!s85 0
+31
+Z18 !s108 1714930563.000000
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/mux.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/mux.v|
+!i113 0
+R7
+R0
+vhdr_engine
+!s110 1714930676
+!i10b 1
+!s100 3m<5gcCk<DmVFLO4;F_6U1
+IQ?SF9P?ZBULbm^9dUU9>80
+R2
+R3
+R13
+8D:/ASU/Senior 2/GP/tgt_enthdr test/HDR_Engine.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/HDR_Engine.v
+R8
+R6
+r1
+!s85 0
+31
+!s108 1714930676.000000
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/HDR_Engine.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/HDR_Engine.v|
+!i113 0
+R7
+R0
+vhot_join
+R16
+!i10b 1
+!s100 H9?>N@F?XTh0i2D85R]C93
+ISMGb><iPH@jOMPDbWmo>@2
+R2
+R3
+R4
+8D:/ASU/Senior 2/GP/tgt_enthdr test/hot_join.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/hot_join.v
+R5
+R6
+r1
+!s85 0
+31
+R18
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/hot_join.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/hot_join.v|
+!i113 0
+R7
+R0
+vi2c_legacy_mode
+R16
+!i10b 1
+!s100 b_^G7SV>K6?fkMB<7:Zfa2
+IZUXP5SL8DaAZkl?Qj2^kL3
+R2
+R3
+w1711484630
+8D:/ASU/Senior 2/GP/tgt_enthdr test/i2c_legacy_mode.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/i2c_legacy_mode.v
+R5
+R6
+r1
+!s85 0
+31
+R18
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/i2c_legacy_mode.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/i2c_legacy_mode.v|
+!i113 0
+R7
+R0
+vi3c_controller_top
+R16
+!i10b 1
+!s100 6`EJA`TQ>VkJ2;4RM?RKj2
+I77:je9WZ:Fd@05TBj4z>F2
+R2
+R3
+w1711484232
+8D:/ASU/Senior 2/GP/tgt_enthdr test/i3c_top.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/i3c_top.v
+R10
+R6
+r1
+!s85 0
+31
+R18
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/i3c_top.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/i3c_top.v|
+!i113 0
+R7
+R0
+vi3c_engine
+R16
+!i10b 1
+!s100 _nH7<mf4lGYbPojDzP_lQ3
+IMDC<1b7]PQQSTHLYP:n<W0
+R2
+R3
+w1713132101
+8D:/ASU/Senior 2/GP/tgt_enthdr test/new_i3c_engine.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/new_i3c_engine.v
+R14
+R6
+r1
+!s85 0
+31
+R18
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/new_i3c_engine.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/new_i3c_engine.v|
+!i113 0
+R7
+R0
+vi3c_timer_fsm
+R16
+!i10b 1
+!s100 zQ::WhASDL6];2>aHLkcl2
+IC7=@SM9HKjla7H3df:kBX2
+R2
+R3
+R13
+8D:/ASU/Senior 2/GP/tgt_enthdr test/i3c_timer_fsm.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/i3c_timer_fsm.v
+R14
+R6
+r1
+!s85 0
+31
+R18
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/i3c_timer_fsm.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/i3c_timer_fsm.v|
+!i113 0
+R7
+R0
+vIBI
+R16
+!i10b 1
+!s100 nR13_=U=bFOZ5g0]AP^`^0
+I1><K=iETz_L_MY`?X^>Mj3
+R2
+R3
+w1711488012
+8D:/ASU/Senior 2/GP/tgt_enthdr test/IBI.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/IBI.v
+R17
+R6
+r1
+!s85 0
+31
+R18
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/IBI.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/IBI.v|
+!i113 0
+R7
+R0
+n@i@b@i
+vmain_ctrl_unit
+R16
+!i10b 1
+!s100 ^FD3STD9;9DY3:i^S=Ikn0
+IY4L9KE1I[cbQQgZTDCIhE1
+R2
+R3
+R4
+8D:/ASU/Senior 2/GP/tgt_enthdr test/main_ctrl_unit.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/main_ctrl_unit.v
+R14
+R6
+r1
+!s85 0
+31
+R18
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/main_ctrl_unit.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/main_ctrl_unit.v|
+!i113 0
+R7
+R0
+vopen_drain_behav_model
+Z19 !s110 1714930564
+!i10b 1
+!s100 :L8M139;O5H8Ym@aDhH8z0
+Il6[H:??`3h=50_[:eP=R80
+R2
+R3
+R4
+8D:/ASU/Senior 2/GP/tgt_enthdr test/open_drain_behav_model.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/open_drain_behav_model.v
+L0 3
+R6
+r1
+!s85 0
+31
+Z20 !s108 1714930564.000000
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/open_drain_behav_model.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/open_drain_behav_model.v|
+!i113 0
+R7
+R0
+vpush_pull_behav_model
+R19
+!i10b 1
+!s100 QLEEi?X8eCBcP=jK_j>a_2
+IM[UlJXN4JNVlLznCG@]?f3
+R2
+R3
+R4
+8D:/ASU/Senior 2/GP/tgt_enthdr test/push_pull_behav_model.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/push_pull_behav_model.v
+L0 3
+R6
+r1
+!s85 0
+31
+R20
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/push_pull_behav_model.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/push_pull_behav_model.v|
+!i113 0
+R7
+R0
+vreg_file
+R19
+!i10b 1
+!s100 @TL92P@?;OETFK]mlHEU[0
+IZcj40@A;1f4R5WK=R9?IZ0
+R2
+R3
+w1713053331
+8D:/ASU/Senior 2/GP/tgt_enthdr test/reg_file (1).v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/reg_file (1).v
+R5
+R6
+r1
+!s85 0
+31
+R20
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/reg_file (1).v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/reg_file (1).v|
+!i113 0
+R7
+R0
+vscl_generation
+R19
+!i10b 1
+!s100 YWmH]e_i66B``PdLjC[0U2
+Il3Sm?Z?B=7Fj8E9j3F;?A3
+R2
+R3
+R4
+8D:/ASU/Senior 2/GP/tgt_enthdr test/scl_generation.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/scl_generation.v
+R14
+R6
+r1
+!s85 0
+31
+R20
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/scl_generation.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/scl_generation.v|
+!i113 0
+R7
+R0
+vscl_staller
+R19
+!i10b 1
+!s100 [A`[gQbzY?D_T_RniIR0H1
+Im=]61a:BB@?>6McaWcIOd1
+R2
+R3
+R4
+8D:/ASU/Senior 2/GP/tgt_enthdr test/scl_staller.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/scl_staller.v
+R17
+R6
+r1
+!s85 0
+31
+R20
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/scl_staller.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/scl_staller.v|
+!i113 0
+R7
+R0
+vsda_handling
+R19
+!i10b 1
+!s100 `>dJ[AP1[OkJ7gI:DM`;_2
+I8eIghEH4BQIY0N`Te?E_V2
+R2
+R3
+R4
+8D:/ASU/Senior 2/GP/tgt_enthdr test/sda_handling.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/sda_handling.v
+R5
+R6
+r1
+!s85 0
+31
+R20
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/sda_handling.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/sda_handling.v|
+!i113 0
+R7
+R0
+vsdr_mode
+R19
+!i10b 1
+!s100 Rd>3S14<;KG_hgjT1^@f]3
+I;[acOBBX0]Ued9lf2V^UN0
+R2
+R3
+w1711484513
+8D:/ASU/Senior 2/GP/tgt_enthdr test/sdr_mode.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/sdr_mode.v
+R5
+R6
+r1
+!s85 0
+31
+R20
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/sdr_mode.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/sdr_mode.v|
+!i113 0
+R7
+R0
+vtri_state_buf
+R19
+!i10b 1
+!s100 Y1iCDi@e;a8cKDoMIajLE3
+IW5j1NF>lDncUV8E^]:U3W3
+R2
+R3
+R4
+8D:/ASU/Senior 2/GP/tgt_enthdr test/tri_state_buf.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/tri_state_buf.v
+L0 3
+R6
+r1
+!s85 0
+31
+R20
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/tri_state_buf.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/tri_state_buf.v|
+!i113 0
+R7
+R0
+vtri_state_buf_n
+!s110 1714930565
+!i10b 1
+!s100 Bj9NLQI?c4ml;?YIa<:jb0
+IJWjZ2YT=Wzm;M1dYlZcS82
+R2
+R3
+R4
+8D:/ASU/Senior 2/GP/tgt_enthdr test/tri_state_buf_n.v
+FD:/ASU/Senior 2/GP/tgt_enthdr test/tri_state_buf_n.v
+L0 3
+R6
+r1
+!s85 0
+31
+!s108 1714930565.000000
+!s107 D:/ASU/Senior 2/GP/tgt_enthdr test/tri_state_buf_n.v|
+!s90 -reportprogress|300|-work|work|-vopt|-stats=none|D:/ASU/Senior 2/GP/tgt_enthdr test/tri_state_buf_n.v|
+!i113 0
+R7
+R0
