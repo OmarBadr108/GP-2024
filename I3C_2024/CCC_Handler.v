@@ -80,7 +80,7 @@ output reg [4:0]  o_sclstall_code    ,
 output reg        o_tx_en            ,
 output reg [3:0]  o_tx_mode          ,
 output reg        o_rx_en    ,
-output reg [3:0]  o_rx_mode  ,
+output reg [2:0]  o_rx_mode  ,
 
 //output reg        o_rx_en_negedge    ,
 //output reg [3:0]  o_rx_mode_negedge  ,
@@ -187,13 +187,13 @@ parameter [3:0]
 parameter [11:0] first_location = 12'd1000 ;
 
 // rx parameters 
-parameter [3:0] 
+parameter [2:0] 
                  preamble_rx_mode    = 4'd0 , 
                  CRC_PREAMBLE        = 4'd1 ,
                  parity_check        = 4'd6 ,
                  deserializing_byte  = 4'd3 ,
-                 check_c_token_CRC   = 4'd5 ,
-                 check_value_CRC     = 4'd7 ;
+                 check_c_token_CRC   = 4'd7 ,
+                 check_value_CRC     = 4'd2 ;
 
 
 // SCL staller parameters 

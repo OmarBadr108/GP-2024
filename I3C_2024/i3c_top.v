@@ -402,10 +402,10 @@ module I3C_TOP (
    wire                 hdr_tx_mode_sel;
    wire        [3:0]    tx_mode_hdr_mux_out;
 
-   wire        [3:0]    ccc_rx_mode;
-   wire        [3:0]    ddr_rx_mode;
+   wire        [2:0]    ccc_rx_mode;
+   wire        [2:0]    ddr_rx_mode;
    wire                 hdr_rx_mode_sel;
-   wire        [3:0]    rx_mode_hdr_mux_out;
+   wire        [2:0]    rx_mode_hdr_mux_out;
 
    wire                  scl_ddr_pp_od                 ;
    wire                  scl_ccc_pp_od                 ;
@@ -1172,7 +1172,7 @@ gen_mux #(4,1) tx_mode_hdr_mux (
             .ctrl_sel (hdr_tx_mode_sel)  ,
             .data_out (tx_mode_hdr_mux_out) );
 
-gen_mux #(4,1) rx_mode_hdr_mux (
+gen_mux #(3,1) rx_mode_hdr_mux (
             .data_in  ({ccc_rx_mode, ddr_rx_mode}),             
             .ctrl_sel (hdr_rx_mode_sel)  ,
             .data_out (rx_mode_hdr_mux_out) );
@@ -1336,7 +1336,7 @@ gen_mux #(1,1) reg_rd_en_config_data_mux (
         .o_regf_addr             (ccc_regf_addr),           // done 
         .o_engine_done(ccc_engine_done),                        // done 
         .o_txrx_addr_ccc         (ccc_tx_special_data),   // done 
-        .o_engine_odd(engine_odd),
+        .o_engine_odd           (engine_odd),
         .o_regf_ERR_STATUS       (o_regf_ERR_STATUS_tb) ,   //??? not an input to regfile - yes it's output to the interface (response fifo or testbench)
 
         .o_crc_en_rx_tx_mux_sel(crc_en_rx_tx_mux_sel),

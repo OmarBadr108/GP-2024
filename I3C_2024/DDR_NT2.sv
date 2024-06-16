@@ -32,7 +32,7 @@ input        i_scl_neg_edge,*/
 output reg       o_tx_en,
 output reg [3:0] o_tx_mode,
 output reg       o_rx_en,
-output reg [3:0] o_rx_mode,
+output reg [2:0] o_rx_mode,
 output reg       o_frmcnt_en,
 output reg       o_bitcnt_en, 
 output reg       o_bitcnt_rst,  
@@ -121,13 +121,13 @@ localparam [3:0]  seven_zeros = 'd3,
  
  
  // -------------- rx modes ----------------//  
-localparam [3:0]     preamble = 'd0, 
+localparam [2:0]     preamble = 'd0, 
                   //  nack_bit = 'd1 ,				 
                      Deserializing_byte = 'd3,                   
-                     Check_token = 'd5,
+                     Check_token = 'd7,
                      Check_Parity_value = 'd6,
-                     Check_CRC_value = 'd7,
-                     Error = 'd15;
+                     Check_CRC_value = 'd2,
+                     Error = 'd4;
                      
 
 
