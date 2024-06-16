@@ -40,7 +40,7 @@ input                     i_sclgen_scl_neg_edge,
 input                     i_ddrccc_rx_en,
 input                     i_sdahnd_rx_sda,
 //input     [4:0]           i_bitcnt_rx_bit_count,
-input        [3:0]        i_ddrccc_rx_mode,
+input        [2:0]        i_ddrccc_rx_mode,
 input        [4:0]        i_crc_value,
 input                     i_crc_valid,
 
@@ -63,16 +63,23 @@ output  reg               o_crc_last_byte
 
 
 /////////////////////////////////rx modes/////////////////////////////////
-localparam [3:0]     
+/*localparam [3:0]     
                      PREAMBLE            = 4'b0000  ,
                      CRC_PREAMBLE        = 4'b0001  ,  
                      DESERIALIZING_BYTE  = 4'b0011  ,                   
                      CHECK_TOKEN         = 4'b0101  ,
                      CHECK_PAR_VALUE     = 4'b0110  ,
                      CHECK_CRC_VALUE     = 4'b0111  ,
-                     ERROR               = 4'b1111  ;
+                     ERROR               = 4'b1111  ;*/
 
-
+localparam [2:0]     
+                     PREAMBLE            = 3'b000  ,
+                     CRC_PREAMBLE        = 3'b001  ,  
+                     DESERIALIZING_BYTE  = 3'b011  ,                   
+                     CHECK_TOKEN         = 3'b111  ,
+                     CHECK_PAR_VALUE     = 3'b110  ,
+                     CHECK_CRC_VALUE     = 3'b010  ,
+                     ERROR               = 3'b100  ;
 
 ////////////////////////////////////////////////////////////////////////////
 

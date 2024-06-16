@@ -1337,7 +1337,7 @@ gen_mux #(1,1) reg_rd_en_config_data_mux (
         .o_regf_addr             (ccc_regf_addr),           // done 
         .o_engine_done(ccc_engine_done),                        // done 
         .o_txrx_addr_ccc         (ccc_tx_special_data),   // done 
-        .o_engine_odd(engine_odd),
+        .o_engine_odd           (engine_odd),
         .o_regf_ERR_STATUS       (o_regf_ERR_STATUS_tb) ,   //??? not an input to regfile - yes it's output to the interface (response fifo or testbench)
 
         .o_crc_en_rx_tx_mux_sel(crc_en_rx_tx_mux_sel),
