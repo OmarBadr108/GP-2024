@@ -30,7 +30,13 @@ module CCC_Handler_tb ();
 	// new /////
 	wire  en_mux ;
 	////////////
-	
+	// related to CRC
+	logic        o_crc_en_rx_tx_mux_sel_tb;
+	logic        o_crc_data_rx_tx_valid_sel_tb;
+	logic        o_crc_data_tx_rx_mux_sel_tb;
+	logic        o_crc_last_byte_tx_rx_mux_sel_tb;
+
+	/////////////////////
 	// related to regfile 
 	bit i_regfile_clk_tb ;
 	wire [7:0]  i_rx_regfcrc_data_wr_tb ;
@@ -173,6 +179,10 @@ module CCC_Handler_tb ();
 		.o_regf_ERR_STATUS(o_regf_ERR_STATUS_tb),
 
 		.o_en_mux(en_mux)       // new
+		.o_crc_en_rx_tx_mux_sel(o_crc_en_rx_tx_mux_sel_tb),
+		.o_crc_data_rx_tx_valid_sel(o_crc_data_rx_tx_valid_sel_tb),
+		.o_crc_data_tx_rx_mux_sel(o_crc_data_tx_rx_mux_sel_tb),
+		.o_crc_last_byte_tx_rx_mux_sel(o_crc_last_byte_tx_rx_mux_sel_tb)
 		);
 
 
