@@ -148,19 +148,18 @@ tx_t  DUT5(
 );
 
 ///////////////////engine_nt_mux////////////////////////
-reg o_ccc_rx_en_tb;
+
 wire engine_en_tb ;
 wire [1:0] engine_or_nt;
 gen_mux #(1,2) DUT6(
-.data_in({o_ccc_rx_en_tb , o_nt_rx_en_tb , engine_en_tb}),
+.data_in({1'b0 , o_nt_rx_en_tb , engine_en_tb}),
 .ctrl_sel(engine_or_nt),
 .data_out(o_rx_en_tb)
 );
 
-reg [3:0] o_ccc_rx_mode_tb;
 wire [3:0] engine_mode; 
 gen_mux #(4,2) DUT7 (
-.data_in({o_ccc_rx_mode_tb , o_nt_rx_mode_tb , engine_mode}),
+.data_in({4'b0000 , o_nt_rx_mode_tb , engine_mode}),
 .ctrl_sel(engine_or_nt),
 .data_out(o_rx_mode_tb)
 );
@@ -287,17 +286,16 @@ pullup(sda_tb);
     // locally driven value
     assign sda_tb   = o_tgt_sdahnd_sda_tb 			;
 /////////////////////////muxes_for_testing_only////////////////////////////////////////////
-reg ent;
 wire sda_in; 
 gen_mux #(1,1) DUT12 (
 .data_in({i_sdahnd_rx_sda_tb , sda_tb}),
-.ctrl_sel(ent),
+.ctrl_sel(o_tx_en),
 .data_out(sda_in)
 );
 
 gen_mux #(1,1) DUT13 ( //who on bus 
 .data_in({o_sdahnd_tgt_serial_data_tb , o_tgt_sdahnd_sda_tb}),
-.ctrl_sel(ent),
+.ctrl_sel(o_tx_en),
 .data_out(sda_out)
 );
 
@@ -363,7 +361,6 @@ initial
   //////////////////////ent_hdr///////////////////////
     //////////////gonna be done by controller////////////
         stall = 1'b0;
-        ent = 1'b0;
         i_data_config_mux_sel   = 1'b0;
 	initialize();
 	reset();               
@@ -373,7 +370,6 @@ initial
         i_i3c_i2c_sel_tb   = 1'b1; 
 //////////////////////////////////////////////////////      
         @(posedge ENTHDR_done) //start of our sequence
-        ent = 1'b1; 
         #(CLK_PERIOD )   
 
 
@@ -434,7 +430,6 @@ initial
    end
   //@(o_engine_done_tb && o_ddrccc_error_tb);
   //@(!i_engine_en_tb);
-  #(CLK_PERIOD);
   gene_exitandstop;
   //@(!i_engine_en_tb);  //complete writing sequence with error in last stage (CRC) to make sure togglig of error flag
   @(exit_done_tb); //complete writing sequence with exit a5iraaaaaaan el7
