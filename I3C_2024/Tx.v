@@ -22,18 +22,18 @@ output reg        o_crc_data_valid
 
 
 // tx modes needed  
-localparam [3:0]  special_preambles = 'b0000, //2'b01 
-                  serializing_address = 'b0001, //address of target
-    				          serializing_zeros = 'b0011 ,  //7-zeros in the first byte of cmd word        
-                  one = 'b0010, // for representing preamble bit or reading_or_writing bit  
-                  zero = 'b0110, // for representing preamble bit or reading_or_writing bit
-				          serializing_data = 'b0111, //data byte from reg to be serialized
-				          CCC_value = 'b0101 , //special data in case of transmitting CCC
-				          calculating_Parity = 'b0100, //parity of word serialized either cmd word or data word
-				          token_CRC = 'b1100, //special bits 4'b1100
-				          CRC_value = 'b1101, //CRC value arrived of data serialized
-                  restart_Pattern = 'b1111,
-                  exit_Pattern = 'b1110;
+localparam [3:0]  special_preambles = 'b0000, 		//'d0			//2'b01 
+                  serializing_address = 'b0001, 	//'d1			//address of target
+    			  serializing_zeros = 'b0011 ,  	//'d3			//7-zeros in the first byte of cmd word        
+                  one = 'b0010, 					//'d2			// for representing preamble bit or reading_or_writing bit  
+                  zero = 'b0110, 					//'d6			// for representing preamble bit or reading_or_writing bit
+				  serializing_data = 'b0111, 		//'d7			//data byte from reg to be serialized
+				  CCC_value = 'b0101 , 				//'d5			//special data in case of transmitting CCC
+				  calculating_Parity = 'b0100,  	//'d4			//parity of word serialized either cmd word or data word
+				  token_CRC = 'b1100, 				//'d12			//special bits 4'b1100
+				  CRC_value = 'b1101, 				//'d13			//CRC value arrived of data serialized
+                  restart_Pattern = 'b1111,			//'d15
+                  exit_Pattern = 'b1110;			//'d14
 
 
 /**special values*/			  
@@ -62,17 +62,17 @@ reg reset_counter_flag;
 reg rd_wr_flag; //storing rd_or_wr bit for calculating (parity adj) and (cmd word parity)
 reg parity_flag; //to distinguish parity is calculated for cmd or data
 reg first_byte_full; //to distinguish tx is serializing first byte or second byte
-wire [4:0] tmp_restart ;
+wire [3:0] tmp_restart ;
 
 
-assign tmp_restart = 5'b 01011;
+assign tmp_restart = 4'b 0101;
 assign A = {i_ddrccc_special_data[6:0],parity_adj} ; 
 assign parity_adj = ( rd_wr_flag ^ (^i_ddrccc_special_data) ) ;
 assign P1 = (parity_flag)? P1_data : P1_cmdword ; 
 assign P0 = (parity_flag)? P0_data : P0_cmdword ;
 assign P = {P1,P0} ;
 assign P1_cmdword = rd_wr_flag ^ A[7] ^ A[5] ^ A[3] ^ A[1] ;
-assign P0_cmdword = A[6] ^ A[4] ^ A[2] ^ A[0] ^ 1 ;
+assign P0_cmdword =  1 ;
 assign P1_data = D1[7] ^ D1[5] ^ D1[3] ^ D1[1] ^ D2[7] ^ D2[5] ^ D2[3] ^ D2[1] ;
 assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^ 1 ; 
 
@@ -596,13 +596,13 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 			    begin
 			     counter <= counter + 1;
 			    //  12 / 6 / 2024
-			    o_sdahnd_serial_data <= tmp_restart[(4 - counter)];
-			     if ( counter == 'd4 )  //before : 4
+			    o_sdahnd_serial_data <= tmp_restart[(3 - counter)];
+			     if ( counter == 'd3 )  //before : 4
 			      o_ddrccc_mode_done <= 'b1;
 			    end	  
 			  end
 			 
-	    else if ( counter == 'd5 )   //before: 5
+	    else if ( counter == 'd4 )   //before: 5
 			 begin
 			  reset_counter_flag <= 0;
 			 end

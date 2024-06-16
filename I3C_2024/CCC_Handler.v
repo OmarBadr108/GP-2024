@@ -100,8 +100,7 @@ output reg [3:0]  o_regf_ERR_STATUS  ,
 output reg        o_en_mux           ,  // for crc muxes btn tx and rx   ( 1 for tx and 0 for rx 
 output reg        o_crc_en_rx_tx_mux_sel,
 output reg        o_crc_data_rx_tx_valid_sel,
-output reg        o_crc_data_tx_rx_mux_sel,
-output wire      o_crc_last_byte_tx_rx_mux_sel
+output reg        o_crc_data_tx_rx_mux_sel
 );   
 
 
@@ -119,6 +118,8 @@ integer   immediate_counter ;
 reg [9:0] tmp_shift ;
 //reg [3:0] o_rx_mode ;
 //reg       o_rx_en ;
+
+//wire exit_setup; //laila edit
 
 
 // configuration 
@@ -197,9 +198,9 @@ parameter [3:0]
 
 
 // SCL staller parameters 
-parameter [4:0] restart_pattern_stall = 5'd9, // correct: 5'd9  , // according to restart pattern specs           //was 11 ,modified by laila
-                restart_pattern_stall_special = 5'd9, // correct : 5'd9  , // according to restart pattern specs   //was 11 ,modified by laila
-                exit_pattern_stall    = 5'd17 ; // according to exit pattern specs 
+parameter [4:0] restart_pattern_stall = 5'd7, // correct: 5'd9  , // according to restart pattern specs           //was 11 ,modified by laila
+                restart_pattern_stall_special = 5'd7, // correct : 5'd9  , // according to restart pattern specs   //was 11 ,modified by laila
+                exit_pattern_stall    = 5'd13 ; // according to exit pattern specs 
 
 
 // Error states parameters 
@@ -336,6 +337,40 @@ end
     end 
 
 
+// Pulse stretcher 
+reg [1:0] pulse_counter ;  
+reg       i_sclstall_stall_done_strtch ;
+
+always @(posedge i_sys_clk or negedge i_sys_rst) begin
+    if (!i_sys_rst) begin
+        pulse_counter                 <= 2'b00 ;
+        i_sclstall_stall_done_strtch  <= 1'b0 ;
+    end 
+    else begin
+        if (i_sclstall_stall_done) begin
+            pulse_counter                <= 2'b11 ;
+            i_sclstall_stall_done_strtch <= 1'b1 ;
+        end 
+        else if (pulse_counter > 0) begin
+            pulse_counter                 <= pulse_counter - 1 ;
+            i_sclstall_stall_done_strtch <= 1'b1 ;
+        end 
+        else begin
+            i_sclstall_stall_done_strtch <= 1'b0 ;
+        end
+    end
+end
+
+//////////////////////////
+
+
+
+
+
+
+
+
+
 ////////////////////////////////////////// state memory ////////////////////////////////////////////////
 
     always @(posedge i_sys_clk or negedge i_sys_rst) begin
@@ -408,6 +443,19 @@ end
                     next_state = IDLE ;
                 end 
 
+/*
+                //laila edit
+                if(i_regf_TOC == 1'b1 && exit_setup == 1'b1)
+                    begin
+                        o_tx_en = 1'b1;
+                        o_tx_mode = zero
+                    end
+                else 
+                    begin
+                    end
+                    
+                end
+*/
             end 
 
             PRE_CMD : begin // i'm driving the 2 bits with 2'b01
@@ -444,7 +492,7 @@ end
                     o_crc_en_rx_tx_mux_sel     = 1'b1 ;
                     o_crc_data_rx_tx_valid_sel = 1'b1 ;
                     o_crc_data_tx_rx_mux_sel   = 1'b1 ;
-                    o_rx_mode = parity_check ;
+                    o_rx_mode                  = CRC_PREAMBLE ;   //o_rx_mode = parity_check ;
 
                     if ((i_rx_mode_done ) && i_frmcnt_last_frame) begin  // HENAAAAAAAAAAAAAA PUT THE CONDITION AFTER VERIFICATIONS (i_rx_mode_done && ! rx_err)
                         next_state = C_TOKEN_STATE ;
@@ -495,7 +543,22 @@ end
                 // state transition
                 if (i_tx_mode_done) begin 
                     next_state = SECOND_CMD_BYTE ;
+/*
+//laila
+if (first_time) begin 
+                    o_txrx_addr_ccc = SEVEN_E ;                    
                 end
+ else if (Direct_Broadcast_n_del && !first_time) begin 
+                    o_txrx_addr_ccc = target_addres ;                
+                  end
+else begin 
+                   
+o_txrx_addr_ccc = target_addres ;
+end
+*/
+end
+
+
                 else begin 
                     next_state = RESERVED ;
                 end
@@ -621,10 +684,7 @@ end
 
                     else begin // if immediate
                         o_tx_en      = 1'b1 ;
-
-                        o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                        o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                        o_crc_data_tx_rx_mux_sel   = 1'b0 ;                              
+                                                      
                         if (Defining_byte) begin 
                             o_regf_addr = first_location + immediate_counter + 1  ; // for 8 bit width Regfile .. point to sixth location
                             o_tx_mode   = serializing_byte_regf ;          // as first byte in the third location will contain the Defining Byte
@@ -635,7 +695,8 @@ end
                         end 
                     end
 
-                    next_state = FIRST_DATA_BYTE ;
+                    next_state   = FIRST_DATA_BYTE ;
+                    o_regf_rd_en = 1'b1 ;
                 end 
 
                 else if (i_rx_mode_done && i_rx_pre) begin 
@@ -648,7 +709,26 @@ end
                     next_state = PRE_FIRST_DATA_TWO ;
                 end 
 
+
+
+
+                // new 12/6/2024 
+                if (!i_regf_RnW) begin  // write operation 
+                    o_regf_rd_en = 1'b1 ;
+                    if (!i_regf_CMD_ATTR[0]) begin              // if regular command discriptor 
+                        o_regf_addr  = first_location + regular_counter ; // regular counter starts with value 8 to point to the ninth location 
+                    end 
+                    else begin                                  // if immediate
+                        if (Defining_byte) begin 
+                            o_regf_addr = first_location + immediate_counter + 1  ; // for 8 bit width Regfile .. point to sixth location
+                        end 
+                        else begin 
+                            o_regf_addr = first_location + immediate_counter ;        // for 8 bit width Regfile .. point to fourth location
+                        end 
+                    end 
+                end 
             end 
+
 
 
             CCC_BYTE : begin    // contains CCC value
@@ -662,8 +742,12 @@ end
 
                 if (i_tx_mode_done && Defining_byte) begin   // if a defining byte exists
                     next_state = DEFINING_BYTE ;
+                    o_regf_rd_en = 1'b1 ;
+                    o_regf_addr  = first_location + 4 ;
                 end
-                else if (i_tx_mode_done && !Defining_byte) begin   
+                else if (i_tx_mode_done && !Defining_byte) begin
+                    o_regf_addr  = first_location - 1  ;               // laila edit 
+                    o_regf_rd_en = 1'b1 ;  
                     next_state = ZEROS ;
                 end 
                 else begin 
@@ -873,30 +957,38 @@ end
                     else begin 
                         o_tx_mode = one ;                   // open drain
                         //o_sdahand_pp_od = open drain ; 
-                    end 
+                    end
 
-                    // rx signals 
-                    o_rx_en   = 1'b1 ;
-                    o_crc_en_rx_tx_mux_sel     = 1'b1 ;
-                    o_crc_data_rx_tx_valid_sel = 1'b1 ;
-                    o_crc_data_tx_rx_mux_sel   = 1'b1 ;                    
-                    o_rx_mode = preamble_rx_mode ;
-
-                    if ((i_rx_mode_done || i_tx_mode_done) && i_rx_pre) begin  // the coming is data still  in this case we may need the bit count number ?
+                    if (i_tx_mode_done) begin  
                         next_state = FIRST_DATA_BYTE ;
                     end
 
-                    else if (i_rx_mode_done && !i_rx_pre) begin // abort by target and crc is following
-                        next_state        = C_TOKEN_STATE ;
-                        o_regf_ERR_STATUS = T_ABORTED ;
-                    end 
+                   
 
                     else begin 
                         next_state = PRE_DATA_TWO ;
                     end
                 end 
+
+
+                // new 12/6/2024 
+                if (!i_regf_RnW) begin  // write operation 
+                    o_regf_rd_en = 1'b1 ;
+                    if (!i_regf_CMD_ATTR[0]) begin              // if regular command discriptor 
+                        o_regf_addr  = first_location + regular_counter ; // regular counter starts with value 8 to point to the ninth location 
+                    end 
+                    else begin                                  // if immediate
+                        if (Defining_byte) begin 
+                            o_regf_addr = first_location + immediate_counter + 1  ; // for 8 bit width Regfile .. point to sixth location
+                        end 
+                        else begin 
+                            o_regf_addr = first_location + immediate_counter ;        // for 8 bit width Regfile .. point to fourth location
+                        end 
+                    end 
+                end 
                 
-            end 
+            end                     
+
 
 
             FIRST_DATA_BYTE : begin    // contains first repeated data byte
@@ -950,7 +1042,9 @@ end
 
                 // for both read and write 
                 if (i_tx_mode_done && i_frmcnt_last_frame) begin  // to handle odd number of bytes in both regular and immediate
-                    next_state   = ZEROS ; 
+                    next_state   = ZEROS ;
+                    o_regf_rd_en = 1'b1 ;
+                    o_regf_addr  = first_location - 1 ; 
                     //o_engine_odd = 1'b1 ;            // to be put in the response discreptor      
                 end
 
@@ -959,16 +1053,31 @@ end
                     next_state = SECOND_DATA_BYTE ; 
                     //immediate_counter = immediate_counter + 1 ;  there can't be immediate Transfer Command Discriptor with direct get 
                     regular_counter   = regular_counter + 1 ;
-                end 
+                    end
+
+                 
                 /////////////////////
 
                 else if ((i_rx_mode_done | i_tx_mode_done) && !i_frmcnt_last_frame) begin  
                     next_state = SECOND_DATA_BYTE ; 
                     immediate_counter = immediate_counter + 1 ;
                     regular_counter   = regular_counter + 1 ;
+
+
+// 12/6/2024
+                    if (!i_regf_CMD_ATTR[0]) begin              
+                        o_regf_addr  = first_location + regular_counter ; 
+                    end 
+                    else begin
+                        o_regf_addr  = first_location + immediate_counter ;
+                    end 
+                    /////////////////
                 end
+
+
+                
                 else begin 
-                    next_state = FIRST_DATA_BYTE ;
+                    next_state = FIRST_DATA_BYTE ;                  
                 end
 
             end
@@ -1002,7 +1111,7 @@ end
                         end        
                     end
                     else begin 
-                        next_state = SECOND_DATA_BYTE ;
+                        next_state = SECOND_DATA_BYTE ;                        
                     end 
                 end 
                 else begin  // read operation 
@@ -1028,6 +1137,7 @@ end
                     end 
                     else begin 
                         next_state = SECOND_DATA_BYTE ;
+
                     end
                 end     
             end
@@ -1163,6 +1273,14 @@ end
                 o_sclstall_en   = 1'b1 ;
                 o_sclstall_code = restart_pattern_stall_special ;
 
+
+                //laila edit
+                if(i_sclstall_stall_done)
+                    o_sclstall_en   = 1'b0 ;
+                else
+                    o_sclstall_en   = 1'b1 ;
+                //////////////////////
+
                 if (i_tx_mode_done  && i_frmcnt_last_frame) begin 
                     next_state = FINISH ;
                     o_sclstall_en   = 1'b0 ;
@@ -1189,6 +1307,13 @@ end
                 o_sclstall_en   = 1'b1 ;
                 o_sclstall_code = restart_pattern_stall ;
 
+/*
+                if (i_sclstall_stall_done_strtch) begin
+                    o_sclstall_en   = 1'b1 ;
+                end
+                else o_sclstall_en   = 1'b0 ;
+
+
                 if (i_tx_mode_done  && i_frmcnt_last_frame) begin 
                     next_state = FINISH ;
                     o_sclstall_en   = 1'b0 ;
@@ -1200,22 +1325,29 @@ end
                 else begin 
                     next_state = RESTART_PATTERN ;
                 end
+*/
+
+                //laila edit
+                if (i_sclstall_stall_done_strtch) o_sclstall_en   = 1'b0 ;
+                else                              o_sclstall_en   = 1'b1 ;
+                //////////////////////
                 
-                
-/*
+
+
                 if (i_tx_mode_done  && i_frmcnt_last_frame) begin 
                     next_state = FINISH ;
                     o_sclstall_en   = 1'b0 ;
                 end 
                 else if (i_tx_mode_done  && !i_frmcnt_last_frame) begin 
-                    //next_state = PRE_CMD ;
-                    next_state = FINISH;  // edittt
+                    next_state = PRE_CMD ;
                     o_sclstall_en   = 1'b0 ;
                 end 
                 else begin 
                     next_state = RESTART_PATTERN ;
                 end
-*/
+              
+                
+
                 
             end 
 
@@ -1230,14 +1362,21 @@ end
                 o_crc_data_rx_tx_valid_sel = 1'b0 ;
                 o_crc_data_tx_rx_mux_sel   = 1'b0 ;
                 o_tx_mode        = exit_pattern ;
-                o_sclstall_en    = 1'b1 ;
+                //o_sclstall_en    = 1'b1 ;
                 o_sclstall_code  = exit_pattern_stall ;
                 o_bitcnt_err_rst = 1'b0 ;
                 o_bitcnt_en      = 1'b0 ;
 
+
+                // badr's edit
+                if (i_sclstall_stall_done_strtch) o_sclstall_en   = 1'b0 ;
+                else                              o_sclstall_en   = 1'b1 ;
+                //////////////////////
+
+
                 if (i_tx_mode_done) begin 
                     next_state = FINISH ;
-                    o_sclstall_en   = 1'b0 ;
+                    //o_sclstall_en   = 1'b1 ;
                     //o_engine_done     = 1'b1 ;
                 end  
                 else begin 
@@ -1282,6 +1421,29 @@ end
                 o_frmcnt_en       = 1'b0 ;
                 o_regf_ERR_STATUS = SUCCESS ;
                 next_state        = IDLE ;
+
+ 
+
+/*
+                //laila edit
+
+                if(i_regf_TOC == 1'b1)
+                begin
+                    o_sclstall_en = 1'b1;
+                    o_tx_en = 1'b1;
+                    o_tx_mode = zero;
+
+                    exit_setup = 1'b1;
+                end
+                else
+                begin
+                    o_sclstall_en = 1'b0;
+                    o_tx_en = 1'b0;
+                    //o_tx_mode 
+
+                    exit_setup = 1'b0;
+                end
+*/
 
             end 
         endcase
