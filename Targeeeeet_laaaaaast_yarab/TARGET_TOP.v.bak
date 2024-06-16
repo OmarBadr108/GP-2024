@@ -256,5 +256,12 @@ gen_mux #(1,1) U16_gen_mux (
 );
 
 ////////////////////exit_detector///////////////////
-	
+Exit_Detector U17_Exit_Detector (
+.i_sys_clk(i_sys_clk),
+.i_sys_rst(i_sys_rst),
+.i_scl(SCL),
+.i_sda(SDA),
+.o_engine_done(exit_done)
+);	
+
 endmodule

@@ -211,8 +211,8 @@ ENTHDR_TGT U10_enthdr (
 );
 
 gen_mux #(1,1) U11_gen_mux ( //who on bus 
-.data_in({o_sdahnd_tgt_serial_data , o_tgt_sdahnd_sda}),
-.ctrl_sel(o_tx_en),
+.data_in({o_tgt_sdahnd_sda , o_sdahnd_tgt_serial_data}),
+.ctrl_sel(o_ENTHDR_en_tb),
 .data_out(SDA)
 );
 
