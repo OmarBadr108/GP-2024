@@ -80,7 +80,7 @@ output reg [4:0]  o_sclstall_code    ,
 output reg        o_tx_en            ,
 output reg [3:0]  o_tx_mode          ,
 output reg        o_rx_en    ,
-output reg [3:0]  o_rx_mode  ,
+output reg [2:0]  o_rx_mode  ,
 
 //output reg        o_rx_en_negedge    ,
 //output reg [3:0]  o_rx_mode_negedge  ,
@@ -97,10 +97,11 @@ output reg        o_engine_done      ,
 output reg [7:0]  o_txrx_addr_ccc    ,         
 output reg        o_engine_odd       ,         
 output reg [3:0]  o_regf_ERR_STATUS  , 
-output reg        o_en_mux           ,  // for crc muxes btn tx and rx   ( 1 for tx and 0 for rx 
+//output reg        o_en_mux           ,  //  for CCC handler environment only for crc muxes btn tx and rx   ( 1 for tx and 0 for rx 
 output reg        o_crc_en_rx_tx_mux_sel,
 output reg        o_crc_data_rx_tx_valid_sel,
-output reg        o_crc_data_tx_rx_mux_sel
+output reg        o_crc_data_tx_rx_mux_sel,
+output wire       o_crc_last_byte_tx_rx_mux_sel
 );   
 
 
@@ -188,14 +189,13 @@ parameter [3:0]
 parameter [11:0] first_location = 12'd1000 ;
 
 // rx parameters 
-parameter [3:0] 
-                 preamble_rx_mode    = 4'd0 , 
-                 CRC_PREAMBLE        = 4'd1 ,
-                 parity_check        = 4'd6 ,
-                 deserializing_byte  = 4'd3 ,
-                 check_c_token_CRC   = 4'd5 ,
-                 check_value_CRC     = 4'd7 ;
-
+parameter [2:0] 
+                 preamble_rx_mode    = 3'd0 , 
+                 CRC_PREAMBLE        = 3'd1 ,
+                 parity_check        = 3'd6 ,
+                 deserializing_byte  = 3'd3 ,
+                 check_c_token_CRC   = 3'd7 ,
+                 check_value_CRC     = 3'd2 ;
 
 // SCL staller parameters 
 parameter [4:0] restart_pattern_stall = 5'd7, // correct: 5'd9  , // according to restart pattern specs           //was 11 ,modified by laila
@@ -233,11 +233,14 @@ parameter [7:0]
                 SETMRL_B    = 8'h0A ,
                 Dummy_B     = 8'h1F ;
 
+// 17/6
+assign o_crc_last_byte_tx_rx_mux_sel = o_crc_en_rx_tx_mux_sel ;
+
 
 always @(*) begin 
     o_frmcnt_Direct_Broadcast_n = Direct_Broadcast_n ;
 end 
-
+/*
 //o_en_mux = (first_time)? 1 : (i_regf_RnW)?  0 : 1 ;
 
 always @(*) begin 
@@ -245,7 +248,7 @@ always @(*) begin
     else if (!i_regf_RnW)   o_en_mux = 1'b1 ;
     else                    o_en_mux = 1'b0 ;
 end
-
+*/
 /////////////////////////// decoding the device address  ///////////////////////////////////////
 
 assign target_addres = i_regf_DEV_INDEX + 'd8 ;
@@ -392,7 +395,7 @@ end
     o_tx_en                    = 1'b0 ; 
     o_tx_mode                  = 4'b0 ; 
     o_rx_en                    = 1'b0 ; 
-    o_rx_mode                  = 4'b0 ; 
+    o_rx_mode                  = 3'b0 ; 
     o_bitcnt_en                = 1'b1 ; 
     o_bitcnt_err_rst           = 1'b0 ; 
     o_sdahand_pp_od            = 1'b1 ; // 1 means PP

@@ -60,8 +60,8 @@ module hdr_engine (
     output  reg             o_frm_cnt_en_sel                      ,
     output  reg             o_hdr_scl_stall_en_sel                , //new
     output  reg             o_hdr_scl_stall_cycles_sel            , //new
-    output  reg             o_sdahand_pp_od_sel                   ,
-    output  reg             o_crc_en_ccc_ddr_mux_sel                              
+    output  reg             o_sdahand_pp_od_sel                   
+                            
 
 
     );

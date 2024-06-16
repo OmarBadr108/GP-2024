@@ -78,15 +78,15 @@ parameter [3:0]
 parameter [11:0] first_location = 12'd1000 ;
 
 
-// rx parameters 
-localparam [3:0] 
-                 preamble_rx_mode    = 4'd0 , 
-                 CRC_PREAMBLE        = 4'd1 ,
-                 parity_check        = 4'd6 ,
-                 deserializing_byte  = 4'd3 ,
-                 check_c_token_CRC   = 4'd5 ,
-                 check_value_CRC     = 4'd7 ;
 
+// rx parameters 
+parameter [2:0] 
+                 preamble_rx_mode    = 3'd0 , 
+                 CRC_PREAMBLE        = 3'd1 ,
+                 parity_check        = 3'd6 ,
+                 deserializing_byte  = 3'd3 ,
+                 check_c_token_CRC   = 3'd7 ,
+                 check_value_CRC     = 3'd2 ;
 
 
 // SCL staller parameters 
