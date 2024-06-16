@@ -25,7 +25,7 @@ module CCC_Handler_tb ();
 	reg  [3:0] o_tx_mode_tb ;
  	// related to rx
 	reg 	   i_rx_mode_done_tb ,i_rx_pre_tb ,i_rx_error_tb ,o_rx_en_tb ;
-	reg  [3:0] o_rx_mode_tb ;
+	reg  [2:0] o_rx_mode_tb ;
 
 	// new /////
 	wire  en_mux ;
