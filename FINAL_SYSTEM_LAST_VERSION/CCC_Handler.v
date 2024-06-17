@@ -196,11 +196,11 @@ parameter [2:0]
                  deserializing_byte  = 3'd3 ,
                  check_c_token_CRC   = 3'd7 ,
                  check_value_CRC     = 3'd2 ;
-
+  
 // SCL staller parameters 
-parameter [4:0] restart_pattern_stall = 5'd7, // correct: 5'd9  , // according to restart pattern specs           //was 11 ,modified by laila
-                restart_pattern_stall_special = 5'd7, // correct : 5'd9  , // according to restart pattern specs   //was 11 ,modified by laila
-                exit_pattern_stall    = 5'd13 ; // according to exit pattern specs 
+parameter [4:0] restart_pattern_stall = 5'd7, 
+                restart_pattern_stall_special = 5'd7, 
+                exit_pattern_stall    = 5'd13 ;  
 
 
 // Error states parameters 
@@ -1278,7 +1278,7 @@ end
 
 
                 //laila edit
-                if(i_sclstall_stall_done)
+                if(i_sclstall_stall_done_strtch)
                     o_sclstall_en   = 1'b0 ;
                 else
                     o_sclstall_en   = 1'b1 ;

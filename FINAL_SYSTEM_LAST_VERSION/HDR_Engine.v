@@ -44,8 +44,8 @@ module hdr_engine (
     output  reg             o_ddrmode_en                          ,
     output  reg             o_ccc_en                              ,
 
-    output  reg   [11:0]     o_regf_addr_special                  ,
-
+    output  reg   [11:0]    o_regf_addr_special                   ,
+    //output  reg             o_int_regf_Dummy_conf                 ,
     output  reg             o_cccnt_tx_special_data_mux_sel       , // by badr
 
     output  reg             o_tx_en_sel                           ,
@@ -94,6 +94,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
             o_ddrmode_en                    <= 1'b0   ;
             o_ccc_en                        <= 1'b0   ;
             o_regf_addr_special             <= 12'd1000 ;
+            o_int_regf_Dummy_conf           <= 0 ;
             i_CP_temp   <= 1'b0;
             i_TOC_temp    <=1'b0;
             i_MODE_temp   <='d6;
@@ -104,6 +105,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
     else 
       begin
       o_regf_addr_special             <= 12'd1000 ;
+      o_int_regf_Dummy_conf           <= 0 ;
         //current_state <= next_state;
         case (next_state)    //case (current_state)
 
@@ -188,6 +190,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
               ccc_done                      <= 1'b0 ; //******signal 3mltha 3shan a3rf arg3 ll ddrmode*//////
               o_ccc_en                      <= 1'b0 ;
               o_regf_addr_special           <= 12'd1000;
+              o_int_regf_Dummy_conf         <= 0 ;
               o_i3cengine_hdrengine_done    <= 1'b0 ;
               ///tid puts on output when the command is done
               
@@ -199,7 +202,8 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                   if(!i_CP_temp) 
                   begin
                     ccc_done   <= 1'b1 ;
-                    o_regf_addr_special <= 12'd450; //go to special address to get dummy value
+                    o_regf_addr_special   <= 12'd450; //go to special address to get dummy value
+                    o_int_regf_Dummy_conf <= 1 ;
                     o_ccc_en   <= 1'b1 ;
                     next_state <= CCC ; ////********lma yru7 y3ml al dummy hwdeh ddr azay*******//////////
                   end
@@ -207,12 +211,14 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                     begin
                       o_ccc_en                      <= 1'b1 ;
                       o_regf_addr_special           <= 12'd1000;
+                      o_int_regf_Dummy_conf         <= 0 ;
                       next_state                    <= CCC ;    
                     end
 
                   ////****/////
                   if(i_ccc_done && ccc_done && !i_CP_temp ) begin
                     o_regf_addr_special           <= 12'd1000;
+                    o_int_regf_Dummy_conf         <= 0 ;
                     o_ccc_en   <= 1'b0 ;
                     o_ddrmode_en <= 1'b1 ;
                     next_state   <= DDR_MODE ;

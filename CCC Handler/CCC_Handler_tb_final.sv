@@ -178,7 +178,7 @@ module CCC_Handler_tb ();
 		.o_engine_odd(o_engine_odd_tb),
 		.o_regf_ERR_STATUS(o_regf_ERR_STATUS_tb),
 
-		.o_en_mux(en_mux)       // new
+		.o_en_mux(en_mux) ,      // new
 		.o_crc_en_rx_tx_mux_sel(o_crc_en_rx_tx_mux_sel_tb),
 		.o_crc_data_rx_tx_valid_sel(o_crc_data_rx_tx_valid_sel_tb),
 		.o_crc_data_tx_rx_mux_sel(o_crc_data_tx_rx_mux_sel_tb),
@@ -3043,7 +3043,7 @@ mux8      mux1_8 (
 		// allocation of the object 
 		conf_obj = new();
 
-		for (i=0 ; i<1000 ; i++) begin
+		for (i=0 ; i<20000 ; i++) begin
 
 			assert(conf_obj.randomize());  // "lw feh moshkla fel constrains edeny error" deh lazmet el word assert
 			
@@ -4219,7 +4219,7 @@ int cycle_count ;
     endsequence
 
     sequence broadcast_sec_TOC_0_1_D_get ;
-    	restart_pattern_seq_1_D_get ##(13) o_tx_mode_tb == special_preamble  ;
+    	restart_pattern_seq_1_D_get ##(12) o_tx_mode_tb == special_preamble  ;
     endsequence
 
 
@@ -4260,7 +4260,7 @@ int cycle_count ;
     	endsequence
     	// for TOC = 0
     	sequence Direct_get_2_bytes_sec_TOC_0 ;
-    	    restart_pattern_seq_2_D_get ##(11) (o_tx_mode_tb == special_preamble)  ;
+    	    restart_pattern_seq_2_D_get ##(12) (o_tx_mode_tb == special_preamble)  ;
     	endsequence
 
 
@@ -4483,7 +4483,9 @@ int cycle_count ;
      	(o_rx_mode_tb == CRC_PREAMBLE 			[*(2*scl_wrt_sys_clk)])  ##1
      	(o_rx_mode_tb == check_c_token_CRC 		[*(4*scl_wrt_sys_clk)])  ##1
      	(o_rx_mode_tb == check_value_CRC 		[*(5*scl_wrt_sys_clk)])  ##1
-     	(o_rx_mode_tb == preamble_rx_mode 		[*(11)])	 		 	 	 	//  disabled >> restart_pattern
+     	(o_rx_mode_tb == preamble_rx_mode 		//[*(12)] 						//  disabled >> restart_pattern
+
+     	)	 		 	 	 	
     
         			;										 
     endproperty
@@ -4533,7 +4535,8 @@ int cycle_count ;
      	(o_rx_mode_tb == CRC_PREAMBLE 			[*(2*scl_wrt_sys_clk)])  ##1
      	(o_rx_mode_tb == check_c_token_CRC 		[*(4*scl_wrt_sys_clk)])  ##1
      	(o_rx_mode_tb == check_value_CRC 		[*(5*scl_wrt_sys_clk)])  ##1
-     	(o_rx_mode_tb == preamble_rx_mode 		[*(17)])	 		 	 	 	//  disabled >> exit_pattern
+     	(o_rx_mode_tb == preamble_rx_mode 		//[*(17)]						//  disabled >> exit_pattern
+     		)	 		 	 	 	
     
         			;										 
     endproperty

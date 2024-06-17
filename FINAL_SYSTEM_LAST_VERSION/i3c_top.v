@@ -443,7 +443,7 @@ module I3C_TOP (
    wire tx_en_mux_out;
 
    ////////////////////////////////// HDR BLOCKS //////////////////////////////////
-   
+   wire o_int_regf_Dummy_conf ; ///// new    17 / 6 / 2024
    // Internal wires  
 
 //----------------------------HDR TX SIGNALS----------------------------//
@@ -1018,6 +1018,7 @@ hdr_engine u_hdr_engine (
         .o_i3cengine_hdrengine_done             (hdrengine_exit)           ,
     .o_ddrmode_en                           (engine_ddr_enable)           ,
     .o_ccc_en                               (engine_ccc_enable)           ,
+    .o_int_regf_Dummy_conf          (o_int_regf_Dummy_conf),
     .o_regf_addr_special                    (engine_configuration_addr)    );
      //output  reg   [7:0]     o_regf_addr_special
 

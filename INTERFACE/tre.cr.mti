@@ -1,0 +1,15 @@
+C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/INTERFACE/internal_regf_tb.sv {1 {vlog -work work -vopt -sv -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/INTERFACE/internal_regf_tb.sv
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module tb_Internal_Regfile
+
+Top level modules:
+	tb_Internal_Regfile
+
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/INTERFACE/internal_regf.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/INTERFACE/internal_regf.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module Internal_Regfile
+
+Top level modules:
+	Internal_Regfile
+
+} {} {}}
