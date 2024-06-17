@@ -3319,7 +3319,7 @@ int cycle_count ;
 				P0_cmdword    =  1 ;
 
 				correct_first_cmd_word = {1'b0 , 7'd0 , 7'h7E 					, parity_adj_7e , P1_cmdword , P0_cmdword } ;
-				correct_cmd_word 	   = {1'b0 , 7'd0 , o_txrx_addr_ccc_tb[6:0] , parity_adj    , P1_cmdword , P0_cmdword } ;
+				correct_cmd_word 	   = {i_regf_RnW_tb, 7'd0 , o_txrx_addr_ccc_tb[6:0] , parity_adj    , P1_cmdword , P0_cmdword } ;
 
 				# (2*CLK_PERIOD) ;
 				if (o == 'd17) begin 

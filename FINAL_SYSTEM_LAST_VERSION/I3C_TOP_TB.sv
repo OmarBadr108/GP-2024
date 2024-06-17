@@ -57,8 +57,8 @@ logic configuration_done=0;
     reg       RAND_TOC               ;
     reg [7:0] RAND_DEF_BYTE  = 8'b0000_0000   ;    //'d1
     reg [7:0] RAND_DATA_TWO  = 8'b1111_0010   ; //'d2
-    reg [7:0] RAND_DATA_THREE= 'd3   ; // DATA_LENGTH = {RAND_DATA_FOUR,RAND_DATA_THREE}
-    reg [7:0] RAND_DATA_FOUR = 'd4   ;
+    reg [7:0] RAND_DATA_THREE= 'd2   ; // DATA_LENGTH = {RAND_DATA_FOUR,RAND_DATA_THREE}
+    reg [7:0] RAND_DATA_FOUR = 'd0   ;
 
 //----------------------------- Clock Generation-------------------------------------//
 always #(CLK_PERIOD/2) i_sdr_clk_tb = ~i_sdr_clk_tb;
@@ -109,55 +109,18 @@ initial begin
 
 //@(posedge o_ctrl_done_tb)
 //i_controller_en_tb = 1'b0;
-
-
-	//<-------------------------TEST CASE 2 ----------------------->//
-	//<            Mode --> HDR, TOC = 1(exit), CP = 1 (CCC) ,Direct CCC :ENEC       >//
-
-    RAND_CMD       = 8'h80 ;
-    RAND_TOC       = 1'b1  ;	
-    configuration_done = 0;
-
-	#(CLK_PERIOD)
-   @(DUT.frame_counter_hdr.o_cccnt_last_frame == 'b1)
-   
-  
-  // change mux selector to write configurations
-	switch_muxes(configuration);
-	write_configurations();
-
-	// change mux selector to give the regfile inputs control to design
-	switch_muxes(Design);
-	configuration_done = 1'b1;
-	#(CLK_PERIOD)
-	configuration_done = 1'b0;
-
-	i_i3c_i2c_sel_tb  = 1'b1;
-    i_controller_en_tb 	= 1'b1;	
-    //check_output(); //temporary to check enthdr ccc output
-
-#(CLK_PERIOD)
-    // first data word preamble
-@(negedge DUT.CCC_Handler.o_rx_en )
-	sda_drive = 'b0;
-  #(4*CLK_PERIOD)
-    sda_drive = 'bz;
-
-
-#(CLK_PERIOD)
-    // second data word preamble
-@(negedge DUT.CCC_Handler.o_rx_en )
-	sda_drive = 'b0;
-  #(4*CLK_PERIOD)
-    sda_drive = 'bz;    
-
-/*
+	
     //////////// added by badr ////////////////
-	//<-------------------------TEST CASE 3 ----------------------->//
-	//<            Mode --> HDR, TOC = 1(exit), CP = 1 (CCC) ,Direct CCC :ENEC       >//
+	//<-------------------------TEST CASE 2 ----------------------->//
+	//<            Mode --> HDR, TOC = 0(restart), CP = 1 (CCC) ,Direct CCC :GETMWL_D    = 8'h8B        >//
 
-    RAND_CMD       = 8'h80 ;
-    RAND_TOC       = 1'b1  ;	
+    RAND_CMD       = 8'h8B ;
+    RAND_CMD_ATTR  = 'd0   ;
+    RAND_TOC       = 1'b0  ;
+    // DATA LENGTH = {DATA_FOUR,DATA_THREE}	== 2 
+    RAND_DTT       = 'd0   ;  // makes DBP = 0 and SRE = 0  	>>>>>> 		{DBP,SRE} = DTT[3:1]
+    RAND_RnW       = 1'b1  ;
+
     configuration_done = 0;
 
 	#(CLK_PERIOD)
@@ -191,9 +154,94 @@ initial begin
 @(negedge DUT.CCC_Handler.o_rx_en )
 	sda_drive = 'b0;
   #(4*CLK_PERIOD)
-    sda_drive = 'bz;    
-*/
+    sda_drive = 'b1;	 
+  // the data word is 1111_1111_1111_1111 and parity bits are :
+  #(4*16 *CLK_PERIOD) 
+  // PA1 = 0
+   sda_drive = 'b0;
+   #(4*CLK_PERIOD)
+   //PA0 = 1
+   sda_drive = 'b1;
+   #(4*CLK_PERIOD)
+   // CRC pre 01
+   sda_drive = 'b0;
+   #(4*CLK_PERIOD)
+   //PA0 = 1
+   sda_drive = 'b1;
+   #(4*CLK_PERIOD)
+   //C token 1100
+   sda_drive = 'b1;
+   #(4*CLK_PERIOD)
+   sda_drive = 'b1;
+   #(4*CLK_PERIOD)
+   sda_drive = 'b0;
+   #(4*CLK_PERIOD)
+   sda_drive = 'b0;
+   #(4*CLK_PERIOD)
 
+   // CRC value for data FF = 01010
+   sda_drive = 'b0;
+   #(4*CLK_PERIOD)
+   sda_drive = 'b1;
+   #(4*CLK_PERIOD)
+   sda_drive = 'b0;
+   #(4*CLK_PERIOD)
+   sda_drive = 'b1;
+   #(4*CLK_PERIOD)
+   sda_drive = 'b0;
+   #(4*CLK_PERIOD)
+   sda_drive = 'bz;
+
+
+   
+	//<-------------------------TEST CASE 3 ----------------------->//
+	//<            Mode --> HDR, TOC = 1(exit), CP = 1 (CCC) ,Direct CCC :ENEC       >//
+
+
+
+    RAND_CMD_ATTR  = 'd1  ;
+    // DATA LENGTH = {DATA_FOUR,DATA_THREE}	== 2 
+    RAND_DTT       = 'd1   ;  // makes DBP = 0 and SRE = 0  	>>>>>> 		{DBP,SRE} = DTT[3:1]
+    RAND_RnW       = 1'b0  ;
+    RAND_CMD       = 8'h80 ;
+    RAND_TOC       = 1'b1  ;
+
+
+
+    configuration_done = 0;
+
+	#(CLK_PERIOD)
+   @(DUT.frame_counter_hdr.o_cccnt_last_frame == 'b1)
+   
+  
+  // change mux selector to write configurations
+	switch_muxes(configuration);
+	write_configurations();
+
+	// change mux selector to give the regfile inputs control to design
+	switch_muxes(Design);
+	configuration_done = 1'b1;
+	#(CLK_PERIOD)
+	configuration_done = 1'b0;
+
+	i_i3c_i2c_sel_tb  = 1'b1;
+    i_controller_en_tb 	= 1'b1;	
+    //check_output(); //temporary to check enthdr ccc output
+
+#(CLK_PERIOD)
+    // first data word preamble
+@(negedge DUT.CCC_Handler.o_rx_en )
+	sda_drive = 'b0;
+  #(4*CLK_PERIOD)
+    sda_drive = 'bz;
+
+
+#(CLK_PERIOD)
+    // second data word preamble
+@(negedge DUT.CCC_Handler.o_rx_en )
+	sda_drive = 'b0;
+  #(4*CLK_PERIOD)
+  	 sda_drive = 'bz;
 
 
 
@@ -252,7 +300,7 @@ end
 	end
 
 	always @(DUT.CCC_Handler.current_state or DUT.DDR_NT.current_state) begin 
-		if ((DUT.CCC_Handler.i_engine_en && DUT.CCC_Handler.current_state == FIRST_DATA_BYTE) || (DUT.DDR_NT.i_engine_en && DUT.DDR_NT.current_state == first_data_byte)) begin 
+		if (DUT.cccnt_RnW == 0 && (DUT.CCC_Handler.i_engine_en && DUT.CCC_Handler.current_state == FIRST_DATA_BYTE) || (DUT.DDR_NT.i_engine_en && DUT.DDR_NT.current_state == first_data_byte)) begin 
 			#(CLK_PERIOD) ;
 			check_repeated_data_word();
 		end 
@@ -262,7 +310,7 @@ end
 	task check_cmd_word (); 
 		begin 
 			logic [17:0] collected_cmd_wrd ;
-			bit 	     parity_adj_7e ,parity_adj ,P1_cmdword ,P0_cmdword ;
+			bit 	     parity_adj_7e ,parity_adj ,P1_cmd_sel ,P0_cmdword , P1_cmd_ind ;
 			bit   [17:0] correct_first_cmd_word , correct_cmd_word ;
 			int 		 o ; // counter
 
@@ -274,14 +322,15 @@ end
 
 				//$display("nvlaue of SDA line is  %b : %t",sda_tb,$time);
 
-				parity_adj_7e = (DUT.CCC_Handler.i_regf_RnW ^ (^7'h7E) ) ;
-				parity_adj    = (DUT.CCC_Handler.i_regf_RnW ^ (^DUT.CCC_Handler.o_txrx_addr_ccc[6:0]) ) ;
+				//parity_adj_7e = collected_cmd_wrd[16] ^ collected_cmd_wrd[14] ^ collected_cmd_wrd[12] ^ collected_cmd_wrd[10] ^ collected_cmd_wrd[8] ^ collected_cmd_wrd[6] ^ collected_cmd_wrd[4]  ;
+				parity_adj    = collected_cmd_wrd[16] ^ collected_cmd_wrd[14] ^ collected_cmd_wrd[12] ^ collected_cmd_wrd[10] ^ collected_cmd_wrd[8] ^ collected_cmd_wrd[6] ^ collected_cmd_wrd[4]  ;
 
-				P1_cmdword    = DUT.CCC_Handler.i_regf_RnW ^ collected_cmd_wrd[9] ^ collected_cmd_wrd[7] ^ collected_cmd_wrd[5] ^ collected_cmd_wrd[3] ; // index is shifted by 2 as this is the 18 bit word (data + parity)
+				P1_cmd_sel    = DUT.CCC_Handler.i_regf_RnW ^ collected_cmd_wrd[9] ^ collected_cmd_wrd[7] ^ collected_cmd_wrd[5] ^ collected_cmd_wrd[3] ; // index is shifted by 2 as this is the 18 bit word (data + parity)
+				P1_cmd_ind 	  = 1'b0 ^ collected_cmd_wrd[9] ^ collected_cmd_wrd[7] ^ collected_cmd_wrd[5] ^ collected_cmd_wrd[3] ; // index is shifted by 2 as this is the 18 bit word (data + parity)
 				P0_cmdword    =  1 ;
 
-				correct_first_cmd_word = {1'b0 , 7'd0 , 7'h7E 					, parity_adj_7e , P1_cmdword , P0_cmdword } ;
-				correct_cmd_word 	   = {1'b0 , 7'd0 , DUT.CCC_Handler.o_txrx_addr_ccc[6:0] , parity_adj    , P1_cmdword , P0_cmdword } ;
+				correct_first_cmd_word = {1'b0 						 , 7'd0 , 7'b111_1110 					       , parity_adj , P1_cmd_ind , P0_cmdword } ;
+				correct_cmd_word 	   = {DUT.CCC_Handler.i_regf_RnW , 7'd0 , DUT.CCC_Handler.o_txrx_addr_ccc[6:0] , parity_adj , P1_cmd_sel , P0_cmdword } ;
 
 				# (2*CLK_PERIOD) ;
 				if (o == 'd17) begin 

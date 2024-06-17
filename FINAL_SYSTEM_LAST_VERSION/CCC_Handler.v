@@ -97,7 +97,7 @@ output reg        o_engine_done      ,
 output reg [7:0]  o_txrx_addr_ccc    ,         
 output reg        o_engine_odd       ,         
 output reg [3:0]  o_regf_ERR_STATUS  , 
-output reg        o_en_mux           ,  //  for CCC handler environment only for crc muxes btn tx and rx   ( 1 for tx and 0 for rx 
+//output reg        o_en_mux           ,  //  for CCC handler environment only for crc muxes btn tx and rx   ( 1 for tx and 0 for rx 
 output reg        o_crc_en_rx_tx_mux_sel,
 output reg        o_crc_data_rx_tx_valid_sel,
 output reg        o_crc_data_tx_rx_mux_sel,
@@ -546,7 +546,8 @@ end
                 // state transition
                 if (i_tx_mode_done) begin 
                     next_state = SECOND_CMD_BYTE ;
-/*
+                end
+/*              
 //laila
 if (first_time) begin 
                     o_txrx_addr_ccc = SEVEN_E ;                    
@@ -559,7 +560,7 @@ else begin
 o_txrx_addr_ccc = target_addres ;
 end
 */
-end
+
 
 
                 else begin 
@@ -1246,9 +1247,9 @@ end
                             o_sclstall_code  = exit_pattern_stall ;
                         end 
                         else begin  
-                            next_state      = RESTART_PATTERN_SPECIAL ;
+                            next_state      = RESTART_PATTERN ;
                             o_sclstall_en   = 1'b1 ;
-                            o_sclstall_code = restart_pattern_stall_special ;
+                            o_sclstall_code = restart_pattern_stall ;
                             //first_time      = 1'b0 ;
                             o_tx_mode       = restart_pattern ;
                             o_tx_en         = 1'b1 ;

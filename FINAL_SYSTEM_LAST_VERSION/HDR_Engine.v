@@ -45,7 +45,7 @@ module hdr_engine (
     output  reg             o_ccc_en                              ,
 
     output  reg   [11:0]    o_regf_addr_special                   ,
-    //output  reg             o_int_regf_Dummy_conf                 ,
+    output  reg             o_int_regf_Dummy_conf                 ,
     output  reg             o_cccnt_tx_special_data_mux_sel       , // by badr
 
     output  reg             o_tx_en_sel                           ,
