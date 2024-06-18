@@ -97,11 +97,21 @@ output reg        o_engine_done      ,
 output reg [7:0]  o_txrx_addr_ccc    ,         
 output reg        o_engine_odd       ,         
 output reg [3:0]  o_regf_ERR_STATUS  , 
+
 //output reg        o_en_mux           ,  //  for CCC handler environment only for crc muxes btn tx and rx   ( 1 for tx and 0 for rx 
 output reg        o_crc_en_rx_tx_mux_sel,
 output reg        o_crc_data_rx_tx_valid_sel,
 output reg        o_crc_data_tx_rx_mux_sel,
 output wire       o_crc_last_byte_tx_rx_mux_sel
+
+output reg        o_en_mux           ,  //  for CCC handler environment only for crc muxes btn tx and rx   ( 1 for tx and 0 for rx 
+output reg        o_crc_rx_tx_mux_sel_ccc
+
+/*output reg        o_crc_rx_tx_mux_sel_ccc,
+output reg        //o_crc_data_rx_tx_valid_sel,
+output reg        o_crc_rx_tx_mux_sel_ccc,
+output wire       o_crc_last_byte_tx_rx_mux_sel*/
+
 );   
 
 
@@ -235,7 +245,7 @@ parameter [7:0]
                 Dummy_B     = 8'h1F ;
 
 // 17/6
-assign o_crc_last_byte_tx_rx_mux_sel = o_crc_en_rx_tx_mux_sel ;
+//assign o_crc_last_byte_tx_rx_mux_sel = o_crc_rx_tx_mux_sel_ccc ;
 
 
 always @(*) begin 
@@ -403,9 +413,9 @@ end
     o_regf_wr_en               = 1'b0 ;
     o_regf_rd_en               = 1'b0 ;
     o_engine_done              = 1'b0 ;
-    o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-    o_crc_data_rx_tx_valid_sel = 1'b0 ;
-    o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+    //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+    //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+    o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
 
 
         case (current_state)
@@ -431,15 +441,15 @@ end
                 controller_abort  = 1'b0 ;
                 o_tx_en           = 1'b0 ;
                 o_frmcnt_en       = 1'b0 ;
-                o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
 
                 if (i_engine_en) begin 
                     next_state = PRE_CMD ;
-                    o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                    o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                    o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                    //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                    //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                    o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
                     o_tx_en    = 1'b1 ; 
                     o_tx_mode  = special_preamble ; 
                 end
@@ -467,9 +477,9 @@ end
                     o_tx_en   = 1'b1 ; 
                     o_tx_mode = special_preamble ; 
 
-                    o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                    o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                    o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                    //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                    //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                    o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
 
                     if (i_tx_mode_done && !(i_frmcnt_last_frame || (Direct_Broadcast_n && first_time))) begin   
                         next_state = RNW ;
@@ -493,9 +503,9 @@ end
             PRE_CRC_TARGET : begin // target is driving the 2 bits with 2'b01
                 if (i_engine_en) begin
                     o_rx_en   = 1'b1 ; 
-                    o_crc_en_rx_tx_mux_sel     = 1'b1 ;
-                    o_crc_data_rx_tx_valid_sel = 1'b1 ;
-                    o_crc_data_tx_rx_mux_sel   = 1'b1 ;
+                    //o_crc_rx_tx_mux_sel_ccc     = 1'b1 ;
+                    //o_crc_data_rx_tx_valid_sel = 1'b1 ;
+                    o_crc_rx_tx_mux_sel_ccc   = 1'b1 ;
                     o_rx_mode                  = CRC_PREAMBLE ;   //o_rx_mode = parity_check ;
 
                     if ((i_rx_mode_done ) && i_frmcnt_last_frame) begin  // HENAAAAAAAAAAAAAA PUT THE CONDITION AFTER VERIFICATIONS (i_rx_mode_done && ! rx_err)
@@ -516,9 +526,9 @@ end
 
             RNW : begin
                 o_tx_en   = 1'b1 ;
-                o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
 
                 if (first_time) begin 
                     o_tx_mode = zero ;
@@ -539,9 +549,9 @@ end
 
             RESERVED : begin
                 o_tx_en   = 1'b1 ;
-                o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                o_crc_data_rx_tx_valid_sel = 1'b0 ;    
-                o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                //o_crc_data_rx_tx_valid_sel = 1'b0 ;    
+                o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
                 o_tx_mode = seven_zeros ;
                 
                 // state transition
@@ -571,9 +581,9 @@ end
 
             SECOND_CMD_BYTE : begin  // contains either 7E or any target address 
                 o_tx_en   = 1'b1 ; 
-                o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
                 if (first_time) begin 
 
                     o_tx_mode = serializing_address ;
@@ -614,9 +624,9 @@ end
 
             PARITY_CMD : begin 
                 o_tx_en   = 1'b1 ; 
-                o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
                 o_tx_mode = parity_calc ;
 
                 if (i_tx_mode_done) begin 
@@ -635,9 +645,9 @@ end
             PRE_FIRST_DATA_ONE : begin // should be 10 to mean ACK ,    and 11 is NACK
             
                 o_tx_en   = 1'b1 ;
-                o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
                 o_tx_mode = one ;
                 o_rx_en   = 1'b0 ;
 
@@ -655,18 +665,18 @@ end
             PRE_FIRST_DATA_TWO : begin 
                 
                 o_rx_en                    = 1'b1 ;
-                o_crc_en_rx_tx_mux_sel     = 1'b1 ;
-                o_crc_data_rx_tx_valid_sel = 1'b1 ;
-                o_crc_data_tx_rx_mux_sel   = 1'b1 ;
+                //o_crc_rx_tx_mux_sel_ccc     = 1'b1 ;
+                //o_crc_data_rx_tx_valid_sel = 1'b1 ;
+                o_crc_rx_tx_mux_sel_ccc   = 1'b1 ;
                 o_rx_mode = preamble_rx_mode ;
 
                 if (i_rx_mode_done && !i_rx_pre && first_time) begin
                     next_state = CCC_BYTE ;
                     o_tx_en      = 1'b1 ;
 
-                    o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                    o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                    o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                    //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                    //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                    o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
                     o_tx_mode    = serializing_byte_port ;
                     o_txrx_addr_ccc = i_regf_CMD ;
                 end
@@ -676,9 +686,9 @@ end
                     if (!i_regf_CMD_ATTR[0] && !i_regf_RnW) begin              // if regular command discriptor  (but long write) not supported cuurently but it's okk
                         o_tx_mode    = serializing_byte_regf ;
                         o_tx_en   = 1'b1 ;
-                        o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                        o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                        o_crc_data_tx_rx_mux_sel   = 1'b0 ;                        
+                        //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                        //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                        o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;                        
                         o_regf_addr  = first_location + regular_counter ; // regular counter starts with value 8 to point to the ninth location 
                         o_regf_wr_en = 1'b1 ;                
                     end
@@ -739,9 +749,9 @@ end
             CCC_BYTE : begin    // contains CCC value
 
                 o_tx_en      = 1'b1 ;
-                o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                o_crc_data_tx_rx_mux_sel   = 1'b0 ;                
+                //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;                
                 o_tx_mode    = serializing_byte_port ;
                 o_txrx_addr_ccc = i_regf_CMD ;
 
@@ -763,9 +773,9 @@ end
 
             DEFINING_BYTE : begin    // contains definaing byte if exist
                 o_tx_en      = 1'b1 ;
-                o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                o_crc_data_tx_rx_mux_sel   = 1'b0 ;                
+                //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;                
                 o_tx_mode    = serializing_byte_regf ; 
                 o_regf_rd_en = 1'b1 ;
                 o_regf_addr  = first_location + 4 ;                 // fifth location (8 bits width)
@@ -781,9 +791,9 @@ end
 
             ZEROS : begin                               // eight zeros fixed at regfile (e.g location 999)
                 o_tx_en      = 1'b1 ;
-                o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
                 o_tx_mode    = serializing_byte_regf ; 
                 o_regf_rd_en = 1'b1 ;
                 o_regf_addr  = first_location - 1  ;
@@ -817,9 +827,9 @@ end
             PARITY_DATA : begin // parity state any Data word
                 if (!i_regf_RnW || first_time) begin // write 
                     o_tx_en   = 1'b1 ;
-                    o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                    o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                    o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                    //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                    //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                    o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
 
 
                     o_tx_mode = parity_calc ;
@@ -839,9 +849,9 @@ end
                 end 
                 else begin // read 
                     o_rx_en   = 1'b1 ;
-                    o_crc_en_rx_tx_mux_sel     = 1'b1 ;
-                    o_crc_data_rx_tx_valid_sel = 1'b1 ;
-                    o_crc_data_tx_rx_mux_sel   = 1'b1 ;
+                    o_crc_rx_tx_mux_sel_ccc     = 1'b1 ;
+                    //o_crc_data_rx_tx_valid_sel = 1'b1 ;
+                    o_crc_rx_tx_mux_sel_ccc   = 1'b1 ;
                     o_rx_mode = parity_check ;
                     if  (i_rx_mode_done && !i_rx_error) begin 
 
@@ -868,9 +878,9 @@ end
             PRE_DATA_ONE : begin  //  11  means ok continue , and 10 to be aborted 
                 if (!i_regf_RnW) begin // write 
                     o_tx_en   = 1'b1 ;
-                    o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                    o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                    o_crc_data_tx_rx_mux_sel   = 1'b0 ;                 
+                    //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                    //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                    o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;                 
                     o_tx_mode = one ;
                     o_rx_en   = 1'b0 ;
 
@@ -887,9 +897,9 @@ end
                 else begin 
                     o_tx_en   = 1'b0 ;
                     o_rx_en   = 1'b1 ;
-                    o_crc_en_rx_tx_mux_sel     = 1'b1 ;
-                    o_crc_data_rx_tx_valid_sel = 1'b1 ;
-                    o_crc_data_tx_rx_mux_sel   = 1'b1 ;
+                   // o_crc_rx_tx_mux_sel_ccc     = 1'b1 ;
+                    //o_crc_data_rx_tx_valid_sel = 1'b1 ;
+                    o_crc_rx_tx_mux_sel_ccc   = 1'b1 ;
                     o_rx_mode = preamble_rx_mode ;
                     
                     if (i_rx_mode_done && i_rx_pre) begin
@@ -910,18 +920,18 @@ end
                 if (!i_regf_RnW) begin // write
                     o_tx_en   = 1'b0 ;
                     o_rx_en   = 1'b1 ;
-                    o_crc_en_rx_tx_mux_sel     = 1'b1 ;
-                    o_crc_data_rx_tx_valid_sel = 1'b1 ;
-                    o_crc_data_tx_rx_mux_sel   = 1'b1 ;
+                    o_crc_rx_tx_mux_sel_ccc     = 1'b1 ;
+                    //o_crc_data_rx_tx_valid_sel = 1'b1 ;
+                    o_crc_rx_tx_mux_sel_ccc   = 1'b1 ;
                     o_rx_mode = preamble_rx_mode ;
 
                     if (i_rx_mode_done && i_rx_pre) begin  // ack by target
                         next_state = FIRST_DATA_BYTE ;
                     ////////////////////////////////// new ////////////////////////////////
                         o_tx_en      = 1'b1 ;
-                        o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                        o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                        o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                        //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                        //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                        o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
                         o_regf_rd_en = 1'b1 ;
                         if (!i_regf_CMD_ATTR[0]) begin              // if regular command discriptor  
                             o_tx_mode    = serializing_byte_regf ;
@@ -953,9 +963,9 @@ end
                 else begin 
                     // tx signals 
                     o_tx_en   = 1'b1 ;
-                    o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                    o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                    o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                    //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                    //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                    o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
                     if (controller_abort) begin 
                         o_tx_mode = zero ;
                     end 
@@ -999,9 +1009,9 @@ end
             FIRST_DATA_BYTE : begin    // contains first repeated data byte
                 if (!i_regf_RnW) begin  // write operation 
                     o_tx_en      = 1'b1 ;
-                    o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                    o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                    o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                    //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                    //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                    o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
                     o_regf_rd_en = 1'b1 ;
                     if (!i_regf_CMD_ATTR[0]) begin              // if regular command discriptor  
                         o_tx_mode    = serializing_byte_regf ;
@@ -1031,9 +1041,9 @@ end
                 end 
                 ///////////////////////////////////////// 
                 o_rx_en      = 1'b1 ;
-                o_crc_en_rx_tx_mux_sel     = 1'b1 ;
-                o_crc_data_rx_tx_valid_sel = 1'b1 ;
-                o_crc_data_tx_rx_mux_sel   = 1'b1 ;
+                o_crc_rx_tx_mux_sel_ccc     = 1'b1 ;
+                //o_crc_data_rx_tx_valid_sel = 1'b1 ;
+                o_crc_rx_tx_mux_sel_ccc   = 1'b1 ;
                 o_regf_wr_en = 1'b1 ;
                     if (!i_regf_CMD_ATTR[0]) begin              // if regular command discriptor  
                         o_rx_mode    = deserializing_byte ;
@@ -1091,9 +1101,9 @@ end
             SECOND_DATA_BYTE : begin   // contains second repeated data byte
                 if (!i_regf_RnW) begin // write operation 
                     o_tx_en      = 1'b1 ;
-                    o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                    o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                    o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                    //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                    //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                    o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
                     o_regf_rd_en = 1'b1 ;
                     o_tx_mode    = serializing_byte_regf ;
                     if (!i_regf_CMD_ATTR[0]) begin              // if regular command discriptor  
@@ -1122,9 +1132,9 @@ end
                 else begin  // read operation 
                     
                     o_rx_en      = 1'b1 ;
-                    o_crc_en_rx_tx_mux_sel     = 1'b1 ;
-                    o_crc_data_rx_tx_valid_sel = 1'b1 ;
-                    o_crc_data_tx_rx_mux_sel   = 1'b1 ;
+                    o_crc_rx_tx_mux_sel_ccc     = 1'b1 ;
+                    //o_crc_data_rx_tx_valid_sel = 1'b1 ;
+                    o_crc_rx_tx_mux_sel_ccc   = 1'b1 ;
                     o_regf_wr_en = 1'b1 ;
                     o_rx_mode    = deserializing_byte ;
                     if (!i_regf_CMD_ATTR[0]) begin                          // if regular command discriptor  
@@ -1151,9 +1161,9 @@ end
                 o_bitcnt_en        = 1'b0 ;
                 if (!i_regf_RnW || first_time) begin // write 
                     o_tx_en   = 1'b1 ;
-                    o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                    o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                    o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                    //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                    //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                    o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
                     o_tx_mode = c_token_CRC ;
 
                     if (i_tx_mode_done) begin 
@@ -1165,9 +1175,9 @@ end
                 end 
                 else begin // read 
                     o_rx_en   = 1'b1 ;
-                    o_crc_en_rx_tx_mux_sel     = 1'b1 ;
-                    o_crc_data_rx_tx_valid_sel = 1'b1 ;
-                    o_crc_data_tx_rx_mux_sel   = 1'b1 ;
+                    o_crc_rx_tx_mux_sel_ccc     = 1'b1 ;
+                    //o_crc_data_rx_tx_valid_sel = 1'b1 ;
+                    o_crc_rx_tx_mux_sel_ccc   = 1'b1 ;
                     o_rx_mode = check_c_token_CRC ;
                     if (i_rx_error) begin 
                         next_state = ERROR ; 
@@ -1187,9 +1197,9 @@ end
                 o_bitcnt_en        = 1'b0 ;
                 if (!i_regf_RnW || first_time) begin  // write 
                     o_tx_en   = 1'b1 ;
-                    o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                    o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                    o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                    //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                    //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                    o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
                     o_tx_mode = value_CRC ;
                     if (i_tx_mode_done) begin 
                         //////////////////////////// new /////////////////////////////////////////////
@@ -1231,9 +1241,9 @@ end
                 end 
                 else begin 
                     o_rx_en   = 1'b1 ;
-                    o_crc_en_rx_tx_mux_sel     = 1'b1 ;
-                    o_crc_data_rx_tx_valid_sel = 1'b1 ;
-                    o_crc_data_tx_rx_mux_sel   = 1'b1 ;
+                    o_crc_rx_tx_mux_sel_ccc     = 1'b1 ;
+                    //o_crc_data_rx_tx_valid_sel = 1'b1 ;
+                    o_crc_rx_tx_mux_sel_ccc   = 1'b1 ;
                     o_rx_mode = check_value_CRC ;
                     if (i_rx_mode_done && !i_rx_error) begin 
                         if (i_regf_TOC) begin 
@@ -1241,9 +1251,9 @@ end
                             //first_time    = 1'b0 ;
                             o_tx_mode     = exit_pattern ;
                             o_tx_en       = 1'b1 ;
-                            o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                            o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                            o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                            //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                            //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                            o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
                             o_sclstall_en    = 1'b1 ;
                             o_sclstall_code  = exit_pattern_stall ;
                         end 
@@ -1254,9 +1264,9 @@ end
                             //first_time      = 1'b0 ;
                             o_tx_mode       = restart_pattern ;
                             o_tx_en         = 1'b1 ;
-                            o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                            o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                            o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                            //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                            //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                            o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
                         end
                     end
                     else begin 
@@ -1271,9 +1281,9 @@ end
                 o_bitcnt_en     = 1'b0 ;
                 // access timer and staller and tx to perform restart pattern 
                 o_tx_en         = 1'b1 ;
-                o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
                 o_tx_mode       = restart_pattern ;
                 o_sclstall_en   = 1'b1 ;
                 o_sclstall_code = restart_pattern_stall_special ;
@@ -1305,9 +1315,9 @@ end
                 o_bitcnt_en     = 1'b0 ;
                 // access timer and staller and tx to perform restart pattern 
                 o_tx_en         = 1'b1 ;
-                o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
                 o_tx_mode       = restart_pattern ;
                 o_sclstall_en   = 1'b1 ;
                 o_sclstall_code = restart_pattern_stall ;
@@ -1363,9 +1373,9 @@ end
                 // access timer and staller and tx to perform exit pattern 
                 first_time       = 1'b0 ; // no need but it's ok 
                 o_tx_en          = 1'b1 ;
-                o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                o_crc_data_tx_rx_mux_sel   = 1'b0 ;
+                //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
                 o_tx_mode        = exit_pattern ;
                 //o_sclstall_en    = 1'b1 ;
                 o_sclstall_code  = exit_pattern_stall ;
@@ -1421,9 +1431,9 @@ end
                 if(i_bitcnt_number == 37) begin 
                     next_state      = EXIT_PATTERN ; // may issue exit or restart pattern .. but conditions ?
                     o_tx_en         = 1'b1 ;
-                    o_crc_en_rx_tx_mux_sel     = 1'b0 ;
-                    o_crc_data_rx_tx_valid_sel = 1'b0 ;
-                    o_crc_data_tx_rx_mux_sel   = 1'b0 ; 
+                    //o_crc_rx_tx_mux_sel_ccc     = 1'b0 ;
+                    //o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                    o_crc_rx_tx_mux_sel_ccc   = 1'b0 ; 
                     o_tx_mode       = exit_pattern ;
                     o_sclstall_en   = 1'b1 ;
                     o_sclstall_code = exit_pattern_stall ;

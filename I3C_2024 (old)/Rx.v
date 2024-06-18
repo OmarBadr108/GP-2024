@@ -163,8 +163,9 @@ begin
     o_crc_en              <= 1'b0;   
     count                 <= 'b0;
     byte_num              <= 1'b0;
-  en <= 'b0;
-   o_crc_data_valid      <=  'b0;
+    en                    <= 'b0;
+    o_crc_data_valid       <=  'b0;
+
  // parity_value_temp     <= 1'b0;
  //   o_ddrccc_error_done   <= 1'b0; 
 
@@ -289,13 +290,13 @@ begin
 
     CHECK_TOKEN :       begin
                       
-             o_crc_en <= 'b1;
-                         o_ddrccc_rx_mode_done <= 1'b0;
+                            o_crc_en <= 'b1;
+                          o_ddrccc_rx_mode_done <= 1'b0;
 
                          if(SCL_edges)
                           begin
                             count <= count + 1'b1;
-                            
+                             token_value_temp['d3 - count] <= 1;
                             if(count == 'd3)
                               begin
                                
@@ -305,7 +306,7 @@ begin
                                   o_ddrccc_error<=1'b1;
                                 else
                                   o_ddrccc_error<=1'b0;*/
-                                  
+                                 kl;localpara 
 
                               end 
                           
@@ -313,15 +314,17 @@ begin
 
                           else 
                           begin
-                              token_value_temp['d3 - count] <= i_sdahnd_rx_sda;
+                         //     token_value_temp['d3 - count] <= i_sdahnd_rx_sda;
+                          token_value_temp['d3 - count] <= 1;
                               if(count == 'd3) begin
-                                o_ddrccc_rx_mode_done <= 1'b1;
-                o_crc_data_valid <= 'b0;
-                if((token_value_temp [3:1]== 'b110)  && (i_sdahnd_rx_sda== 'b0))
+                                 o_ddrccc_rx_mode_done <= 1'b1;
+                                 o_crc_data_valid <= 'b0;
+
+                                if((token_value_temp [3:1]== 'b110)  && (i_sdahnd_rx_sda== 'b0))
                                   o_ddrccc_error<=1'b0;
-                                else
+                                  else
                                   o_ddrccc_error<=1'b1;
-                end
+                                  end
                 
                             
                           end
