@@ -159,7 +159,7 @@ class configuration_class ;
 	rand bit  [7:0] RAND_DATA_THREE   ;
 	rand bit  [7:0] RAND_DATA_FOUR    ;    
     rand bit 		RAND_SDA_DRIVE    ; 			
-   
+   	rand bit  [3:0] RAND_INDEX  	  ;
  
 	constraint CMD_ATTR {
 		//RAND_CMD_ATTR inside { 0 , 1 } ;
@@ -173,9 +173,8 @@ class configuration_class ;
 
 	constraint CMD {
 		RAND_CMD inside {8'h00 , 8'h01 , 8'h09 , 8'h0A , 8'h1F	 	 	 // broadcast 
-					    ,8'h80 , 8'h81 , 8'h89 , 8'h8A  				 // direct set
-					    //8'h8B 
-					    //, 8'h8C , 8'h90 , 8'h8E , 8'h8F  	 	 // direct get
+					    ,8'h80 , 8'h81 , 8'h89 , 8'h8A ,8'h8B  				 // direct set 
+					    , 8'h8C , 8'h90 , 8'h8E , 8'h8F  	 	 // direct get
 					    //,8'h8D	 	  		 		 	 	 	 	 // GETPID	 
 						 								   		} ;	
 	}
@@ -224,11 +223,14 @@ class configuration_class ;
 	}
 
 	constraint DATA_LENGTH {
-		RAND_DATA_THREE inside {2} ;	
+		RAND_DATA_THREE inside {1,2} ;	
 	}
 
 	constraint DATA_FOUR {
 		RAND_DATA_FOUR == 0 ;	
+	}
+	constraint RAND_INDEX_k {
+		RAND_INDEX inside {[0:9]} ;	
 	}
 	
 endclass 

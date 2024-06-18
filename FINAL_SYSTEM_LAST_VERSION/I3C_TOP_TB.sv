@@ -81,7 +81,7 @@ assign sda_tb   = sda_drive 			;
 
     	/////////////////////// SDA Line //////////////////////
     	reg  	  RAND_SDA_DRIVE ;
-
+    	bit [3:0]   RAND_INDEX ;
 
     	reg TOC_old ;
 
@@ -117,6 +117,8 @@ assign sda_tb   = sda_drive 			;
 			RAND_DATA_TWO   = conf_obj.RAND_DATA_TWO  ;
 			RAND_DATA_THREE = conf_obj.RAND_DATA_THREE; 
 			RAND_DATA_FOUR  = conf_obj.RAND_DATA_FOUR ; 
+			RAND_INDEX 		= conf_obj.RAND_INDEX ;
+
 			//RAND_SDA_DRIVE = conf_obj.RAND_SDA_DRIVE ;
 
 			switch_muxes(configuration);
@@ -203,30 +205,33 @@ assign sda_tb   = sda_drive 			;
 	reg [28:0] read_vector_2 = 29'b0000_0000_0000_0000_01_01_1100_00001 ;
 
 
-	always @(DUT.CCC_Handler.current_state or DUT.DDR_NT.current_state) begin 
-		if (DUT.cccnt_RnW == 1 && RAND_CMD_ATTR == 'd1 && ({RAND_DATA_FOUR,RAND_DATA_THREE} == 'd2 ) && (DUT.CCC_Handler.i_engine_en && DUT.CCC_Handler.current_state == FIRST_DATA_BYTE) || (DUT.DDR_NT.i_engine_en && DUT.DDR_NT.current_state == first_data_byte)) begin 
+	always @(DUT.CCC_Handler.next_state or DUT.DDR_NT.next_state) begin 
+		if (DUT.cccnt_RnW == 1 && RAND_CMD_ATTR == 'd0 && ({RAND_DATA_FOUR,RAND_DATA_THREE} == 'd2 ) && (DUT.CCC_Handler.i_engine_en && DUT.CCC_Handler.next_state == FIRST_DATA_BYTE) || (DUT.DDR_NT.i_engine_en && DUT.DDR_NT.next_state == first_data_byte)) begin 
 			Drive_repeated_data_word();
 		end 
 	end
 
-	task Drive_repeated_data_word (); 
+	task Drive_repeated_data_word (); // check read commands
 		begin 
 			int 		 o ; // counter
+			#(CLK_PERIOD);
 			for ( o = 0 ; o < 'd29 ; o++ ) begin 
 
-			@ (negedge DUT.scl_pos_edge or negedge DUT.scl_neg_edge ) ;
-
+				@ (negedge DUT.scl_neg_edge_not_stalled or negedge DUT.scl_pos_edge_not_stalled ) ;
 				sda_drive = read_vector_2[28 - o];
+				# (SYS_CLK_PERIOD) ;
+ 
+			end
+			sda_drive = 1'bz ;
+			# (4*SYS_CLK_PERIOD) ;
 
-				# (3*SYS_CLK_PERIOD) ;
-				if (RAND_TOC) begin 
+			if (TOC_old) begin 
 					assert (DUT.CCC_Handler.current_state == EXIT_PATTERN) $display("READ data word TOC = 1 is CORRECT : %0t" ,$time);
 					else 												   $display("READ data word TOC = 1 is WRONG   : %0t" ,$time);
-				end 
-				if (!RAND_TOC) begin 
-					assert (DUT.CCC_Handler.current_state == RESTART_PATTERN) $display("READ data word TOC = 0 is CORRECT : %0t" ,$time);
-					else 												   	  $display("READ data word TOC = 0 is WRONG   : %0t" ,$time);
-				end 
+			end 
+			else if (!TOC_old) begin 
+				assert (DUT.CCC_Handler.current_state == RESTART_PATTERN) $display("READ data word TOC = 0 is CORRECT : %0t" ,$time);
+				else 												   	  $display("READ data word TOC = 0 is WRONG   : %0t" ,$time);
 			end 
 		end  
 	endtask 
@@ -436,15 +441,7 @@ task check_output ();
 
 		BROADCAST = 8'b0; // 7'h7E+ R/w bit
 		ENTHDR0 = 9'b0;
-		// ddr code: 0x20 + T-bit
-		//frame_ended = 1'b0;
-		// once you see the start condition--> sample the first data 7E then sample 'h20 then the parity bit
-		/*bit start_condition;
-		start_condition = ~sda_tb &&  ~scl_tb 
-		if(start_condition) begin
-			data_check[i] <= //sda
-		end
-*/
+
 			for(int i=0; i < 8 ; i++)   //receive first 8 bits of 7E and write bit
 			 	begin  
 				   @(posedge scl_tb)
@@ -621,8 +618,8 @@ I3C_TOP DUT (
 			bins no_def_byte_0 = {0};
 			bins no_def_byte_1 = {1};
 			bins no_def_byte_2 = {2};
-			bins no_def_byte_3 = {3};
-			bins no_def_byte_4 = {4};
+			//bins no_def_byte_3 = {3};
+			//bins no_def_byte_4 = {4};
 
 			//ignore_bins def_byte [] = {[5:7]};
 		}
@@ -649,8 +646,8 @@ I3C_TOP DUT (
 		{
 			bins DATA_LEN_1 = {1} ;
 			bins DATA_LEN_2 = {2} ;
-			bins DATA_LEN_3 = {3} ;
-			bins DATA_LEN_4 = {4} ;
+			//bins DATA_LEN_3 = {3} ;
+			//bins DATA_LEN_4 = {4} ;
 		}
 
 		RAND_DATA_FOUR_cp : coverpoint RAND_DATA_FOUR iff (i_sdr_rst_n_tb)
@@ -667,6 +664,28 @@ I3C_TOP DUT (
 		cr2 : cross  RAND_CMD_ATTR_cp , RAND_CMD_regular_cp {
 			ignore_bins immediate = binsof(RAND_CMD_ATTR_cp) intersect {1};
 		}
+	
+		engine_odd : coverpoint DUT.engine_odd iff (i_sdr_rst_n_tb && ((RAND_DTT == 1) || (RAND_DTT == 3) || {RAND_DATA_THREE,RAND_DATA_FOUR} %2 == 1))
+		{
+			bins ENGINE_ODD     = {1} ;
+			bins ENGINE_ODD_not = {0} ;
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 		cr3 : cross  RAND_DTT_cp , RAND_CMD_immediate_cp {
 			ignore_bins more_than_one =  binsof (RAND_DTT_cp) intersect {0,2,3,4} &&

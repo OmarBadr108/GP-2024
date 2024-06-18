@@ -63,22 +63,27 @@ add wave -noupdate -expand -group CCC /I3C_TOP_TB/DUT/CCC_Handler/o_rx_mode
 add wave -noupdate -expand -group CCC /I3C_TOP_TB/DUT/CCC_Handler/i_tx_mode_done
 add wave -noupdate -expand -group CCC /I3C_TOP_TB/DUT/CCC_Handler/i_sclstall_stall_done
 add wave -noupdate -expand -group CCC /I3C_TOP_TB/DUT/CCC_Handler/i_frmcnt_last_frame
-add wave -noupdate -expand -group RAND_CONF /I3C_TOP_TB/RAND_WROC
-add wave -noupdate -expand -group RAND_CONF /I3C_TOP_TB/RAND_TOC
-add wave -noupdate -expand -group RAND_CONF /I3C_TOP_TB/RAND_TID
-add wave -noupdate -expand -group RAND_CONF /I3C_TOP_TB/RAND_SDA_DRIVE
-add wave -noupdate -expand -group RAND_CONF /I3C_TOP_TB/RAND_RnW
-add wave -noupdate -expand -group RAND_CONF /I3C_TOP_TB/RAND_RESERVED
-add wave -noupdate -expand -group RAND_CONF /I3C_TOP_TB/RAND_MODE
-add wave -noupdate -expand -group RAND_CONF /I3C_TOP_TB/RAND_DTT
-add wave -noupdate -expand -group RAND_CONF /I3C_TOP_TB/RAND_DEV_INDEX
-add wave -noupdate -expand -group RAND_CONF /I3C_TOP_TB/RAND_DEF_BYTE
-add wave -noupdate -expand -group RAND_CONF /I3C_TOP_TB/RAND_DATA_TWO
-add wave -noupdate -expand -group RAND_CONF /I3C_TOP_TB/RAND_DATA_THREE
-add wave -noupdate -expand -group RAND_CONF /I3C_TOP_TB/RAND_DATA_FOUR
-add wave -noupdate -expand -group RAND_CONF /I3C_TOP_TB/RAND_CP
-add wave -noupdate -expand -group RAND_CONF /I3C_TOP_TB/RAND_CMD_ATTR
-add wave -noupdate -expand -group RAND_CONF /I3C_TOP_TB/RAND_CMD
+add wave -noupdate -expand -group {rd operation checks final} /I3C_TOP_TB/DUT/RX/o_regfcrc_rx_data_out
+add wave -noupdate -expand -group {rd operation checks final} /I3C_TOP_TB/DUT/RX/o_ddrccc_error
+add wave -noupdate -expand -group {rd operation checks final} /I3C_TOP_TB/DUT/u_reg_file/i_regf_wr_en
+add wave -noupdate -expand -group {rd operation checks final} /I3C_TOP_TB/DUT/u_reg_file/i_regf_data_wr
+add wave -noupdate -expand -group {rd operation checks final} /I3C_TOP_TB/DUT/u_reg_file/i_regf_addr
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_WROC
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_TOC
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_TID
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_SDA_DRIVE
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_RnW
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_RESERVED
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_MODE
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_DTT
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_DEV_INDEX
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_DEF_BYTE
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_DATA_TWO
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_DATA_THREE
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_DATA_FOUR
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_CP
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_CMD_ATTR
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_CMD
 add wave -noupdate -height 24 -group HDR_TX /I3C_TOP_TB/DUT/tx/i_sclgen_scl_pos_edge
 add wave -noupdate -height 24 -group HDR_TX /I3C_TOP_TB/DUT/tx/i_sclgen_scl_neg_edge
 add wave -noupdate -height 24 -group HDR_TX /I3C_TOP_TB/DUT/tx/i_ddrccc_tx_mode
@@ -211,8 +216,8 @@ add wave -noupdate /I3C_TOP_TB/DUT/tx/D1
 add wave -noupdate /I3C_TOP_TB/sys_clk
 add wave -noupdate /I3C_TOP_TB/DUT/u_reg_file/o_engine_MODE
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {20271000005 ps} 0} {{Cursor 4} {5202278584 ps} 0}
-quietly wave cursor active 2
+WaveRestoreCursors {{Cursor 1} {49521654989921 ps} 0} {{Cursor 4} {5202278584 ps} 0}
+quietly wave cursor active 1
 configure wave -namecolwidth 202
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
@@ -227,4 +232,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {4501556352 ps} {6810046816 ps}
+WaveRestoreZoom {49520924508014 ps} {49522590568671 ps}
