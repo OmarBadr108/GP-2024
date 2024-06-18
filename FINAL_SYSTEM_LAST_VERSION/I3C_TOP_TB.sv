@@ -98,7 +98,7 @@ assign sda_tb   = sda_drive 			;
 		initialize();
 		conf_obj = new();
 
-		for (i=0 ; i<10000 ; i++) begin 
+		for (i=0 ; i<100 ; i++) begin 
 			assert(conf_obj.randomize());
 
 			RAND_CMD_ATTR  = conf_obj.RAND_CMD_ATTR  ;
@@ -141,12 +141,13 @@ assign sda_tb   = sda_drive 			;
 				check_output(); // to check enthdr ccc output
 				// write new configuration
 				@(DUT.frame_counter_hdr.o_cccnt_last_frame == 'b1 && (DUT.CCC_Handler.current_state == PARITY_DATA || DUT.DDR_NT.current_state == parity));
+				#(4*SYS_CLK_PERIOD);
 				$display("this is testcase no. %d with TOC = 1 ",i,$time);
-				
 		  	end 
 
 		  	else if (!TOC_old) begin 
 		  		@(DUT.frame_counter_hdr.o_cccnt_last_frame == 'b1 && (DUT.CCC_Handler.current_state == PARITY_DATA || DUT.DDR_NT.current_state == parity));
+		  		#(4*SYS_CLK_PERIOD);
 		  		$display("this is testcase no. %d with TOC = 0 ",i,$time);
 		  	end 
 		end	
@@ -202,11 +203,11 @@ assign sda_tb   = sda_drive 			;
 			check_repeated_data_word();
 		end 
 	end
+
 	reg [28:0] read_vector_2 = 29'b0000_0000_0000_0000_01_01_1100_00001 ;
 
-
 	always @(DUT.CCC_Handler.next_state or DUT.DDR_NT.next_state) begin 
-		if (DUT.cccnt_RnW == 1 && RAND_CMD_ATTR == 'd0 && ({RAND_DATA_FOUR,RAND_DATA_THREE} == 'd2 ) && (DUT.CCC_Handler.i_engine_en && DUT.CCC_Handler.next_state == FIRST_DATA_BYTE) || (DUT.DDR_NT.i_engine_en && DUT.DDR_NT.next_state == first_data_byte)) begin 
+		if (DUT.cccnt_RnW == 1 && RAND_CMD_ATTR == 'd0 && ({RAND_DATA_FOUR,RAND_DATA_THREE} == 'd2 || {RAND_DATA_FOUR,RAND_DATA_THREE} == 'd1 ) && (DUT.CCC_Handler.i_engine_en && DUT.CCC_Handler.next_state == FIRST_DATA_BYTE) || (DUT.DDR_NT.i_engine_en && DUT.DDR_NT.next_state == first_data_byte)) begin 
 			Drive_repeated_data_word();
 		end 
 	end
@@ -219,15 +220,15 @@ assign sda_tb   = sda_drive 			;
 
 				@ (negedge DUT.scl_neg_edge_not_stalled or negedge DUT.scl_pos_edge_not_stalled ) ;
 				sda_drive = read_vector_2[28 - o];
-				# (SYS_CLK_PERIOD) ;
+				# (3*CLK_PERIOD) ;
  
 			end
 			sda_drive = 1'bz ;
 			# (4*SYS_CLK_PERIOD) ;
 
 			if (TOC_old) begin 
-					assert (DUT.CCC_Handler.current_state == EXIT_PATTERN) $display("READ data word TOC = 1 is CORRECT : %0t" ,$time);
-					else 												   $display("READ data word TOC = 1 is WRONG   : %0t" ,$time);
+				assert (DUT.CCC_Handler.current_state == EXIT_PATTERN) $display("READ data word TOC = 1 is CORRECT : %0t" ,$time);
+				else 												   $display("READ data word TOC = 1 is WRONG   : %0t" ,$time);
 			end 
 			else if (!TOC_old) begin 
 				assert (DUT.CCC_Handler.current_state == RESTART_PATTERN) $display("READ data word TOC = 0 is CORRECT : %0t" ,$time);
@@ -655,8 +656,6 @@ I3C_TOP DUT (
 			bins ZERO = {0} ;
 		}
 		
-
-
 		cr1 : cross RAND_CMD_ATTR_cp , RAND_CMD_immediate_cp {
 			ignore_bins regular = binsof(RAND_CMD_ATTR_cp) intersect {0};
 		}

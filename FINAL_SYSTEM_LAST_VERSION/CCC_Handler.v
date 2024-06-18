@@ -1213,7 +1213,7 @@ end
                     o_rx_mode = check_c_token_CRC ;
                     if (i_rx_error) begin 
                         next_state = ERROR ; 
-                        o_regf_ERR_STATUS = CRC_ERR ;
+                        o_regf_ERR_STATUS = FRAME ;
                     end
                     else if (i_rx_mode_done && !i_rx_error) begin 
                         next_state = CRC_CHECKSUM_STATE ; // 5 bits checksum
@@ -1301,6 +1301,10 @@ end
                             o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
                         end
                     end
+                    else if (i_rx_mode_done && i_rx_error) begin 
+                        next_state        = ERROR ; 
+                        o_regf_ERR_STATUS = CRC_ERR ;
+                    end 
                     else begin 
                         next_state = CRC_CHECKSUM_STATE ;
                     end 

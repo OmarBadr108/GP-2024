@@ -67,7 +67,10 @@ add wave -noupdate -expand -group {rd operation checks final} /I3C_TOP_TB/DUT/RX
 add wave -noupdate -expand -group {rd operation checks final} /I3C_TOP_TB/DUT/RX/o_ddrccc_error
 add wave -noupdate -expand -group {rd operation checks final} /I3C_TOP_TB/DUT/u_reg_file/i_regf_wr_en
 add wave -noupdate -expand -group {rd operation checks final} /I3C_TOP_TB/DUT/u_reg_file/i_regf_data_wr
-add wave -noupdate -expand -group {rd operation checks final} /I3C_TOP_TB/DUT/u_reg_file/i_regf_addr
+add wave -noupdate -expand -group {rd operation checks final} -radix decimal /I3C_TOP_TB/DUT/u_reg_file/i_regf_addr
+add wave -noupdate /I3C_TOP_TB/DUT/RX/token_value_temp
+add wave -noupdate /I3C_TOP_TB/DUT/RX/parity_value_temp
+add wave -noupdate /I3C_TOP_TB/DUT/RX/CRC_value_temp
 add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_WROC
 add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_TOC
 add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_TID
@@ -216,7 +219,7 @@ add wave -noupdate /I3C_TOP_TB/DUT/tx/D1
 add wave -noupdate /I3C_TOP_TB/sys_clk
 add wave -noupdate /I3C_TOP_TB/DUT/u_reg_file/o_engine_MODE
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {49521654989921 ps} 0} {{Cursor 4} {5202278584 ps} 0}
+WaveRestoreCursors {{Cursor 1} {50656665081091 ps} 0} {{Cursor 4} {5202278584 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 202
 configure wave -valuecolwidth 100
@@ -232,4 +235,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {49520924508014 ps} {49522590568671 ps}
+WaveRestoreZoom {50655711240294 ps} {50657377300950 ps}

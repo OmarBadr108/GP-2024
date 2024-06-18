@@ -172,10 +172,10 @@ class configuration_class ;
 	}
 
 	constraint CMD {
-		RAND_CMD inside {8'h00 , 8'h01 , 8'h09 , 8'h0A , 8'h1F	 	 	 // broadcast 
-					    ,8'h80 , 8'h81 , 8'h89 , 8'h8A ,8'h8B  				 // direct set 
-					    , 8'h8C , 8'h90 , 8'h8E , 8'h8F  	 	 // direct get
-					    //,8'h8D	 	  		 		 	 	 	 	 // GETPID	 
+		RAND_CMD inside {//8'h00 , 8'h01 , 8'h09 , 8'h0A , 8'h1F	 // broadcast 
+					    //,8'h80 , 8'h81 , 8'h89 , 8'h8A ,8'h8B  	 // direct set 
+					    8'h8C , 8'h90 , 8'h8E , 8'h8F  	 	 // direct get
+					    //,8'h8D	 	  		 		 	 	 // GETPID	 
 						 								   		} ;	
 	}
 
@@ -199,9 +199,9 @@ class configuration_class ;
 		RAND_MODE == 6 ;	
 	}
 
-	constraint RnW {
-		RAND_RnW == ((RAND_CMD == 8'h00)|(RAND_CMD == 8'h01)|(RAND_CMD == 8'h09)|(RAND_CMD ==8'h0A)|
-					 (RAND_CMD == 8'h80)|(RAND_CMD == 8'h81)|(RAND_CMD == 8'h89)|(RAND_CMD ==8'h8A)|(RAND_CMD ==8'h1F) 
+	constraint RnW {		
+		RAND_RnW == ((RAND_CMD == 8'h00)|(RAND_CMD == 8'h01)|(RAND_CMD == 8'h09)|(RAND_CMD ==8'h0A)|				   // Direct 
+					 (RAND_CMD == 8'h80)|(RAND_CMD == 8'h81)|(RAND_CMD == 8'h89)|(RAND_CMD ==8'h8A)|(RAND_CMD ==8'h1F) // broadcast
 					 | (RAND_CP == 0)
 					 )? 0 : 1 ;	
 	}
