@@ -34,31 +34,17 @@ int cycle_count ;
 logic configuration_done=0;
 
 //-----------------------------Parameters-------------------------------------//
-    parameter CLK_PERIOD  = 10;
+    parameter CLK_PERIOD      = 10 ;		 // 100 mhz
+    parameter SYS_CLK_PERIOD  = 20 ;  		 // 50mhz
     parameter configuration   = 1'b1 ;
     parameter Design          = 1'b0 ;
     parameter config_location = 12'd1000 ;
 
     parameter EXPECTED_BROADCAST = 8'b11111100; // 'h7E+ R/W bit = 0
     parameter EXPECTED_ENTHDR0 = 9'b001000000;
-    
-    reg [2:0] RAND_CMD_ATTR  = 'd1   ;  // immediate data transfer command, dword1 is: data_byte4,3,2,1(def_byte)
-    reg [3:0] RAND_TID       = 'd3   ;
-    reg [7:0] RAND_CMD       = 8'h00 ;
- // reg       RAND_CP        = 1     ;
- 	reg       RAND_CP;
- 		
-    reg [4:0] RAND_DEV_INDEX = 'd3   ;
-    reg [1:0] RAND_RESERVED  = 'd0   ;
-    reg [2:0] RAND_DTT       = 'd2   ;
-    reg [2:0] RAND_MODE      = 'd6   ;
-    reg       RAND_RnW       = 1'b0  ; // 0 for write ,  1 for read   
-    reg       RAND_WROC      = 1'd0  ;
-    reg       RAND_TOC               ;
-    reg [7:0] RAND_DEF_BYTE  = 8'b0000_0000   ;    //'d1
-    reg [7:0] RAND_DATA_TWO  = 8'b1111_0010   ; //'d2
-    reg [7:0] RAND_DATA_THREE= 'd2   ; // DATA_LENGTH = {RAND_DATA_FOUR,RAND_DATA_THREE}
-    reg [7:0] RAND_DATA_FOUR = 'd0   ;
+
+    wire  	 sys_clk ;
+    assign   sys_clk = DUT.sys_clk_50mhz ;
 
 //----------------------------- Clock Generation-------------------------------------//
 always #(CLK_PERIOD/2) i_sdr_clk_tb = ~i_sdr_clk_tb;
@@ -67,222 +53,150 @@ always #(CLK_PERIOD/2) i_sdr_clk_tb = ~i_sdr_clk_tb;
 // locally driven value
 assign sda_tb   = sda_drive 			;
 
-initial begin
 
-	initialize();
-	reset();
+// initialize the object with the default values in the class defined as bit >> 0
+    	configuration_class conf_obj ;
 
 
-	//<-------------------------TEST CASE 1 ----------------------->//
-	//<            Mode --> HDR, TOC = 0, CP = 1 (CCC) ,Broadcast CCC :ENEC       >//
-	RAND_CP        = 1'b1     ;
-	RAND_TOC       = 1'b0  ;
+    	// inputs to be randomized 
 
-  	// change mux selector to write configurations
+    	//////////////////////// DWORD0  //////////////////////
+    	reg [2:0] RAND_CMD_ATTR      ;
+    	reg [3:0] RAND_TID           ;
+ 		reg [7:0] RAND_CMD           ;
+ 		reg 	  RAND_CP            ;
+ 		reg [4:0] RAND_DEV_INDEX     ;
+ 		reg [1:0] RAND_RESERVED      ;
+ 		reg [2:0] RAND_DTT           ; 	 	 // or {DBP,SRE,reserved}
+ 		reg [2:0] RAND_MODE = 'd6    ;
+ 		reg  	  RAND_RnW           ;
+ 		reg   	  RAND_WROC          ;
+ 		reg 	  RAND_TOC           ;
+
+    	//////////////////////// DWORD1  //////////////////////
+    	reg [7:0] RAND_DEF_BYTE     ;
+    	reg [7:0] RAND_DATA_TWO     ;
+    	reg [7:0] RAND_DATA_THREE   ;
+    	reg [7:0] RAND_DATA_FOUR    ;
+
+    	/////////////////////// SDA Line //////////////////////
+    	reg  	  RAND_SDA_DRIVE ;
+
+    	integer i ;
+
+    initial begin 
+    	
+		initialize();
+		reset();
+		conf_obj = new();
+
 		switch_muxes(configuration);
 		write_configurations();
-
-	// change mux selector to give the regfile inputs control to design
 		switch_muxes(Design);
-
-	configuration_done = 1'b1;
-	#(CLK_PERIOD)
-	configuration_done = 1'b0;
-
-	i_i3c_i2c_sel_tb    = 1'b1;
-    i_controller_en_tb = 1'b1;
-		 
-    check_output(); //temporary to check enthdr ccc output
-
-	// first second preamble for data word
-	@(negedge DUT.CCC_Handler.o_rx_en )
-	sda_drive = 'b0;
-  	#(4*CLK_PERIOD)
-    sda_drive = 'bz;
-
-	// second second preamble for repeated data word
-	#(CLK_PERIOD)
-	@(negedge DUT.CCC_Handler.o_rx_en )
-	sda_drive = 'b1;
-  	#(4*CLK_PERIOD)
-    sda_drive = 'bz;    
-
-//@(posedge o_ctrl_done_tb)
-//i_controller_en_tb = 1'b0;
 	
-    //////////// added by badr ////////////////
-	//<-------------------------TEST CASE 2 ----------------------->//
-	//<            Mode --> HDR, TOC = 0(restart), CP = 1 (CCC) ,Direct CCC :GETMWL_D    = 8'h8B        >//
 
-    RAND_CMD       = 8'h8B ;
-    RAND_CMD_ATTR  = 'd0   ;
-    RAND_TOC       = 1'b0  ;
-    // DATA LENGTH = {DATA_FOUR,DATA_THREE}	== 2 
-    RAND_DTT       = 'd0   ;  // makes DBP = 0 and SRE = 0  	>>>>>> 		{DBP,SRE} = DTT[3:1]
-    RAND_RnW       = 1'b1  ;
+    	//i_controller_en_tb = 1'b1 ;
+		// allocation of the object 
+		
+		#(CLK_PERIOD);
+		i_controller_en_tb = 1'b1;
+		i_i3c_i2c_sel_tb   = 1'b1 ;
 
-    configuration_done = 0;
+		check_output(); //temporary to check enthdr ccc output
+		assert(conf_obj.randomize());  			
 
-	#(CLK_PERIOD)
-    @(DUT.frame_counter_hdr.o_cccnt_last_frame == 'b1)
+			RAND_CMD_ATTR  = conf_obj.RAND_CMD_ATTR  ;
+			RAND_TID       = conf_obj.RAND_TID       ;
+			RAND_CMD       = conf_obj.RAND_CMD       ;
+			RAND_CP        = conf_obj.RAND_CP        ;
+			RAND_DEV_INDEX = conf_obj.RAND_DEV_INDEX ;
+			RAND_RESERVED  = conf_obj.RAND_RESERVED  ;
+			RAND_DTT       = conf_obj.RAND_DTT       ;
+			RAND_MODE      = conf_obj.RAND_MODE      ;
+			RAND_RnW       = conf_obj.RAND_RnW       ;
+			RAND_WROC      = conf_obj.RAND_WROC      ;
+			RAND_TOC       = conf_obj.RAND_TOC       ;
+
+			RAND_DEF_BYTE   = conf_obj.RAND_DEF_BYTE  ;
+			RAND_DATA_TWO   = conf_obj.RAND_DATA_TWO  ;
+			RAND_DATA_THREE = conf_obj.RAND_DATA_THREE; 
+			RAND_DATA_FOUR  = conf_obj.RAND_DATA_FOUR ; 
+
+
+    	for (i=0 ; i<100 ; i++) begin
+
+			assert(conf_obj.randomize());  			
+
+			RAND_CMD_ATTR  = conf_obj.RAND_CMD_ATTR  ;
+			RAND_TID       = conf_obj.RAND_TID       ;
+			RAND_CMD       = conf_obj.RAND_CMD       ;
+			RAND_CP        = conf_obj.RAND_CP        ;
+			RAND_DEV_INDEX = conf_obj.RAND_DEV_INDEX ;
+			RAND_RESERVED  = conf_obj.RAND_RESERVED  ;
+			RAND_DTT       = conf_obj.RAND_DTT       ;
+			RAND_MODE      = conf_obj.RAND_MODE      ;
+			RAND_RnW       = conf_obj.RAND_RnW       ;
+			RAND_WROC      = conf_obj.RAND_WROC      ;
+			RAND_TOC       = conf_obj.RAND_TOC       ;
+
+			RAND_DEF_BYTE   = conf_obj.RAND_DEF_BYTE  ;
+			RAND_DATA_TWO   = conf_obj.RAND_DATA_TWO  ;
+			RAND_DATA_THREE = conf_obj.RAND_DATA_THREE; 
+			RAND_DATA_FOUR  = conf_obj.RAND_DATA_FOUR ; 
+			
+			//RAND_SDA_DRIVE = conf_obj.RAND_SDA_DRIVE ;
+
+			// change mux selector to write configurations
+			switch_muxes(configuration);
+			write_configurations();
+			switch_muxes(Design);
+			i_controller_en_tb = 1'b1;	
+			check_output();
+
+/*			
+			@(DUT.frame_counter_hdr.o_cccnt_last_frame == 'b1)
    
   
-  // change mux selector to write configurations
-	switch_muxes(configuration);
-	write_configurations();
+  			// change mux selector to write configurations
+			switch_muxes(configuration);
+			write_configurations();
 
-	// change mux selector to give the regfile inputs control to design
-	switch_muxes(Design);
-	configuration_done = 1'b1;
-	#(CLK_PERIOD)
-	configuration_done = 1'b0;
+			// change mux selector to give the regfile inputs control to design
+			switch_muxes(Design);
+*/		
 
-	i_i3c_i2c_sel_tb  = 1'b1;
-    i_controller_en_tb 	= 1'b1;	
-    //check_output(); //temporary to check enthdr ccc output
+			@(posedge (DUT.ccc_engine_done || DUT.ddr_engine_done ));
+			$display("this is testcase no. %d",i,$time);
+			#(2*SYS_CLK_PERIOD) ;
+		end	
+		#(50*SYS_CLK_PERIOD) ;		
+		$stop ;
+	end
+/*
+//////////////////////////////////////////////  General driver /////////////////////////////////
 
-#(CLK_PERIOD)
-    // first data word preamble
-@(negedge DUT.CCC_Handler.o_rx_en )
-	sda_drive = 'b0;
-  #(4*CLK_PERIOD)
-    sda_drive = 'bz;
+	initial begin 
+		forever #(2*SYS_CLK_PERIOD) begin 
 
-
-#(CLK_PERIOD)
-    // second data word preamble
-@(negedge DUT.CCC_Handler.o_rx_en )
-	sda_drive = 'b0;
-  #(4*CLK_PERIOD)
-    sda_drive = 'b1;	 
-  // the data word is 1111_1111_1111_1111 and parity bits are :
-  #(4*16 *CLK_PERIOD) 
-  // PA1 = 0
-   sda_drive = 'b0;
-   #(4*CLK_PERIOD)
-   //PA0 = 1
-   sda_drive = 'b1;
-   #(4*CLK_PERIOD)
-   // CRC pre 01
-   sda_drive = 'b0;
-   #(4*CLK_PERIOD)
-   //PA0 = 1
-   sda_drive = 'b1;
-   #(4*CLK_PERIOD)
-   //C token 1100
-   sda_drive = 'b1;
-   #(4*CLK_PERIOD)
-   sda_drive = 'b1;
-   #(4*CLK_PERIOD)
-   sda_drive = 'b0;
-   #(4*CLK_PERIOD)
-   sda_drive = 'b0;
-   #(4*CLK_PERIOD)
-
-   // CRC value for data FF = 01010
-   sda_drive = 'b0;
-   #(4*CLK_PERIOD)
-   sda_drive = 'b1;
-   #(4*CLK_PERIOD)
-   sda_drive = 'b0;
-   #(4*CLK_PERIOD)
-   sda_drive = 'b1;
-   #(4*CLK_PERIOD)
-   sda_drive = 'b0;
-   #(4*CLK_PERIOD)
-   sda_drive = 'bz;
-
-
-   
-	//<-------------------------TEST CASE 3 ----------------------->//
-	//<            Mode --> HDR, TOC = 1(exit), CP = 1 (CCC) ,Direct CCC :ENEC       >//
-
-
-
-    RAND_CMD_ATTR  = 'd1  ;
-    // DATA LENGTH = {DATA_FOUR,DATA_THREE}	== 2 
-    RAND_DTT       = 'd1   ;  // makes DBP = 0 and SRE = 0  	>>>>>> 		{DBP,SRE} = DTT[3:1]
-    RAND_RnW       = 1'b0  ;
-    RAND_CMD       = 8'h80 ;
-    RAND_TOC       = 1'b1  ;
-
-
-
-    configuration_done = 0;
-
-	#(CLK_PERIOD)
-   @(DUT.frame_counter_hdr.o_cccnt_last_frame == 'b1)
-   
-  
-  // change mux selector to write configurations
-	switch_muxes(configuration);
-	write_configurations();
-
-	// change mux selector to give the regfile inputs control to design
-	switch_muxes(Design);
-	configuration_done = 1'b1;
-	#(CLK_PERIOD)
-	configuration_done = 1'b0;
-
-	i_i3c_i2c_sel_tb  = 1'b1;
-    i_controller_en_tb 	= 1'b1;	
-    //check_output(); //temporary to check enthdr ccc output
-
-#(CLK_PERIOD)
-    // first data word preamble
-@(negedge DUT.CCC_Handler.o_rx_en )
-	sda_drive = 'b0;
-  #(4*CLK_PERIOD)
-    sda_drive = 'bz;
-
-
-#(CLK_PERIOD)
-    // second data word preamble
-@(negedge DUT.CCC_Handler.o_rx_en )
-	sda_drive = 'b0;
-  #(4*CLK_PERIOD)
-  	 sda_drive = 'bz;
-
-
-
-
-//@(DUT.tx.i_ddrccc_tx_mode == 15)
-//DUT.CCC_Handler.i_sclstall_stall_done = 1;
- 
- /* 
-
-/////////////////////////////////////////////NT Test////////////////////////////////////////////////
-								//<-------------------------TEST CASE 1 ----------------------->//
-										//<            Mode --> HDR, TOC = 1, CP = 0 (NT)       >//
-    RAND_CP                       = 0     ;
-   	i_i3c_i2c_sel_tb     			    = 1'b1;
-    i_controller_en_tb 						= 1'b1;
-
-    check_output(); //temporary to check enthdr ccc output
-
-		// first second preamble for data word
-		@(posedge DUT.DDR_NT.o_rx_en )
-			sda_drive = 'b0;
-		  #(4*CLK_PERIOD)
-		    sda_drive = 'bz;
-
-
-    #(3*CLK_PERIOD)
-		  @(posedge DUT.DDR_NT.o_rx_en )
-			sda_drive = 'b0;
-		  #(4*CLK_PERIOD)
-		    sda_drive = 'bz;
+			if (DUT.CCC_Handler.current_state == PRE_FIRST_DATA_TWO) begin 
+				@(negedge DUT.scl_neg_edge_not_stalled or negedge DUT.scl_pos_edge_not_stalled) ;
+				sda_drive = 1'b0 ;
+				#(2*SYS_CLK_PERIOD) ;
+				sda_drive = 1'bz ;
+			end
+			else if (DUT.CCC_Handler.current_state == PRE_DATA_TWO) begin 
+				@(negedge DUT.scl_neg_edge_not_stalled or negedge DUT.scl_pos_edge_not_stalled) ;
+				sda_drive = 1'b1 ;
+				#(2*SYS_CLK_PERIOD) ;
+				sda_drive = 1'bz ;
+			end
+			else begin
+				sda_drive = 1'bz ;
+			end
+		end
+	end 
 */
-
-
-
-
-    #50000
-    $stop;
-end
-
-
-
+   
 	// deserialization checking 
 
 	always @(DUT.CCC_Handler.current_state) begin 
@@ -431,9 +345,9 @@ pullup(sda_tb);
 task reset;
 	begin
 	    i_sdr_rst_n_tb 		        = 1'b1;
-		# (CLK_PERIOD)
+		# (SYS_CLK_PERIOD)
 		i_sdr_rst_n_tb 				= 1'b0; // activated
-		# (CLK_PERIOD)
+		# (SYS_CLK_PERIOD)
 		i_sdr_rst_n_tb 				= 1'b1; // de-activated
 
 	end	
@@ -465,41 +379,42 @@ task write_configurations();
 
 //1.write randomized values
 	// DWORD0
+	@(negedge sys_clk) ;
 	 	i_regf_wr_en_config_tb = 1'b1;
-	 #(2*CLK_PERIOD)																		    																									; 
+	 #(SYS_CLK_PERIOD)																		    																									; 
 		i_regf_config_tb     = { RAND_CMD[0] , RAND_TID , RAND_CMD_ATTR }  			 		;
     	i_regf_wr_address_config_tb = config_location 																												;
     	    
-      #(2*CLK_PERIOD)  																																											; 
+      #(SYS_CLK_PERIOD)  																																											; 
 		i_regf_config_tb     = { RAND_CP , RAND_CMD[7:1] } 									;
     	i_regf_wr_address_config_tb = config_location + 'd1 																									;
 
-      #(2*CLK_PERIOD)  																																											; 
+      #(SYS_CLK_PERIOD)  																																											; 
 		i_regf_config_tb     = { RAND_DTT[0] , RAND_RESERVED , RAND_DEV_INDEX }  			;		    
     	i_regf_wr_address_config_tb = config_location + 'd2 																									;
 
-      #(2*CLK_PERIOD)  																																											; 
+      #(SYS_CLK_PERIOD)  																																											; 
 		i_regf_config_tb     = { RAND_TOC , RAND_WROC , RAND_RnW ,RAND_MODE , RAND_DTT[2:1]} ;
     	i_regf_wr_address_config_tb = config_location + 'd3 																									;
 
       // DWORD 1
-       #(2*CLK_PERIOD)  																																									  ; 
+       #(SYS_CLK_PERIOD)  																																									  ; 
 		i_regf_config_tb     = RAND_DEF_BYTE     																														;
     	i_regf_wr_address_config_tb  = config_location + 'd4 																									;		
 
-       #(2*CLK_PERIOD)  																																										; 
+       #(SYS_CLK_PERIOD)  																																										; 
 		i_regf_config_tb     = RAND_DATA_TWO     																														;
     	i_regf_wr_address_config_tb  = config_location + 'd5 																									;
 
-       #(2*CLK_PERIOD); 																		 
+       #(SYS_CLK_PERIOD); 																		 
 		i_regf_config_tb     = RAND_DATA_THREE     																													;
     	i_regf_wr_address_config_tb  = config_location + 'd6 																									;
 
-       #(2*CLK_PERIOD)  																																										; 
+       #(SYS_CLK_PERIOD)  																																										; 
 		i_regf_config_tb     = RAND_DATA_FOUR     																														;
     	i_regf_wr_address_config_tb  = config_location + 'd7 																									;
   
-        #(CLK_PERIOD) 																																											;
+        #(SYS_CLK_PERIOD) 																																											;
 	end
 endtask : write_configurations
 
@@ -556,23 +471,27 @@ end
 endtask
 
 task send_ack;
-	begin
-		//#(30*CLK_PERIOD)
-		#(2*CLK_PERIOD)
-			if(!scl_tb)       //drive ack when scl is low
-			  begin  	
-					sda_drive = 1'b0; //ack bit
+    begin 
+    														$display(" one %0t",$time);
+        #(SYS_CLK_PERIOD)
+        												$display(" two %0t",$time);
+        if(!scl_tb) begin
+        														$display(" three%0t",$time);      //drive ack when scl is low
+        	sda_drive = 1'b0; //ack bit
+        													$display(" four %0t",$time);
+        	#(4*SYS_CLK_PERIOD) ;
+        														$display(" five %0t",$time);
+        	sda_drive =  1'bz ;
+        												$display("six %0t",$time);
+        	/*@(negedge scl_tb)  
+        	#(2*CLK_PERIOD)  
 
-				  @(negedge scl_tb)
-				  //#(30*CLK_PERIOD)
-				  #(2*CLK_PERIOD)  //(2*CLK_PERIOD)
-
-						if(!scl_tb)
-				 			sda_drive = 'bz;     
-			  end
-	end
+        	if(!scl_tb) sda_drive = 'bz;
+        end
+        */
+    	end
+    end 
 endtask
-
 
 
 //-----------------------------DUT Instantiation-------------------------------------//
@@ -662,78 +581,194 @@ I3C_TOP DUT (
 
 
 
-
-
-
-
-
-
-
-/*
-// DUT.sys_clk_50mhz ;
-
-    parameter scl_pos_wrt_sys_clc = 4 ;         // used in sdr transmission trancking changes every pos edge only of sda 
-    parameter scl_pos_neg_wrt_sys_clc = 2 ;     // used in hdr transmission trancking changes every pos or neg edge of sda 
-
-    //////////////////////////////////////////////////// ENTHDR assertion /////////////////////////////////////
-    sequence start_bit_1 ;
-        (sda_tb == 1'b1 && scl_tb == 1'b1 ); 
-    endsequence 
-
-    sequence start_bit_2 ;
-        start_bit_1 ##(1) (sda_tb == 1'b0 && scl_tb == 1'b1 ); 
-    endsequence 
-
-    sequence start_bit_3 ;
-        start_bit_2 ##(3) (sda_tb == 1'b0 && scl_tb == 1'b0 ); 
-    endsequence
-
-    sequence start_bit_4 ;
-        start_bit_3 ##(1) (sda_tb == 1'b1 && scl_tb == 1'b0 ); 
-    endsequence
-
-    // end of START condition
-    ////////////////////////////////////////////////////////////////////////
-
-    sequence ENTHDR_1 ;                        // first bit of seven E is transmitted above and it's duration is here 
-        start_bit_4 ##(scl_pos_wrt_sys_clc) sda_tb == 1'b1 ;
-    endsequence
-
-    sequence ENTHDR_2 ;                       
-        ENTHDR_1 ##(5*scl_pos_wrt_sys_clc) sda_tb == 1'b0 ;
-    endsequence
-
-    sequence ENTHDR_3 ;
-        ENTHDR_2 ##(4*scl_pos_wrt_sys_clc) sda_tb == 1'b1 ;
-    endsequence
-
-    sequence ENTHDR_4 ;
-        ENTHDR_3 ##(scl_pos_wrt_sys_clc) sda_tb == 1'b0;
-    endsequence
-
-    sequence START_ENTHDR_sec;
-        ENTHDR_4 ##(6*scl_pos_wrt_sys_clc) sda_tb == 1'b1 ; // this is the first bit in the HDR mode i.e (RnW bit)
-    endsequence
-
-
-
-    // Property to track SDA line ENTHDR frame >> (8'b11111100 then 9'b001000000) then HDR 
-    property START_ENTHDR_seq  ;
-        @(posedge (DUT.sys_clk_50mhz)) $rose(i_controller_en_tb) |-> START_ENTHDR_sec ;  
-    endproperty
-
-
-    // Assert the property
-    assert property(START_ENTHDR_seq)
-                            $display("%t START_ENTHDR_sec PASSED ",$time); else
-                            $display("%t START_ENTHDR_sec FAILED ",$time);
-
-
-*/
-
 endmodule
 
+///////////////////////////////////////////////////////////////// ended 17 / 6 / 2024 ////////////////////////////////////////////////////// 
 
+/*
+initial begin
+
+	initialize();
+	reset();
+
+	//<-------------------------TEST CASE 1 ----------------------->//
+	//<            Mode --> HDR, TOC = 0, CP = 1 (CCC) ,Broadcast CCC :ENEC       >//
+	RAND_CP        = 1'b1     ;
+	RAND_TOC       = 1'b0  ;
+
+  	// change mux selector to write configurations
+		switch_muxes(configuration);
+		write_configurations();
+
+	// change mux selector to give the regfile inputs control to design
+		switch_muxes(Design);
+
+	configuration_done = 1'b1;
+	#(CLK_PERIOD)
+	configuration_done = 1'b0;
+
+	i_i3c_i2c_sel_tb    = 1'b1;
+    i_controller_en_tb = 1'b1;
+		 
+    check_output(); //temporary to check enthdr ccc output
+
+	// first second preamble for data word
+	@(negedge DUT.CCC_Handler.o_rx_en )
+	sda_drive = 'b0;
+  	#(4*CLK_PERIOD)
+    sda_drive = 'bz;
+
+	// second second preamble for repeated data word
+	#(CLK_PERIOD)
+	@(negedge DUT.CCC_Handler.o_rx_en )
+	sda_drive = 'b1;
+  	#(4*CLK_PERIOD)
+    sda_drive = 'bz;    
+
+//@(posedge o_ctrl_done_tb)
+//i_controller_en_tb = 1'b0;
+	
+    //////////// added by badr ////////////////
+	//<-------------------------TEST CASE 2 ----------------------->//
+	//<            Mode --> HDR, TOC = 0(restart), CP = 1 (CCC) ,Direct CCC :GETMWL_D    = 8'h8B        >//
+
+    RAND_CMD       = 8'h8B ;
+    RAND_CMD_ATTR  = 'd0   ;
+    RAND_TOC       = 1'b0  ;
+    // DATA LENGTH = {DATA_FOUR,DATA_THREE}	== 2 
+    RAND_DTT       = 'd0   ;  // makes DBP = 0 and SRE = 0  	>>>>>> 		{DBP,SRE} = DTT[3:1]
+    RAND_RnW       = 1'b1  ;
+
+    configuration_done = 0;
+
+	#(CLK_PERIOD)
+    @(DUT.frame_counter_hdr.o_cccnt_last_frame == 'b1)
+   
+  
+  // change mux selector to write configurations
+	switch_muxes(configuration);
+	write_configurations();
+
+	// change mux selector to give the regfile inputs control to design
+	switch_muxes(Design);
+	configuration_done = 1'b1;
+	#(CLK_PERIOD)
+	configuration_done = 1'b0;
+
+	i_i3c_i2c_sel_tb  = 1'b1;
+    i_controller_en_tb 	= 1'b1;	
+    //check_output(); //temporary to check enthdr ccc output
+
+#(CLK_PERIOD)
+    // first data word preamble
+@(negedge DUT.CCC_Handler.o_rx_en )
+	sda_drive = 'b0;
+  #(4*CLK_PERIOD)
+    sda_drive = 'bz;
+
+
+#(CLK_PERIOD)
+    // second data word preamble
+@(negedge DUT.CCC_Handler.o_rx_en )
+	sda_drive = 'b0;
+  #(4*CLK_PERIOD)
+    sda_drive = 'b1;	 
+  // the data word is 1111_1111_1111_1111 and parity bits are :
+  #(4*16 *CLK_PERIOD) 
+  // PA1 = 0
+   sda_drive = 'b0;
+   #(4*CLK_PERIOD)
+   //PA0 = 1
+   sda_drive = 'b1;
+   #(4*CLK_PERIOD)
+   // CRC pre 01
+   sda_drive = 'b0;
+   #(4*CLK_PERIOD)
+   //PA0 = 1
+   sda_drive = 'b1;
+   #(4*CLK_PERIOD)
+   //C token 1100
+   sda_drive = 'b1;
+   #(4*CLK_PERIOD)
+   sda_drive = 'b1;
+   #(4*CLK_PERIOD)
+   sda_drive = 'b0;
+   #(4*CLK_PERIOD)
+   sda_drive = 'b0;
+   #(4*CLK_PERIOD)
+
+   // CRC value for data FF = 01010
+   sda_drive = 'b0;
+   #(4*CLK_PERIOD)
+   sda_drive = 'b1;
+   #(4*CLK_PERIOD)
+   sda_drive = 'b0;
+   #(4*CLK_PERIOD)
+   sda_drive = 'b1;
+   #(4*CLK_PERIOD)
+   sda_drive = 'b0;
+   #(4*CLK_PERIOD)
+   sda_drive = 'bz;
+
+
+
+	//<-------------------------TEST CASE 3 ----------------------->//
+	//<            Mode --> HDR, TOC = 1(exit), CP = 1 (CCC) ,Direct CCC :ENEC       >//
+
+
+
+    RAND_CMD_ATTR  = 'd1  ;
+    // DATA LENGTH = {DATA_FOUR,DATA_THREE}	== 2 
+    RAND_DTT       = 'd1   ;  // makes DBP = 0 and SRE = 0  	>>>>>> 		{DBP,SRE} = DTT[3:1]
+    RAND_RnW       = 1'b0  ;
+    RAND_CMD       = 8'h80 ;
+    RAND_TOC       = 1'b1 ;
+
+
+
+    configuration_done = 0;
+
+	#(CLK_PERIOD)
+   @(DUT.frame_counter_hdr.o_cccnt_last_frame == 'b1)
+   
+  
+  // change mux selector to write configurations
+	switch_muxes(configuration);
+	write_configurations();
+
+	// change mux selector to give the regfile inputs control to design
+	switch_muxes(Design);
+	configuration_done = 1'b1;
+	#(CLK_PERIOD)
+	configuration_done = 1'b0;
+
+	i_i3c_i2c_sel_tb  = 1'b1;
+    i_controller_en_tb 	= 1'b1;	
+    //check_output(); //temporary to check enthdr ccc output
+
+#(CLK_PERIOD)
+    // first data word preamble
+@(negedge DUT.CCC_Handler.o_rx_en )
+	sda_drive = 'b0;
+  #(4*CLK_PERIOD)
+    sda_drive = 'bz;
+
+
+#(CLK_PERIOD)
+    // second data word preamble
+@(negedge DUT.CCC_Handler.o_rx_en )
+	sda_drive = 'b0;
+  #(4*CLK_PERIOD)
+  	 sda_drive = 'bz;
+
+
+
+    #10000
+    $stop;
+end
+*/
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 

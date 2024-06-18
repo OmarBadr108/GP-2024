@@ -5,6 +5,13 @@ QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
 Top level modules:
 	tri_state_buf
 
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/Tx.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/Tx.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module tx
+
+Top level modules:
+	tx
+
 } {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/sda_handling.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/sda_handling.v
 QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
 -- Compiling module sda_handling
@@ -26,13 +33,6 @@ QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
 Top level modules:
 	i3c_timer_fsm
 
-} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/sys_package.sv {1 {vlog -work work -vopt -sv -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/sys_package.sv
-QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
--- Compiling package SYSTEM_PACKAGE
-
-Top level modules:
-	--none--
-
 } {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/sdr_mode.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/sdr_mode.v
 QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
 -- Compiling module sdr_mode
@@ -53,13 +53,6 @@ QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
 
 Top level modules:
 	DDR_NT
-
-} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/CCC_Handler.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/CCC_Handler.v
-QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
--- Compiling module CCC_Handler
-
-Top level modules:
-	CCC_Handler
 
 } {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/tri_state_buf_n.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/tri_state_buf_n.v
 QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
@@ -152,6 +145,13 @@ QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
 Top level modules:
 	open_drain_behav_model
 
+} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/new_i3c_engine.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/new_i3c_engine.v
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module i3c_engine
+
+Top level modules:
+	i3c_engine
+
 } {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/scl_generation.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/scl_generation.v
 QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
 -- Compiling module scl_generation
@@ -165,13 +165,6 @@ QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
 
 Top level modules:
 	reg_file
-
-} {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/new_i3c_engine.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/new_i3c_engine.v
-QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
--- Compiling module i3c_engine
-
-Top level modules:
-	i3c_engine
 
 } {} {}} C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/controller_RX.v {1 {vlog -work work -vopt -stats=none C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/controller_RX.v
 QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021

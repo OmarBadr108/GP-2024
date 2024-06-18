@@ -42,7 +42,7 @@ module I3C_TOP (
     input  wire          i_i3c_i2c_sel       , // sdr/i2c blocks selector
     input  wire          i_ccc_en_dis_hj     , // (TBD) for enable/disable events to prevent Bus-Initialization or DAA interruptions.
     
-    input wire           i_sclgen_rst_n , // new by badr 
+    //input wire           i_sclgen_rst_n , // new by badr 
 
     // Configurations signals
     input wire   [7:0]   i_regf_config  ,

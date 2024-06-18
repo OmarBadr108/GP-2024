@@ -809,8 +809,7 @@ always @(posedge i_clk or negedge i_rst_n)
                     o_tx_mode           <= 3'b010    ; //stop bit
                     o_pp_od             <= 1'b1      ; 
                     send_stop           <= 1'b0      ;
-                    //state                           <= STOP           ;
-                     state                           <= IDLE           ;
+                    state                           <= STOP           ; 
                   end
                  else 
                   begin

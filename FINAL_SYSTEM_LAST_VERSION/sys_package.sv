@@ -1,12 +1,12 @@
 package SYSTEM_PACKAGE ;
 
-    parameter CLK_PERIOD        = 20 ; 
+    //parameter CLK_PERIOD        = 20 ; 
     parameter REGF_CLK_PERIOD   = 10 ;
 	parameter configuration_mux = 1'b1 ;
     parameter Design_mux  	    = 1'b0 ;
     parameter config_location   = 12'd1000 ;
     parameter special_config    = 12'd450 ;
-
+    
 
 // CCC Handler states
 parameter  [4:0]   IDLE               = 5'd0  , // 0
@@ -90,11 +90,9 @@ parameter [2:0]
 
 
 // SCL staller parameters 
-parameter [4:0] restart_pattern_stall = 5'd11  , // according to restart pattern specs
-		restart_pattern_stall_special = 5'd11  , // according to restart pattern specs
-                exit_pattern_stall    = 5'd17 ; // according to exit pattern specs 
-
-
+parameter [4:0] restart_pattern_stall = 5'd7, 
+                restart_pattern_stall_special = 5'd7, 
+                exit_pattern_stall    = 5'd13 ;  
 
 // Error states parameters for ccc
 localparam [3:0] 
@@ -130,7 +128,7 @@ parameter [7:0]
         SETMRL_B    = 8'h0A ,
         Dummy_B 	= 8'h1F ;
 
-class configuration ;
+class configuration_class ;
 	// DWORD0
 	rand bit  [2:0] RAND_CMD_ATTR     ;
 	rand bit  [3:0] RAND_TID          ;
@@ -149,12 +147,12 @@ class configuration ;
 	rand bit  [7:0] RAND_DATA_TWO     ;
 	rand bit  [7:0] RAND_DATA_THREE   ;
 	rand bit  [7:0] RAND_DATA_FOUR    ;    
-    //rand bit 		RAND_SDA ; 			
+    rand bit 		RAND_SDA_DRIVE    ; 			
    
  
 	constraint CMD_ATTR {
 		//RAND_CMD_ATTR inside { 0 , 1 } ;
-		RAND_CMD_ATTR dist {1:/70 , 0:/30} ;
+		RAND_CMD_ATTR dist {1:/100 , 0:/0} ;
 	}
 	
 	constraint TID {
@@ -163,7 +161,7 @@ class configuration ;
 
 	constraint CMD {
 		RAND_CMD inside {8'h00 , 8'h01 , 8'h09 , 8'h0A , 8'h1F	 	 	 // broadcast 
-					    //,8'h80 , 8'h81 , 8'h89 , 8'h8A  				 // direct set
+					    ,8'h80 , 8'h81 , 8'h89 , 8'h8A  				 // direct set
 					    //,8'h8B , 8'h8C , 8'h90 , 8'h8E , 8'h8F  	 	 // direct get
 					    //,8'h8D	 	  		 		 	 	 	 	 // GETPID	 
 						 								   		} ;	
