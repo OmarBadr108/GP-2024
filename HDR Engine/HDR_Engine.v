@@ -38,16 +38,13 @@ module hdr_engine (
     input   wire            i_TOC                                 , //term of completion if 0 restart/ 1 exit needed for exit
     input   wire            i_CP                                  , // Cmnd present=1 if CCC 0 for Normal Transcation
     input   wire  [2:0]     i_MODE                                ,
-    //input   wire  [3:0]     i_TID                               ,
+
     //to_blocks
     output  reg             o_i3cengine_hdrengine_done            ,
     output  reg             o_ddrmode_en                          ,
     output  reg             o_ccc_en                              ,
-
     output  reg   [11:0]     o_regf_addr_special                  ,
-
     output  reg             o_cccnt_tx_special_data_mux_sel       , // by badr
-
     output  reg             o_tx_en_sel                           ,
     output  reg             o_rx_en_sel                           ,
     output  reg             o_tx_mode_sel                         ,
@@ -103,7 +100,6 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
     else 
       begin
       o_regf_addr_special             <= 12'd1000 ;
-        //current_state <= next_state;
         case (next_state)    //case (current_state)
 
           IDLE : begin
@@ -184,7 +180,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
 
             end
             else if ((!i_TOC_temp && i_ccc_done) && (i_MODE_temp == 'd6)) begin
-              ccc_done                      <= 1'b0 ; //******signal 3mltha 3shan a3rf arg3 ll ddrmode*//////
+              ccc_done                      <= 1'b0 ; 
               o_ccc_en                      <= 1'b0 ;
               o_regf_addr_special           <= 12'd1000;
               o_i3cengine_hdrengine_done    <= 1'b0 ;
@@ -200,7 +196,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                     ccc_done   <= 1'b1 ;
                     o_regf_addr_special <= 12'd450; //go to special address to get dummy value
                     o_ccc_en   <= 1'b1 ;
-                    next_state <= CCC ; ////********lma yru7 y3ml al dummy hwdeh ddr azay*******//////////
+                    next_state <= CCC ; 
                   end
                   else
                     begin
