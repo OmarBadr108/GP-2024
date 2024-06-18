@@ -1178,7 +1178,7 @@ wire tgt_sda_handle_en ;
 wire tgt_deser_s_data ;
 wire tgt_sdahnd_sda;
 
-ENTHDR_TGT u1_enthdr (
+/*ENTHDR_TGT u1_enthdr (
  .i_sys_clk   (sys_clk_50mhz),
  .i_sys_rst   (i_sdr_rst_n),
  .i_enigne_en (i_tgt_engine_en), 
@@ -1192,7 +1192,7 @@ ENTHDR_TGT u1_enthdr (
  . o_sda_handle_en(tgt_sda_handle_en), 
  . o_engine_done(o_tgt_engine_done) 
 );
-
+*/
 
 
 /*

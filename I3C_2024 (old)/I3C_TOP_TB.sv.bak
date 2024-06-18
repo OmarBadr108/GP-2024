@@ -50,11 +50,11 @@ int cycle_count ;
     reg [1:0] RAND_RESERVED  = 'd0   ;
     reg [2:0] RAND_DTT       = 'd1   ;
     reg [2:0] RAND_MODE      = 'd6   ;
-    reg       RAND_RnW       = 1'b0  ; // write   
+    reg       RAND_RnW       = 1'b1  ; // 0: write   1:READ  
     reg       RAND_WROC      = 1'd0  ;
-    reg       RAND_TOC       = 1'b1  ;
-    reg [7:0] RAND_DEF_BYTE  = 'd1   ;
-    reg [7:0] RAND_DATA_TWO  = 'd2   ;
+    reg       RAND_TOC       = 1'b0  ;
+    reg [7:0] RAND_DEF_BYTE  = 'd0   ;
+    reg [7:0] RAND_DATA_TWO  = 'b1111_0010   ;
     reg [7:0] RAND_DATA_THREE= 'd3   ;
     reg [7:0] RAND_DATA_FOUR = 'd4   ;
 
@@ -65,10 +65,17 @@ always #(CLK_PERIOD/2) i_sdr_clk_tb = ~i_sdr_clk_tb;
 // locally driven value
 assign sda_tb   = sda_drive 			;
 
+parameter DATA_1 = 8'b1010_0101;
+parameter DATA_2 = 8'b0101_1111;
+parameter TOKEN     		= 4'b1100;
+parameter  CRC = 4'b00110;
+
 initial begin
 
 	initialize();
 	reset();
+	  RAND_CP                       = 0     ;
+      RAND_DTT       				= 'd2   ;
 
 	// change mux selector to write configurations
 	switch_muxes(configuration);
@@ -78,7 +85,7 @@ initial begin
 	switch_muxes(Design);
 
 /*
-			//<-------------------------TEST CASE 1 ----------------------->//
+	//<-------------------------TEST CASE 1 ----------------------->//
 			//<            Mode --> HDR, TOC = 1, CP = 1 (CCC) ,Broadcast CCC :ENEC       >//
 		reg       RAND_CP        = 1     ;
 
@@ -133,11 +140,11 @@ i_controller_en_tb = 1'b0;
   
 */
 /////////////////////////////////////////////NT Test////////////////////////////////////////////////
-								//<-------------------------TEST CASE 1 ----------------------->//
-										//<            Mode --> HDR, TOC = 1, CP = 0 (NT)       >//
-    RAND_CP                       = 0     ;
+			  //<-------------------------TEST CASE 1 ----------------------->//
+				 //<            Mode --> HDR, TOC = 1, CP = 0 (NT) WRITE       >//
+
    	i_i3c_i2c_sel_tb     			    = 1'b1;
-    i_controller_en_tb 						= 1'b1;
+   /* i_controller_en_tb 						= 1'b1;
 
     check_output(); //temporary to check enthdr ccc output
 
@@ -149,18 +156,129 @@ i_controller_en_tb = 1'b0;
 
 
     #(3*CLK_PERIOD)
-		   @(posedge DUT.DDR_NT.o_rx_en )
-			sda_drive = 'b0;
+		  @(posedge DUT.DDR_NT.o_rx_en )
+		  #
+		  (CLK_PERIOD)
+			sda_drive = 'b1;
 		  #(4*CLK_PERIOD)
 		    sda_drive = 'bz;
+////////////////////////////////////////////////////////////////////////////////////////////////////
+*/
+/////////////////////////////////////////////NT Test////////////////////////////////////////////////
+			  //<-------------------------TEST CASE 1 ----------------------->//
+				 //<            Mode --> HDR, TOC = 1, CP = 0 (NT) READ       >//
 
+   	i_i3c_i2c_sel_tb     			    = 1'b1;
+    i_controller_en_tb 						= 1'b1;
 
+    check_output(); //temporary to check enthdr ccc output
+
+		// first second preamble for data word
+		@(posedge DUT.DDR_NT.o_rx_en )
+			sda_drive = 'b0;
+		  #(4*CLK_PERIOD)
+		    send_data(DATA_1,DATA_2,CRC);
+		     sda_drive = 1'bz;
+
+/*
+    #(3*CLK_PERIOD)
+		  @(posedge DUT.DDR_NT.o_rx_en )
+		  #
+		  (CLK_PERIOD)
+			sda_drive = 'b1;
+		  #(4*CLK_PERIOD)
+		    sda_drive = 'bz;*/
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
     #5000
     $stop;
 end
+
+
+task send_data(input bit  [7:0] data_1,data_2,input bit [4:0] crc);
+    begin
+        bit par [15:0] ;
+
+        for(int i=0; i<8 ; i++) 
+           begin
+                   sda_drive = data_1['d7 - i];
+                #(4*CLK_PERIOD);
+           end
+
+        // check data 1
+           @(DUT.RX.o_ddrccc_rx_mode_done == 1)
+
+                   if(DUT.RX.o_regfcrc_rx_data_out == data_1)
+                    begin
+                        $display(" Correct: serial input data is %b data sampled by rx is %b ", data_1,DUT.RX.o_regfcrc_rx_data_out);
+                    end 
+                else
+                begin
+                     $display(" Wrong: serial input data is %b data sampled by rx is %b ", data_1,DUT.RX.o_regfcrc_rx_data_out);
+                 end 
+
+
+
+
+        for(int i=0; i<8 ; i++) 
+           begin
+                   sda_drive = data_2['d7 - i];
+                #(4*CLK_PERIOD);
+           end
+
+        // check data 2
+           @(DUT.RX.o_ddrccc_rx_mode_done == 1)
+
+                   if(DUT.RX.o_regfcrc_rx_data_out == data_2)
+                    begin
+                        $display(" Correct: serial input data is %b data sampled by rx is %b ", data_2,DUT.RX.o_regfcrc_rx_data_out);
+                    end 
+                else
+                begin
+                     $display(" Wrong: serial input data is %b data sampled by rx is %b ", data_2,DUT.RX.o_regfcrc_rx_data_out);
+                 end 
+
+        // sending 2 parity bits of data 1 and data 2
+           //@(DUT.RX.o_ddrccc_rx_mode_done == 1)
+
+                sda_drive = 'd0;
+                #(4*CLK_PERIOD);
+                sda_drive = 'd1;
+
+                #(4*CLK_PERIOD);
+
+                //   sending 2 preamble bits of crc
+                sda_drive = 'd0;
+               	 #(4*CLK_PERIOD);
+                sda_drive = 'd1;
+                 #(4*CLK_PERIOD);
+            
+
+                //   sending crc token
+	   			 for (int i=0 ; i<4 ; i=i+1) //3 bits 
+       			  begin
+             		 sda_drive = TOKEN['d3-i] ; 
+             		 #(4*CLK_PERIOD); 
+       			  end
+ 			       
+
+                //   sending crc value 
+ 			     for(int i=0; i<5 ; i++) 
+                       begin
+                           sda_drive = crc['d4 - i];
+                        #(4*CLK_PERIOD);
+                       end
+                     
+ 
+    end
+endtask
+//////////////////////////////////////////// selector(cmd word) + data word(data) ///////////////////////////
+
+
+
+
 pullup(sda_tb);
 //-----------------------------     Tasks       -------------------------------------//
 

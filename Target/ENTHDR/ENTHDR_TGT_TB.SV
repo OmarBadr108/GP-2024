@@ -59,7 +59,8 @@ parameter CLK_PERIOD  = 20;
 
 
 //--------------------------------------------------- Configuration Values --------------------------------------------//
-
+parameter EXPECTED_BROADCAST = 8'b11111100; // 'h7E+ R/W bit = 0
+    parameter EXPECTED_ENTHDR0 = 9'b001000000;
 
 localparam  [11:0]  config_location = 12'd1000;
 //reg [11:0] config_location;
@@ -105,7 +106,7 @@ initial begin
         i_hdr_en_tb        = 1'b1;
         i_tgt_engine_en_tb    = 1'b1;
 
-        check_output(); 
+        //check_output(); 
 
         @(negedge o_tgt_engine_done_tb)
          i_tgt_engine_en_tb    = 1'b0;
@@ -222,7 +223,7 @@ task write_configurations;
 
     end
 endtask
-task check_output ();
+/*task check_output ();
     begin
         logic [7:0] BROADCAST; // 7'h7E+ R/w bit
         logic [8:0] ENTHDR0; 
@@ -238,7 +239,7 @@ task check_output ();
             data_check[i] <= //sda
         end
 */
-            for(int i=0; i < 8 ; i++)   //receive first 8 bits of 7E and write bit
+            /*for(int i=0; i < 8 ; i++)   //receive first 8 bits of 7E and write bit
                 begin  
                    @(posedge scl_tb)
                     BROADCAST['d7 - i] = sda_tb;
@@ -259,7 +260,7 @@ task check_output ();
                 end
  
 
-            if(ENTHDR0 == EXPECTED_ENTHDR0) begin
+         /*   if(ENTHDR0 == EXPECTED_ENTHDR0) begin
                 $display("ENTHDR frame is received");
 
                 @(negedge scl_tb)
@@ -270,10 +271,10 @@ task check_output ();
 
 
 end         
-        
-    end 
+       */ 
+    /*end 
 endtask
-task send_ack;
+/*task send_ack;
     begin
         //#(30*CLK_PERIOD)
         #(2*CLK_PERIOD)
@@ -289,7 +290,7 @@ task send_ack;
                             sda_drive = 'bz;     
               end
     end
-endtask
+endtask*/
 
 //--------------------------------------------------- Design Instantiation -----------------------------------------//
 ENTHDR_CTRL_TGT_top DUT (

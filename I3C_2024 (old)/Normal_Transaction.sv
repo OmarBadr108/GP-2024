@@ -288,11 +288,11 @@ always @(posedge i_sys_clk or negedge i_sys_rst)
 		      parity	: begin 
 
 		        if (i_rx_mode_done | i_tx_mode_done)
-		          begin
+		        begin
 
-				    if (Parity_data_seq)begin	
-				          		 
-
+				      if (Parity_data_seq)
+				       begin	
+				        
 				           if (!i_regf_wr_rd_bit)
 				             begin
 
@@ -304,35 +304,38 @@ always @(posedge i_sys_clk or negedge i_sys_rst)
 					        end
 
 
-				           else begin
+				           else 
+				           begin
 
-				            if (i_rx_error)             // may no sync due to delay one system clk cycle
-				             next_state = error;
-				             
-				            else 
-				              
-				             begin
+				                if (i_rx_error)             // may no sync due to delay one system clk cycle
+				                 next_state = error;
+				                 
+				                else 
+				                  
+				                 begin
 				 
-				           /* if(!i_frmcnt_last)
-		                   next_state = third_stage_first_data_pre ;
-				            else 
-				               next_state = fourth_stage_crc_first_pre ;*/
-				               
-							   next_state = third_stage_first_data_pre ;
-					           end
+				                	if(!i_frmcnt_last)
+		                       next_state = third_stage_first_data_pre ;
+				                	else 
+				                 	  next_state = fourth_stage_crc_first_pre ;
+				                   
+							            //next_state = third_stage_first_data_pre ;
+					               end
 							   
 				   
 
-					      end
+					          end
+					      
+
 					      end
 
 				    
 
 
-				    else 
-				    next_state =  sec_stage_first_data_pre ;
+				       else 
+				      next_state =  sec_stage_first_data_pre ;
 
-				    end
+				 		end
 
 
 		  else
