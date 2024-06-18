@@ -1027,13 +1027,13 @@ hdr_engine u_hdr_engine (
         .o_i3cengine_hdrengine_done             (hdrengine_exit)           ,
     .o_ddrmode_en                           (engine_ddr_enable)           ,
     .o_ccc_en                               (engine_ccc_enable)           ,
-<<<<<<< Updated upstream
+/*
     .o_int_regf_Dummy_conf          (o_int_regf_Dummy_conf),
     .o_regf_addr_special                    (engine_configuration_addr)    );
-=======
+*/
     .o_regf_addr_special                    (engine_configuration_addr) ,
     .o_crc_rx_tx_mux_sel_ccc_nt_sel          (crc_rx_tx_mux_sel_ccc_nt_sel)   );
->>>>>>> Stashed changes
+
      //output  reg   [7:0]     o_regf_addr_special
 
 

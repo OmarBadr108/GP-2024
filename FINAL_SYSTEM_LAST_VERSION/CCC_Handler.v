@@ -102,10 +102,10 @@ output reg [3:0]  o_regf_ERR_STATUS  ,
 output reg        o_crc_en_rx_tx_mux_sel,
 output reg        o_crc_data_rx_tx_valid_sel,
 output reg        o_crc_data_tx_rx_mux_sel,
-output wire       o_crc_last_byte_tx_rx_mux_sel
+output wire       o_crc_last_byte_tx_rx_mux_sel,
 
-output reg        o_en_mux           ,  //  for CCC handler environment only for crc muxes btn tx and rx   ( 1 for tx and 0 for rx 
-output reg        o_crc_rx_tx_mux_sel_ccc
+//output reg        o_en_mux           ,  //  for CCC handler environment only for crc muxes btn tx and rx   ( 1 for tx and 0 for rx 
+output reg        o_crc_rx_tx_mux_sel_ccc 
 
 /*output reg        o_crc_rx_tx_mux_sel_ccc,
 output reg        //o_crc_data_rx_tx_valid_sel,
