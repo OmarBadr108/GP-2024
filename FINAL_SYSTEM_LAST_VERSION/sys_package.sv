@@ -86,8 +86,19 @@ parameter [2:0]
                  parity_check        = 3'd6 ,
                  deserializing_byte  = 3'd3 ,
                  check_c_token_CRC   = 3'd7 ,
-                 check_value_CRC     = 3'd2 ;
-
+                 check_value_CRC     = 3'd2 ,
+                 ERROR_RX            = 3'b100  ;
+/*                 
+/////////////////////////////////rx modes////////////18 / 6 / 2024 ///////
+localparam [2:0]
+                     PREAMBLE            = 3'b000  ,
+                     CRC_PREAMBLE        = 3'b001  ,
+                     DESERIALIZING_BYTE  = 3'b011  ,
+                     CHECK_TOKEN         = 3'b111  ,
+                     CHECK_PAR_VALUE     = 3'b110  ,
+                     CHECK_CRC_VALUE     = 3'b010  ,
+                     ERROR               = 3'b100  ;
+*/
 
 // SCL staller parameters 
 parameter [4:0] restart_pattern_stall = 5'd7, 
@@ -168,7 +179,7 @@ class configuration_class ;
 	}
 
 	constraint CP {
-		RAND_CP == 1  ;	
+		RAND_CP inside {1}  ;	
 	}
 
 	constraint DEV_INDEX {
@@ -189,7 +200,9 @@ class configuration_class ;
 
 	constraint RnW {
 		RAND_RnW == ((RAND_CMD == 8'h00)|(RAND_CMD == 8'h01)|(RAND_CMD == 8'h09)|(RAND_CMD ==8'h0A)|
-					 (RAND_CMD == 8'h80)|(RAND_CMD == 8'h81)|(RAND_CMD == 8'h89)|(RAND_CMD ==8'h8A)|(RAND_CMD ==8'h1F))? 0 : 1 ;	
+					 (RAND_CMD == 8'h80)|(RAND_CMD == 8'h81)|(RAND_CMD == 8'h89)|(RAND_CMD ==8'h8A)|(RAND_CMD ==8'h1F) 
+					 | (RAND_CP == 0)
+					 )? 0 : 1 ;	
 	}
 
 	constraint WROC {

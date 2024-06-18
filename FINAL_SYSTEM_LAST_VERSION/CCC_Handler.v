@@ -195,8 +195,9 @@ parameter [2:0]
                  parity_check        = 3'd6 ,
                  deserializing_byte  = 3'd3 ,
                  check_c_token_CRC   = 3'd7 ,
-                 check_value_CRC     = 3'd2 ;
-  
+                 check_value_CRC     = 3'd2 ,
+                 ERROR_RX            = 3'b100  ;
+
 // SCL staller parameters 
 parameter [4:0] restart_pattern_stall = 5'd7, 
                 restart_pattern_stall_special = 5'd7, 
@@ -470,10 +471,10 @@ end
                     o_crc_data_rx_tx_valid_sel = 1'b0 ;
                     o_crc_data_tx_rx_mux_sel   = 1'b0 ;
 
-                    if (i_tx_mode_done && !(i_frmcnt_last_frame || (Direct_Broadcast_n_del && first_time))) begin   
+                    if (i_tx_mode_done && !(i_frmcnt_last_frame || (Direct_Broadcast_n && first_time))) begin   
                         next_state = RNW ;
                     end 
-                    else if ((i_tx_mode_done || (i_rx_mode_done && !i_rx_error)) && (i_frmcnt_last_frame  || (Direct_Broadcast_n_del && first_time))) begin  // at reading operation with matched data length
+                    else if (    (i_tx_mode_done || (i_rx_mode_done && !i_rx_error))   &&    (i_frmcnt_last_frame  || (Direct_Broadcast_n_del && first_time))   ) begin  // at reading operation with matched data length
                         next_state = C_TOKEN_STATE ;
                     end
                     else if ((i_tx_mode_done || (i_rx_mode_done && i_rx_error)) && (i_frmcnt_last_frame  || (Direct_Broadcast_n_del && first_time))) begin  // at reading operation with matched data length
@@ -1389,8 +1390,30 @@ end
             end
 
 
+            // 18/6/2024 correct state for final verification 
+            ERROR : begin      // controller error state 
+                
+                o_tx_en = 1'b0 ;
+                o_rx_en = 1'b1 ;
+                o_rx_mode = ERROR_RX ;
 
- 
+                if(i_rx_mode_done) begin 
+                    next_state      = EXIT_PATTERN ; // may issue exit or restart pattern .. but conditions ?
+                    o_tx_en         = 1'b1 ;
+                    o_crc_en_rx_tx_mux_sel     = 1'b0 ;
+                    o_crc_data_rx_tx_valid_sel = 1'b0 ;
+                    o_crc_data_tx_rx_mux_sel   = 1'b0 ; 
+                    o_tx_mode       = exit_pattern ;
+                    o_sclstall_en   = 1'b1 ;
+                    o_sclstall_code = exit_pattern_stall ;
+                end 
+                else begin 
+                    next_state = ERROR ;
+                end 
+
+            end 
+
+ /*         // u have done ur job now boss <3
             ERROR : begin      // controller error state 
                 o_bitcnt_err_rst = 1'b1 ; // active hight rst to count specially for error state
 
@@ -1410,7 +1433,7 @@ end
                 end 
 
             end 
-
+*/
             
 
             FINISH : begin 

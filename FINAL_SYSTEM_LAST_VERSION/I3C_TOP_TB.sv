@@ -6,8 +6,8 @@ import SYSTEM_PACKAGE ::*;
 module I3C_TOP_TB ();
 
 //-----------------------------Testbench signals-------------------------------------//
-  logic         i_sdr_clk_tb           		; // system clk
-  logic         i_sdr_rst_n_tb         		; // asynch neg edge reset
+  bit         i_sdr_clk_tb           		; // system clk
+  bit         i_sdr_rst_n_tb         		; // asynch neg edge reset
   logic         i_controller_en_tb     		; // from device configuration of Controller/Target role
   logic         i_i3c_i2c_sel_tb       		; // sdr/i2c blocks selector
   logic         i_ccc_en_dis_hj_tb     		; //2023: (TBD) for enable/disable events to prevent Bus-Initialization or DAA interruptions.
@@ -68,7 +68,7 @@ assign sda_tb   = sda_drive 			;
  		reg [4:0] RAND_DEV_INDEX     ;
  		reg [1:0] RAND_RESERVED      ;
  		reg [2:0] RAND_DTT           ; 	 	 // or {DBP,SRE,reserved}
- 		reg [2:0] RAND_MODE = 'd6    ;
+ 		reg [2:0] RAND_MODE 	     ;
  		reg  	  RAND_RnW           ;
  		reg   	  RAND_WROC          ;
  		reg 	  RAND_TOC           ;
@@ -82,28 +82,24 @@ assign sda_tb   = sda_drive 			;
     	/////////////////////// SDA Line //////////////////////
     	reg  	  RAND_SDA_DRIVE ;
 
+
+    	reg TOC_old ;
+
     	integer i ;
+    always @(DUT.frame_counter_hdr.o_cccnt_last_frame) begin 
+    	if(DUT.frame_counter_hdr.o_cccnt_last_frame == 'b1) begin 
+			TOC_old = RAND_TOC ;
+		end 
+    end 
 
     initial begin 
-    	
+
+    	reset();
 		initialize();
-		reset();
 		conf_obj = new();
 
-		switch_muxes(configuration);
-		write_configurations();
-		switch_muxes(Design);
-	
-
-    	//i_controller_en_tb = 1'b1 ;
-		// allocation of the object 
-		
-		#(CLK_PERIOD);
-		i_controller_en_tb = 1'b1;
-		i_i3c_i2c_sel_tb   = 1'b1 ;
-
-		check_output(); //temporary to check enthdr ccc output
-		assert(conf_obj.randomize());  			
+		for (i=0 ; i<10000 ; i++) begin 
+			assert(conf_obj.randomize());
 
 			RAND_CMD_ATTR  = conf_obj.RAND_CMD_ATTR  ;
 			RAND_TID       = conf_obj.RAND_TID       ;
@@ -121,58 +117,45 @@ assign sda_tb   = sda_drive 			;
 			RAND_DATA_TWO   = conf_obj.RAND_DATA_TWO  ;
 			RAND_DATA_THREE = conf_obj.RAND_DATA_THREE; 
 			RAND_DATA_FOUR  = conf_obj.RAND_DATA_FOUR ; 
-
-
-    	for (i=0 ; i<100 ; i++) begin
-
-			assert(conf_obj.randomize());  			
-
-			RAND_CMD_ATTR  = conf_obj.RAND_CMD_ATTR  ;
-			RAND_TID       = conf_obj.RAND_TID       ;
-			RAND_CMD       = conf_obj.RAND_CMD       ;
-			RAND_CP        = conf_obj.RAND_CP        ;
-			RAND_DEV_INDEX = conf_obj.RAND_DEV_INDEX ;
-			RAND_RESERVED  = conf_obj.RAND_RESERVED  ;
-			RAND_DTT       = conf_obj.RAND_DTT       ;
-			RAND_MODE      = conf_obj.RAND_MODE      ;
-			RAND_RnW       = conf_obj.RAND_RnW       ;
-			RAND_WROC      = conf_obj.RAND_WROC      ;
-			RAND_TOC       = conf_obj.RAND_TOC       ;
-
-			RAND_DEF_BYTE   = conf_obj.RAND_DEF_BYTE  ;
-			RAND_DATA_TWO   = conf_obj.RAND_DATA_TWO  ;
-			RAND_DATA_THREE = conf_obj.RAND_DATA_THREE; 
-			RAND_DATA_FOUR  = conf_obj.RAND_DATA_FOUR ; 
-			
 			//RAND_SDA_DRIVE = conf_obj.RAND_SDA_DRIVE ;
 
-			// change mux selector to write configurations
 			switch_muxes(configuration);
 			write_configurations();
 			switch_muxes(Design);
-			i_controller_en_tb = 1'b1;	
-			check_output();
+			i_controller_en_tb = 1'b1;
+			i_i3c_i2c_sel_tb   = 1'b1 ;
 
-/*			
-			@(DUT.frame_counter_hdr.o_cccnt_last_frame == 'b1)
-   
-  
-  			// change mux selector to write configurations
-			switch_muxes(configuration);
-			write_configurations();
+			// if first iteration i must go to enter HDR
+			if (i == 0) begin 
+				wait (DUT.enthdr_en);
+				check_output(); // to check enthdr ccc output
+				// write new configuration
+				@(DUT.frame_counter_hdr.o_cccnt_last_frame == 'b1 && (DUT.CCC_Handler.current_state == PARITY_DATA || DUT.DDR_NT.current_state == parity));
+				$display("this is testcase no. %d",i,$time);
+			end 
 
-			// change mux selector to give the regfile inputs control to design
-			switch_muxes(Design);
-*/		
+			else if (TOC_old) begin
+				wait (DUT.enthdr_en); 
+				check_output(); // to check enthdr ccc output
+				// write new configuration
+				@(DUT.frame_counter_hdr.o_cccnt_last_frame == 'b1 && (DUT.CCC_Handler.current_state == PARITY_DATA || DUT.DDR_NT.current_state == parity));
+				$display("this is testcase no. %d with TOC = 1 ",i,$time);
+				
+		  	end 
 
-			@(posedge (DUT.ccc_engine_done || DUT.ddr_engine_done ));
-			$display("this is testcase no. %d",i,$time);
-			#(2*SYS_CLK_PERIOD) ;
+		  	else if (!TOC_old) begin 
+		  		@(DUT.frame_counter_hdr.o_cccnt_last_frame == 'b1 && (DUT.CCC_Handler.current_state == PARITY_DATA || DUT.DDR_NT.current_state == parity));
+		  		$display("this is testcase no. %d with TOC = 0 ",i,$time);
+		  	end 
 		end	
+
+
+		//@(posedge (DUT.ccc_engine_done || DUT.ddr_engine_done ));
+			$display("this is loop is done  %t",$time);
 		#(50*SYS_CLK_PERIOD) ;		
 		$stop ;
 	end
-/*
+
 //////////////////////////////////////////////  General driver /////////////////////////////////
 
 	initial begin 
@@ -190,12 +173,9 @@ assign sda_tb   = sda_drive 			;
 				#(2*SYS_CLK_PERIOD) ;
 				sda_drive = 1'bz ;
 			end
-			else begin
-				sda_drive = 1'bz ;
-			end
 		end
 	end 
-*/
+
    
 	// deserialization checking 
 
@@ -442,11 +422,10 @@ task check_output ();
 			 	end
 
 			@(negedge scl_tb)
-			if(BROADCAST == EXPECTED_BROADCAST)
-			 begin
-					$display("Broadcast frame is received");
+			assert (BROADCAST == EXPECTED_BROADCAST) $display("Broadcast frame is RECIEVED");
+			else 									 $display("Broadcast frame is WRONG");
 					send_ack();
-			 end
+			 
 
 			for(int i=0; i < 9 ; i++)   //receive first 8 bits of 7E and write bit
 			 	begin  
@@ -455,40 +434,21 @@ task check_output ();
 			 	end
  
 
-			if(ENTHDR0 == EXPECTED_ENTHDR0) begin
-				$display("ENTHDR frame is received");
+			assert (ENTHDR0 == EXPECTED_ENTHDR0) $display("ENTHDR frame is RECIEVED");
+			else 								 $display("ENTHDR frame is WRONG");			
 
-				@(negedge scl_tb)
-				#(CLK_PERIOD)
-				frame_ended = 1'b1;
-				#(CLK_PERIOD)
-				frame_ended = 1'b0;
-
-
-end	   		
+	   		
 		
 	end 
 endtask
 
 task send_ack;
     begin 
-    														$display(" one %0t",$time);
         #(SYS_CLK_PERIOD)
-        												$display(" two %0t",$time);
         if(!scl_tb) begin
-        														$display(" three%0t",$time);      //drive ack when scl is low
         	sda_drive = 1'b0; //ack bit
-        													$display(" four %0t",$time);
         	#(4*SYS_CLK_PERIOD) ;
-        														$display(" five %0t",$time);
         	sda_drive =  1'bz ;
-        												$display("six %0t",$time);
-        	/*@(negedge scl_tb)  
-        	#(2*CLK_PERIOD)  
-
-        	if(!scl_tb) sda_drive = 'bz;
-        end
-        */
     	end
     end 
 endtask
@@ -579,9 +539,91 @@ I3C_TOP DUT (
 
 
 
+	covergroup RAND_VALUES @(posedge i_sdr_clk_tb) ;
+ 
+		RAND_CMD_ATTR_cp : coverpoint RAND_CMD_ATTR iff (i_sdr_rst_n_tb)
+		{
+			bins regular_0   = {0};
+			bins immediate_1 = {1};
+		}
+
+		RAND_CMD_cp : coverpoint RAND_CMD iff (i_sdr_rst_n_tb)
+		{
+			bins ENEC_D_bin      = {8'h80};
+			bins DISEC_D_bin     = {8'h81};
+			bins SETMWL_D_bin    = {8'h89};
+			bins SETMRL_D_bin    = {8'h8A};
+			bins GETMWL_D_bin    = {8'h8B};
+			bins GETMRL_D_bin    = {8'h8C};
+			bins GETSTATUS_D_bin = {8'h90};
+			bins GETBCR_D_bin    = {8'h8E};
+			bins GETDCR_D_bin    = {8'h8F};
+			bins ENEC_B_bin      = {8'h00};
+			bins DISEC_B_bin     = {8'h01};
+			bins SETMWL_B_bin    = {8'h09};
+			bins SETMRL_B_bin    = {8'h0A};
+			bins Dummy_B_bin     = {8'h1F};
+			
+		}
+
+		RAND_CP_cp : coverpoint RAND_CP iff (i_sdr_rst_n_tb)
+		{
+			bins Normal_transaction_bin = {0};
+			bins CCC_Handler_bin 		= {1};
+		}
+		
+		RAND_DEV_INDEX_cp : coverpoint RAND_DEV_INDEX iff (i_sdr_rst_n_tb)
+		{
+			bins low  = {[0:8]};
+			bins mid  = {[9:20]};
+			bins high = {[21:31]};
+		}
+
+		RAND_DTT_cp : coverpoint RAND_DTT iff (i_sdr_rst_n_tb)
+		{
+			bins no_def_byte [] = {[0:4]};
+			ignore_bins def_byte [] = {[5:7]};
+		}
+
+		RAND_MODE_cp : coverpoint RAND_MODE iff (i_sdr_rst_n_tb)
+		{
+			bins HDR_mode_bin = {6};
+			illegal_bins none =  default ;
+		}
+
+		RAND_RnW_cp : coverpoint RAND_RnW iff (i_sdr_rst_n_tb)
+		{
+			bins Write  = {0} ;
+			bins Read   = {1} ;
+		}
+
+		RAND_TOC_cp : coverpoint RAND_TOC iff (i_sdr_rst_n_tb)
+		{
+			bins exit_patt    = {1} ;
+			bins restart_patt = {0} ;
+		}
+
+		RAND_DATA_THREE_cp : coverpoint RAND_DATA_THREE iff (i_sdr_rst_n_tb)
+		{
+			bins DATA_LEN_1 = {1} ;
+			bins DATA_LEN_2 = {2} ;
+			bins DATA_LEN_3 = {3} ;
+			bins DATA_LEN_4 = {4} ;
+		}
+
+		RAND_DATA_FOUR_cp : coverpoint RAND_DATA_FOUR iff (i_sdr_rst_n_tb)
+		{
+			bins ZERO = {0} ;
+		}
+
+	endgroup
+
+	RAND_VALUES RAND_VALUES_instance = new();
+		
 
 
 endmodule
+
 
 ///////////////////////////////////////////////////////////////// ended 17 / 6 / 2024 ////////////////////////////////////////////////////// 
 
