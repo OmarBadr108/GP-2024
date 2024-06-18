@@ -327,6 +327,10 @@ localparam [5:0] CCC_value_hi      = 7'd63 ,
         tmp_shift <= 10'd0 ;
         Direct_Broadcast_n_del <= 1'b0 ;
     end 
+    else if (next_state == IDLE) begin 
+        Direct_Broadcast_n_del <= 1'b0 ;
+        tmp_shift <= 10'd0 ;
+    end 
     else begin 
         if (i_engine_en) begin 
             tmp_shift[0] <= Direct_Broadcast_n ;
@@ -481,16 +485,44 @@ end
                     //o_crc_data_rx_tx_valid_sel = 1'b0 ;
                     o_crc_rx_tx_mux_sel_ccc   = 1'b0 ;
 
-                    if (i_tx_mode_done && !(i_frmcnt_last_frame || (Direct_Broadcast_n && first_time))) begin   
+                    
+
+                    ///////////////// first cmd word direct or broadcast that's the point of the delay >> always sees the first cmd as broadcast////////////////////////
+                    if (i_tx_mode_done && !i_frmcnt_last_frame && !Direct_Broadcast_n_del && first_time) begin   
                         next_state = RNW ;
-                    end 
-                    else if (    (i_tx_mode_done || (i_rx_mode_done && !i_rx_error))   &&    (i_frmcnt_last_frame  || (Direct_Broadcast_n_del && first_time))   ) begin  // at reading operation with matched data length
+                    end
+                    //////////////////////////////////////////////////////////
+
+                    ///////////////////////// first crc direct  ///////////////////////////
+                    else if (i_tx_mode_done && !i_frmcnt_last_frame && Direct_Broadcast_n_del && first_time) begin   
                         next_state = C_TOKEN_STATE ;
+                    end 
+                    //////////////////////////////////////////////////////////
+
+                    ////////////////////// Second cmd word direct //////////////
+                    else if (i_tx_mode_done && !i_frmcnt_last_frame && Direct_Broadcast_n_del && !first_time) begin   
+                        next_state = RNW ;
                     end
-                    else if ((i_tx_mode_done || (i_rx_mode_done && i_rx_error)) && (i_frmcnt_last_frame  || (Direct_Broadcast_n_del && first_time))) begin  // at reading operation with matched data length
-                        next_state = ERROR ;
-                        o_regf_ERR_STATUS = FRAME ;
-                    end
+                    //////////////////////////////////////////////////////////
+
+                    ///////////////////////// last crc direct ///////////////////////////
+                    else if (i_tx_mode_done && i_frmcnt_last_frame && Direct_Broadcast_n_del && !first_time ) begin   
+                        next_state = C_TOKEN_STATE ;
+                    end 
+                    //////////////////////////////////////////////////////////
+
+                    ///////////////////////// last crc broadcast ///////////////////////////
+                    else if (i_tx_mode_done && i_frmcnt_last_frame && !Direct_Broadcast_n_del && !first_time ) begin   
+                        next_state = C_TOKEN_STATE ;
+                    end 
+                    //////////////////////////////////////////////////////////
+
+                    ///////////////////////// last crc broadcast special for dummy case ///////////////////////////
+                    else if (i_tx_mode_done && i_frmcnt_last_frame && !Direct_Broadcast_n_del && first_time ) begin   
+                        next_state = C_TOKEN_STATE ;
+                    end 
+                    //////////////////////////////////////////////////////////
+
                     else begin 
                         next_state = PRE_CMD ;
                     end
@@ -506,12 +538,12 @@ end
                     //o_crc_rx_tx_mux_sel_ccc     = 1'b1 ;
                     //o_crc_data_rx_tx_valid_sel = 1'b1 ;
                     o_crc_rx_tx_mux_sel_ccc   = 1'b1 ;
-                    o_rx_mode                  = CRC_PREAMBLE ;   //o_rx_mode = parity_check ;
+                    o_rx_mode                 = CRC_PREAMBLE ;   //o_rx_mode = parity_check ;
 
-                    if ((i_rx_mode_done ) && i_frmcnt_last_frame) begin  // HENAAAAAAAAAAAAAA PUT THE CONDITION AFTER VERIFICATIONS (i_rx_mode_done && ! rx_err)
+                    if ((i_rx_mode_done && !i_rx_error) && i_frmcnt_last_frame) begin 
                         next_state = C_TOKEN_STATE ;
                     end
-                    else if (i_rx_mode_done ) begin  // at reading operation with matched data length    HENA BARDO PUT THE CONDITION (i_rx_mode_done && rx_err)
+                    else if (i_rx_mode_done && i_rx_error ) begin  // at reading operation with matched data length    HENA BARDO PUT THE CONDITION (i_rx_mode_done && rx_err)
                         next_state = ERROR ;
                         o_regf_ERR_STATUS = FRAME ;
                     end

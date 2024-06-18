@@ -163,7 +163,8 @@ class configuration_class ;
  
 	constraint CMD_ATTR {
 		//RAND_CMD_ATTR inside { 0 , 1 } ;
-		RAND_CMD_ATTR dist {1:/100 , 0:/0} ;
+		RAND_CMD_ATTR ==  ((RAND_CMD == 8'h00)|(RAND_CMD == 8'h01)|(RAND_CMD == 8'h09)|(RAND_CMD ==8'h0A)|
+					 (RAND_CMD == 8'h80)|(RAND_CMD == 8'h81)|(RAND_CMD == 8'h89)|(RAND_CMD ==8'h8A)|(RAND_CMD ==8'h1F) )? 1 : 0 ;
 	}
 	
 	constraint TID {
@@ -173,7 +174,8 @@ class configuration_class ;
 	constraint CMD {
 		RAND_CMD inside {8'h00 , 8'h01 , 8'h09 , 8'h0A , 8'h1F	 	 	 // broadcast 
 					    ,8'h80 , 8'h81 , 8'h89 , 8'h8A  				 // direct set
-					    //,8'h8B , 8'h8C , 8'h90 , 8'h8E , 8'h8F  	 	 // direct get
+					    //8'h8B 
+					    //, 8'h8C , 8'h90 , 8'h8E , 8'h8F  	 	 // direct get
 					    //,8'h8D	 	  		 		 	 	 	 	 // GETPID	 
 						 								   		} ;	
 	}
@@ -222,7 +224,7 @@ class configuration_class ;
 	}
 
 	constraint DATA_LENGTH {
-		RAND_DATA_THREE inside {1,2} ;	
+		RAND_DATA_THREE inside {2} ;	
 	}
 
 	constraint DATA_FOUR {
