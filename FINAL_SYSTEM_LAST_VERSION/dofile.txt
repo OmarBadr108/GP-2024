@@ -3,6 +3,6 @@ vlog I3C_TOP_TB.sv sys_package.sv Normal_Transaction.v bits_counter.v bits_count
 vsim -voptargs=+acc work.I3C_TOP_TB -cover
 
 do ./wave.do \
-# Save coverage data and run the simulation
-#coverage save CCC_Handler.ucdb -onexit
+Save coverage data and run the simulation
+coverage save I3C_TOP.ucdb -onexit
 run -all

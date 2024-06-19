@@ -28,6 +28,96 @@ R0
 R0
 R0
 R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
 !s11f vlog 2021.1 2021.01, Jan 19 2021
 13
 !s112 1.1
@@ -37,10 +127,10 @@ R0
 cModel Technology
 Z1 dC:/Users/omerb/OneDrive/Desktop/GP System/I3C_2024
 T_opt
-!s110 1718638435
-V[MR2VGQi>:9?1m]W6^3[z2
+!s110 1718734756
+V6=nfY20Umf=h[o0QE`Mm=0
 Z2 04 10 4 work I3C_TOP_TB fast 0
-=1-48a472837b0b-66705762-373-4cec
+=1-48a472837b0b-6671cfa4-249-3ba8
 Z3 !s124 OEM100
 Z4 o-quiet -auto_acc_if_foreign -work work +acc
 Z5 tCvgOpt 0
@@ -58,7 +148,7 @@ n@_opt1
 R6
 R1
 vbits_counter
-Z7 !s110 1718638428
+Z7 !s110 1718734742
 !i10b 1
 !s100 <`mUi0b_K?RJ35@=Eb4Iz2
 IcD=:[n?kUTM:O`CQcHaIb3
@@ -66,14 +156,14 @@ Z8 dC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_V
 Z9 w1715017740
 8bits_counter.v
 Fbits_counter.v
-!i122 423
+!i122 824
 L0 3 61
 Z10 VDg1SIo80bB@j0V0VzS_@n1
 Z11 OL;L;2021.1;73
 r1
 !s85 0
 31
-Z12 !s108 1718638428.000000
+Z12 !s108 1718734742.000000
 Z13 !s107 Tx.v|tri_state_buf_n.v|tri_state_buf.v|top_for_hj_test.v|top_for_crh_test.v|staller.v|sdr_mode.v|sda_handling.v|scl_generation.v|Rx.v|reg_file.v|push_pull_behav_model.v|open_drain_behav_model.v|new_i3c_engine.v|mux.v|main_ctrl_unit.v|IBI.v|i3c_top.v|i3c_timer_fsm.v|i2c_legacy_mode.v|hot_join.v|HDR_Engine.v|gen_mux.v|frame_counter_sdr.v|FRAME_COUNTER.v|ENTHDR.v|dynamic_address_assignment.v|crc.v|controller_TX.v|controller_RX.v|controller_crh.v|clk_divider.v|CCC_Handler.v|bits_counter_sdr.v|bits_counter.v|Normal_Transaction.v|sys_package.sv|I3C_TOP_TB.sv|
 Z14 !s90 -reportprogress|300|I3C_TOP_TB.sv|sys_package.sv|Normal_Transaction.v|bits_counter.v|bits_counter_sdr.v|CCC_Handler.v|clk_divider.v|controller_crh.v|controller_RX.v|controller_TX.v|crc.v|dynamic_address_assignment.v|ENTHDR.v|FRAME_COUNTER.v|frame_counter_sdr.v|gen_mux.v|HDR_Engine.v|hot_join.v|i2c_legacy_mode.v|i3c_timer_fsm.v|i3c_top.v|IBI.v|main_ctrl_unit.v|mux.v|new_i3c_engine.v|open_drain_behav_model.v|push_pull_behav_model.v|reg_file.v|Rx.v|scl_generation.v|sda_handling.v|sdr_mode.v|staller.v|top_for_crh_test.v|top_for_hj_test.v|tri_state_buf.v|tri_state_buf_n.v|Tx.v|+cover|-covercells|
 !i113 0
@@ -89,7 +179,7 @@ R8
 w1715019582
 8bits_counter_sdr.v
 Fbits_counter_sdr.v
-!i122 423
+!i122 824
 L0 33 73
 R10
 R11
@@ -106,14 +196,14 @@ R5
 vCCC_Handler
 R7
 !i10b 1
-!s100 j8^0Y7QK=M8SUhiJL0SU;2
-I=S`]clT`CMeBWQYI<2z@Z3
+!s100 2J;Z`=D43ml3DL^i`fK8I1
+I6[BZ5gNNAZ9z0^mmeM=<03
 R8
-w1718630287
+w1718733751
 8CCC_Handler.v
 FCCC_Handler.v
-!i122 423
-L0 46 1410
+!i122 824
+L0 46 1479
 R10
 R11
 r1
@@ -136,7 +226,7 @@ R8
 Z17 w1708289392
 8clk_divider.v
 Fclk_divider.v
-!i122 423
+!i122 824
 L0 32 22
 R10
 R11
@@ -159,7 +249,7 @@ R8
 Z18 w1711488480
 8controller_crh.v
 Fcontroller_crh.v
-!i122 423
+!i122 824
 L0 35 1282
 R10
 R11
@@ -182,7 +272,7 @@ R8
 R17
 8controller_RX.v
 Fcontroller_RX.v
-!i122 423
+!i122 824
 L0 36 193
 R10
 R11
@@ -205,7 +295,7 @@ R8
 w1716161862
 8controller_TX.v
 Fcontroller_TX.v
-!i122 423
+!i122 824
 L0 33 268
 R10
 R11
@@ -228,7 +318,7 @@ R8
 w1718154232
 8crc.v
 Fcrc.v
-!i122 423
+!i122 824
 L0 1 121
 R10
 R11
@@ -243,7 +333,7 @@ R15
 R16
 R5
 vdaa_tb
-!s110 1718626769
+!s110 1718719407
 !i10b 1
 !s100 PJI9<g@WGE0S2Qn8aFT0B2
 IEZTUib[ST;dRIS2L[@VnV1
@@ -251,14 +341,14 @@ R8
 w1715258612
 8C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/daa_tb.v
 FC:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/daa_tb.v
-!i122 372
+!i122 744
 L0 4 171
 R10
 R11
 r1
 !s85 0
 31
-!s108 1718626769.000000
+!s108 1718719407.000000
 !s107 C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/daa_tb.v|
 !s90 -reportprogress|300|-work|work|-vopt|-stats=none|C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/FINAL_SYSTEM_LAST_VERSION/daa_tb.v|
 !i113 0
@@ -267,14 +357,14 @@ R5
 vDDR_NT
 R7
 !i10b 1
-!s100 dS@S[D[O;BK@cbT:fD3Z10
-IHcJOB?aFWNUWMT6z`5<Xc1
+!s100 >2RQDd_MB`=E@caPllA9L1
+IK`R:LlaXUPE9LmEQ[G8bM1
 R8
-w1718581222
+Z19 w1718714172
 8Normal_Transaction.v
 FNormal_Transaction.v
-!i122 423
-L0 1 1421
+!i122 824
+L0 1 1422
 R10
 R11
 r1
@@ -321,7 +411,7 @@ R8
 R18
 8dynamic_address_assignment.v
 Fdynamic_address_assignment.v
-!i122 423
+!i122 824
 L0 34 397
 R10
 R11
@@ -344,7 +434,7 @@ R8
 w1715044228
 8ENTHDR.v
 FENTHDR.v
-!i122 423
+!i122 824
 L0 33 211
 R10
 R11
@@ -367,7 +457,7 @@ R8
 R9
 8FRAME_COUNTER.v
 FFRAME_COUNTER.v
-!i122 423
+!i122 824
 L0 2 55
 R10
 R11
@@ -390,7 +480,7 @@ R8
 w1715019654
 8frame_counter_sdr.v
 Fframe_counter_sdr.v
-!i122 423
+!i122 824
 L0 22 33
 R10
 R11
@@ -413,7 +503,7 @@ R8
 R17
 8mux.v
 Fmux.v
-!i122 423
+!i122 824
 L0 23 12
 R10
 R11
@@ -430,14 +520,14 @@ R5
 vhdr_engine
 R7
 !i10b 1
-!s100 MPn6lMdYn84ZX0R4NISXW1
-IMZadB3Cc:JM_8bRV[ag6K0
+!s100 QHY<W247CiNkY38f7`zj03
+IEB]Ra8n;>Kb<O@fm1bT:P0
 R8
-w1718626741
+R19
 8HDR_Engine.v
 FHDR_Engine.v
-!i122 423
-L0 32 335
+!i122 824
+L0 32 342
 R10
 R11
 r1
@@ -459,7 +549,7 @@ R8
 R17
 8hot_join.v
 Fhot_join.v
-!i122 423
+!i122 824
 L0 33 357
 R10
 R11
@@ -482,7 +572,7 @@ R8
 R18
 8i2c_legacy_mode.v
 Fi2c_legacy_mode.v
-!i122 423
+!i122 824
 L0 33 291
 R10
 R11
@@ -499,14 +589,14 @@ R5
 vi3c_engine
 R7
 !i10b 1
-!s100 H8knhD[^khMkjK6g5YS>72
-IIgVo@Zk<6mgA3fNX5PaEh2
+!s100 DKQDFmo01<ocm=6N7gRni2
+I;VNgPhHmjD8z]eag0:VmA3
 R8
-w1718157842
+w1718649664
 8new_i3c_engine.v
 Fnew_i3c_engine.v
-!i122 423
-L0 34 836
+!i122 824
+L0 34 837
 R10
 R11
 r1
@@ -528,7 +618,7 @@ R8
 w1714475410
 8i3c_timer_fsm.v
 Fi3c_timer_fsm.v
-!i122 423
+!i122 824
 L0 34 280
 R10
 R11
@@ -545,14 +635,14 @@ R5
 vI3C_TOP
 R7
 !i10b 1
-!s100 J4cAcYmig>?3Bh1:2_a]E2
-IT26]TO2U2_U453^Kgkai73
+!s100 jbTc_@Han^l0QB]2eHMZB1
+I`Xf_<TTfNn_R7TZoIYNkc3
 R8
-w1718626763
+w1718714317
 8i3c_top.v
 Fi3c_top.v
-!i122 423
-L0 38 1620
+!i122 824
+L0 38 1641
 R10
 R11
 r1
@@ -567,24 +657,24 @@ R16
 R5
 n@i3@c_@t@o@p
 vI3C_TOP_TB
-Z19 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
-Z20 DXx4 work 14 SYSTEM_PACKAGE 0 22 z1LZC]UUB]?;0>Rd<RDRX3
-DXx4 work 18 I3C_TOP_TB_sv_unit 0 22 :<FEa<Yh5QOa;m?]_DzMm0
+Z20 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+Z21 DXx4 work 14 SYSTEM_PACKAGE 0 22 4kKd`l_2@h?VhQk_G611>3
+DXx4 work 18 I3C_TOP_TB_sv_unit 0 22 _Ci91E`YEY@24PlkHVbJG3
 R7
 R10
 r1
 !s85 0
 !i10b 1
-!s100 lR]Cc=XNi@_WJ`S`Rjj^:3
-IFGbHW1TkYV2h6ZU?fGen[2
+!s100 <3K9mgSLkhTN[ABn=dCSR2
+IZRK^OlELh3WjRAP2AQUHU0
 !s105 I3C_TOP_TB_sv_unit
 S1
 R8
-Z21 w1718638424
-Z22 8I3C_TOP_TB.sv
-Z23 FI3C_TOP_TB.sv
-!i122 423
-L0 6 729
+Z22 w1718734738
+Z23 8I3C_TOP_TB.sv
+Z24 FI3C_TOP_TB.sv
+!i122 824
+L0 6 696
 R11
 31
 R12
@@ -596,23 +686,23 @@ R16
 R5
 n@i3@c_@t@o@p_@t@b
 XI3C_TOP_TB_sv_unit
-R19
 R20
+R21
 R7
-V:<FEa<Yh5QOa;m?]_DzMm0
+V_Ci91E`YEY@24PlkHVbJG3
 r1
 !s85 0
 !i10b 1
-!s100 h=mgL26Yi@OIVB;^0cZc<2
-I:<FEa<Yh5QOa;m?]_DzMm0
+!s100 @C[Az<od_eQmiS3JfWk5h3
+I_Ci91E`YEY@24PlkHVbJG3
 !i103 1
 S1
 R8
-R21
 R22
 R23
-!i122 423
-Z24 L0 1 0
+R24
+!i122 824
+Z25 L0 1 0
 R11
 31
 R12
@@ -632,7 +722,7 @@ R8
 w1711493054
 8IBI.v
 FIBI.v
-!i122 423
+!i122 824
 L0 23 510
 R10
 R11
@@ -656,7 +746,7 @@ R8
 R17
 8main_ctrl_unit.v
 Fmain_ctrl_unit.v
-!i122 423
+!i122 824
 L0 34 152
 R10
 R11
@@ -679,7 +769,7 @@ R8
 R17
 8open_drain_behav_model.v
 Fopen_drain_behav_model.v
-!i122 423
+!i122 824
 L0 3 13
 R10
 R11
@@ -702,7 +792,7 @@ R8
 R17
 8push_pull_behav_model.v
 Fpush_pull_behav_model.v
-!i122 423
+!i122 824
 L0 3 25
 R10
 R11
@@ -725,7 +815,7 @@ R8
 w1715381120
 8reg_file.v
 Freg_file.v
-!i122 423
+!i122 824
 L0 33 309
 R10
 R11
@@ -748,7 +838,7 @@ R8
 w1718580980
 8Rx.v
 FRx.v
-!i122 423
+!i122 824
 L0 33 414
 R10
 R11
@@ -772,7 +862,7 @@ R8
 w1715521968
 8scl_generation.v
 Fscl_generation.v
-!i122 423
+!i122 824
 L0 34 139
 R10
 R11
@@ -795,7 +885,7 @@ R8
 w1718402177
 8staller.v
 Fstaller.v
-!i122 423
+!i122 824
 L0 2 37
 R10
 R11
@@ -818,7 +908,7 @@ R8
 R17
 8sda_handling.v
 Fsda_handling.v
-!i122 423
+!i122 824
 L0 33 56
 R10
 R11
@@ -841,7 +931,7 @@ R8
 R18
 8sdr_mode.v
 Fsdr_mode.v
-!i122 423
+!i122 824
 L0 33 433
 R10
 R11
@@ -856,19 +946,19 @@ R15
 R16
 R5
 XSYSTEM_PACKAGE
-R19
+R20
 R7
 !i10b 1
-!s100 <lSAc<n^@`1F@3jFEH26O1
-Iz1LZC]UUB]?;0>Rd<RDRX3
+!s100 Fm5gAoF[BO`ZQZkh;841S0
+I4kKd`l_2@h?VhQk_G611>3
 S1
 R8
-w1718581114
+w1718734182
 8sys_package.sv
 Fsys_package.sv
-!i122 423
-R24
-Vz1LZC]UUB]?;0>Rd<RDRX3
+!i122 824
+R25
+V4kKd`l_2@h?VhQk_G611>3
 R11
 r1
 !s85 0
@@ -890,7 +980,7 @@ R8
 R17
 8top_for_crh_test.v
 Ftop_for_crh_test.v
-!i122 423
+!i122 824
 L0 35 295
 R10
 R11
@@ -913,7 +1003,7 @@ R8
 R17
 8top_for_hj_test.v
 Ftop_for_hj_test.v
-!i122 423
+!i122 824
 L0 35 247
 R10
 R11
@@ -936,8 +1026,8 @@ R8
 R17
 8tri_state_buf.v
 Ftri_state_buf.v
-!i122 423
-Z25 L0 3 8
+!i122 824
+Z26 L0 3 8
 R10
 R11
 r1
@@ -959,8 +1049,8 @@ R8
 R17
 8tri_state_buf_n.v
 Ftri_state_buf_n.v
-!i122 423
-R25
+!i122 824
+R26
 R10
 R11
 r1
@@ -982,7 +1072,7 @@ R8
 w1718635694
 8Tx.v
 FTx.v
-!i122 423
+!i122 824
 L0 1 672
 R10
 R11

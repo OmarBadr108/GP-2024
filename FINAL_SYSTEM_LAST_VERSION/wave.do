@@ -41,6 +41,15 @@ add wave -noupdate -height 24 -group SDR_TX /I3C_TOP_TB/DUT/u_controller_tx/o_tx
 add wave -noupdate -height 24 -group SDR_TX /I3C_TOP_TB/DUT/u_controller_tx/o_ser_to_parity_transition
 add wave -noupdate -height 24 -group SDR_TX /I3C_TOP_TB/DUT/u_controller_tx/last_bit_flag
 add wave -noupdate -height 24 -group SDR_TX /I3C_TOP_TB/DUT/u_controller_tx/parity_counter
+add wave -noupdate -group Configuration /I3C_TOP_TB/DUT/CCC_Handler/i_i_regf_TOC
+add wave -noupdate -group Configuration /I3C_TOP_TB/DUT/CCC_Handler/i_i_regf_RnW
+add wave -noupdate -group Configuration /I3C_TOP_TB/DUT/CCC_Handler/i_i_regf_DTT
+add wave -noupdate -group Configuration /I3C_TOP_TB/DUT/CCC_Handler/i_i_regf_DEV_INDEX
+add wave -noupdate -group Configuration /I3C_TOP_TB/DUT/CCC_Handler/i_i_regf_DBP
+add wave -noupdate -group Configuration /I3C_TOP_TB/DUT/CCC_Handler/i_i_regf_CMD_ATTR
+add wave -noupdate -group Configuration /I3C_TOP_TB/DUT/CCC_Handler/i_i_regf_CMD
+add wave -noupdate /I3C_TOP_TB/DUT/CCC_Handler/i_frmcnt_last_frame
+add wave -noupdate -expand -group CCC /I3C_TOP_TB/DUT/CCC_Handler/o_engine_done
 add wave -noupdate -expand -group CCC /I3C_TOP_TB/DUT/CCC_Handler/o_txrx_addr_ccc
 add wave -noupdate -expand -group CCC /I3C_TOP_TB/DUT/CCC_Handler/Direct_Broadcast_n
 add wave -noupdate -expand -group CCC /I3C_TOP_TB/DUT/CCC_Handler/Direct_Broadcast_n_del
@@ -54,30 +63,51 @@ add wave -noupdate -expand -group CCC /I3C_TOP_TB/DUT/CCC_Handler/o_rx_mode
 add wave -noupdate -expand -group CCC /I3C_TOP_TB/DUT/CCC_Handler/i_tx_mode_done
 add wave -noupdate -expand -group CCC /I3C_TOP_TB/DUT/CCC_Handler/i_sclstall_stall_done
 add wave -noupdate -expand -group CCC /I3C_TOP_TB/DUT/CCC_Handler/i_frmcnt_last_frame
-add wave -noupdate -height 24 -expand -group HDR_TX /I3C_TOP_TB/DUT/tx/i_sclgen_scl_pos_edge
-add wave -noupdate -height 24 -expand -group HDR_TX /I3C_TOP_TB/DUT/tx/i_sclgen_scl_neg_edge
-add wave -noupdate -height 24 -expand -group HDR_TX /I3C_TOP_TB/DUT/tx/i_ddrccc_tx_mode
-add wave -noupdate -height 24 -expand -group HDR_TX /I3C_TOP_TB/DUT/tx/i_regf_tx_parallel_data
-add wave -noupdate -height 24 -expand -group HDR_TX /I3C_TOP_TB/DUT/tx/o_sdahnd_serial_data
-add wave -noupdate -height 24 -expand -group HDR_TX -color Magenta /I3C_TOP_TB/DUT/tx/o_ddrccc_mode_done
-add wave -noupdate -height 24 -expand -group HDR_TX /I3C_TOP_TB/DUT/tx/counter
-add wave -noupdate -height 24 -expand -group HDR_TX -radix binary /I3C_TOP_TB/DUT/tx/i_ddrccc_special_data
-add wave -noupdate -height 24 -expand -group HDR_TX /I3C_TOP_TB/DUT/tx/parity_adj
-add wave -noupdate -height 24 -expand -group HDR_TX /I3C_TOP_TB/DUT/tx/i_ddrccc_tx_en
+add wave -noupdate -expand -group {rd operation checks final} /I3C_TOP_TB/DUT/RX/o_regfcrc_rx_data_out
+add wave -noupdate -expand -group {rd operation checks final} /I3C_TOP_TB/DUT/RX/o_ddrccc_error
+add wave -noupdate -expand -group {rd operation checks final} /I3C_TOP_TB/DUT/u_reg_file/i_regf_wr_en
+add wave -noupdate -expand -group {rd operation checks final} /I3C_TOP_TB/DUT/u_reg_file/i_regf_data_wr
+add wave -noupdate -expand -group {rd operation checks final} -radix decimal /I3C_TOP_TB/DUT/u_reg_file/i_regf_addr
+add wave -noupdate /I3C_TOP_TB/DUT/RX/token_value_temp
+add wave -noupdate /I3C_TOP_TB/DUT/RX/parity_value_temp
+add wave -noupdate /I3C_TOP_TB/DUT/RX/CRC_value_temp
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_WROC
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_TOC
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_TID
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_SDA_DRIVE
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_RnW
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_RESERVED
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_MODE
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_DTT
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_DEV_INDEX
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_DEF_BYTE
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_DATA_TWO
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_DATA_THREE
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_DATA_FOUR
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_CP
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_CMD_ATTR
+add wave -noupdate -group RAND_CONF /I3C_TOP_TB/RAND_CMD
+add wave -noupdate -height 24 -group HDR_TX /I3C_TOP_TB/DUT/tx/i_sclgen_scl_pos_edge
+add wave -noupdate -height 24 -group HDR_TX /I3C_TOP_TB/DUT/tx/i_sclgen_scl_neg_edge
+add wave -noupdate -height 24 -group HDR_TX /I3C_TOP_TB/DUT/tx/i_ddrccc_tx_mode
+add wave -noupdate -height 24 -group HDR_TX /I3C_TOP_TB/DUT/tx/i_regf_tx_parallel_data
+add wave -noupdate -height 24 -group HDR_TX /I3C_TOP_TB/DUT/tx/o_sdahnd_serial_data
+add wave -noupdate -height 24 -group HDR_TX -color Magenta /I3C_TOP_TB/DUT/tx/o_ddrccc_mode_done
+add wave -noupdate -height 24 -group HDR_TX /I3C_TOP_TB/DUT/tx/counter
+add wave -noupdate -height 24 -group HDR_TX -radix binary /I3C_TOP_TB/DUT/tx/i_ddrccc_special_data
+add wave -noupdate -height 24 -group HDR_TX /I3C_TOP_TB/DUT/tx/parity_adj
+add wave -noupdate -height 24 -group HDR_TX /I3C_TOP_TB/DUT/tx/i_ddrccc_tx_en
 add wave -noupdate /I3C_TOP_TB/DUT/tx/A
-add wave -noupdate /I3C_TOP_TB/check_cmd_word/#ublk#76587794#299/correct_first_cmd_word
-add wave -noupdate /I3C_TOP_TB/check_cmd_word/#ublk#76587794#299/correct_cmd_word
-add wave -noupdate /I3C_TOP_TB/check_cmd_word/#ublk#76587794#299/collected_cmd_wrd
 add wave -noupdate /I3C_TOP_TB/DUT/u_enthdr/o_i3cengine_done
-add wave -noupdate -color Magenta /I3C_TOP_TB/DUT/u_hdr_engine/i_i3cengine_hdrengine_en
+add wave -noupdate -color {Slate Blue} -itemcolor {Slate Blue} /I3C_TOP_TB/DUT/u_hdr_engine/i_i3cengine_hdrengine_en
 add wave -noupdate /I3C_TOP_TB/DUT/tx/i_ddrccc_tx_en
 add wave -noupdate /I3C_TOP_TB/DUT/u_hdr_engine/o_ccc_en
 add wave -noupdate /I3C_TOP_TB/DUT/CCC_Handler/i_sclstall_stall_done_strtch
-add wave -noupdate -height 30 -expand -group Staller /I3C_TOP_TB/DUT/u_scl_staller/o_stall_done
-add wave -noupdate -height 30 -expand -group Staller /I3C_TOP_TB/DUT/u_scl_staller/o_scl_stall
-add wave -noupdate -height 30 -expand -group Staller /I3C_TOP_TB/DUT/u_scl_staller/i_stall_flag
-add wave -noupdate -height 30 -expand -group Staller -radix unsigned /I3C_TOP_TB/DUT/u_scl_staller/i_stall_cycles
-add wave -noupdate -height 30 -expand -group Staller -radix unsigned /I3C_TOP_TB/DUT/u_scl_staller/count
+add wave -noupdate -height 30 -group Staller /I3C_TOP_TB/DUT/u_scl_staller/o_stall_done
+add wave -noupdate -height 30 -group Staller /I3C_TOP_TB/DUT/u_scl_staller/o_scl_stall
+add wave -noupdate -height 30 -group Staller /I3C_TOP_TB/DUT/u_scl_staller/i_stall_flag
+add wave -noupdate -height 30 -group Staller -radix unsigned /I3C_TOP_TB/DUT/u_scl_staller/i_stall_cycles
+add wave -noupdate -height 30 -group Staller -radix unsigned /I3C_TOP_TB/DUT/u_scl_staller/count
 add wave -noupdate -height 24 -group ENTHDR /I3C_TOP_TB/DUT/u_enthdr/IDLE
 add wave -noupdate -height 24 -group ENTHDR /I3C_TOP_TB/DUT/u_enthdr/BROADCAST
 add wave -noupdate -height 24 -group ENTHDR /I3C_TOP_TB/DUT/u_enthdr/ACK
@@ -99,20 +129,20 @@ add wave -noupdate -height 24 -group ENTHDR /I3C_TOP_TB/DUT/u_enthdr/o_tx_mode
 add wave -noupdate -height 24 -group ENTHDR /I3C_TOP_TB/DUT/u_enthdr/o_rx_en
 add wave -noupdate -height 24 -group ENTHDR /I3C_TOP_TB/DUT/u_enthdr/o_rx_mode
 add wave -noupdate -height 24 -group ENTHDR /I3C_TOP_TB/DUT/u_enthdr/state
-add wave -noupdate -height 24 -group I3C_ENGINE /I3C_TOP_TB/DUT/u_i3c_engine/i_scl_pos_edge
-add wave -noupdate -height 24 -group I3C_ENGINE /I3C_TOP_TB/DUT/u_i3c_engine/i_scl_neg_edge
-add wave -noupdate -height 24 -group I3C_ENGINE /I3C_TOP_TB/DUT/u_i3c_engine/o_enthdr_en
-add wave -noupdate -height 24 -group I3C_ENGINE /I3C_TOP_TB/DUT/u_i3c_engine/o_mode_sda_sel
-add wave -noupdate -height 24 -group I3C_ENGINE /I3C_TOP_TB/DUT/u_i3c_engine/o_hdrengine_en
-add wave -noupdate -height 24 -group I3C_ENGINE -radix binary /I3C_TOP_TB/DUT/u_i3c_engine/state
-add wave -noupdate -height 24 -group I3C_ENGINE /I3C_TOP_TB/DUT/u_i3c_engine/hdr_en
-add wave -noupdate -height 24 -group I3C_ENGINE /I3C_TOP_TB/DUT/u_i3c_engine/o_controller_done
-add wave -noupdate -height 24 -group HDR_ENGINE /I3C_TOP_TB/DUT/u_hdr_engine/i_TOC
-add wave -noupdate -height 24 -group HDR_ENGINE /I3C_TOP_TB/DUT/u_hdr_engine/i_CP
-add wave -noupdate -height 24 -group HDR_ENGINE /I3C_TOP_TB/DUT/u_hdr_engine/o_ddrmode_en
-add wave -noupdate -height 24 -group HDR_ENGINE /I3C_TOP_TB/DUT/u_hdr_engine/next_state
-add wave -noupdate -height 24 -group HDR_ENGINE /I3C_TOP_TB/DUT/u_hdr_engine/i_CP_temp
-add wave -noupdate -height 24 -group HDR_ENGINE /I3C_TOP_TB/DUT/u_hdr_engine/i_TOC_temp
+add wave -noupdate -height 24 -expand -group I3C_ENGINE /I3C_TOP_TB/DUT/u_i3c_engine/i_scl_pos_edge
+add wave -noupdate -height 24 -expand -group I3C_ENGINE /I3C_TOP_TB/DUT/u_i3c_engine/i_scl_neg_edge
+add wave -noupdate -height 24 -expand -group I3C_ENGINE /I3C_TOP_TB/DUT/u_i3c_engine/o_enthdr_en
+add wave -noupdate -height 24 -expand -group I3C_ENGINE /I3C_TOP_TB/DUT/u_i3c_engine/o_mode_sda_sel
+add wave -noupdate -height 24 -expand -group I3C_ENGINE /I3C_TOP_TB/DUT/u_i3c_engine/o_hdrengine_en
+add wave -noupdate -height 24 -expand -group I3C_ENGINE -radix binary /I3C_TOP_TB/DUT/u_i3c_engine/state
+add wave -noupdate -height 24 -expand -group I3C_ENGINE /I3C_TOP_TB/DUT/u_i3c_engine/hdr_en
+add wave -noupdate -height 24 -expand -group I3C_ENGINE /I3C_TOP_TB/DUT/u_i3c_engine/o_controller_done
+add wave -noupdate -height 24 -expand -group HDR_ENGINE /I3C_TOP_TB/DUT/u_hdr_engine/i_TOC
+add wave -noupdate -height 24 -expand -group HDR_ENGINE /I3C_TOP_TB/DUT/u_hdr_engine/i_CP
+add wave -noupdate -height 24 -expand -group HDR_ENGINE /I3C_TOP_TB/DUT/u_hdr_engine/o_ddrmode_en
+add wave -noupdate -height 24 -expand -group HDR_ENGINE /I3C_TOP_TB/DUT/u_hdr_engine/next_state
+add wave -noupdate -height 24 -expand -group HDR_ENGINE /I3C_TOP_TB/DUT/u_hdr_engine/i_CP_temp
+add wave -noupdate -height 24 -expand -group HDR_ENGINE /I3C_TOP_TB/DUT/u_hdr_engine/i_TOC_temp
 add wave -noupdate -height 24 -group DDR /I3C_TOP_TB/DUT/DDR_NT/i_sys_clk
 add wave -noupdate -height 24 -group DDR /I3C_TOP_TB/DUT/DDR_NT/i_sys_rst
 add wave -noupdate -height 24 -group DDR /I3C_TOP_TB/DUT/DDR_NT/i_engine_en
@@ -186,8 +216,10 @@ add wave -noupdate /I3C_TOP_TB/DUT/CCC_Handler/pulse_counter
 add wave -noupdate /I3C_TOP_TB/DUT/CCC_Handler/o_sclstall_en
 add wave -noupdate /I3C_TOP_TB/DUT/tx/D2
 add wave -noupdate /I3C_TOP_TB/DUT/tx/D1
+add wave -noupdate /I3C_TOP_TB/sys_clk
+add wave -noupdate /I3C_TOP_TB/DUT/u_reg_file/o_engine_MODE
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {9122141261 ps} 0} {{Cursor 4} {2450748132 ps} 0}
+WaveRestoreCursors {{Cursor 1} {50656665081091 ps} 0} {{Cursor 4} {5202278584 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 202
 configure wave -valuecolwidth 100
@@ -203,4 +235,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {8778660951 ps} {10270850135 ps}
+WaveRestoreZoom {50655711240294 ps} {50657377300950 ps}

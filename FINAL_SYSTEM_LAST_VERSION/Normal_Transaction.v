@@ -51,10 +51,11 @@ output reg [7:0] o_tx_special_data,
 output reg       o_regf_abort,
 output reg [3:0] o_regf_error_type,
 
-output wire       o_crc_en_rx_tx_mux_sel,
-output wire       o_crc_data_rx_tx_valid_sel,
+output wire       o_crc_rx_tx_mux_sel_NT
+
+/*output wire       o_crc_data_rx_tx_valid_sel,
 output wire       o_crc_data_tx_rx_mux_sel,
-output wire       o_crc_last_byte_tx_rx_mux_sel
+output wire       o_crc_last_byte_tx_rx_mux_sel*/
 
 );  
 
@@ -171,13 +172,13 @@ localparam specific_address = 'd 999; // for 8 zeros
 
 
 
-assign o_crc_en_rx_tx_mux_sel = (i_regf_wr_rd_bit)? 1 : 0;
+assign o_crc_rx_tx_mux_sel_NT = (i_regf_wr_rd_bit)? 1'b1 : 1'b0;
 
-assign o_crc_data_rx_tx_valid_sel = (i_regf_wr_rd_bit)? 1:0;
+/*assign o_crc_data_rx_tx_valid_sel = (i_regf_wr_rd_bit)? 1'b1 : 1'b0;
 
-assign o_crc_data_tx_rx_mux_sel   = (i_regf_wr_rd_bit)? 1:0;
+assign o_crc_data_tx_rx_mux_sel   = (i_regf_wr_rd_bit)? 1'b1 :1'b0;
 
-assign o_crc_last_byte_tx_rx_mux_sel = (i_regf_wr_rd_bit)? 1:0;
+assign o_crc_last_byte_tx_rx_mux_sel = (i_regf_wr_rd_bit)? 1'b1 :1'b0;*/
 
 //--------------------------- 1: Sequential Always Block ------------------------------//
 always @(posedge i_sys_clk or negedge i_sys_rst)

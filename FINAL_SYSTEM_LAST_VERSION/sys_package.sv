@@ -1,12 +1,12 @@
 package SYSTEM_PACKAGE ;
 
-    parameter CLK_PERIOD        = 20 ; 
+    //parameter CLK_PERIOD        = 20 ; 
     parameter REGF_CLK_PERIOD   = 10 ;
 	parameter configuration_mux = 1'b1 ;
     parameter Design_mux  	    = 1'b0 ;
     parameter config_location   = 12'd1000 ;
     parameter special_config    = 12'd450 ;
-
+    
 
 // CCC Handler states
 parameter  [4:0]   IDLE               = 5'd0  , // 0
@@ -86,15 +86,24 @@ parameter [2:0]
                  parity_check        = 3'd6 ,
                  deserializing_byte  = 3'd3 ,
                  check_c_token_CRC   = 3'd7 ,
-                 check_value_CRC     = 3'd2 ;
-
+                 check_value_CRC     = 3'd2 ,
+                 ERROR_RX            = 3'b100  ;
+/*                 
+/////////////////////////////////rx modes////////////18 / 6 / 2024 ///////
+localparam [2:0]
+                     PREAMBLE            = 3'b000  ,
+                     CRC_PREAMBLE        = 3'b001  ,
+                     DESERIALIZING_BYTE  = 3'b011  ,
+                     CHECK_TOKEN         = 3'b111  ,
+                     CHECK_PAR_VALUE     = 3'b110  ,
+                     CHECK_CRC_VALUE     = 3'b010  ,
+                     ERROR               = 3'b100  ;
+*/
 
 // SCL staller parameters 
-parameter [4:0] restart_pattern_stall = 5'd11  , // according to restart pattern specs
-		restart_pattern_stall_special = 5'd11  , // according to restart pattern specs
-                exit_pattern_stall    = 5'd17 ; // according to exit pattern specs 
-
-
+parameter [4:0] restart_pattern_stall = 5'd7, 
+                restart_pattern_stall_special = 5'd7, 
+                exit_pattern_stall    = 5'd13 ;  
 
 // Error states parameters for ccc
 localparam [3:0] 
@@ -130,7 +139,7 @@ parameter [7:0]
         SETMRL_B    = 8'h0A ,
         Dummy_B 	= 8'h1F ;
 
-class configuration ;
+class configuration_class ;
 	// DWORD0
 	rand bit  [2:0] RAND_CMD_ATTR     ;
 	rand bit  [3:0] RAND_TID          ;
@@ -149,12 +158,13 @@ class configuration ;
 	rand bit  [7:0] RAND_DATA_TWO     ;
 	rand bit  [7:0] RAND_DATA_THREE   ;
 	rand bit  [7:0] RAND_DATA_FOUR    ;    
-    //rand bit 		RAND_SDA ; 			
-   
+    rand bit 		RAND_SDA_DRIVE    ; 			
+   	rand bit  [3:0] RAND_INDEX  	  ;
  
 	constraint CMD_ATTR {
 		//RAND_CMD_ATTR inside { 0 , 1 } ;
-		RAND_CMD_ATTR dist {1:/70 , 0:/30} ;
+		RAND_CMD_ATTR ==  ((RAND_CMD == 8'h00)|(RAND_CMD == 8'h01)|(RAND_CMD == 8'h09)|(RAND_CMD ==8'h0A)|
+					 (RAND_CMD == 8'h80)|(RAND_CMD == 8'h81)|(RAND_CMD == 8'h89)|(RAND_CMD ==8'h8A)|(RAND_CMD ==8'h1F) )? 1 : 0 ;
 	}
 	
 	constraint TID {
@@ -162,15 +172,15 @@ class configuration ;
 	}
 
 	constraint CMD {
-		RAND_CMD inside {8'h00 , 8'h01 , 8'h09 , 8'h0A , 8'h1F	 	 	 // broadcast 
-					    //,8'h80 , 8'h81 , 8'h89 , 8'h8A  				 // direct set
-					    //,8'h8B , 8'h8C , 8'h90 , 8'h8E , 8'h8F  	 	 // direct get
-					    //,8'h8D	 	  		 		 	 	 	 	 // GETPID	 
+		RAND_CMD inside {//8'h00 , 8'h01 , 8'h09 , 8'h0A , 8'h1F	 // broadcast 
+					    //,8'h80 , 8'h81 , 8'h89 , 8'h8A ,8'h8B  	 // direct set 
+					    8'h8C , 8'h90 , 8'h8E , 8'h8F  	 	 // direct get
+					    //,8'h8D	 	  		 		 	 	 // GETPID	 
 						 								   		} ;	
 	}
 
 	constraint CP {
-		RAND_CP == 1  ;	
+		RAND_CP inside {1}  ;	
 	}
 
 	constraint DEV_INDEX {
@@ -189,9 +199,11 @@ class configuration ;
 		RAND_MODE == 6 ;	
 	}
 
-	constraint RnW {
-		RAND_RnW == ((RAND_CMD == 8'h00)|(RAND_CMD == 8'h01)|(RAND_CMD == 8'h09)|(RAND_CMD ==8'h0A)|
-					 (RAND_CMD == 8'h80)|(RAND_CMD == 8'h81)|(RAND_CMD == 8'h89)|(RAND_CMD ==8'h8A)|(RAND_CMD ==8'h1F))? 0 : 1 ;	
+	constraint RnW {		
+		RAND_RnW == ((RAND_CMD == 8'h00)|(RAND_CMD == 8'h01)|(RAND_CMD == 8'h09)|(RAND_CMD ==8'h0A)|				   // Direct 
+					 (RAND_CMD == 8'h80)|(RAND_CMD == 8'h81)|(RAND_CMD == 8'h89)|(RAND_CMD ==8'h8A)|(RAND_CMD ==8'h1F) // broadcast
+					 | (RAND_CP == 0)
+					 )? 0 : 1 ;	
 	}
 
 	constraint WROC {
@@ -216,6 +228,9 @@ class configuration ;
 
 	constraint DATA_FOUR {
 		RAND_DATA_FOUR == 0 ;	
+	}
+	constraint RAND_INDEX_k {
+		RAND_INDEX inside {[0:9]} ;	
 	}
 	
 endclass 

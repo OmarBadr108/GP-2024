@@ -60,7 +60,8 @@ module hdr_engine (
     output  reg             o_frm_cnt_en_sel                      ,
     output  reg             o_hdr_scl_stall_en_sel                , //new
     output  reg             o_hdr_scl_stall_cycles_sel            , //new
-    output  reg             o_sdahand_pp_od_sel                   
+    output  reg             o_sdahand_pp_od_sel                   ,
+    output  reg             o_crc_rx_tx_mux_sel_ccc_nt_sel          //MAGH              
                             
 
 
@@ -139,6 +140,7 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                              o_hdr_scl_stall_en_sel <=CCC_SEL ;             
                              o_hdr_scl_stall_cycles_sel <=CCC_SEL;
                              o_cccnt_tx_special_data_mux_sel  <=CCC_SEL; // badr  
+                             o_crc_rx_tx_mux_sel_ccc_nt_sel   <=CCC_SEL; //magh
                          end
                       else 
                         begin
@@ -157,7 +159,8 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                              o_sdahand_pp_od_sel    <=DDR_SEL;  
                              o_hdr_scl_stall_en_sel <=DDR_SEL ;             
                              o_hdr_scl_stall_cycles_sel <=DDR_SEL;
-                             o_cccnt_tx_special_data_mux_sel  <=DDR_SEL; // badr        
+                             o_cccnt_tx_special_data_mux_sel  <=DDR_SEL; // badr   
+                             o_crc_rx_tx_mux_sel_ccc_nt_sel   <=DDR_SEL; //magh
                         end
           end
 
@@ -235,7 +238,8 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                      o_sdahand_pp_od_sel    <=DDR_SEL; 
                      o_hdr_scl_stall_en_sel <=DDR_SEL ;             
                      o_hdr_scl_stall_cycles_sel <=DDR_SEL;
-                     o_cccnt_tx_special_data_mux_sel  <=DDR_SEL; // badr                       
+                     o_cccnt_tx_special_data_mux_sel  <=DDR_SEL; // badr
+                     o_crc_rx_tx_mux_sel_ccc_nt_sel   <=DDR_SEL; //magh                       
                   end
                   else begin
                     next_state   <= CCC ;
@@ -252,7 +256,8 @@ always @(posedge i_sys_clk or negedge i_sys_rst_n )
                     o_sdahand_pp_od_sel    <=CCC_SEL;
                     o_hdr_scl_stall_en_sel <=CCC_SEL ;             
                     o_hdr_scl_stall_cycles_sel <=CCC_SEL;
-                    o_cccnt_tx_special_data_mux_sel  <=CCC_SEL; // badr                    
+                    o_cccnt_tx_special_data_mux_sel  <=CCC_SEL; // badr
+                     o_crc_rx_tx_mux_sel_ccc_nt_sel   <=CCC_SEL; //magh                   
                     end  
             end
             else
@@ -312,7 +317,8 @@ if (i_i3cengine_hdrengine_en) begin
                      o_sdahand_pp_od_sel    <=DDR_SEL;
                      o_hdr_scl_stall_en_sel <=DDR_SEL ;             
                      o_hdr_scl_stall_cycles_sel <=DDR_SEL;
-                     o_cccnt_tx_special_data_mux_sel  <=DDR_SEL; // badr                       
+                     o_cccnt_tx_special_data_mux_sel  <=DDR_SEL; // badr 
+                     o_crc_rx_tx_mux_sel_ccc_nt_sel   <=DDR_SEL; //magh                          
                   end
                   else begin
                     o_ccc_en <= 1'b1 ;
@@ -330,7 +336,8 @@ if (i_i3cengine_hdrengine_en) begin
                      o_sdahand_pp_od_sel    <=CCC_SEL;
                      o_hdr_scl_stall_en_sel <=CCC_SEL ;             
                      o_hdr_scl_stall_cycles_sel <=CCC_SEL;
-                     o_cccnt_tx_special_data_mux_sel  <=CCC_SEL; // badr                       
+                     o_cccnt_tx_special_data_mux_sel  <=CCC_SEL; // badr    
+                     o_crc_rx_tx_mux_sel_ccc_nt_sel   <=CCC_SEL; //magh                       
                   end
             end
             else

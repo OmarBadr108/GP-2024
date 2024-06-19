@@ -124,7 +124,7 @@ class configuration ;
     //rand bit 		RAND_SDA ; 			
    
  
-	constraint CMD_ATTR {
+	constraint CMD_ATTR {	 	 	 	 	// 1 for immediate and 0 for regular
 		//RAND_CMD_ATTR inside { 0 , 1 } ;
 		RAND_CMD_ATTR dist {1:/70 , 0:/30} ;
 	}

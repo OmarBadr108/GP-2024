@@ -54,7 +54,7 @@ parameter CLK_PERIOD  = 20;
 //--------------------------------------------------- Internal Signals --------------------------------------------//
     reg               sda_drive             ;  
     // locally driven value
-    assign sda_tb   = sda_drive             ;
+    assign sda_tb   = o_tgt_sdahnd_sda_tb             ;
 
 
 
@@ -105,10 +105,7 @@ initial begin
         i_hdr_en_tb        = 1'b1;
         i_tgt_engine_en_tb    = 1'b1;
 
-        #40540
-        sda_drive = o_tgt_sdahnd_sda_tb;
-        #5050
-        sda_drive = o_tgt_sdahnd_sda_tb;
+        check_output(); 
 
         @(negedge o_tgt_engine_done_tb)
          i_tgt_engine_en_tb    = 1'b0;
@@ -223,6 +220,74 @@ task write_configurations;
   
         #(CLK_PERIOD) ;
 
+    end
+endtask
+task check_output ();
+    begin
+        logic [7:0] BROADCAST; // 7'h7E+ R/w bit
+        logic [8:0] ENTHDR0; 
+
+        BROADCAST = 8'b0; // 7'h7E+ R/w bit
+        ENTHDR0 = 9'b0;
+        // ddr code: 0x20 + T-bit
+        //frame_ended = 1'b0;
+        // once you see the start condition--> sample the first data 7E then sample 'h20 then the parity bit
+        /*bit start_condition;
+        start_condition = ~sda_tb &&  ~scl_tb 
+        if(start_condition) begin
+            data_check[i] <= //sda
+        end
+*/
+            for(int i=0; i < 8 ; i++)   //receive first 8 bits of 7E and write bit
+                begin  
+                   @(posedge scl_tb)
+                    BROADCAST['d7 - i] = sda_tb;
+                
+                end
+
+            @(negedge scl_tb)
+            if(BROADCAST == EXPECTED_BROADCAST)
+             begin
+                    $display("Broadcast frame is received");
+                    send_ack();
+             end
+
+            for(int i=0; i < 9 ; i++)   //receive first 8 bits of 7E and write bit
+                begin  
+                   @(posedge scl_tb)
+                    ENTHDR0['d8 - i] = sda_tb;
+                end
+ 
+
+            if(ENTHDR0 == EXPECTED_ENTHDR0) begin
+                $display("ENTHDR frame is received");
+
+                @(negedge scl_tb)
+                #(CLK_PERIOD)
+                frame_ended = 1'b1;
+                #(CLK_PERIOD)
+                frame_ended = 1'b0;
+
+
+end         
+        
+    end 
+endtask
+task send_ack;
+    begin
+        //#(30*CLK_PERIOD)
+        #(2*CLK_PERIOD)
+            if(!scl_tb)       //drive ack when scl is low
+              begin     
+                    sda_drive = o_tgt_sdahnd_sda_tb; //ack bit
+
+                  @(negedge scl_tb)
+                  //#(30*CLK_PERIOD)
+                  #(2*CLK_PERIOD)  //(2*CLK_PERIOD)
+
+                        if(!scl_tb)
+                            sda_drive = 'bz;     
+              end
     end
 endtask
 
