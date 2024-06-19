@@ -23,7 +23,7 @@ reg [7:0] temp;
  
 
 
-// Initializations
+
 always @(posedge i_sys_clk or negedge i_sys_rst) begin
     if (!i_sys_rst) begin
         

@@ -63,15 +63,22 @@ reg rd_wr_flag; //storing rd_or_wr bit for calculating (parity adj) and (cmd wor
 reg parity_flag; //to distinguish parity is calculated for cmd or data
 reg first_byte_full; //to distinguish tx is serializing first byte or second byte
 wire [3:0] tmp_restart ;
+reg rd_wr_flag_BADR ;
 
+always @(*) begin 
+	if (i_ddrccc_special_data == 7'b111_1110 ) begin  // 7E 
+		rd_wr_flag_BADR = 1'b0 ;
+	end 
+	else rd_wr_flag_BADR = rd_wr_flag ;
+end 
 
 assign tmp_restart = 4'b 0101;
 assign A = {i_ddrccc_special_data[6:0],parity_adj} ; 
-assign parity_adj = ( rd_wr_flag ^ (^i_ddrccc_special_data) ) ;
+assign parity_adj =  A[6] ^ A[4] ^ A[2]  ;
 assign P1 = (parity_flag)? P1_data : P1_cmdword ; 
 assign P0 = (parity_flag)? P0_data : P0_cmdword ;
 assign P = {P1,P0} ;
-assign P1_cmdword = rd_wr_flag ^ A[7] ^ A[5] ^ A[3] ^ A[1] ;
+assign P1_cmdword = rd_wr_flag_BADR ^ A[7] ^ A[5] ^ A[3] ^ A[1] ;
 assign P0_cmdword =  1 ;
 assign P1_data = D1[7] ^ D1[5] ^ D1[3] ^ D1[1] ^ D2[7] ^ D2[5] ^ D2[3] ^ D2[1] ;
 assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^ 1 ; 

@@ -31,32 +31,35 @@ parameter  [4:0]   IDLE               = 5'd0  , // 0
                    EXIT_PATTERN       = 5'd19 , 
                    ERROR              = 5'd20 , 
                    FINISH             = 5'd21 , 
-                   PRE_CRC_TARGET     = 5'd22 ,
-                   RESTART_PATTERN_SPECIAL = 5'd23 ;
+                   PRE_CRC_TARGET     = 5'd22 ;
+                   //RESTART_PATTERN_SPECIAL = 5'd23 ;
 
-// NT states
-parameter [4:0]               idle = 'd0,
-                              first_stage_command_Pre = 'd1,
-                              serializing_seven_zeros = 'd2,
-					          address = 'd3,                
-					          parity = 'd4,
+
+
+
+
+//------------------ fsm states ----------------//
+localparam [4:0]    		  idle 					  = 'd0,
+                    		  first_stage_command_Pre = 'd1,
+                    		  serializing_seven_zeros = 'd2,
+							  address 					= 'd3,                
+					          parity 					= 'd4,
 					          sec_stage_first_data_pre = 'd5,             // sent by controller
-					          ack_waiting = 'd6,
-					          first_data_byte = 'd7,
-					          second_data_byte = 'd8,
+					          ack_waiting 				= 'd6,
+					          first_data_byte 			= 'd7,
+					          second_data_byte 		     = 'd8,
 					          third_stage_first_data_pre = 'd9,             // send by target or controller
-					          abort_bit = 'd10,                      //   aborting by controller or target             
+					          abort_bit 				= 'd10,                      //   aborting by controller or target             
 					          fourth_stage_crc_first_pre = 'd11,
 					          fourth_stage_crc_second_pre = 'd12,
-					          token_crc_bits = 'd13,                 // 4 bits
-					          crc_value_bits = 'd14,                  // 5 bits 
-					          error = 'd15,
-					          restart = 'd16,
-					          exit = 'd17,
-							  Read_Write_bit = 'd18,
-							  serializing_zeros = 'd19,
-							  waiting = 'd20 ;
-
+					          token_crc_bits 	 		= 'd13,                 // 4 bits
+					          crc_value_bits 	 		= 'd14,                  // 5 bits 
+					          error 					= 'd15,
+					          restart 					= 'd16,
+					          exit 						= 'd17,
+							  Read_Write_bit 			= 'd18,
+							  serializing_zeros 		= 'd19,
+							  waiting 					= 'd20 ;
 
 
     // tx modes parameters 
@@ -79,7 +82,7 @@ parameter [11:0] first_location = 12'd1000 ;
 
 
 
-// rx parameters 
+// rx parameters de tmam 
 parameter [2:0] 
                  preamble_rx_mode    = 3'd0 , 
                  CRC_PREAMBLE        = 3'd1 ,
@@ -102,7 +105,6 @@ localparam [2:0]
 
 // SCL staller parameters 
 parameter [4:0] restart_pattern_stall = 5'd7, 
-                restart_pattern_stall_special = 5'd7, 
                 exit_pattern_stall    = 5'd13 ;  
 
 // Error states parameters for ccc
@@ -162,9 +164,11 @@ class configuration_class ;
    	rand bit  [3:0] RAND_INDEX  	  ;
  
 	constraint CMD_ATTR {
-		//RAND_CMD_ATTR inside { 0 , 1 } ;
-		RAND_CMD_ATTR ==  ((RAND_CMD == 8'h00)|(RAND_CMD == 8'h01)|(RAND_CMD == 8'h09)|(RAND_CMD ==8'h0A)|
-					 (RAND_CMD == 8'h80)|(RAND_CMD == 8'h81)|(RAND_CMD == 8'h89)|(RAND_CMD ==8'h8A)|(RAND_CMD ==8'h1F) )? 1 : 0 ;
+		//RAND_CMD_ATTR inside { 1 } ;
+		
+		RAND_CMD_ATTR ==  ((RAND_CMD == 8'h00)|(RAND_CMD == 8'h01)|(RAND_CMD == 8'h09)|(RAND_CMD ==8'h0A)|							
+					       (RAND_CMD == 8'h80)|(RAND_CMD == 8'h81)|(RAND_CMD == 8'h89)|(RAND_CMD ==8'h8A)|(RAND_CMD ==8'h1F) )? 1 : 0 ;
+		
 	}
 	
 	constraint TID {
@@ -172,10 +176,9 @@ class configuration_class ;
 	}
 
 	constraint CMD {
-		RAND_CMD inside {//8'h00 , 8'h01 , 8'h09 , 8'h0A , 8'h1F	 // broadcast 
-					    //,8'h80 , 8'h81 , 8'h89 , 8'h8A ,8'h8B  	 // direct set 
-					    8'h8C , 8'h90 , 8'h8E , 8'h8F  	 	 // direct get
-					    //,8'h8D	 	  		 		 	 	 // GETPID	 
+		RAND_CMD inside {//8'h00 , 8'h01 , 8'h09 , 8'h0A , 8'h1F,	 // broadcast 
+					    //8'h80 , 8'h81 , 8'h89 , 8'h8A 			 // direct set
+					      8'h8B /*, 8'h8C , 8'h8E , 8'h90 , 8'h8F  */	 // direct get	 
 						 								   		} ;	
 	}
 
@@ -192,18 +195,20 @@ class configuration_class ;
 	}
 
 	constraint DTT {
-		RAND_DTT inside {0,1,2} ;	
+		RAND_DTT inside {2} ;	
 	}
 
 	constraint MODE {
 		RAND_MODE == 6 ;	
 	}
 
-	constraint RnW {		
+	constraint RnW {
+		//RAND_RnW inside {0} ;
+		
 		RAND_RnW == ((RAND_CMD == 8'h00)|(RAND_CMD == 8'h01)|(RAND_CMD == 8'h09)|(RAND_CMD ==8'h0A)|				   // Direct 
-					 (RAND_CMD == 8'h80)|(RAND_CMD == 8'h81)|(RAND_CMD == 8'h89)|(RAND_CMD ==8'h8A)|(RAND_CMD ==8'h1F) // broadcast
-					 | (RAND_CP == 0)
+					 (RAND_CMD == 8'h80)|(RAND_CMD == 8'h81)|(RAND_CMD == 8'h89)|(RAND_CMD ==8'h8A)|(RAND_CMD ==8'h1F) // broadcast	 
 					 )? 0 : 1 ;	
+	
 	}
 
 	constraint WROC {
@@ -211,7 +216,7 @@ class configuration_class ;
 	}
 
 	constraint TOC {
-		RAND_TOC inside {[0:1]} ;	
+		RAND_TOC inside {0,1} ;	
 	}
 
 	constraint DEF_BYTE {
@@ -223,7 +228,7 @@ class configuration_class ;
 	}
 
 	constraint DATA_LENGTH {
-		RAND_DATA_THREE inside {1,2} ;	
+		RAND_DATA_THREE inside {2} ;	
 	}
 
 	constraint DATA_FOUR {

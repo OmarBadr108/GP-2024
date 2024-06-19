@@ -62,17 +62,11 @@ input wire [7:0]  i_i_regf_CMD       ,          // CCC value
 input wire [4:0]  i_i_regf_DEV_INDEX ,
 input wire        i_i_regf_TOC       , 
 input wire        i_i_regf_WROC      , 
-
 // in case of immidiate command descriptor 
 input wire [2:0]  i_i_regf_DTT       , 
-
 // in case of regular command descriptor 
 input wire        i_i_regf_DBP       , 
 input wire        i_i_regf_SRE       , 
-//input wire [15:0] i_regf_DATA_LENGTH , // will be removed 
-
-// new for CCC Table 
-//input wire [4:0] i_no_of_targets ,
 
 output reg        o_frmcnt_Direct_Broadcast_n ,
 output reg        o_sclstall_en      ,
@@ -81,11 +75,6 @@ output reg        o_tx_en            ,
 output reg [3:0]  o_tx_mode          ,
 output reg        o_rx_en    ,
 output reg [2:0]  o_rx_mode  ,
-
-//output reg        o_rx_en_negedge    ,
-//output reg [3:0]  o_rx_mode_negedge  ,
-
-
 output reg        o_bitcnt_en        ,
 output reg        o_bitcnt_err_rst   , 
 output reg        o_frmcnt_en        ,
@@ -97,21 +86,13 @@ output reg        o_engine_done      ,
 output reg [7:0]  o_txrx_addr_ccc    ,         
 output reg        o_engine_odd       ,         
 output reg [3:0]  o_regf_ERR_STATUS  , 
-
 //output reg        o_en_mux           ,  //  for CCC handler environment only for crc muxes btn tx and rx   ( 1 for tx and 0 for rx 
 output reg        o_crc_en_rx_tx_mux_sel,
 output reg        o_crc_data_rx_tx_valid_sel,
 output reg        o_crc_data_tx_rx_mux_sel,
 output wire       o_crc_last_byte_tx_rx_mux_sel,
-
 //output reg        o_en_mux           ,  //  for CCC handler environment only for crc muxes btn tx and rx   ( 1 for tx and 0 for rx 
 output reg        o_crc_rx_tx_mux_sel_ccc 
-
-/*output reg        o_crc_rx_tx_mux_sel_ccc,
-output reg        //o_crc_data_rx_tx_valid_sel,
-output reg        o_crc_rx_tx_mux_sel_ccc,
-output wire       o_crc_last_byte_tx_rx_mux_sel*/
-
 );   
 
 
@@ -1311,7 +1292,7 @@ end
                 end  
             end 
 
-
+/*
             RESTART_PATTERN_SPECIAL : begin 
                 first_time      = 1'b0 ;
                 o_bitcnt_en     = 1'b0 ;
@@ -1344,7 +1325,7 @@ end
                     next_state = RESTART_PATTERN_SPECIAL ;
                 end
             end 
-
+*/
 
             RESTART_PATTERN : begin 
                 first_time      = 1'b0 ;
@@ -1434,7 +1415,7 @@ end
                     next_state = EXIT_PATTERN ;
                 end
             end
-
+/*
 
             // 18/6/2024 correct state for final verification 
             ERROR : begin      // controller error state 
@@ -1458,8 +1439,9 @@ end
                 end 
 
             end 
+            */
 
- /*         // u have done ur job now boss <3
+          // u have done ur job now boss <3
             ERROR : begin      // controller error state 
                 o_bitcnt_err_rst = 1'b1 ; // active hight rst to count specially for error state
 
@@ -1479,7 +1461,7 @@ end
                 end 
 
             end 
-*/
+
             
 
             FINISH : begin 

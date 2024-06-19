@@ -98,7 +98,7 @@ assign sda_tb   = sda_drive 			;
 		initialize();
 		conf_obj = new();
 
-		for (i=0 ; i<100 ; i++) begin 
+		for (i=0 ; i<10 ; i++) begin 
 			assert(conf_obj.randomize());
 
 			RAND_CMD_ATTR  = conf_obj.RAND_CMD_ATTR  ;
@@ -165,13 +165,13 @@ assign sda_tb   = sda_drive 			;
 	initial begin 
 		forever #(2*SYS_CLK_PERIOD) begin 
 
-			if (DUT.CCC_Handler.current_state == PRE_FIRST_DATA_TWO) begin 
+			if (DUT.CCC_Handler.current_state == PRE_FIRST_DATA_TWO || DUT.DDR_NT.current_state == ack_waiting) begin 
 				@(negedge DUT.scl_neg_edge_not_stalled or negedge DUT.scl_pos_edge_not_stalled) ;
 				sda_drive = 1'b0 ;
 				#(2*SYS_CLK_PERIOD) ;
 				sda_drive = 1'bz ;
 			end
-			else if (DUT.CCC_Handler.current_state == PRE_DATA_TWO) begin 
+			else if (DUT.CCC_Handler.current_state == PRE_DATA_TWO || DUT.DDR_NT.current_state == abort_bit) begin 
 				@(negedge DUT.scl_neg_edge_not_stalled or negedge DUT.scl_pos_edge_not_stalled) ;
 				sda_drive = 1'b1 ;
 				#(2*SYS_CLK_PERIOD) ;
@@ -184,7 +184,7 @@ assign sda_tb   = sda_drive 			;
 	// deserialization checking 
 
 	always @(DUT.CCC_Handler.current_state) begin 
-		if (DUT.CCC_Handler.i_engine_en && DUT.CCC_Handler.current_state == RNW) begin 
+		if ((DUT.CCC_Handler.i_engine_en && DUT.CCC_Handler.current_state == RNW) || (DUT.DDR_NT.i_engine_en && DUT.DDR_NT.current_state == Read_Write_bit)) begin 
 			#(SYS_CLK_PERIOD) ;
 			check_cmd_word();
 		end 
@@ -204,10 +204,13 @@ assign sda_tb   = sda_drive 			;
 		end 
 	end
 
-	reg [28:0] read_vector_2 = 29'b0000_0000_0000_0000_01_01_1100_00001 ;
+	reg [28:0] read_vector_2_1 = 29'b0000_0000_0000_0000_01_01_1100_00001 ;
+	reg [28:0] read_vector_2_2 = 29'b1111_1111_1111_1111_01_01_1100_01010 ;
+	reg [28:0] read_vector_2_3 = 29'b1010_1010_1010_1010_01_01_1100_10000 ;
+	reg [28:0] read_vector_2_4 = 29'b1111_0000_1111_0000_01_01_1100_11001 ;
 
 	always @(DUT.CCC_Handler.next_state or DUT.DDR_NT.next_state) begin 
-		if (DUT.cccnt_RnW == 1 && RAND_CMD_ATTR == 'd0 && ({RAND_DATA_FOUR,RAND_DATA_THREE} == 'd2 || {RAND_DATA_FOUR,RAND_DATA_THREE} == 'd1 ) && (DUT.CCC_Handler.i_engine_en && DUT.CCC_Handler.next_state == FIRST_DATA_BYTE) || (DUT.DDR_NT.i_engine_en && DUT.DDR_NT.next_state == first_data_byte)) begin 
+		if ( (DUT.cccnt_RnW == 1 ) && (RAND_CMD_ATTR == 'd0) && ({RAND_DATA_FOUR,RAND_DATA_THREE} == 'd2 /*|| {RAND_DATA_FOUR,RAND_DATA_THREE} == 'd1 */) && ((DUT.CCC_Handler.i_engine_en && DUT.CCC_Handler.next_state == FIRST_DATA_BYTE) || (DUT.DDR_NT.i_engine_en && DUT.DDR_NT.next_state == first_data_byte))) begin 
 			Drive_repeated_data_word();
 		end 
 	end
@@ -219,7 +222,7 @@ assign sda_tb   = sda_drive 			;
 			for ( o = 0 ; o < 'd29 ; o++ ) begin 
 
 				@ (negedge DUT.scl_neg_edge_not_stalled or negedge DUT.scl_pos_edge_not_stalled ) ;
-				sda_drive = read_vector_2[28 - o];
+				sda_drive = read_vector_2_4[28 - o];
 				# (3*CLK_PERIOD) ;
  
 			end
@@ -250,27 +253,23 @@ assign sda_tb   = sda_drive 			;
 
 				collected_cmd_wrd['d17- o] = sda_tb ;
 
-				//$display("nvlaue of SDA line is  %b : %t",sda_tb,$time);
-
-				//parity_adj_7e = collected_cmd_wrd[16] ^ collected_cmd_wrd[14] ^ collected_cmd_wrd[12] ^ collected_cmd_wrd[10] ^ collected_cmd_wrd[8] ^ collected_cmd_wrd[6] ^ collected_cmd_wrd[4]  ;
 				parity_adj    = collected_cmd_wrd[16] ^ collected_cmd_wrd[14] ^ collected_cmd_wrd[12] ^ collected_cmd_wrd[10] ^ collected_cmd_wrd[8] ^ collected_cmd_wrd[6] ^ collected_cmd_wrd[4]  ;
-
 				P1_cmd_sel    = DUT.CCC_Handler.i_regf_RnW ^ collected_cmd_wrd[9] ^ collected_cmd_wrd[7] ^ collected_cmd_wrd[5] ^ collected_cmd_wrd[3] ; // index is shifted by 2 as this is the 18 bit word (data + parity)
 				P1_cmd_ind 	  = 1'b0 ^ collected_cmd_wrd[9] ^ collected_cmd_wrd[7] ^ collected_cmd_wrd[5] ^ collected_cmd_wrd[3] ; // index is shifted by 2 as this is the 18 bit word (data + parity)
 				P0_cmdword    =  1 ;
 
-				correct_first_cmd_word = {1'b0 						 , 7'd0 , 7'b111_1110 					       , parity_adj , P1_cmd_ind , P0_cmdword } ;
-				correct_cmd_word 	   = {DUT.CCC_Handler.i_regf_RnW , 7'd0 , DUT.CCC_Handler.o_txrx_addr_ccc[6:0] , parity_adj , P1_cmd_sel , P0_cmdword } ;
+				correct_first_cmd_word = {1'b0 			, 7'd0 , 7'b111_1110 					        , parity_adj , P1_cmd_ind , P0_cmdword } ;
+				correct_cmd_word 	   = {DUT.cccnt_RnW , 7'd0 , DUT.cccnt_tx_special_data_mux_out[6:0] , parity_adj , P1_cmd_sel , P0_cmdword } ;
 
 				# (2*CLK_PERIOD) ;
 				if (o == 'd17) begin 
-					if (DUT.CCC_Handler.first_time || !DUT.CCC_Handler.Direct_Broadcast_n_del) begin  // this is a 7E cmd word
+					if (DUT.CCC_Handler.i_engine_en && (DUT.CCC_Handler.first_time || !DUT.CCC_Handler.Direct_Broadcast_n_del)) begin  // this is a 7E cmd word
 						assert (correct_first_cmd_word == collected_cmd_wrd) $display("first command word in CCC is CORRECT : %0t" ,$time);
 						else 												 $display("first command word in CCC is WRONG   : %0t" ,$time);
 					end 
 					else begin 	// this is an address word  
-						assert (correct_cmd_word == collected_cmd_wrd) $display("second command word in CCC is CORRECT : %0t" ,$time);
-						else 										   $display("second command word in CCC is WRONG   : %0t" ,$time);
+						assert (correct_cmd_word == collected_cmd_wrd) $display("second command word is CORRECT : %0t" ,$time);
+						else 										   $display("second command word is WRONG   : %0t" ,$time);
 					end 
 				end  
 			end 

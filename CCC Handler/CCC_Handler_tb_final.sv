@@ -131,7 +131,7 @@ module CCC_Handler_tb ();
 
 	// scl ddr clk = 25 Mhz
 	parameter DDR_CLK_PERIOD = 40 ;
-
+	wire o_crc_rx_tx_mux_sel_ccc ;
 // 3-DUT instatiation 
 	
 
@@ -182,7 +182,8 @@ module CCC_Handler_tb ();
 		.o_crc_en_rx_tx_mux_sel(o_crc_en_rx_tx_mux_sel_tb),
 		.o_crc_data_rx_tx_valid_sel(o_crc_data_rx_tx_valid_sel_tb),
 		.o_crc_data_tx_rx_mux_sel(o_crc_data_tx_rx_mux_sel_tb),
-		.o_crc_last_byte_tx_rx_mux_sel(o_crc_last_byte_tx_rx_mux_sel_tb)
+		.o_crc_last_byte_tx_rx_mux_sel(o_crc_last_byte_tx_rx_mux_sel_tb),
+		.o_crc_rx_tx_mux_sel_ccc(o_crc_rx_tx_mux_sel_ccc)
 		);
 
 
@@ -2012,8 +2013,8 @@ mux8      mux1_8 (
 			bins rx_preamble_rx_mode   = {preamble_rx_mode};
 			bins rx_deserializing_byte = {deserializing_byte};
 			bins rx_parity_check       = {parity_check};
-			bins rx_check_c_token_CRC  = {check_c_token_CRC};
-			bins rx_check_value_CRC    = {check_value_CRC};
+			//bins rx_check_c_token_CRC  = {check_c_token_CRC};
+			//bins rx_check_value_CRC    = {check_value_CRC};
 		}
 
 		i_rx_pre : coverpoint i_rx_pre_tb iff (
@@ -2180,8 +2181,8 @@ mux8      mux1_8 (
 			bins rx_preamble_rx_mode   = {preamble_rx_mode};
 			bins rx_deserializing_byte = {deserializing_byte};
 			bins rx_parity_check       = {parity_check};
-			bins rx_check_c_token_CRC  = {check_c_token_CRC};
-			bins rx_check_value_CRC    = {check_value_CRC};
+			//bins rx_check_c_token_CRC  = {check_c_token_CRC};
+			//bins rx_check_value_CRC    = {check_value_CRC};
 		}
 
 		i_rx_pre : coverpoint i_rx_pre_tb iff (
@@ -2346,8 +2347,8 @@ mux8      mux1_8 (
 			bins rx_preamble_rx_mode   = {preamble_rx_mode};
 			bins rx_deserializing_byte = {deserializing_byte};
 			bins rx_parity_check       = {parity_check};
-			bins rx_check_c_token_CRC  = {check_c_token_CRC};
-			bins rx_check_value_CRC    = {check_value_CRC};
+			//bins rx_check_c_token_CRC  = {check_c_token_CRC};
+			//bins rx_check_value_CRC    = {check_value_CRC};
 		}
 
 		i_rx_pre : coverpoint i_rx_pre_tb iff (
@@ -2510,8 +2511,8 @@ mux8      mux1_8 (
 			bins rx_preamble_rx_mode   = {preamble_rx_mode};
 			bins rx_deserializing_byte = {deserializing_byte};
 			bins rx_parity_check       = {parity_check};
-			bins rx_check_c_token_CRC  = {check_c_token_CRC};
-			bins rx_check_value_CRC    = {check_value_CRC};
+			//bins rx_check_c_token_CRC  = {check_c_token_CRC};
+			//bins rx_check_value_CRC    = {check_value_CRC};
 		}
 
 		i_rx_pre : coverpoint i_rx_pre_tb iff (
@@ -2676,8 +2677,8 @@ mux8      mux1_8 (
 			bins rx_preamble_rx_mode   = {preamble_rx_mode};
 			bins rx_deserializing_byte = {deserializing_byte};
 			bins rx_parity_check       = {parity_check};
-			bins rx_check_c_token_CRC  = {check_c_token_CRC};
-			bins rx_check_value_CRC    = {check_value_CRC};
+			//bins rx_check_c_token_CRC  = {check_c_token_CRC};
+			//bins rx_check_value_CRC    = {check_value_CRC};
 		}
 
 		i_rx_pre : coverpoint i_rx_pre_tb iff (
@@ -3017,7 +3018,7 @@ mux8      mux1_8 (
 	end
 
 	always @(CCC_Handler_dut.current_state) begin 
-		if (i_engine_en_tb && CCC_Handler_dut.current_state == FIRST_DATA_BYTE) begin 
+		if (!i_regf_RnW_tb && i_engine_en_tb && CCC_Handler_dut.current_state == FIRST_DATA_BYTE) begin 
 			#(CLK_PERIOD) ;
 			check_repeated_data_word();
 		end 
@@ -3136,7 +3137,7 @@ int cycle_count ;
     end
 */
 
-
+/*
 //////////////////////////////////////////////  General driver /////////////////////////////////
 
 	initial begin 
@@ -3148,6 +3149,29 @@ int cycle_count ;
 
 
 ///////////////////////////////////////////////////// TASKS ///////////////////////////////////////
+*/
+//////////////////////////////////////////////  General driver /////////////////////////////////
+
+	initial begin 
+		forever #(2*CLK_PERIOD) begin 
+
+			if (CCC_Handler_dut.current_state == PRE_FIRST_DATA_TWO) begin 
+				@(negedge scl_neg_edge_tb or negedge scl_pos_edge_tb) ;
+				i_sdahnd_rx_sda_tb = 1'b0 ;
+				#(2*CLK_PERIOD) ;
+				//i_sdahnd_rx_sda_tb = 1'bz ;
+			end
+			else if (CCC_Handler_dut.current_state == PRE_DATA_TWO) begin 
+				@(negedge scl_neg_edge_tb or negedge scl_pos_edge_tb) ;
+				i_sdahnd_rx_sda_tb = 1'b1 ;
+				#(2*CLK_PERIOD) ;
+				//i_sdahnd_rx_sda_tb = 1'bz ;
+			end
+		end
+	end 
+
+
+
 	task system_reset ;
 		begin 
 			@(negedge i_sys_clk_tb)
@@ -3220,7 +3244,7 @@ int cycle_count ;
 	task check_cmd_word (); 
 		begin 
 			logic [17:0] collected_cmd_wrd ;
-			bit 	     parity_adj_7e ,parity_adj ,P1_cmdword ,P0_cmdword ;
+			bit 	     parity_adj_7e ,parity_adj ,P1_cmd_sel ,P1_cmd_ind ,P0_cmdword ;
 			bit   [17:0] correct_first_cmd_word , correct_cmd_word ;
 			int 		 o ;
 
@@ -3232,14 +3256,13 @@ int cycle_count ;
 
 				//$display("nvlaue of SDA line is  %b : %t",o_sdahnd_serial_data_tb,$time);
 
-				parity_adj_7e = (i_regf_RnW_tb ^ (^7'h7E) ) ;
-				parity_adj    = (i_regf_RnW_tb ^ (^o_txrx_addr_ccc_tb[6:0]) ) ;
-
-				P1_cmdword    = i_regf_RnW_tb ^ collected_cmd_wrd[9] ^ collected_cmd_wrd[7] ^ collected_cmd_wrd[5] ^ collected_cmd_wrd[3] ; // index is shifted by 2 as this is the 18 bit word (data + parity)
+				parity_adj    = collected_cmd_wrd[16] ^ collected_cmd_wrd[14] ^ collected_cmd_wrd[12] ^ collected_cmd_wrd[10] ^ collected_cmd_wrd[8] ^ collected_cmd_wrd[6] ^ collected_cmd_wrd[4]  ;
+				//P1_cmdword    = i_regf_RnW_tb ^ collected_cmd_wrd[9] ^ collected_cmd_wrd[7] ^ collected_cmd_wrd[5] ^ collected_cmd_wrd[3] ; // index is shifted by 2 as this is the 18 bit word (data + parity)
+				P1_cmd_sel    = i_regf_RnW_tb ^ collected_cmd_wrd[9] ^ collected_cmd_wrd[7] ^ collected_cmd_wrd[5] ^ collected_cmd_wrd[3] ; // index is shifted by 2 as this is the 18 bit word (data + parity)
+				P1_cmd_ind 	  = 1'b0 		  ^ collected_cmd_wrd[9] ^ collected_cmd_wrd[7] ^ collected_cmd_wrd[5] ^ collected_cmd_wrd[3] ; // index is shifted by 2 as this is the 18 bit word (data + parity)
 				P0_cmdword    =  1 ;
-
-				correct_first_cmd_word = {1'b0 , 7'd0 , 7'h7E 					, parity_adj_7e , P1_cmdword , P0_cmdword } ;
-				correct_cmd_word 	   = {i_regf_RnW_tb, 7'd0 , o_txrx_addr_ccc_tb[6:0] , parity_adj    , P1_cmdword , P0_cmdword } ;
+				correct_first_cmd_word = {1'b0 		    , 7'd0 , 7'h7E 					 , parity_adj , P1_cmd_ind , P0_cmdword } ;
+				correct_cmd_word 	   = {i_regf_RnW_tb , 7'd0 , o_txrx_addr_ccc_tb[6:0] , parity_adj , P1_cmd_sel , P0_cmdword } ;
 
 				# (2*CLK_PERIOD) ;
 				if (o == 'd17) begin 

@@ -103,7 +103,6 @@ output reg        o_crc_en_rx_tx_mux_sel,
 output reg        o_crc_data_rx_tx_valid_sel,
 output reg        o_crc_data_tx_rx_mux_sel,
 output wire       o_crc_last_byte_tx_rx_mux_sel,
-
 //output reg        o_en_mux           ,  //  for CCC handler environment only for crc muxes btn tx and rx   ( 1 for tx and 0 for rx 
 output reg        o_crc_rx_tx_mux_sel_ccc 
 
@@ -145,8 +144,6 @@ reg        i_regf_DBP       ;
 reg        i_regf_SRE       ;
 
 
-
-
 ///////////////////////////////// state encoding //////////////////////////////////////////////
 
 // localparam to prevent overriding the states from outside the design
@@ -174,8 +171,8 @@ localparam  [4:0]  IDLE               = 5'd0  , // 0
                    EXIT_PATTERN       = 5'd19 , 
                    ERROR              = 5'd20 , 
                    FINISH             = 5'd21 , 
-                   PRE_CRC_TARGET     = 5'd22 ,
-                   RESTART_PATTERN_SPECIAL = 5'd23 ;
+                   PRE_CRC_TARGET     = 5'd22 ;
+                   //RESTART_PATTERN_SPECIAL = 5'd23 ;
 
 parameter [6:0] SEVEN_E = 7'h7E ;
 
@@ -1311,7 +1308,7 @@ end
                 end  
             end 
 
-
+/*
             RESTART_PATTERN_SPECIAL : begin 
                 first_time      = 1'b0 ;
                 o_bitcnt_en     = 1'b0 ;
@@ -1344,7 +1341,7 @@ end
                     next_state = RESTART_PATTERN_SPECIAL ;
                 end
             end 
-
+*/
 
             RESTART_PATTERN : begin 
                 first_time      = 1'b0 ;
