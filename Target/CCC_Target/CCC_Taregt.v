@@ -137,6 +137,7 @@ always@(*)begin
     byte_no            = 3'd0 ;
     case_ccc           = 1'b0 ;
     direc_ccc          = 1'b0 ;
+    o_detector_en      = 1'b0 ;
 
         case (current_state)
 
