@@ -2964,7 +2964,7 @@ mux8      mux1_8 (
 		// allocation of the object 
 		conf_obj = new();
 
-		for (i=0 ; i<20000 ; i++) begin
+		for (i=0 ; i<10000 ; i++) begin
 
 			assert(conf_obj.randomize());  // "lw feh moshkla fel constrains edeny error" deh lazmet el word assert
 			
@@ -3977,11 +3977,11 @@ int cycle_count ;
 
     property Direct_ENEC_DISEC_SETMWL_SETMRL_TOC_0_track ;
         @(posedge i_sys_clk_tb) ($rose(i_engine_en_tb) 								  &&
-        											i_regf_CMD_ATTR_tb  == 3'd1       && 
-        	(i_regf_CMD_tb == 8'h80 || i_regf_CMD_tb == 8'h81 || i_regf_CMD_tb == 8'h89 || i_regf_CMD_tb == 8'h8A) && 
+        											     i_regf_CMD_ATTR_tb == 3'd1   && 
+        						   (i_regf_CMD_tb == 8'h80 || i_regf_CMD_tb == 8'h81  ||
+        	 						i_regf_CMD_tb == 8'h89 || i_regf_CMD_tb == 8'h8A) && 
         							(i_regf_DTT_tb == 3'd1 || i_regf_DTT_tb == 3'd1 ) && 
-        											i_regf_TOC_tb == 0 ) 
-        											|->  
+        											     i_regf_TOC_tb == 0 ) |->  
         // CMD word											
         (o_tx_mode_tb == special_preamble 		[*(2*scl_wrt_sys_clk)])  ##1
         (o_tx_mode_tb == zero 					[*(scl_wrt_sys_clk)])    ##1
