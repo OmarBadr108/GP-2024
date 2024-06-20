@@ -1,0 +1,8 @@
+vlib work
+vlog I3C_TOP_TB.sv sys_package.sv Normal_Transaction.v bits_counter.v bits_counter_sdr.v CCC_Handler.v clk_divider.v controller_crh.v controller_RX.v controller_TX.v crc.v dynamic_address_assignment.v ENTHDR.v FRAME_COUNTER.v frame_counter_sdr.v gen_mux.v HDR_Engine.v hot_join.v i2c_legacy_mode.v i3c_timer_fsm.v i3c_top.v IBI.v main_ctrl_unit.v mux.v new_i3c_engine.v open_drain_behav_model.v push_pull_behav_model.v reg_file.v Rx.v scl_generation.v sda_handling.v sdr_mode.v staller.v top_for_crh_test.v top_for_hj_test.v tri_state_buf.v tri_state_buf_n.v Tx.v +cover -covercells
+vsim -voptargs=+acc work.I3C_TOP_TB -cover
+
+do ./wave.do \
+Save coverage data and run the simulation
+coverage save I3C_TOP.ucdb -onexit
+run -all
