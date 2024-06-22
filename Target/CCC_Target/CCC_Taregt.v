@@ -380,12 +380,12 @@ always@(*)begin
             end 
 
             TOKEN_CRC : begin
-                if (i_rx_mode_done & !i_rx_error) begin
+                if (i_rx_mode_done && !i_rx_error) begin
                    o_rx_en = 1'b1 ;
                    o_rx_mode = crc_value ;
                    next_state = CRC_VALUE ;
                 end
-                else if (i_rx_mode_done & i_rx_error) begin
+                else if (i_rx_mode_done && i_rx_error) begin
                     o_engine_done = 1'b1 ;
                     next_state = IDLE ;
                 end
@@ -441,6 +441,7 @@ always@(*)begin
                 else begin
                     o_rx_en = 1'b0 ;
                     o_engine_done = 1'b1 ;
+                    next_state = IDLE ;
                 end
 
 
