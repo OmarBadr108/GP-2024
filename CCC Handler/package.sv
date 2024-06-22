@@ -54,21 +54,18 @@ parameter [11:0] first_location = 12'd1000 ;
 
 
 // rx parameters 
-localparam [3:0] 
-                 preamble_rx_mode    = 4'd0 , 
-                 CRC_PREAMBLE        = 4'd1 ,
-                 parity_check        = 4'd6 ,
-                 deserializing_byte  = 4'd3 ,
-                 check_c_token_CRC   = 4'd5 ,
-                 check_value_CRC     = 4'd7 ;
-
-
-
+parameter [2:0] 
+                 preamble_rx_mode    = 3'd0 , 
+                 CRC_PREAMBLE        = 3'd1 ,
+                 parity_check        = 3'd6 ,
+                 deserializing_byte  = 3'd3 ,
+                 check_c_token_CRC   = 3'd7 ,
+                 check_value_CRC     = 3'd2 ;
+  
 // SCL staller parameters 
-parameter [4:0] restart_pattern_stall = 5'd11  , // according to restart pattern specs
-		restart_pattern_stall_special = 5'd11  , // according to restart pattern specs
-                exit_pattern_stall    = 5'd17 ; // according to exit pattern specs 
-
+parameter [4:0] restart_pattern_stall = 5'd7, 
+                restart_pattern_stall_special = 5'd7, 
+                exit_pattern_stall    = 5'd13 ;  
 
 
 // Error states parameters 
@@ -127,7 +124,7 @@ class configuration ;
     //rand bit 		RAND_SDA ; 			
    
  
-	constraint CMD_ATTR {
+	constraint CMD_ATTR {	 	 	 	 	// 1 for immediate and 0 for regular
 		//RAND_CMD_ATTR inside { 0 , 1 } ;
 		RAND_CMD_ATTR dist {1:/70 , 0:/30} ;
 	}
@@ -138,8 +135,8 @@ class configuration ;
 
 	constraint CMD {
 		RAND_CMD inside {8'h00 , 8'h01 , 8'h09 , 8'h0A , 8'h1F	 	 	 // broadcast 
-					    //,8'h80 , 8'h81 , 8'h89 , 8'h8A  				 // direct set
-					    //,8'h8B , 8'h8C , 8'h90 , 8'h8E , 8'h8F  	 	 // direct get
+					    ,8'h80 , 8'h81 , 8'h89 , 8'h8A  				 // direct set
+					    ,8'h8B , 8'h8C , 8'h90 , 8'h8E , 8'h8F  	 	 // direct get
 					    //,8'h8D	 	  		 		 	 	 	 	 // GETPID	 
 						 								   		} ;	
 	}

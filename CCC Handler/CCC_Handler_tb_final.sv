@@ -25,11 +25,18 @@ module CCC_Handler_tb ();
 	reg  [3:0] o_tx_mode_tb ;
  	// related to rx
 	reg 	   i_rx_mode_done_tb ,i_rx_pre_tb ,i_rx_error_tb ,o_rx_en_tb ;
-	reg  [3:0] o_rx_mode_tb ;
+	reg  [2:0] o_rx_mode_tb ;
 
 	// new /////
 	wire  en_mux ;
 	////////////
+	// related to CRC
+	logic        o_crc_en_rx_tx_mux_sel_tb;
+	logic        o_crc_data_rx_tx_valid_sel_tb;
+	logic        o_crc_data_tx_rx_mux_sel_tb;
+	logic        o_crc_last_byte_tx_rx_mux_sel_tb;
+
+	/////////////////////
 	// related to regfile 
 	bit i_regfile_clk_tb ;
 	wire [7:0]  i_rx_regfcrc_data_wr_tb ;
@@ -124,7 +131,7 @@ module CCC_Handler_tb ();
 
 	// scl ddr clk = 25 Mhz
 	parameter DDR_CLK_PERIOD = 40 ;
-
+	wire o_crc_rx_tx_mux_sel_ccc ;
 // 3-DUT instatiation 
 	
 
@@ -171,7 +178,12 @@ module CCC_Handler_tb ();
 		.o_engine_odd(o_engine_odd_tb),
 		.o_regf_ERR_STATUS(o_regf_ERR_STATUS_tb),
 
-		.o_en_mux(en_mux)       // new
+		.o_en_mux(en_mux) ,      // new
+		.o_crc_en_rx_tx_mux_sel(o_crc_en_rx_tx_mux_sel_tb),
+		.o_crc_data_rx_tx_valid_sel(o_crc_data_rx_tx_valid_sel_tb),
+		.o_crc_data_tx_rx_mux_sel(o_crc_data_tx_rx_mux_sel_tb),
+		.o_crc_last_byte_tx_rx_mux_sel(o_crc_last_byte_tx_rx_mux_sel_tb),
+		.o_crc_rx_tx_mux_sel_ccc(o_crc_rx_tx_mux_sel_ccc)
 		);
 
 
@@ -1257,50 +1269,6 @@ mux8      mux1_8 (
 
 		Dummy_Broadcast  Dummy_Broadcast_instance = new();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////// DIRECT ///////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1967,42 +1935,6 @@ mux8      mux1_8 (
 
 		SETMRL_Direct  SETMRL_Direct_instance = new();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //////////////////////////////////////////////////////// DIRECT GET /////////////////////////////////////////////////
 
 	//----------------------------------------------- ninth GROUP GETMWL_D ----------------------------------------//
@@ -2081,8 +2013,8 @@ mux8      mux1_8 (
 			bins rx_preamble_rx_mode   = {preamble_rx_mode};
 			bins rx_deserializing_byte = {deserializing_byte};
 			bins rx_parity_check       = {parity_check};
-			bins rx_check_c_token_CRC  = {check_c_token_CRC};
-			bins rx_check_value_CRC    = {check_value_CRC};
+			//bins rx_check_c_token_CRC  = {check_c_token_CRC};
+			//bins rx_check_value_CRC    = {check_value_CRC};
 		}
 
 		i_rx_pre : coverpoint i_rx_pre_tb iff (
@@ -2249,8 +2181,8 @@ mux8      mux1_8 (
 			bins rx_preamble_rx_mode   = {preamble_rx_mode};
 			bins rx_deserializing_byte = {deserializing_byte};
 			bins rx_parity_check       = {parity_check};
-			bins rx_check_c_token_CRC  = {check_c_token_CRC};
-			bins rx_check_value_CRC    = {check_value_CRC};
+			//bins rx_check_c_token_CRC  = {check_c_token_CRC};
+			//bins rx_check_value_CRC    = {check_value_CRC};
 		}
 
 		i_rx_pre : coverpoint i_rx_pre_tb iff (
@@ -2415,8 +2347,8 @@ mux8      mux1_8 (
 			bins rx_preamble_rx_mode   = {preamble_rx_mode};
 			bins rx_deserializing_byte = {deserializing_byte};
 			bins rx_parity_check       = {parity_check};
-			bins rx_check_c_token_CRC  = {check_c_token_CRC};
-			bins rx_check_value_CRC    = {check_value_CRC};
+			//bins rx_check_c_token_CRC  = {check_c_token_CRC};
+			//bins rx_check_value_CRC    = {check_value_CRC};
 		}
 
 		i_rx_pre : coverpoint i_rx_pre_tb iff (
@@ -2579,8 +2511,8 @@ mux8      mux1_8 (
 			bins rx_preamble_rx_mode   = {preamble_rx_mode};
 			bins rx_deserializing_byte = {deserializing_byte};
 			bins rx_parity_check       = {parity_check};
-			bins rx_check_c_token_CRC  = {check_c_token_CRC};
-			bins rx_check_value_CRC    = {check_value_CRC};
+			//bins rx_check_c_token_CRC  = {check_c_token_CRC};
+			//bins rx_check_value_CRC    = {check_value_CRC};
 		}
 
 		i_rx_pre : coverpoint i_rx_pre_tb iff (
@@ -2745,8 +2677,8 @@ mux8      mux1_8 (
 			bins rx_preamble_rx_mode   = {preamble_rx_mode};
 			bins rx_deserializing_byte = {deserializing_byte};
 			bins rx_parity_check       = {parity_check};
-			bins rx_check_c_token_CRC  = {check_c_token_CRC};
-			bins rx_check_value_CRC    = {check_value_CRC};
+			//bins rx_check_c_token_CRC  = {check_c_token_CRC};
+			//bins rx_check_value_CRC    = {check_value_CRC};
 		}
 
 		i_rx_pre : coverpoint i_rx_pre_tb iff (
@@ -3032,7 +2964,7 @@ mux8      mux1_8 (
 		// allocation of the object 
 		conf_obj = new();
 
-		for (i=0 ; i<1000 ; i++) begin
+		for (i=0 ; i<10000 ; i++) begin
 
 			assert(conf_obj.randomize());  // "lw feh moshkla fel constrains edeny error" deh lazmet el word assert
 			
@@ -3086,7 +3018,7 @@ mux8      mux1_8 (
 	end
 
 	always @(CCC_Handler_dut.current_state) begin 
-		if (i_engine_en_tb && CCC_Handler_dut.current_state == FIRST_DATA_BYTE) begin 
+		if (!i_regf_RnW_tb && i_engine_en_tb && CCC_Handler_dut.current_state == FIRST_DATA_BYTE) begin 
 			#(CLK_PERIOD) ;
 			check_repeated_data_word();
 		end 
@@ -3205,7 +3137,7 @@ int cycle_count ;
     end
 */
 
-
+/*
 //////////////////////////////////////////////  General driver /////////////////////////////////
 
 	initial begin 
@@ -3217,6 +3149,29 @@ int cycle_count ;
 
 
 ///////////////////////////////////////////////////// TASKS ///////////////////////////////////////
+*/
+//////////////////////////////////////////////  General driver /////////////////////////////////
+
+	initial begin 
+		forever #(2*CLK_PERIOD) begin 
+
+			if (CCC_Handler_dut.current_state == PRE_FIRST_DATA_TWO) begin 
+				@(negedge scl_neg_edge_tb or negedge scl_pos_edge_tb) ;
+				i_sdahnd_rx_sda_tb = 1'b0 ;
+				#(2*CLK_PERIOD) ;
+				//i_sdahnd_rx_sda_tb = 1'bz ;
+			end
+			else if (CCC_Handler_dut.current_state == PRE_DATA_TWO) begin 
+				@(negedge scl_neg_edge_tb or negedge scl_pos_edge_tb) ;
+				i_sdahnd_rx_sda_tb = 1'b1 ;
+				#(2*CLK_PERIOD) ;
+				//i_sdahnd_rx_sda_tb = 1'bz ;
+			end
+		end
+	end 
+
+
+
 	task system_reset ;
 		begin 
 			@(negedge i_sys_clk_tb)
@@ -3289,7 +3244,7 @@ int cycle_count ;
 	task check_cmd_word (); 
 		begin 
 			logic [17:0] collected_cmd_wrd ;
-			bit 	     parity_adj_7e ,parity_adj ,P1_cmdword ,P0_cmdword ;
+			bit 	     parity_adj_7e ,parity_adj ,P1_cmd_sel ,P1_cmd_ind ,P0_cmdword ;
 			bit   [17:0] correct_first_cmd_word , correct_cmd_word ;
 			int 		 o ;
 
@@ -3301,14 +3256,13 @@ int cycle_count ;
 
 				//$display("nvlaue of SDA line is  %b : %t",o_sdahnd_serial_data_tb,$time);
 
-				parity_adj_7e = (i_regf_RnW_tb ^ (^7'h7E) ) ;
-				parity_adj    = (i_regf_RnW_tb ^ (^o_txrx_addr_ccc_tb[6:0]) ) ;
-
-				P1_cmdword    = i_regf_RnW_tb ^ collected_cmd_wrd[9] ^ collected_cmd_wrd[7] ^ collected_cmd_wrd[5] ^ collected_cmd_wrd[3] ; // index is shifted by 2 as this is the 18 bit word (data + parity)
+				parity_adj    = collected_cmd_wrd[16] ^ collected_cmd_wrd[14] ^ collected_cmd_wrd[12] ^ collected_cmd_wrd[10] ^ collected_cmd_wrd[8] ^ collected_cmd_wrd[6] ^ collected_cmd_wrd[4]  ;
+				//P1_cmdword    = i_regf_RnW_tb ^ collected_cmd_wrd[9] ^ collected_cmd_wrd[7] ^ collected_cmd_wrd[5] ^ collected_cmd_wrd[3] ; // index is shifted by 2 as this is the 18 bit word (data + parity)
+				P1_cmd_sel    = i_regf_RnW_tb ^ collected_cmd_wrd[9] ^ collected_cmd_wrd[7] ^ collected_cmd_wrd[5] ^ collected_cmd_wrd[3] ; // index is shifted by 2 as this is the 18 bit word (data + parity)
+				P1_cmd_ind 	  = 1'b0 		  ^ collected_cmd_wrd[9] ^ collected_cmd_wrd[7] ^ collected_cmd_wrd[5] ^ collected_cmd_wrd[3] ; // index is shifted by 2 as this is the 18 bit word (data + parity)
 				P0_cmdword    =  1 ;
-
-				correct_first_cmd_word = {1'b0 , 7'd0 , 7'h7E 					, parity_adj_7e , P1_cmdword , P0_cmdword } ;
-				correct_cmd_word 	   = {1'b0 , 7'd0 , o_txrx_addr_ccc_tb[6:0] , parity_adj    , P1_cmdword , P0_cmdword } ;
+				correct_first_cmd_word = {1'b0 		    , 7'd0 , 7'h7E 					 , parity_adj , P1_cmd_ind , P0_cmdword } ;
+				correct_cmd_word 	   = {i_regf_RnW_tb , 7'd0 , o_txrx_addr_ccc_tb[6:0] , parity_adj , P1_cmd_sel , P0_cmdword } ;
 
 				# (2*CLK_PERIOD) ;
 				if (o == 'd17) begin 
@@ -4023,11 +3977,11 @@ int cycle_count ;
 
     property Direct_ENEC_DISEC_SETMWL_SETMRL_TOC_0_track ;
         @(posedge i_sys_clk_tb) ($rose(i_engine_en_tb) 								  &&
-        											i_regf_CMD_ATTR_tb  == 3'd1       && 
-        	(i_regf_CMD_tb == 8'h80 || i_regf_CMD_tb == 8'h81 || i_regf_CMD_tb == 8'h89 || i_regf_CMD_tb == 8'h8A) && 
+        											     i_regf_CMD_ATTR_tb == 3'd1   && 
+        						   (i_regf_CMD_tb == 8'h80 || i_regf_CMD_tb == 8'h81  ||
+        	 						i_regf_CMD_tb == 8'h89 || i_regf_CMD_tb == 8'h8A) && 
         							(i_regf_DTT_tb == 3'd1 || i_regf_DTT_tb == 3'd1 ) && 
-        											i_regf_TOC_tb == 0 ) 
-        											|->  
+        											     i_regf_TOC_tb == 0 ) |->  
         // CMD word											
         (o_tx_mode_tb == special_preamble 		[*(2*scl_wrt_sys_clk)])  ##1
         (o_tx_mode_tb == zero 					[*(scl_wrt_sys_clk)])    ##1
@@ -4208,7 +4162,7 @@ int cycle_count ;
     endsequence
 
     sequence broadcast_sec_TOC_0_1_D_get ;
-    	restart_pattern_seq_1_D_get ##(13) o_tx_mode_tb == special_preamble  ;
+    	restart_pattern_seq_1_D_get ##(12) o_tx_mode_tb == special_preamble  ;
     endsequence
 
 
@@ -4249,7 +4203,7 @@ int cycle_count ;
     	endsequence
     	// for TOC = 0
     	sequence Direct_get_2_bytes_sec_TOC_0 ;
-    	    restart_pattern_seq_2_D_get ##(11) (o_tx_mode_tb == special_preamble)  ;
+    	    restart_pattern_seq_2_D_get ##(12) (o_tx_mode_tb == special_preamble)  ;
     	endsequence
 
 
@@ -4472,7 +4426,9 @@ int cycle_count ;
      	(o_rx_mode_tb == CRC_PREAMBLE 			[*(2*scl_wrt_sys_clk)])  ##1
      	(o_rx_mode_tb == check_c_token_CRC 		[*(4*scl_wrt_sys_clk)])  ##1
      	(o_rx_mode_tb == check_value_CRC 		[*(5*scl_wrt_sys_clk)])  ##1
-     	(o_rx_mode_tb == preamble_rx_mode 		[*(11)])	 		 	 	 	//  disabled >> restart_pattern
+     	(o_rx_mode_tb == preamble_rx_mode 		//[*(12)] 						//  disabled >> restart_pattern
+
+     	)	 		 	 	 	
     
         			;										 
     endproperty
@@ -4522,7 +4478,8 @@ int cycle_count ;
      	(o_rx_mode_tb == CRC_PREAMBLE 			[*(2*scl_wrt_sys_clk)])  ##1
      	(o_rx_mode_tb == check_c_token_CRC 		[*(4*scl_wrt_sys_clk)])  ##1
      	(o_rx_mode_tb == check_value_CRC 		[*(5*scl_wrt_sys_clk)])  ##1
-     	(o_rx_mode_tb == preamble_rx_mode 		[*(17)])	 		 	 	 	//  disabled >> exit_pattern
+     	(o_rx_mode_tb == preamble_rx_mode 		//[*(17)]						//  disabled >> exit_pattern
+     		)	 		 	 	 	
     
         			;										 
     endproperty

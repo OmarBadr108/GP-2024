@@ -65,8 +65,8 @@ module ENTHDR_CTRL_TGT_top (
     input  wire i_tgt_engine_en              ,
 
 
-    //output wire o_tgt_sdahnd_sda             ,
-    //output wire o_tgt_pp_od_sdahand          ,
+    output wire o_tgt_sdahnd_sda             ,
+    output wire o_tgt_pp_od_sdahand          ,
     output wire o_tgt_engine_done
 
 
@@ -1187,7 +1187,7 @@ ENTHDR_TGT u1_enthdr (
  .i_scl_pos_edge (scl_pos_edge) ,
  .i_scl_neg_edge (scl_neg_edge),
 
- . o_sdahnd_sda (sda) ,
+ . o_sdahnd_sda (o_tgt_sdahnd_sda) ,
  . o_pp_od      (tgt_pp_od_sdahand),
  . o_sda_handle_en(tgt_sda_handle_en), 
  . o_engine_done(o_tgt_engine_done) 

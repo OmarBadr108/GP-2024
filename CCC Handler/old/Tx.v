@@ -62,16 +62,16 @@ reg reset_counter_flag;
 reg rd_wr_flag; //storing rd_or_wr bit for calculating (parity adj) and (cmd word parity)
 reg parity_flag; //to distinguish parity is calculated for cmd or data
 reg first_byte_full; //to distinguish tx is serializing first byte or second byte
+wire [4:0] tmp_restart ;
 
-
-//111 1110 0
+assign tmp_restart = 5'b 01011;
 assign A = {i_ddrccc_special_data[6:0],parity_adj} ; 
 assign parity_adj = ( rd_wr_flag ^ (^i_ddrccc_special_data) ) ;
 assign P1 = (parity_flag)? P1_data : P1_cmdword ; 
 assign P0 = (parity_flag)? P0_data : P0_cmdword ;
 assign P = {P1,P0} ;
 assign P1_cmdword = rd_wr_flag ^ A[7] ^ A[5] ^ A[3] ^ A[1] ;
-assign P0_cmdword = A[6] ^ A[4] ^ A[2] ^ A[0] ^ 1 ;
+assign P0_cmdword =  1 ;
 assign P1_data = D1[7] ^ D1[5] ^ D1[3] ^ D1[1] ^ D2[7] ^ D2[5] ^ D2[3] ^ D2[1] ;
 assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^ 1 ; 
 
@@ -230,8 +230,7 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 		  
 		  o_crc_last_byte <= 'b0;
 		  o_crc_en <= 'b1;
-		 // crc_indicator <= 'b1;
-		 // crc_temp <= i_crc_crc_value ;
+		  o_crc_parallel_data <= i_ddrccc_special_data;
 			
 		  if (i_sclgen_scl_neg_edge || i_sclgen_scl_pos_edge)
 		   begin    
@@ -351,17 +350,13 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 			    end
 			//	o_crc_data_valid <= 'b0;
 				end
-			    
 			 end
 			 
 			else if ( (counter == 'd7) )
 			  begin
 			 reset_counter_flag <= 0;
 			 
-			 end
-			 
-			 
-			 
+			 end	 
 		 end	
 		 
 		 /////////////////////////////////
@@ -472,7 +467,7 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 			 
 	  end
 			  
-			  /////////////////////////////////////////////
+	/////////////////////////////////////////////
 			  
 		restart_Pattern: begin
 			  
@@ -488,7 +483,8 @@ assign P0_data = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^
 			   else
 			    begin
 			     counter <= counter + 1;
-			     o_sdahnd_serial_data <= !o_sdahnd_serial_data;
+			    //  12 / 6 / 2024
+			    o_sdahnd_serial_data <= tmp_restart[(4 - counter)];
 			     if ( counter == 'd4 )
 			      o_ddrccc_mode_done <= 'b1;
 			    end	  

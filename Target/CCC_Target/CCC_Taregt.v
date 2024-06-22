@@ -49,9 +49,9 @@ input wire        i_rx_error , //error in special preamble after restart CMND wo
 input wire        premable,
 
 output reg        o_tx_en ,
-output reg [4:0]  o_tx_mode ,
+output reg [2:0]  o_tx_mode ,
 output reg        o_rx_en ,
-output reg [4:0]  o_rx_mode ,
+output reg [3:0]  o_rx_mode ,
 output reg        o_detector_en ,
 output reg        o_engine_done ,
 output reg [7:0]  o_regf_addr ,
@@ -59,47 +59,47 @@ output reg        o_regf_wr_en ,
 output reg        o_regf_rd_en 
 
 
-
 );
 
 
 // internal signals 
-reg [4:0] current_state , next_state ;
+reg [3:0] current_state , next_state ;
 reg case_ccc, direc_ccc ;
 reg [2:0] byte_no ;
 
 
 // Local Parameters of States
-localparam [4:0] IDLE = 5'd0 ;
-localparam [4:0] PRE_CMD = 5'd1 ;
-localparam [4:0] CHECK_CCC = 5'd2 ;
-localparam [4:0] DEF_DATA = 5'd3 ;
-localparam [4:0] CHECK_PARITY = 5'd4 ;
-localparam [4:0] DATA= 5'd5 ;
-localparam [4:0] SPECIAL_PREAMBLE = 5'd6 ;
-localparam [4:0] DESER_ZEROS = 5'd7 ;
-localparam [4:0] ACK = 5'd8 ;
-localparam [4:0] TOKEN_CRC = 5'd9 ;
-localparam [4:0] CRC_VALUE = 5'd10 ;
-localparam [4:0] RESTART_EXIT = 5'd11 ;
-localparam [4:0] DESER_ADDR = 5'd12 ;
+localparam [3:0] IDLE = 5'd0 ; 
+localparam [3:0] PRE_CMD = 5'd1 ;
+localparam [3:0] CHECK_CCC = 5'd2 ;
+localparam [3:0] DEF_DATA = 5'd3 ;
+localparam [3:0] CHECK_PARITY = 5'd4 ;
+localparam [3:0] DATA= 5'd5 ;
+localparam [3:0] SPECIAL_PREAMBLE = 5'd6 ;
+localparam [3:0] DESER_ZEROS = 5'd7 ;
+localparam [3:0] ACK = 5'd8 ;
+localparam [3:0] TOKEN_CRC = 5'd9 ;
+localparam [3:0] CRC_VALUE = 5'd10 ;
+localparam [3:0] RESTART_EXIT = 5'd11 ;
+localparam [3:0] DESER_ADDR = 5'd12 ;
 
 //Local Parameters of TX modes
-localparam [4:0] one_preamble = 5'd0 ;
-localparam [4:0] zero_preamble = 5'd1 ;
+localparam [2:0] one_preamble = 3'b000 ; //confirmed with TX
+localparam [2:0] zero_preamble = 3'b001 ; //confirmed with TX
+
 
 
 
 //Local Parameters of RX modes
-localparam [4:0] preamble = 5'd0 ;
-localparam [4:0] ccc_value = 5'd1 ;
-localparam [4:0] deser_def = 5'd2 ;
-localparam [4:0] check_parity = 5'd3 ;
-localparam [4:0] special_preamble = 5'd4 ;
-localparam [4:0] deser_zeros = 5'd5 ;
-localparam [4:0] deser_addr = 5'd6 ; 
-localparam [4:0] token_crc = 5'd7 ;
-localparam [4:0] crc_value = 5'd8;
+localparam [3:0] preamble = 4'b0001 ; //confirmed with RX
+localparam [3:0] ccc_value = 4'b0110 ; //confirmed with RX
+localparam [3:0] deser_def = 4'b0010 ; //confirmed with RX to send data and def byte(useless addr) on same state
+localparam [3:0] check_parity = 4'b0100 ; //confirmed with RX
+localparam [3:0] special_preamble = 4'b1001; //confirmed with RX
+localparam [3:0] deser_zeros = 4'b1000 ; //confirmed with RX
+localparam [3:0] deser_addr = 4'b0111 ; //confirmed with RX
+localparam [3:0] token_crc = 4'b0101 ; //confirmed with R
+localparam [3:0] crc_value = 4'b0110; //confirmed with RX
 
 
 
@@ -127,7 +127,7 @@ always@(*)begin
 
     // initial values of outputs 
     o_tx_en            = 1'b0 ; 
-    o_tx_mode          = 4'b0 ; 
+    o_tx_mode          = 3'b0 ; 
     o_rx_en            = 1'b0 ; 
     o_rx_mode          = 4'b0 ; 
     o_regf_wr_en       = 1'b0 ;
@@ -137,6 +137,7 @@ always@(*)begin
     byte_no            = 3'd0 ;
     case_ccc           = 1'b0 ;
     direc_ccc          = 1'b0 ;
+    o_detector_en      = 1'b0 ;
 
         case (current_state)
 
@@ -379,12 +380,12 @@ always@(*)begin
             end 
 
             TOKEN_CRC : begin
-                if (i_rx_mode_done & !i_rx_error) begin
+                if (i_rx_mode_done && !i_rx_error) begin
                    o_rx_en = 1'b1 ;
                    o_rx_mode = crc_value ;
                    next_state = CRC_VALUE ;
                 end
-                else if (i_rx_mode_done & i_rx_error) begin
+                else if (i_rx_mode_done && i_rx_error) begin
                     o_engine_done = 1'b1 ;
                     next_state = IDLE ;
                 end
@@ -440,6 +441,7 @@ always@(*)begin
                 else begin
                     o_rx_en = 1'b0 ;
                     o_engine_done = 1'b1 ;
+                    next_state = IDLE ;
                 end
 
 
