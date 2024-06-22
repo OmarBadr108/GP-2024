@@ -48,9 +48,9 @@ parameter CLK_PERIOD  = 10;
 
 
 //--------------------------------------------------- Internal Signals --------------------------------------------//
-    reg               sda_drive             ;  
+      
     // locally driven value
-    assign sda_tb   = o_tgt_sdahnd_sda_tb 			;
+    //assign sda_tb   = o_tgt_sdahnd_sda_tb 			;
 
 
 
@@ -94,7 +94,7 @@ initial begin
 // Test Case 1: enabling the hdr mode to send the ENTHDR CCC and then enabling the HDR engine     
      
    // Writing configurations
-     	//write_configurations();
+     	write_configurations();
      	i_data_config_mux_sel   = 1'b0;
 
 
@@ -134,7 +134,7 @@ task initialize;
 		i_ccc_en_dis_hj_tb      = 1'b0;
         i_ccc_done_tb			= 1'b0;
         i_ddr_mode_done_tb      = 1'b0;
-		sda_drive 				= 1'bz;
+		
 		//i_ddr_pp_od_tb			= 1'b0;
 		//i_ddr_pp_od_tb			= 1'b0;
 		i_data_config_mux_sel   = 1'b0;

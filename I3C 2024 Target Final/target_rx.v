@@ -63,7 +63,7 @@ assign CMD_P0 = A[6] ^ A[4] ^ A[2] ^ A[0] ^ 1 ;
 assign D_P1 = D1[7] ^ D1[5] ^ D1[3] ^ D1[1] ^ D2[7] ^ D2[5] ^ D2[3] ^ D2[1] ;
 assign D_P0 = D1[6] ^ D1[4] ^ D1[2] ^ D1[0] ^ D2[6] ^ D2[4] ^ D2[2] ^ D2[0] ^ 1 ;
 assign Parity =  parity_flag? {D_P1,D_P0} : {CMD_P1, CMD_P0};
-assign decision_error = (initial_seq[19:18] == special_preamble) & (initial_seq[16:10] == 0) & (initial_seq[2] == (^initial_seq[9:3] ^ initial_seq[17]) & (initial_seq[1] == seq_P1) & (initial_seq[0] == seq_P0));
+assign decision_error = (initial_seq[19:18] == special_preamble) & (initial_seq[16:10] == 0) & (initial_seq[1] == seq_P1) & (initial_seq[0] == seq_P0);
 assign o_ddrccc_rnw = initial_seq[17];
 
 always @ (*)
@@ -96,7 +96,8 @@ always @ (posedge i_sys_clk or negedge i_sys_rst)
              D2 <= 0;
              first_byte_full <= 0;
              o_crc_data_valid <= 0;
-             o_crc_last_byte <= 0;       
+             o_crc_last_byte <= 0;
+             parity_flag <= 0;       
       end
   
    else if (i_ddrccc_rx_en)
@@ -143,12 +144,13 @@ always @ (posedge i_sys_clk or negedge i_sys_rst)
                               initial_seq['d19 - count] <= i_sdahnd_rx_sda;
                               if(count == 'd19)
                                begin                                                   
+                                    parity_flag <= 0;
                                     o_ddrccc_rx_mode_done <= 1'b1;
                                     o_crc_data <= initial_seq[9:2];     
                                     if (initial_seq[17])
-                                     o_crc_en <= 1;
-                                    else
                                      o_crc_en <= 0;
+                                    else
+                                     o_crc_en <= 1;
                                end
                               end   
 		      
@@ -312,7 +314,8 @@ always @ (posedge i_sys_clk or negedge i_sys_rst)
                              begin
                               deserialized['d4 - count] <= i_sdahnd_rx_sda;
                               if(count == 'd4)
-                               begin                                                   
+                               begin   
+                                  parity_flag <= 0;              
                                   o_ddrccc_rx_mode_done <= 1'b1;
                                   if ({deserialized[4:1],i_sdahnd_rx_sda} == i_crc_value)
                                     o_ddrccc_error_flag = 0;
@@ -342,7 +345,7 @@ always @ (posedge i_sys_clk or negedge i_sys_rst)
                               if(count == 'd7)
                                begin                                                   
                                   o_ddrccc_rx_mode_done <= 1'b1;
-                                  if ((deserialized[7:1] == my_address) & (i_sdahnd_rx_sda == 1))
+                                  if (deserialized[7:1] == my_address)
                                     begin
                                       o_ddrccc_error_flag <= 0;
                                       A <= {deserialized[7:1],i_sdahnd_rx_sda};

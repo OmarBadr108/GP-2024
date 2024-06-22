@@ -15,7 +15,7 @@ module nt_target (
   output reg       o_rx_en,
   output reg [3:0] o_rx_mode,
   output reg       o_engine_done,
-  output reg       o_sdahand_pp_od,
+  output wire      o_sdahand_pp_od,
   output reg       o_frmcnt_en,
   output wire       o_frmcnt_rnw,
   output reg       o_regf_wr_en,
@@ -26,6 +26,7 @@ module nt_target (
   );
   
   assign o_frmcnt_rnw = i_rx_ddrccc_rnw;
+  assign o_sdahand_pp_od = o_tx_en;
 
   localparam [3:0]  initializing = 'b0000,    
                     pereamble = 'b0001, 
@@ -60,7 +61,7 @@ module nt_target (
 					          crc_value_bits = 11, //done
 					          delaying = 12;
 					          
-parameter Start_From = 'd200;
+parameter Start_From = 'd1000;
 
 reg    [3:0]         current_state , 
                      next_state ;
@@ -208,11 +209,9 @@ assign mode_done = i_tx_mode_done || i_rx_mode_done ;
      o_tx_en = 0;
      o_rx_en = 0;
      o_engine_done = 0;
-     o_sdahand_pp_od = 1; //pp
      o_regf_wr_en = 0;
      o_regf_rd_en = 0;
      o_bitcnt_reset = 0;
-
      case (current_state)
        
        idle: begin
@@ -279,6 +278,8 @@ assign mode_done = i_tx_mode_done || i_rx_mode_done ;
         o_bitcnt_en = 'b1;
         o_tx_en = 0;
         o_rx_en = 0;
+        o_regf_wr_en = 1;
+        o_regf_addr = o_regf_addr_temp;
       end
        
       first_data_byte: begin
@@ -287,6 +288,10 @@ assign mode_done = i_tx_mode_done || i_rx_mode_done ;
        o_regf_addr = o_regf_addr_temp;
        o_tx_mode = SERIALIZING_BYTE;
        o_rx_mode = deserializing_data;
+       if (mode_done)
+         o_regf_addr = o_regf_addr_temp + 1;
+       else
+         o_regf_addr = o_regf_addr_temp;
        if(!i_rx_ddrccc_rnw)
          begin
           o_rx_en = 1;
@@ -306,7 +311,6 @@ assign mode_done = i_tx_mode_done || i_rx_mode_done ;
       second_data_byte: begin
        o_frmcnt_en = 'b1 ;
        o_bitcnt_en = 'b1;
-       o_regf_addr = o_regf_addr_temp + 1;
        o_tx_mode = SERIALIZING_BYTE;
        o_rx_mode = deserializing_data;
        if(!i_rx_ddrccc_rnw)
@@ -348,6 +352,7 @@ assign mode_done = i_tx_mode_done || i_rx_mode_done ;
      o_rx_mode = pereamble; 
      o_bitcnt_en = 'b1;
      o_frmcnt_en = 'b1 ;
+     o_regf_addr = o_regf_addr_temp;
      if (mode_done)
        begin
          o_tx_mode = PREAMBLE_ZERO;
@@ -381,7 +386,6 @@ assign mode_done = i_tx_mode_done || i_rx_mode_done ;
       
       abort_bit: begin //transition
        o_rx_mode = pereamble;
-       o_regf_addr = o_regf_addr_temp;
        o_bitcnt_en = 'b1;
        o_frmcnt_en = 'b1 ;
        if(i_rx_ddrccc_rnw)
@@ -494,3 +498,4 @@ endmodule
 
 
   
+

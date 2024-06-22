@@ -1,6 +1,7 @@
 `timescale 1us / 1ps
 
 module target_tb ();
+  ////////////////this module is made starting with rx, tx and nt block and then integrating block by block /////////////////////
   /////////nt_target/////////////
   reg i_sys_clk_tb = 1'b0;
   reg i_sys_rst_tb;
@@ -105,7 +106,7 @@ target_rx DUT4 (
 	.i_sclgen_scl_pos_edge		(DUT11.scl_pos_edge)	,
 	.i_sclgen_scl_neg_edge		(DUT11.scl_neg_edge)	,
 	.i_ddrccc_rx_en				(o_rx_en_tb)			,
-	.i_sdahnd_rx_sda			(i_sdahnd_rx_sda_tb)		,
+	.i_sdahnd_rx_sda			(i_sdahnd_rx_sada_tb)		, //edit lately to add a handler for op and pp behave
 	.i_ddrccc_rx_mode			(o_rx_mode_tb)		,
 	.i_crc_value                           (i_crc_value_tb),		
 	.o_regfcrc_rx_data_out		(o_regfcrc_rx_data_out_tb)	,
@@ -152,16 +153,16 @@ tx_t  DUT5(
 wire engine_en_tb ;
 wire [1:0] engine_or_nt;
 gen_mux #(1,2) DUT6(
-.data_in({1'b0 , o_nt_rx_en_tb , engine_en_tb}),
+.data_in({1'b0 , o_nt_rx_en_tb , engine_en_tb}), //signal zero as ccc block not finished
 .ctrl_sel(engine_or_nt),
-.data_out(o_rx_en_tb)
+.data_out(o_rx_en_tb) //mux to control who is handling the rx (engine or normal)
 );
 
 wire [3:0] engine_mode; 
 gen_mux #(4,2) DUT7 (
-.data_in({4'b0000 , o_nt_rx_mode_tb , engine_mode}),
+.data_in({4'b0000 , o_nt_rx_mode_tb , engine_mode}), ////signal zero as ccc block not finished
 .ctrl_sel(engine_or_nt),
-.data_out(o_rx_mode_tb)
+.data_out(o_rx_mode_tb) ////mux to control who is handling the rx (engine or normal)
 );
 
 ////////////////////engine//////////////////////////
@@ -282,30 +283,36 @@ ENTHDR_CTRL_TGT_top DUT11 (
 .o_tgt_engine_done(ENTHDR_done)
 );
 pullup(sda_tb);
-    reg               sda_drive             ;  
-    // locally driven value
-    assign sda_tb   = o_tgt_sdahnd_sda_tb 			;
-/////////////////////////muxes_for_testing_only////////////////////////////////////////////
+     
+// locally driven value
+assign sda_tb   = o_tgt_sdahnd_sda_tb 			;
+// testing the enthdr response using a top containing controller blocks and the response block to make sure pattern is detected correctly
+// scl of this top is also used in testing ;)
+/////////////////////////muxes_for_SDA////////////////////////////////////////////
 wire sda_in;
 reg ent; 
 gen_mux #(1,1) DUT12 (
-.data_in({sda_tb , i_sdahnd_rx_sda_tb}),
-.ctrl_sel(o_ENTHDR_en_tb),
+.data_in({i_sdahnd_rx_sda_tb , sda_tb}), 
+.ctrl_sel(ent),
 .data_out(sda_in)
-);
+); //only for better screening for the sda entering the response in the top tested and the one drived in this module (not included in TOP_Module)
 
-gen_mux #(1,1) DUT13 ( //who on bus 
-.data_in({o_tgt_sdahnd_sda_tb , o_sdahnd_tgt_serial_data_tb}),
+wire sda_drive_;
+assign sda_drive_ = o_tgt_sdahnd_sda_tb;
+pullup (sda_drive_);
+wire sda_out;
+gen_mux #(1,1) DUT13 (  
+.data_in({sda_drive_ , o_sdahnd_tgt_serial_data_tb}),
 .ctrl_sel(o_ENTHDR_en_tb),
 .data_out(sda_out)
-);
+); //who is accessing the bus (response or tx)
 
 reg [1:0] stall;
 gen_mux #(1,2) DUT14 (
-.data_in({!DUT11.scl ,1'b0 , DUT11.scl}),
+.data_in({1'b1 ,!DUT11.scl ,1'b0 , DUT11.scl}), //this !DUT11.scl as after stalling SCL is may take a 180 phaseshift ;)
 .ctrl_sel(stall),
 .data_out(SCL)
-);
+); //mux to make the behave of stalling scl as its only in the controller 
 
 wire crc_valid, last_byte, data_valid, CRC_EN;
 wire [7:0] CRC_data;
@@ -341,7 +348,7 @@ gen_mux #(1,1) DUT18 (
 gen_mux #(1,1) DUT19 (
 .data_in({data_valid_tx , data_valid_rx}),
 .ctrl_sel(o_tx_en_tb),
-.data_out(data_valid)
+.data_out(data_valid) //all these muxes is for who is accessing crc block (tx or rx)
 );
 
 Exit_Detector DUT20 (
@@ -351,6 +358,24 @@ Exit_Detector DUT20 (
 .i_sda(i_sdahnd_rx_sda_tb),
 .o_engine_done(exit_done_tb)
 );
+
+wire SDA2; //SDA of Blocks of tx and rx only not include enthdr response sda
+wire SDA;
+sda_handling DUT21 (
+.i_handling_s_data (o_sdahnd_tgt_serial_data_tb),
+.i_handling_sel_pp_od (1'b1),
+.i_handling_pp_en (1'b1),
+.sda (SDA),
+.o_handling_s_data (i_sdahnd_rx_sada_tb)
+); //non synthizable block but just to perform the behave of Open drain and Push Pull (not included in TOP_Module) 
+
+assign SDA2 = i_sdahnd_rx_sda_tb; 
+gen_mux #(1,1) DUT22 (
+.data_in({sda_in , SDA2}),
+.ctrl_sel(o_ENTHDR_en_tb),
+.data_out(SDA) 
+);//mux of SDA handled from controller_target enthdr top and from  this module to be on waveform (not included in top module)
+pullup(SDA); 
 ///////////////////////CLK_Generator////////////////////////////////////
 parameter CLK_PERIOD = 40;  	 
 always #(CLK_PERIOD/2) i_sys_clk_tb = ~i_sys_clk_tb ;
@@ -372,7 +397,7 @@ initial
         i_i3c_i2c_sel_tb   = 1'b1; 
 //////////////////////////////////////////////////////      
         @(posedge ENTHDR_done) //start of our sequence
-ent = 1;
+        ent = 1;
         #(CLK_PERIOD )   
 
 
@@ -389,14 +414,17 @@ ent = 1;
     #(CLK_PERIOD); 
    end
   //i_sdahnd_rx_sda_tb = 0; was for testing a framing error case
-  i_sdahnd_rx_sda_tb = 1; 
+  i_sdahnd_rx_sda_tb = 1;
+  #(2*CLK_PERIOD);
+  i_sdahnd_rx_sda_tb = 1'bz;
   ////////////////////////////////////////
   @((o_tx_mode_tb == 1) && (tx_mode_done_tb));
   #(2*CLK_PERIOD);
-  /* i_sdahnd_rx_sda_tb = 0;
-  @(o_engine_done_tb) */  //was for testing aborting case
+  //i_sdahnd_rx_sda_tb = 0;
+  //@(o_engine_done_tb);  //was for testing aborting case
   i_sdahnd_rx_sda_tb = 1;
   #(2*CLK_PERIOD);
+  i_sdahnd_rx_sda_tb = 1'bz;
   @(tx_mode_done_tb)
   #(CLK_PERIOD);
   //o_cccnt_last_frame_tb = 1;
@@ -415,16 +443,20 @@ ent = 1;
   #(2*CLK_PERIOD);
   i_sdahnd_rx_sda_tb = 1; 
   @(tx_mode_done_tb);
+  i_sdahnd_rx_sda_tb = 1'bz;
   #(2*CLK_PERIOD);
   data[17:0] = {8'b01010101,8'b11001100,2'b01};
   for (i = 0 ; i < 18 ; i = i + 1)
    begin
      i_sdahnd_rx_sda_tb = data[17-i];
      #(2*CLK_PERIOD);
-   end  
-  /*@(o_engine_done_tb); //it was for testing aborting writing case
-  #(5*CLK_PERIOD); */
-  //data[10:0] = {2'b01,4'b1100,5'b11011};
+   end
+  //i_sdahnd_rx_sda_tb = 1'b1;
+  //#(2*CLK_PERIOD);
+  //i_sdahnd_rx_sda_tb = 1'bz;  
+  //@(o_engine_done_tb); //it was for testing aborting writing case
+  //#(5*CLK_PERIOD); 
+  //data[10:0] = {2'b01,4'b1100,5'b11011}; //for testing a crc error case
   data[10:0] = {2'b01,4'b1100,5'b10001};
   for (i = 0 ; i < 11 ; i = i + 1)
    begin
@@ -435,7 +467,7 @@ ent = 1;
   //@(!i_engine_en_tb);
   gene_exitandstop;
   //@(!i_engine_en_tb);  //complete writing sequence with error in last stage (CRC) to make sure togglig of error flag
-  @(exit_done_tb); //complete writing sequence with exit a5iraaaaaaan el7
+  //@(exit_done_tb); //complete writing sequence with exit a5iraaaaaaan el7 
   #(5*CLK_PERIOD); 
   $stop;
  end
@@ -451,7 +483,6 @@ task initialize;
 		i_ccc_en_dis_hj_tb      = 1'b0;
         i_ccc_done_tb			= 1'b0;
         i_ddr_mode_done_tb      = 1'b0;
-		sda_drive 				= 1'bz;
 		//i_ddr_pp_od_tb			= 1'b0;
 		//i_ddr_pp_od_tb			= 1'b0;
 		i_data_config_mux_sel   = 1'b0;
@@ -561,6 +592,7 @@ task gene_exitandstop ();
                 #(CLK_PERIOD);
                 i_sdahnd_rx_sda_tb = 1;
                 #(CLK_PERIOD);
+                stall = 3; 
  end
 endtask
 

@@ -8,14 +8,12 @@ module ENTHDR_TGT (
     input wire  i_scl_neg_edge  ,
 
 	output reg  o_sdahnd_sda ,
-	output wire o_pp_od      , 
+	output reg o_pp_od      , 
 	output reg  sda_handle_en,
 	output reg  o_engine_done 
 );
 
 
-
-assign o_pp_od = 1'b1;
 parameter [6:0] broadcast_address = 7'H7E;
 parameter [7:0] ENTHDR_CMD        = 8'H20;
 
@@ -53,7 +51,7 @@ always@(posedge i_sys_clk or negedge i_sys_rst)
   begin
    if (!i_sys_rst)
     begin
-     sda_old<= 1'bz;
+     sda_old<= 1'b0;
      start_detected<=1'b0;
      o_engine_done_temp <= 1'b0;
     end
@@ -91,9 +89,10 @@ always@(posedge i_sys_clk or negedge i_sys_rst)
      if(!i_sys_rst)
        begin
          state <= IDLE;
-		 o_sdahnd_sda <= 1'bz;
+		 o_sdahnd_sda <= 1'b1;
 		 sda_handle_en<=1'b1;
                  o_engine_done_temp <= 0;
+                 o_pp_od <= 0;
 		
        end
      
@@ -102,6 +101,7 @@ always@(posedge i_sys_clk or negedge i_sys_rst)
 	   	 o_sdahnd_sda <= 1'bz;
 		 o_engine_done_temp <=1'b0;
 		 tgt_count<=0;
+                 o_pp_od <= 0;
 		 
 		 //enthdr_des<=0;
 		 //address_RnW_des<=0;
@@ -143,7 +143,8 @@ always@(posedge i_sys_clk or negedge i_sys_rst)
  					else if ((address_RnW_des=={broadcast_address,1'b0})&&i_scl_neg_edge) begin
  					     state <= ACK;
 					     o_sdahnd_sda<=1'b0;
-					     o_sda_handle_en<=1'b1;
+					     sda_handle_en<=1'b1;
+                                             o_pp_od <= 1;
 					end
  					   
  				     
@@ -154,9 +155,11 @@ always@(posedge i_sys_clk or negedge i_sys_rst)
 
          ACK:begin
           	  o_sdahnd_sda<=1'b0;
+                  o_pp_od <= 1;
 		      if(i_scl_neg_edge)
                begin
-	            o_sdahnd_sda<=1'bz;
+	            o_sdahnd_sda<=1'b0;
+                    o_pp_od <= 1;
 		        state<= ENTHDR; 
                end
 

@@ -50,7 +50,7 @@ parameter CLK_PERIOD  = 10;
 //--------------------------------------------------- Internal Signals --------------------------------------------//
     reg               sda_drive             ;  
     // locally driven value
-    assign sda_tb   = o_tgt_sdahnd_sda_tb 			;
+    //assign sda_tb   = o_tgt_sdahnd_sda_tb 			;
 
 
 

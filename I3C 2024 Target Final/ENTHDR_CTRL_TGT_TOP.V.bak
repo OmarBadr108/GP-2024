@@ -158,10 +158,10 @@ wire   [11:0]  o_regf_address_special  ;
     wire                 stall_flag                  ;
     wire      [3:0]      scl_stall_cycles            ;
     wire                 scl_stall_done              ;
-    wire                 sdr_ctrl_scl_idle  = 1'b0         ;
+    wire                 sdr_ctrl_scl_idle           ;
     wire                 i3c_scl_idle                ;
     wire      [2:0]      scl_idle_mux_sel            ;
-    wire                 sdr_scl_idle_mux_out        ;
+    wire                 sdr_scl_idle_mux_out    = 1'b0    ;
     wire                 enthdr_pp_od                ; //for enthdr
 
 /////////////////////  reg_file wires   ////////////////////////////
@@ -436,7 +436,7 @@ wire   [11:0]  o_regf_address_special  ;
    //wire                 ddr_pp_od;
    wire                  scl_ddr_pp_od                 ;
    wire                  scl_ccc_pp_od                 ;
-   assign  scl_ddr_pp_od =1'b0                         ;                         //untill integration
+   assign  scl_ddr_pp_od =1'b1                         ;                         //untill integration
  
    wire                 hdr_sdahand_pp_od_sel;
    wire                 hdr_scl_pp_od_sel;
@@ -450,8 +450,6 @@ wire   [11:0]  o_regf_address_special  ;
    
    wire                 hdr_frm_cnt_en_sel;
    wire                 hdr_frm_cnt_en_sel_mux_out;
-
-
 
 
 assign o_sdr_rx_valid = regf_wr_en_mux_out ;
@@ -1187,11 +1185,10 @@ ENTHDR_TGT u1_enthdr (
  .i_scl_pos_edge (scl_pos_edge) ,
  .i_scl_neg_edge (scl_neg_edge),
 
- . o_sdahnd_sda (o_tgt_sdahnd_sda) ,
+ . o_sdahnd_sda (sda) ,
  . o_pp_od      (o_tgt_pp_od_sdahand), 
  . o_engine_done(o_tgt_engine_done) 
 );
-
 
 
 

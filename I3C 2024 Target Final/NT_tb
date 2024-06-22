@@ -1,0 +1,40 @@
+onerror {resume}
+quietly WaveActivateNextPane {} 0
+add wave -noupdate -group BUS -label CLK /target_tb/DUT4/i_sys_clk
+add wave -noupdate -group BUS -label RST /target_tb/DUT4/i_sys_rst
+add wave -noupdate -group BUS -label SCL /target_tb/DUT4/i_sclgen_scl
+add wave -noupdate -expand -group EN /target_tb/DUT4/i_ddrccc_rx_en
+add wave -noupdate -expand -group EN /target_tb/DUT5/i_ddrccc_tx_en
+add wave -noupdate -expand -group EN /target_tb/DUT0/i_engine_en
+add wave -noupdate -expand -group DONE /target_tb/DUT4/o_ddrccc_rx_mode_done
+add wave -noupdate -expand -group DONE /target_tb/DUT5/o_ddrccc_tx_mode_done
+add wave -noupdate -expand -group DONE /target_tb/DUT0/o_engine_done
+add wave -noupdate -group MODE /target_tb/DUT4/i_ddrccc_rx_mode
+add wave -noupdate -group MODE /target_tb/DUT5/i_ddrccc_tx_mode
+add wave -noupdate -expand -group FLAGS /target_tb/DUT4/o_ddrccc_pre
+add wave -noupdate -expand -group FLAGS /target_tb/DUT4/o_ddrccc_rnw
+add wave -noupdate -expand -group FLAGS /target_tb/DUT4/o_engine_decision
+add wave -noupdate -expand -group FLAGS /target_tb/DUT0/i_rx_error
+add wave -noupdate -expand -group FLAGS /target_tb/DUT0/i_frmcnt_last
+add wave -noupdate -expand -group FLAGS /target_tb/DUT0/o_sdahand_pp_od
+add wave -noupdate -group NT_STATES /target_tb/DUT0/current_state
+add wave -noupdate -group NT_STATES /target_tb/DUT0/next_state
+add wave -noupdate -group REG_FILE /target_tb/DUT0/o_regf_addr
+TreeUpdate [SetDefaultTree]
+WaveRestoreCursors {{Cursor 1} {0 ps} 0}
+quietly wave cursor active 0
+configure wave -namecolwidth 239
+configure wave -valuecolwidth 100
+configure wave -justifyvalue left
+configure wave -signalnamewidth 1
+configure wave -snapdistance 10
+configure wave -datasetprefix 0
+configure wave -rowmargin 4
+configure wave -childrowmargin 2
+configure wave -gridoffset 0
+configure wave -gridperiod 1
+configure wave -griddelta 40
+configure wave -timeline 0
+configure wave -timelineunits ps
+update
+WaveRestoreZoom {0 ps} {1477 ps}

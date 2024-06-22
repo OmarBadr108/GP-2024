@@ -1,0 +1,31 @@
+aonerror {resume}
+quietly WaveActivateNextPane {} 0
+add wave -noupdate -expand -group SYSTEM -label RST /rx_target_tb/i_sys_rst_tb
+add wave -noupdate -expand -group SYSTEM -label CLK /rx_target_tb/i_sys_clk_tb
+add wave -noupdate -expand -group BUS -label SCL /rx_target_tb/i_sclgen_scl_tb
+add wave -noupdate -expand -group BUS -label SDA_IN /rx_target_tb/i_sdahnd_rx_sda_tb
+add wave -noupdate -expand -group DECISION -label DECISION /rx_target_tb/o_engine_decision_tb
+add wave -noupdate -expand -group FLAGS -label EN /rx_target_tb/i_ddrccc_rx_en_tb
+add wave -noupdate -expand -group FLAGS -label MODE_DONE /rx_target_tb/o_ddrccc_rx_mode_done_tb
+add wave -noupdate -expand -group FLAGS -label ERROR /rx_target_tb/o_ddrccc_error_flag_tb
+add wave -noupdate -expand -group MODE -label MODE /rx_target_tb/i_ddrccc_rx_mode_tb
+add wave -noupdate -expand -group DATA -label CRC_CALCULATED /rx_target_tb/i_crc_value_tb
+add wave -noupdate -expand -group DATA -label DATA_DESERIALIZED /rx_target_tb/o_regfcrc_rx_data_out_tb
+TreeUpdate [SetDefaultTree]
+WaveRestoreCursors {{Cursor 1} {227 ns} 0} {{Cursor 2} {30 ns} 0}
+quietly wave cursor active 2
+configure wave -namecolwidth 257
+configure wave -valuecolwidth 100
+configure wave -justifyvalue left
+configure wave -signalnamewidth 1
+configure wave -snapdistance 10
+configure wave -datasetprefix 0
+configure wave -rowmargin 4
+configure wave -childrowmargin 2
+configure wave -gridoffset 0
+configure wave -gridperiod 1
+configure wave -griddelta 40
+configure wave -timeline 0
+configure wave -timelineunits ns
+update
+WaveRestoreZoom {0 ns} {1592 ns}

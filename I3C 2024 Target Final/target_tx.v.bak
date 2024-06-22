@@ -303,9 +303,10 @@ begin
     
     else
       begin
-     o_sdahnd_tgt_serial_data <= 1'b1;
+     o_sdahnd_tgt_serial_data <= 1'bz;
      o_ddrccc_tx_mode_done    <= 1'b0;
      o_crc_en <= 1'b1;
+     o_crc_last_byte <= 1'b0;
      end
 end
 

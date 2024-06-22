@@ -16,7 +16,7 @@ module reg_file_t #(parameter WIDTH = 8 , DEPTH = 2**10 , ADDR = 10 )
  reg [WIDTH-1:0] reg_array [DEPTH-1:0] ;  // 32 entry * 8 bits
  integer i;
  
- parameter Start_From = 'd200,
+ parameter Start_From = 'd1000,
            max_rd_location = 'd100,
            max_wr_location = 'd150; //other for special storing
  
@@ -25,7 +25,7 @@ module reg_file_t #(parameter WIDTH = 8 , DEPTH = 2**10 , ADDR = 10 )
  		if (!i_regf_rst_n)
  			begin
  				for (i=0 ; i<DEPTH ; i=i+1)
- 				 reg_array[Start_From + i] = 'd15 + i ; //any data just after reset
+ 				 reg_array[Start_From + i] = 8'b11111111 + i ; //any data just after reset
  				 
  				reg_array[max_rd_location] = 'd0;
  		                reg_array[max_rd_location + 1] = 'd4;

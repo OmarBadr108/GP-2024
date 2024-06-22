@@ -25,9 +25,9 @@ always @ (posedge i_sys_clk , negedge i_sys_rst)
  
 0:begin
      o_engine_done <= 0;
-     if (i_sda && !i_scl && count != 1)
+     if (i_sda && i_scl && count != 1)
       count <= count + 1;
-     else if(count == 1)
+     else if(i_sda && !i_scl && count == 1)
       begin
        state <= 1;
        count <= 0;
@@ -37,9 +37,9 @@ always @ (posedge i_sys_clk , negedge i_sys_rst)
    end
 
 1:begin
-     if (!i_sda && !i_scl && count != 1)
+     if (count != 1)
       count <= count + 1;
-     else if(count == 1)
+     else if(!i_sda && !i_scl && count == 1)
       begin
        state <= 2;
        count <= 0;
@@ -49,9 +49,9 @@ always @ (posedge i_sys_clk , negedge i_sys_rst)
    end
 
 2:begin
-     if (i_sda && !i_scl && count != 1)
+     if (count != 1)
       count <= count + 1;
-     else if(count == 1)
+     else if(i_sda && !i_scl && count == 1)
       begin
        state <= 3;
        count <= 0;
@@ -61,9 +61,9 @@ always @ (posedge i_sys_clk , negedge i_sys_rst)
    end
 
 3:begin
-     if (!i_sda && !i_scl && count != 1)
+     if (count != 1)
       count <= count + 1;
-     else if(count == 1)
+     else if(!i_sda && !i_scl && count == 1)
       begin
        state <= 4;
        count <= 0;
@@ -73,9 +73,9 @@ always @ (posedge i_sys_clk , negedge i_sys_rst)
    end
 
 4:begin
-     if (i_sda && !i_scl && count != 1)
+     if (count != 1)
       count <= count + 1;
-     else if(count == 1)
+     else if(i_sda && !i_scl && count == 1)
       begin
        state <= 5;
        count <= 0;
@@ -85,9 +85,9 @@ always @ (posedge i_sys_clk , negedge i_sys_rst)
    end
 
 5:begin
-     if (!i_sda && !i_scl && count != 1)
+     if (count != 1)
       count <= count + 1;
-     else if(count == 1)
+     else if(!i_sda && !i_scl && count == 1)
       begin
        state <= 6;
        count <= 0;
@@ -97,9 +97,9 @@ always @ (posedge i_sys_clk , negedge i_sys_rst)
    end
 
 6:begin
-     if (i_sda && !i_scl && count != 1)
+     if (count != 1)
       count <= count + 1;
-     else if(count == 1)
+     else if(i_sda && !i_scl && count == 1)
       begin
        state <= 7;
        count <= 0;
@@ -109,22 +109,19 @@ always @ (posedge i_sys_clk , negedge i_sys_rst)
    end
 
 7:begin
-     if (!i_sda && !i_scl)
+     if (count != 1)
+       count <= count + 1;
+     else if (!i_sda && !i_scl && count == 1)
        state <= 8;
      else
        state <= 0;
    end
 
 8:begin
-     if (!i_sda && i_scl)
-       state <= 9;
-     else
-       state <= 0;
-   end
-
-9:begin
-     if (i_sda && i_scl)
-       begin   
+     if (count != 1 && i_scl)
+       count <= count + 1;
+     else if (i_sda && i_scl && count == 1)
+       begin
          state <= 0;
          o_engine_done <= 1;
        end
