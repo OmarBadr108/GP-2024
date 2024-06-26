@@ -90,10 +90,13 @@ wire [1:0] parity_value_calc;
 
 wire SCL_edges; 
 
+reg badr_flag ,was_disabled ;
+reg was_pre , was_was_pre , was_was_was_pre ;
+
 //////////////////////////////parity calc////////////////////////////////////
 
  assign parity_value_calc[1] =  data_paritychecker[15]^data_paritychecker[13]^data_paritychecker[11]^data_paritychecker[9]^data_paritychecker[7]^data_paritychecker[5]^data_paritychecker[3]^data_paritychecker[1] ;     
- assign parity_value_calc[0] =  data_paritychecker[14]^data_paritychecker[12]^data_paritychecker[10]^data_paritychecker[8]^data_paritychecker[6]^data_paritychecker[4]^data_paritychecker[2]^data_paritychecker[0]^1'b1 ; 
+ assign parity_value_calc[0] =  data_paritychecker[14]^data_paritychecker[12]^data_paritychecker[10]^data_paritychecker[8]^data_paritychecker[6]^data_paritychecker[4]^data_paritychecker[2]^data_paritychecker[0] ^ 1 ; 
 
 
 assign count_done = (count==7)? 1'b1:1'b0 ;
@@ -102,6 +105,16 @@ assign SCL_edges = (i_sclgen_scl_pos_edge || i_sclgen_scl_neg_edge);
 
 
 parameter crc_pre_calc = 2'b01;
+
+
+always @(posedge i_sys_clk or negedge i_sys_rst) begin 
+    if (!i_ddrccc_rx_en) badr_flag <= 1'b1 ;
+    else                 badr_flag <= 1'b0 ; 
+end
+always @(posedge i_sys_clk) was_disabled <= badr_flag ;
+
+
+
 
 
 ////////////////////////////// Registering data bytes for parity check ////////////////////////////////////
@@ -130,14 +143,11 @@ begin
   else if ((byte_num == 0) && (count_done))
    data_paritychecker[15:8] = o_regfcrc_rx_data_out_temp;
 
-  else if ((byte_num == 1) &&  (count_done))
-   data_paritychecker[7 :0]  = o_regfcrc_rx_data_out_temp;
+  else if ((byte_num == 1) &&  (count_done ))
+   data_paritychecker[7:0]  = o_regfcrc_rx_data_out_temp[7:0] ;
 
 
 end
-
-
-
 
 
 
@@ -248,8 +258,17 @@ begin
                             
                             if(SCL_edges)
                                begin
-                          
-                                count <= count + 1; 
+                                  
+                                  if (was_disabled)begin 
+                                    count <= count ;
+                                  end 
+                                  else begin 
+                                    count <= count + 1;
+                                  end 
+                                  
+
+                                  //count <= count + 1;
+                                   
                                 if(count == 'd7)
                                 begin
                                   count <= 'b0;
@@ -263,7 +282,8 @@ begin
                             else 
                              begin
                               o_ddrccc_rx_mode_done <= 1'b0;
-                              o_regfcrc_rx_data_out_temp['d7 - count] <= i_sdahnd_rx_sda;
+                              o_regfcrc_rx_data_out_temp['d7 - count] <= i_sdahnd_rx_sda; 
+
                               if(count == 'd7)                    
                                begin
                                   

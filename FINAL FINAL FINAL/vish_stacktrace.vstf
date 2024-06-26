@@ -1,0 +1,31 @@
+# Current time Thu Jun 20 15:13:41 2024
+# Program = vish
+# Id = "2021.1"
+# Version = "2021.01"
+# Date = "Jan 19 2021"
+# Platform = win64
+
+Exception c0000005 has occurred at address 2307f490. Traceback:
+# 0    0x2307f490: '<unknown (@0x2307f490)>'
+# 1    0x403cc483: 'Ucdb_Init + 0x32e63'
+# 2    0x4011f86a: '<unknown (@0x4011f86a)>'
+# 3    0x40129945: '<unknown (@0x40129945)>'
+# 4    0x590e7103: 'TclNRRunCallbacks + 0x63'
+# 5    0x590e8974: 'Tcl_EvalEx + 0xa34'
+# 6    0x590e7f68: 'Tcl_EvalEx + 0x28'
+# 7    0x592b431a: 'Tk_BindEvent + 0x91a'
+# 8    0x592ebd41: 'TkBindEventProc + 0x291'
+# 9    0x592fc614: 'Tk_HandleEvent + 0x2f4'
+# 10   0x592fb2da: 'TkDeleteThreadExitHandler + 0x31a'
+# 11   0x5919a56d: 'Tcl_ServiceEvent + 0xed'
+# 12   0x5919a9e4: 'Tcl_DoOneEvent + 0x184'
+# 13   0x592faee5: 'Tk_MainLoop + 0x25'
+# 14   0x5933d282: 'Tk_MainEx + 0x932'
+# 15   0x401ab032: 'Mtirpc_Init + 0x23642'
+# 16   0x401adc14: 'Mtirpc_Init + 0x26224'
+# 17   0x40771eb0: 'Tclsqlite3_Init + 0x1c000'
+# 18   0x68187344: 'BaseThreadInitThunk + 0x14'
+# 19   0x695c26b1: 'RtlUserThreadStart + 0x21'
+StackWalk failed 0
+# End of Stack Trace
+

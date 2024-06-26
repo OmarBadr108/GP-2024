@@ -1,0 +1,101 @@
+{C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/FRAME_COUNTER.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/FRAME_COUNTER.v}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module frame_counter
+
+Top level modules:
+	frame_counter
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/mux8.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/mux8.v}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module mux8
+
+Top level modules:
+	mux8
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/Rx.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/Rx.v}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module RX
+
+Top level modules:
+	RX
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/Tx.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/Tx.v}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module tx
+
+Top level modules:
+	tx
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/package.sv} {1 {vlog -work work -vopt -sv -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/package.sv}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling package CCC_HANDLER_PACKAGE
+
+Top level modules:
+	--none--
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/testing_mux.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/testing_mux.v}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module mux
+
+Top level modules:
+	mux
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/staller.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/staller.v}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module scl_staller
+
+Top level modules:
+	scl_staller
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/mux1.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/mux1.v}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module mux1
+
+Top level modules:
+	mux1
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/reg_file.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/reg_file.v}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module reg_file
+
+Top level modules:
+	reg_file
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/scl_generation.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/scl_generation.v}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module scl_generation
+
+Top level modules:
+	scl_generation
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler.v}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module CCC_Handler
+
+Top level modules:
+	CCC_Handler
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler_tb_final.sv} {1 {vlog -work work -vopt -sv -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/CCC_Handler_tb_final.sv}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling package CCC_Handler_tb_final_sv_unit
+-- Importing package CCC_HANDLER_PACKAGE
+-- Compiling module CCC_Handler_tb
+
+Top level modules:
+	CCC_Handler_tb
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/crc.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/crc.v}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module crc
+
+Top level modules:
+	crc
+
+} {} {}} {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/bits_counter.v} {1 {vlog -work work -vopt -stats=none {C:/Users/omerb/OneDrive/Desktop/Desktop/GP/Codes/GP-2024/CCC Handler/bits_counter.v}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module bits_counter
+
+Top level modules:
+	bits_counter
+
+} {} {}}

@@ -179,10 +179,6 @@ module CCC_Handler_tb ();
 		.o_regf_ERR_STATUS(o_regf_ERR_STATUS_tb),
 
 		.o_en_mux(en_mux) ,      // new
-		.o_crc_en_rx_tx_mux_sel(o_crc_en_rx_tx_mux_sel_tb),
-		.o_crc_data_rx_tx_valid_sel(o_crc_data_rx_tx_valid_sel_tb),
-		.o_crc_data_tx_rx_mux_sel(o_crc_data_tx_rx_mux_sel_tb),
-		.o_crc_last_byte_tx_rx_mux_sel(o_crc_last_byte_tx_rx_mux_sel_tb),
 		.o_crc_rx_tx_mux_sel_ccc(o_crc_rx_tx_mux_sel_ccc)
 		);
 
@@ -373,7 +369,7 @@ module CCC_Handler_tb ();
 
 
 mux1      mux1_1 (
-	.en(en_mux),
+	.en(o_crc_rx_tx_mux_sel_ccc),
 	.tx(crc_en_tx),
 	.rx(crc_en_rx),
 	.y(mux1_out1)
@@ -381,7 +377,7 @@ mux1      mux1_1 (
 );
 
 mux1      mux1_2 (
-	.en(en_mux),
+	.en(o_crc_rx_tx_mux_sel_ccc),
 	.tx(o_crc_last_byte_tx_tb),
 	.rx(o_crc_last_byte_rx_tb),
 	.y(mux1_out2)
@@ -390,7 +386,7 @@ mux1      mux1_2 (
 
 
 mux1      mux1_3 (
-	.en(en_mux),
+	.en(o_crc_rx_tx_mux_sel_ccc),
 	.tx(o_crc_data_valid_tx_tb),
 	.rx(o_crc_data_valid_rx_tb),
 	.y(mux1_out3)
@@ -399,7 +395,7 @@ mux1      mux1_3 (
 
 
 mux8      mux1_8 (
-	.en(en_mux),
+	.en(o_crc_rx_tx_mux_sel_ccc),
 	.tx(o_crc_parallel_data_tx_tb),
 	.rx(i_rx_regfcrc_data_wr_tb),
 	.y(mux8_out)
@@ -568,7 +564,7 @@ mux8      mux1_8 (
 			bins o_regf_addr_first_location = {first_location + 4};
 			bins o_regf_addr_zeros = {first_location - 1};
 			ignore_bins last_addres_of_prev_cmd = {first_location + 5} ;
-			illegal_bins other_addresses = default ;
+			//illegal_bins other_addresses = default ;
 		}
 
 		o_txrx_addr_ccc : coverpoint o_txrx_addr_ccc_tb iff (
@@ -733,7 +729,7 @@ mux8      mux1_8 (
 			bins o_regf_addr_first_location = {first_location + 4};
 			bins o_regf_addr_zeros = {first_location-1};
 			ignore_bins last_addres_of_prev_cmd = {first_location + 5} ;
-			illegal_bins other_addresses = default ;
+			//illegal_bins other_addresses = default ;
 		}
 
 		o_txrx_addr_ccc : coverpoint o_txrx_addr_ccc_tb iff (
@@ -899,7 +895,7 @@ mux8      mux1_8 (
 			bins o_regf_addr_first_location  = {first_location + 4};
 			bins o_regf_addr_second_location = {first_location + 5};
 			bins o_regf_addr_zeros = {first_location - 1};
-			illegal_bins other_addresses = default ;
+			//illegal_bins other_addresses = default ;
 		}
 
 		o_txrx_addr_ccc : coverpoint o_txrx_addr_ccc_tb iff (
@@ -1066,7 +1062,7 @@ mux8      mux1_8 (
 			bins o_regf_addr_first_location  = {first_location + 4};
 			bins o_regf_addr_second_location = {first_location + 5};
 			bins o_regf_addr_zeros = {first_location - 1};
-			illegal_bins other_addresses = default ;
+			//illegal_bins other_addresses = default ;
 		}
 
 		o_txrx_addr_ccc : coverpoint o_txrx_addr_ccc_tb iff (
@@ -1232,15 +1228,15 @@ mux8      mux1_8 (
 			i_regf_CMD_ATTR_tb  == 3'd1 && i_regf_CMD_tb == 8'h1F && i_regf_DTT_tb == 3'd0 && i_engine_en_tb) 
 		{
 			bins o_regf_addr_zeros = {first_location - 1};
-			ignore_bins last_addres_of_prev_cmd = {first_location + 5 ,first_location + 4} ;
-			illegal_bins other_addresses = default ;
+			ignore_bins last_addres_of_prev_cmd = {first_location  } ;
+			//illegal_bins other_addresses = default ;
 		}
 
 		o_txrx_addr_ccc : coverpoint o_txrx_addr_ccc_tb iff (
 			i_regf_CMD_ATTR_tb  == 3'd1 && i_regf_CMD_tb == 8'h1F && i_regf_DTT_tb == 3'd0 && i_engine_en_tb)
 		{
 			bins CCC_value = {Dummy_B};
-			illegal_bins others = default ;
+			//illegal_bins others = default ;
 		}
 
 		o_engine_odd : coverpoint o_engine_odd_tb iff (
@@ -1400,7 +1396,7 @@ mux8      mux1_8 (
 			bins o_regf_addr_first_location = {first_location + 4};
 			bins o_regf_addr_zeros = {first_location - 1};
 			ignore_bins last_addres_of_prev_cmd = {first_location + 5} ;
-			illegal_bins other_addresses = default ;
+			//illegal_bins other_addresses = default ;
 		}
 
 		o_txrx_addr_ccc : coverpoint o_txrx_addr_ccc_tb iff (
@@ -1565,7 +1561,7 @@ mux8      mux1_8 (
 			bins o_regf_addr_first_location = {first_location + 4};
 			bins o_regf_addr_zeros = {first_location - 1};
 			ignore_bins last_addres_of_prev_cmd = {first_location + 5} ;
-			illegal_bins other_addresses = default ;
+			//illegal_bins other_addresses = default ;
 		}
 
 		o_txrx_addr_ccc : coverpoint o_txrx_addr_ccc_tb iff (
@@ -1734,7 +1730,7 @@ mux8      mux1_8 (
 			bins o_regf_addr_first_location = {first_location + 4};
 			bins o_regf_addr_zeros = {first_location - 1};
 			bins o_regf_addr_second_location = {first_location + 5} ;
-			illegal_bins other_addresses = default ;
+			//illegal_bins other_addresses = default ;
 		}
 
 		o_txrx_addr_ccc : coverpoint o_txrx_addr_ccc_tb iff (
@@ -1899,7 +1895,7 @@ mux8      mux1_8 (
 			bins o_regf_addr_first_location = {first_location + 4};
 			bins o_regf_addr_zeros = {first_location - 1};
 			bins o_regf_addr_second_location = {first_location + 5} ;
-			illegal_bins other_addresses = default ;
+			//illegal_bins other_addresses = default ;
 		}
 
 		o_txrx_addr_ccc : coverpoint o_txrx_addr_ccc_tb iff (
@@ -2021,7 +2017,7 @@ mux8      mux1_8 (
 			i_regf_CMD_ATTR_tb  == 3'd0 && i_regf_CMD_tb == 8'h8B && !i_regf_DBP_tb && i_regf_DATA_LEN_tb == 2)
 		{
 			bins first_word_rx_pre = {0};
-			illegal_bins second_word_rx_pre = {1};
+			//illegal_bins second_word_rx_pre = {1};
 		}
 
 		o_frmcnt_en : coverpoint o_frmcnt_en_tb iff (
@@ -2065,7 +2061,7 @@ mux8      mux1_8 (
 			bins o_regf_addr_first_location = {first_location + 8};
 			bins o_regf_addr_second_location = {first_location + 9};
 			bins o_regf_addr_zeros = {first_location-1};
-			illegal_bins other_addresses = default ;
+			//illegal_bins other_addresses = default ;
 		}
 
 		o_txrx_addr_ccc : coverpoint o_txrx_addr_ccc_tb iff (
@@ -2181,15 +2177,15 @@ mux8      mux1_8 (
 			bins rx_preamble_rx_mode   = {preamble_rx_mode};
 			bins rx_deserializing_byte = {deserializing_byte};
 			bins rx_parity_check       = {parity_check};
-			//bins rx_check_c_token_CRC  = {check_c_token_CRC};
-			//bins rx_check_value_CRC    = {check_value_CRC};
+			bins rx_check_c_token_CRC  = {check_c_token_CRC};
+			bins rx_check_value_CRC    = {check_value_CRC};
 		}
 
 		i_rx_pre : coverpoint i_rx_pre_tb iff (
 			i_regf_CMD_ATTR_tb  == 3'd0 && i_regf_CMD_tb == 8'h8C && !i_regf_DBP_tb && i_regf_DATA_LEN_tb == 2)
 		{
 			bins first_word_rx_pre = {0};
-			illegal_bins second_word_rx_pre = {1};
+			//illegal_bins second_word_rx_pre = {1};
 		}
 
 		o_frmcnt_en : coverpoint o_frmcnt_en_tb iff (
@@ -2233,7 +2229,7 @@ mux8      mux1_8 (
 			bins o_regf_addr_first_location = {first_location + 8};
 			bins o_regf_addr_second_location = {first_location + 9};
 			bins o_regf_addr_zeros = {first_location-1};
-			illegal_bins other_addresses = default ;
+			//illegal_bins other_addresses = default ;
 		}
 
 		o_txrx_addr_ccc : coverpoint o_txrx_addr_ccc_tb iff (
@@ -2355,7 +2351,7 @@ mux8      mux1_8 (
 			i_regf_CMD_ATTR_tb  == 3'd0 && i_regf_CMD_tb == 8'h90 && !i_regf_DBP_tb && i_regf_DATA_LEN_tb == 2)
 		{
 			bins first_word_rx_pre = {0};
-			illegal_bins second_word_rx_pre = {1};
+			//illegal_bins second_word_rx_pre = {1};
 		}
 
 		o_frmcnt_en : coverpoint o_frmcnt_en_tb iff (
@@ -2399,7 +2395,7 @@ mux8      mux1_8 (
 			bins o_regf_addr_first_location = {first_location + 8};
 			bins o_regf_addr_second_location = {first_location + 9};
 			bins o_regf_addr_zeros = {first_location-1};
-			illegal_bins other_addresses = default ;
+			//illegal_bins other_addresses = default ;
 		}
 
 		o_txrx_addr_ccc : coverpoint o_txrx_addr_ccc_tb iff (
@@ -2519,7 +2515,7 @@ mux8      mux1_8 (
 			i_regf_CMD_ATTR_tb  == 3'd0 && i_regf_CMD_tb == 8'h8E && !i_regf_DBP_tb && i_regf_DATA_LEN_tb == 1)
 		{
 			bins first_word_rx_pre = {0};
-			illegal_bins second_word_rx_pre = {1};
+			//illegal_bins second_word_rx_pre = {1};
 		}
 
 		o_frmcnt_en : coverpoint o_frmcnt_en_tb iff (
@@ -2563,7 +2559,7 @@ mux8      mux1_8 (
 			bins o_regf_addr_first_location = {first_location + 8};
 			bins o_regf_addr_second_location = {first_location + 9};
 			bins o_regf_addr_zeros = {first_location-1};
-			illegal_bins other_addresses = default ;
+			//illegal_bins other_addresses = default ;
 		}
 
 		o_txrx_addr_ccc : coverpoint o_txrx_addr_ccc_tb iff (
@@ -2685,7 +2681,7 @@ mux8      mux1_8 (
 			i_regf_CMD_ATTR_tb  == 3'd0 && i_regf_CMD_tb == 8'h8F && !i_regf_DBP_tb && i_regf_DATA_LEN_tb == 1)
 		{
 			bins first_word_rx_pre = {0};
-			illegal_bins second_word_rx_pre = {1};
+			//illegal_bins second_word_rx_pre = {1};
 		}
 
 		o_frmcnt_en : coverpoint o_frmcnt_en_tb iff (
@@ -2730,7 +2726,7 @@ mux8      mux1_8 (
 			bins o_regf_addr_second_location = {first_location + 9 };
 
 			bins o_regf_addr_zeros = {first_location-1};
-			illegal_bins other_addresses = default ;
+			//illegal_bins other_addresses = default ;
 		}
 
 		o_txrx_addr_ccc : coverpoint o_txrx_addr_ccc_tb iff (
@@ -2765,13 +2761,10 @@ mux8      mux1_8 (
 
 	GETDCR_Direct  GETDCR_Direct_instance = new();
 
-
-
-/*
-	//----------------------------------------------- fourteenth GROUP GETPID_D ----------------------------------------//
+//----------------------------------------------- thirteenth GROUP GETDCR_D ----------------------------------------//
 
 	covergroup GETPID_Direct @(negedge i_sys_clk_tb);
-		// coverpoints for operands 
+		// coverpoint for operands 
 		o_tx_en : coverpoint o_tx_en_tb iff (
 			i_regf_CMD_ATTR_tb  == 3'd0 && i_regf_CMD_tb == 8'h8D && i_regf_DBP_tb == 0 && i_regf_DATA_LEN_tb == 6) 
 		{
@@ -2852,7 +2845,7 @@ mux8      mux1_8 (
 			i_regf_CMD_ATTR_tb  == 3'd0 && i_regf_CMD_tb == 8'h8D && !i_regf_DBP_tb && i_regf_DATA_LEN_tb == 6)
 		{
 			bins first_word_rx_pre = {0};
-			bins second_word_rx_pre = {1};
+			//bins second_word_rx_pre = {1};
 		}
 
 		o_frmcnt_en : coverpoint o_frmcnt_en_tb iff (
@@ -2893,14 +2886,11 @@ mux8      mux1_8 (
 		o_regf_addr : coverpoint o_regf_addr_tb iff (
 			i_regf_CMD_ATTR_tb  == 3'd0 && i_regf_CMD_tb == 8'h8D && !i_regf_DBP_tb  && i_regf_DATA_LEN_tb == 6) 
 		{
-			bins o_regf_addr_first_location  = {first_location + 8};
-			bins o_regf_addr_second_location = {first_location + 9};
-			bins o_regf_addr_third_location  = {first_location + 10};
-			bins o_regf_addr_fourth_location = {first_location + 11};
-			bins o_regf_addr_fifth_location  = {first_location + 12};
-			bins o_regf_addr_sixth_location  = {first_location + 13};
+			bins o_regf_addr_first_location  = {first_location + 8 };
+			bins o_regf_addr_second_location = {first_location + 9 };
+
 			bins o_regf_addr_zeros = {first_location-1};
-			illegal_bins other_addresses = default ;
+			//illegal_bins other_addresses = default ;
 		}
 
 		o_txrx_addr_ccc : coverpoint o_txrx_addr_ccc_tb iff (
@@ -2915,7 +2905,7 @@ mux8      mux1_8 (
 			i_regf_CMD_ATTR_tb  == 3'd0 && i_regf_CMD_tb == 8'h8D && !i_regf_DBP_tb  && i_regf_DATA_LEN_tb == 6) 
 		{
 			bins o_engine_odd_0 = {0};
-			illegal_bins o_engine_odd_1 = {1};
+			//bins o_engine_odd_1 = {1};
 		}
 
 		o_regf_ERR_STATUS : coverpoint o_regf_ERR_STATUS_tb iff (
@@ -2933,8 +2923,8 @@ mux8      mux1_8 (
 
 	endgroup
 
-	GETPID_Direct  GETPID_Direct_instance = new();
-*/
+	GETDCR_Direct  GETPID_Direct_instance = new();
+
 // 4-initial block 
 /* IMPORTANT NOTES :
 		1- (General) when driving input to the block which is considered as output of other block u must drive it at posedge not at negdge .
@@ -3150,7 +3140,7 @@ int cycle_count ;
 
 ///////////////////////////////////////////////////// TASKS ///////////////////////////////////////
 */
-//////////////////////////////////////////////  General driver /////////////////////////////////
+//////////////////////////////////////////////  ACK driver /////////////////////////////////
 
 	initial begin 
 		forever #(2*CLK_PERIOD) begin 
@@ -3159,17 +3149,16 @@ int cycle_count ;
 				@(negedge scl_neg_edge_tb or negedge scl_pos_edge_tb) ;
 				i_sdahnd_rx_sda_tb = 1'b0 ;
 				#(2*CLK_PERIOD) ;
-				//i_sdahnd_rx_sda_tb = 1'bz ;
+				i_sdahnd_rx_sda_tb = 1'bz ;
 			end
-			else if (CCC_Handler_dut.current_state == PRE_DATA_TWO) begin 
+			else if (!RAND_RnW && CCC_Handler_dut.current_state == PRE_DATA_TWO) begin 
 				@(negedge scl_neg_edge_tb or negedge scl_pos_edge_tb) ;
 				i_sdahnd_rx_sda_tb = 1'b1 ;
 				#(2*CLK_PERIOD) ;
-				//i_sdahnd_rx_sda_tb = 1'bz ;
+				i_sdahnd_rx_sda_tb = 1'bz ;
 			end
 		end
 	end 
-
 
 
 	task system_reset ;
@@ -3359,6 +3348,116 @@ int cycle_count ;
 
 
 
+
+	reg [28:0] read_vector_2_1 = 29'b0000_0000_0000_0000_01_01_1100_00001 ;
+	reg [28:0] read_vector_2_2 = 29'b1111_1111_1111_1111_01_01_1100_01010 ;
+	reg [28:0] read_vector_2_3 = 29'b1010_1010_1010_1010_01_01_1100_10000 ;
+	reg [28:0] read_vector_2_4 = 29'b1111_0000_1111_0000_01_01_1100_11001 ;
+	reg [49:0] read_vector_4_1 = 50'b0000_0000_1000_0001_10_1zz_0011_1111_1111_1111_10_01_1100_10100 ;
+	reg [70:0] read_vector_6_1 = 71'b1010_1010_1010_1010_01_1zz_1111_1111_1111_1110_00_1zz_0000_0010_1111_0000_11_01_1100_01100 ;
+	reg [70:0] read_vector_6_2 = 71'b0000_1111_0000_1000_11_1zz_1111_1111_0000_0000_01_1zz_0011_1100_0000_1111_01_01_1100_10001 ;
+
+	always @(CCC_Handler_dut.next_state) begin 
+		if ( (RAND_RnW == 1 ) && (RAND_CMD_ATTR == 'd0) && ({RAND_DATA_FOUR,RAND_DATA_THREE} == 'd2 || {RAND_DATA_FOUR,RAND_DATA_THREE} == 'd1 ) && (i_engine_en_tb && CCC_Handler_dut.next_state == FIRST_DATA_BYTE)) begin 
+			Drive_repeated_data_word_2();
+		end 
+	end
+
+
+	always @(CCC_Handler_dut.next_state) begin 
+		if ( (RAND_RnW == 1 ) && (RAND_CMD_ATTR == 'd0) && ({RAND_DATA_FOUR,RAND_DATA_THREE} == 'd3 || {RAND_DATA_FOUR,RAND_DATA_THREE} == 'd4 ) && (i_engine_en_tb && CCC_Handler_dut.next_state == FIRST_DATA_BYTE) ) begin 
+			Drive_repeated_data_word_4();
+		end 
+	end
+
+	always @(CCC_Handler_dut.next_state) begin 
+		if ( (RAND_RnW == 1 ) && (RAND_CMD_ATTR == 'd0) && ({RAND_DATA_FOUR,RAND_DATA_THREE} == 'd6 ) && (i_engine_en_tb && CCC_Handler_dut.next_state == FIRST_DATA_BYTE) ) begin 
+			Drive_repeated_data_word_6();
+		end 
+	end
+
+
+	task Drive_repeated_data_word_2 (); // check read commands
+		begin 
+			int 		 o ; // counter
+			#(CLK_PERIOD);
+			for ( o = 0 ; o < 'd29 ; o++ ) begin 
+
+				@ (negedge scl_neg_edge_tb or negedge scl_pos_edge_tb ) ;
+				i_sdahnd_rx_sda_tb = read_vector_2_2[28 - o];
+				# (2*CLK_PERIOD) ;
+ 
+			end
+			i_sdahnd_rx_sda_tb = 1'bz ;
+			# (2*CLK_PERIOD) ;
+
+			if (RAND_TOC) begin 
+				assert (CCC_Handler_dut.current_state == EXIT_PATTERN) $display("READ data word TOC = 1 is CORRECT : %0t" ,$time);
+				else 												   $display("READ data word TOC = 1 is WRONG   : %0t" ,$time);
+			end 
+			else if (!RAND_TOC) begin 
+				assert (CCC_Handler_dut.current_state == RESTART_PATTERN) $display("READ data word TOC = 0 is CORRECT : %0t" ,$time);
+				else 												   	  $display("READ data word TOC = 0 is WRONG   : %0t" ,$time);
+			end 
+		end  
+	endtask 
+
+
+	task Drive_repeated_data_word_4 (); // check read commands
+		begin 
+			int 		 o ; // counter
+			#(CLK_PERIOD);
+			for ( o = 0 ; o < 'd50 ; o++ ) begin 
+
+				@ (negedge scl_neg_edge_tb or negedge scl_pos_edge_tb ) ;
+				i_sdahnd_rx_sda_tb = read_vector_4_1[49 - o];
+				# (2*CLK_PERIOD) ;
+ 
+			end
+			i_sdahnd_rx_sda_tb = 1'bz ;
+			# (2*CLK_PERIOD) ;
+
+			if (RAND_TOC) begin 
+				assert (CCC_Handler_dut.current_state == EXIT_PATTERN) $display("READ data word TOC = 1 is CORRECT : %0t" ,$time);
+				else 												   $display("READ data word TOC = 1 is WRONG   : %0t" ,$time);
+			end 
+			else if (!RAND_TOC) begin 
+				assert (CCC_Handler_dut.current_state == RESTART_PATTERN) $display("READ data word TOC = 0 is CORRECT : %0t" ,$time);
+				else 												   	  $display("READ data word TOC = 0 is WRONG   : %0t" ,$time);
+			end 
+		end  
+	endtask 
+
+
+	task Drive_repeated_data_word_6 (); // check read commands
+		begin 
+			int 		 o ; // counter
+			#(CLK_PERIOD);
+			for ( o = 0 ; o < 'd71 ; o++ ) begin 
+
+				@ (negedge scl_neg_edge_tb or negedge scl_pos_edge_tb ) ;
+				i_sdahnd_rx_sda_tb = read_vector_6_2[70 - o];
+				# (2*CLK_PERIOD) ;
+ 
+			end
+			i_sdahnd_rx_sda_tb = 1'bz ;
+			# (4*CLK_PERIOD) ;
+
+			if (RAND_TOC) begin 
+				assert (CCC_Handler_dut.current_state == EXIT_PATTERN) $display("READ data word TOC = 1 is CORRECT : %0t" ,$time);
+				else 												   $display("READ data word TOC = 1 is WRONG   : %0t" ,$time);
+			end 
+			else if (!RAND_TOC) begin 
+				assert (CCC_Handler_dut.current_state == RESTART_PATTERN) $display("READ data word TOC = 0 is CORRECT : %0t" ,$time);
+				else 												   	  $display("READ data word TOC = 0 is WRONG   : %0t" ,$time);
+			end 
+		end  
+	endtask 
+
+
+
+
+
 	 //----------------------------------------------- ASSERTIONS -----------------------------------------------//
 	 // Broadcast assertions
 	 parameter [1:0] scl_wrt_sys_clk = 2 ;
@@ -3461,7 +3560,7 @@ int cycle_count ;
     	    value_CRC_seq ##(5*scl_wrt_sys_clk) o_tx_mode_tb == restart_pattern ;
     	endsequence
     	sequence broadcast_sec_TOC_0 ;
-    	    restart_pattern_seq ##(13) o_tx_mode_tb == special_preamble  ;
+    	    restart_pattern_seq ##(10) o_tx_mode_tb == special_preamble  ;
     	endsequence
 
 
@@ -3470,7 +3569,7 @@ int cycle_count ;
     	    value_CRC_seq ##(5*scl_wrt_sys_clk) o_tx_mode_tb == exit_pattern ;
     	endsequence
     	sequence broadcast_sec_TOC_1 ;
-    	    exit_pattern_seq ##(18) o_tx_mode_tb == special_preamble  ;
+    	    exit_pattern_seq ##(17) o_tx_mode_tb == special_preamble  ;
     	endsequence
 
 
@@ -3543,7 +3642,7 @@ int cycle_count ;
     	    value_CRC_seq_dummy ##(5*scl_wrt_sys_clk) o_tx_mode_tb == restart_pattern ;
     	endsequence
     	sequence Dummy_sec_TOC_0 ;
-    	    restart_pattern_seq_dummy ##(13) o_tx_mode_tb == special_preamble  ;
+    	    restart_pattern_seq_dummy ##(10) o_tx_mode_tb == special_preamble  ;
     	endsequence
 
 
@@ -3552,7 +3651,7 @@ int cycle_count ;
     	    value_CRC_seq_dummy ##(5*scl_wrt_sys_clk) o_tx_mode_tb == exit_pattern ;
     	endsequence
     	sequence Dummy_sec_TOC_1 ;
-    	    exit_pattern_seq_dummy ##(18) o_tx_mode_tb == special_preamble  ;
+    	    exit_pattern_seq_dummy ##(17) o_tx_mode_tb == special_preamble  ;
     	endsequence
 
 
@@ -3648,7 +3747,7 @@ int cycle_count ;
      	(o_tx_mode_tb == special_preamble 		[*(2*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == c_token_CRC 			[*(4*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == value_CRC 				[*(5*scl_wrt_sys_clk)])  ##1
-     	(o_tx_mode_tb == restart_pattern 		[*(12)])
+     	(o_tx_mode_tb == restart_pattern 		[*(10)])
     
         			;										 
     endproperty
@@ -3658,7 +3757,7 @@ int cycle_count ;
     property Broadcast_ENEC_DISEC_SETMWL_SETMRL_TOC_1_track ;
         @(posedge i_sys_clk_tb) ($rose(i_engine_en_tb) 								  &&
         											i_regf_CMD_ATTR_tb  == 3'd1       && 
-        	(i_regf_CMD_tb == 8'h00 || i_regf_CMD_tb == 8'h01 || i_regf_CMD_tb == 8'h09 || i_regf_CMD_tb == 8'h0A) && 
+        	(i_regf_CMD_tb == 8'h00 || i_regf_CMD_tb == 8'h01 || i_regf_CMD_tb == 8'h09 || i_regf_CMD_tb == 8'h0A ) && 
         						  (i_regf_DTT_tb == 3'd1 || i_regf_DTT_tb == 3'd2)    && 
         											i_regf_TOC_tb == 1 ) 
         											|->  
@@ -3679,7 +3778,7 @@ int cycle_count ;
      	(o_tx_mode_tb == special_preamble 		[*(2*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == c_token_CRC 			[*(4*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == value_CRC 				[*(5*scl_wrt_sys_clk)])  ##1
-     	(o_tx_mode_tb == exit_pattern 		    [*(18)])
+     	(o_tx_mode_tb == exit_pattern 		    [*(17)])
     
         			;										 
     endproperty
@@ -3706,7 +3805,7 @@ int cycle_count ;
      	(o_tx_mode_tb == special_preamble 		[*(2*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == c_token_CRC 			[*(4*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == value_CRC 				[*(5*scl_wrt_sys_clk)])  ##1
-     	(o_tx_mode_tb == restart_pattern 		[*(12)])
+     	(o_tx_mode_tb == restart_pattern 		[*(10)])
     
         			;										 
     endproperty
@@ -3732,7 +3831,7 @@ int cycle_count ;
      	(o_tx_mode_tb == special_preamble 		[*(2*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == c_token_CRC 			[*(4*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == value_CRC 				[*(5*scl_wrt_sys_clk)])  ##1
-     	(o_tx_mode_tb == exit_pattern 		    [*(18)])
+     	(o_tx_mode_tb == exit_pattern 		    [*(17)])
     
         			;										 
     endproperty
@@ -3753,15 +3852,15 @@ int cycle_count ;
                             //$display("%t Broadcast_SETMWL_SETMRL_TOC_0 FAILED ",$time);
   
     cover property(Broadcast_SETMWL_SETMRL_TOC_1);
-                           // $display("%t Broadcast_SETMWL_SETMRL_TOC_1 PASSED ",$time); else
+                            //$display("%t Broadcast_SETMWL_SETMRL_TOC_1 PASSED ",$time); else
                             //$display("%t Broadcast_SETMWL_SETMRL_TOC_1 FAILED ",$time);
  
     cover property(Broadcast_Dummy_TOC_0);
-                           // $display("%t Broadcast_Dummy_TOC_0 PASSED ",$time); else
+                            //$display("%t Broadcast_Dummy_TOC_0 PASSED ",$time); else
                             //$display("%t Broadcast_Dummy_TOC_0 FAILED ",$time);
     
     cover property(Broadcast_Dummy_TOC_1);
-                           // $display("%t Broadcast_Dummy_TOC_1 PASSED ",$time); else
+                            //$display("%t Broadcast_Dummy_TOC_1 PASSED ",$time); else
                             //$display("%t Broadcast_Dummy_TOC_1 FAILED ",$time);                     
 
     cover property(Broadcast_ENEC_DISEC_SETMWL_SETMRL_TOC_0_track);
@@ -3769,7 +3868,7 @@ int cycle_count ;
                             //$display("%t Broadcast_ENEC_DISEC_SETMWL_SETMRL_TOC_0_track FAILED ",$time);	
 
     cover property(Broadcast_ENEC_DISEC_SETMWL_SETMRL_TOC_1_track);
-                           // $display("%t Broadcast_ENEC_DISEC_SETMWL_SETMRL_TOC_1_track PASSED ",$time); else
+                            //$display("%t Broadcast_ENEC_DISEC_SETMWL_SETMRL_TOC_1_track PASSED ",$time); else
                             //$display("%t Broadcast_ENEC_DISEC_SETMWL_SETMRL_TOC_1_track FAILED ",$time);	
 
     cover property(Broadcast_Dummy_TOC_0_track);
@@ -3856,7 +3955,7 @@ int cycle_count ;
     endsequence
 
     sequence broadcast_sec_TOC_0_1_D ;
-    	restart_pattern_seq_1_D ##(13) o_tx_mode_tb == special_preamble  ;
+    	restart_pattern_seq_1_D ##(10) o_tx_mode_tb == special_preamble  ;
     endsequence
 
 
@@ -3924,7 +4023,7 @@ int cycle_count ;
     	    value_CRC_seq_2_D ##(5*scl_wrt_sys_clk) o_tx_mode_tb == restart_pattern ;
     	endsequence
     	sequence Direct_sec_TOC_0 ;
-    	    restart_pattern_seq_2_D ##(13) o_tx_mode_tb == special_preamble  ;
+    	    restart_pattern_seq_2_D ##(10) o_tx_mode_tb == special_preamble  ;
     	endsequence
 
 
@@ -3933,7 +4032,7 @@ int cycle_count ;
     	    value_CRC_seq_2_D ##(5*scl_wrt_sys_clk) o_tx_mode_tb == exit_pattern ;
     	endsequence
     	sequence Direct_sec_TOC_1 ;
-    	    exit_pattern_seq_D ##(18) o_tx_mode_tb == special_preamble  ;
+    	    exit_pattern_seq_D ##(17) o_tx_mode_tb == special_preamble  ;
     	endsequence
 
 
@@ -3998,7 +4097,7 @@ int cycle_count ;
      	(o_tx_mode_tb == special_preamble 		[*(2*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == c_token_CRC 			[*(4*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == value_CRC 				[*(5*scl_wrt_sys_clk)])  ##1
-     	(o_tx_mode_tb == restart_pattern 		[*(12)])				 ##1
+     	(o_tx_mode_tb == restart_pattern 		[*(10)])				 ##1
      	// CMD word
      	(o_tx_mode_tb == special_preamble 		[*(2*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == zero 					[*(scl_wrt_sys_clk)])    ##1
@@ -4014,7 +4113,7 @@ int cycle_count ;
      	(o_tx_mode_tb == special_preamble 		[*(2*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == c_token_CRC 			[*(4*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == value_CRC 				[*(5*scl_wrt_sys_clk)])  ##1
-     	(o_tx_mode_tb == restart_pattern 		[*(12)])
+     	(o_tx_mode_tb == restart_pattern 		[*(10)])
     
         			;										 
     endproperty
@@ -4042,7 +4141,7 @@ int cycle_count ;
      	(o_tx_mode_tb == special_preamble 		[*(2*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == c_token_CRC 			[*(4*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == value_CRC 				[*(5*scl_wrt_sys_clk)])  ##1
-     	(o_tx_mode_tb == restart_pattern 		[*(12)])				 ##1
+     	(o_tx_mode_tb == restart_pattern 		[*(10)])				 ##1
      	// CMD word
      	(o_tx_mode_tb == special_preamble 		[*(2*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == zero 					[*(scl_wrt_sys_clk)])    ##1
@@ -4058,7 +4157,7 @@ int cycle_count ;
      	(o_tx_mode_tb == special_preamble 		[*(2*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == c_token_CRC 			[*(4*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == value_CRC 				[*(5*scl_wrt_sys_clk)])  ##1
-     	(o_tx_mode_tb == exit_pattern   		[*(18)])
+     	(o_tx_mode_tb == exit_pattern   		[*(17)])
     
         			;										 
     endproperty
@@ -4162,7 +4261,7 @@ int cycle_count ;
     endsequence
 
     sequence broadcast_sec_TOC_0_1_D_get ;
-    	restart_pattern_seq_1_D_get ##(12) o_tx_mode_tb == special_preamble  ;
+    	restart_pattern_seq_1_D_get ##(10) o_tx_mode_tb == special_preamble  ;
     endsequence
 
 
@@ -4203,7 +4302,7 @@ int cycle_count ;
     	endsequence
     	// for TOC = 0
     	sequence Direct_get_2_bytes_sec_TOC_0 ;
-    	    restart_pattern_seq_2_D_get ##(12) (o_tx_mode_tb == special_preamble)  ;
+    	    restart_pattern_seq_2_D_get ##(10) (o_tx_mode_tb == special_preamble)  ;
     	endsequence
 
 
@@ -4308,7 +4407,7 @@ int cycle_count ;
      	(o_tx_mode_tb == special_preamble 		[*(2*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == c_token_CRC 			[*(4*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == value_CRC 				[*(5*scl_wrt_sys_clk)])  ##1
-     	(o_tx_mode_tb == restart_pattern 		[*(12)])				 ##1
+     	(o_tx_mode_tb == restart_pattern 		[*(10)])				 ##1
      	// CMD word
      	(o_tx_mode_tb == special_preamble 		[*(2*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == one 					[*(scl_wrt_sys_clk)])    ##1  	// RnW bit = 1 
@@ -4324,7 +4423,7 @@ int cycle_count ;
      	(o_tx_mode_tb == special_preamble 		[*(2*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == special_preamble 		[*(4*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == special_preamble 		[*(5*scl_wrt_sys_clk)])  ##1
-     	(o_tx_mode_tb == restart_pattern 		[*(12)])
+     	(o_tx_mode_tb == restart_pattern 		[*(10)])
     
         			;										 
     endproperty
@@ -4359,7 +4458,7 @@ int cycle_count ;
      	(o_tx_mode_tb == special_preamble 		[*(2*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == c_token_CRC 			[*(4*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == value_CRC 				[*(5*scl_wrt_sys_clk)])  ##1
-     	(o_tx_mode_tb == restart_pattern 		[*(12)])				 ##1
+     	(o_tx_mode_tb == restart_pattern 		[*(10)])				 ##1
      	// CMD word
      	(o_tx_mode_tb == special_preamble 		[*(2*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == one 					[*(scl_wrt_sys_clk)])    ##1  	// RnW bit = 1 
@@ -4375,7 +4474,7 @@ int cycle_count ;
      	(o_tx_mode_tb == special_preamble 		[*(2*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == special_preamble 		[*(4*scl_wrt_sys_clk)])  ##1
      	(o_tx_mode_tb == special_preamble 		[*(5*scl_wrt_sys_clk)])  ##1
-     	(o_tx_mode_tb == exit_pattern 	 		[*(18)])
+     	(o_tx_mode_tb == exit_pattern 	 		[*(17)])
     
         			;										 
     endproperty
@@ -4410,7 +4509,7 @@ int cycle_count ;
      	(o_rx_mode_tb == preamble_rx_mode 		[*(2*scl_wrt_sys_clk)])  ##1
      	(o_rx_mode_tb == preamble_rx_mode 		[*(4*scl_wrt_sys_clk)])  ##1
      	(o_rx_mode_tb == preamble_rx_mode 		[*(5*scl_wrt_sys_clk)])  ##1
-     	(o_rx_mode_tb == preamble_rx_mode 		[*(12)])				 ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(10)])				 ##1
      	// CMD word
      	(o_rx_mode_tb == preamble_rx_mode 		[*(2*scl_wrt_sys_clk)])  ##1
      	(o_rx_mode_tb == preamble_rx_mode 		[*(scl_wrt_sys_clk)])    ##1  	// RnW bit = 1 
@@ -4426,7 +4525,7 @@ int cycle_count ;
      	(o_rx_mode_tb == CRC_PREAMBLE 			[*(2*scl_wrt_sys_clk)])  ##1
      	(o_rx_mode_tb == check_c_token_CRC 		[*(4*scl_wrt_sys_clk)])  ##1
      	(o_rx_mode_tb == check_value_CRC 		[*(5*scl_wrt_sys_clk)])  ##1
-     	(o_rx_mode_tb == preamble_rx_mode 		//[*(12)] 						//  disabled >> restart_pattern
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(10)] 						//  disabled >> restart_pattern
 
      	)	 		 	 	 	
     
@@ -4462,7 +4561,7 @@ int cycle_count ;
      	(o_rx_mode_tb == preamble_rx_mode 		[*(2*scl_wrt_sys_clk)])  ##1
      	(o_rx_mode_tb == preamble_rx_mode 		[*(4*scl_wrt_sys_clk)])  ##1
      	(o_rx_mode_tb == preamble_rx_mode 		[*(5*scl_wrt_sys_clk)])  ##1
-     	(o_rx_mode_tb == preamble_rx_mode 		[*(12)])				 ##1
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(10)])				 ##1
      	// CMD word
      	(o_rx_mode_tb == preamble_rx_mode 		[*(2*scl_wrt_sys_clk)])  ##1
      	(o_rx_mode_tb == preamble_rx_mode 		[*(scl_wrt_sys_clk)])    ##1  	// RnW bit = 1 
@@ -4478,7 +4577,7 @@ int cycle_count ;
      	(o_rx_mode_tb == CRC_PREAMBLE 			[*(2*scl_wrt_sys_clk)])  ##1
      	(o_rx_mode_tb == check_c_token_CRC 		[*(4*scl_wrt_sys_clk)])  ##1
      	(o_rx_mode_tb == check_value_CRC 		[*(5*scl_wrt_sys_clk)])  ##1
-     	(o_rx_mode_tb == preamble_rx_mode 		//[*(17)]						//  disabled >> exit_pattern
+     	(o_rx_mode_tb == preamble_rx_mode 		[*(17)]						//  disabled >> exit_pattern
      		)	 		 	 	 	
     
         			;										 

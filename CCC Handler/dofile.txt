@@ -2,7 +2,7 @@ vlib work
 vlog package.sv CCC_Handler.v CCC_Handler_tb_final.sv bits_counter.v FRAME_COUNTER.v reg_file.v Rx.v Tx.v scl_generation.v staller.v testing_mux.v crc.v mux1.v mux8.v +cover -covercells
 vsim -voptargs=+acc work.CCC_Handler_tb -cover
 
-do ./wave.wcfg \
-# Save coverage data and run the simulation
-#coverage save CCC_Handler.ucdb -onexit
+do ./wave.do \
+#Save coverage data and run the simulation
+coverage save CCC_Handler.ucdb -onexit
 run -all

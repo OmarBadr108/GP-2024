@@ -30,8 +30,8 @@ parameter  [4:0]   IDLE               = 5'd0  , // 0
                    EXIT_PATTERN       = 5'd19 , 
                    ERROR              = 5'd20 , 
                    FINISH             = 5'd21 , 
-                   PRE_CRC_TARGET     = 5'd22 ,
-                   RESTART_PATTERN_SPECIAL = 5'd23 ;
+                   PRE_CRC_TARGET     = 5'd22 ;
+                
 
 
     // tx modes parameters 
@@ -53,18 +53,18 @@ parameter [3:0]
 parameter [11:0] first_location = 12'd1000 ;
 
 
-// rx parameters 
+// rx parameters de tmam 
 parameter [2:0] 
                  preamble_rx_mode    = 3'd0 , 
                  CRC_PREAMBLE        = 3'd1 ,
                  parity_check        = 3'd6 ,
                  deserializing_byte  = 3'd3 ,
                  check_c_token_CRC   = 3'd7 ,
-                 check_value_CRC     = 3'd2 ;
-  
+                 check_value_CRC     = 3'd2 ,
+                 ERROR_RX            = 3'b100  ;
+                
 // SCL staller parameters 
-parameter [4:0] restart_pattern_stall = 5'd7, 
-                restart_pattern_stall_special = 5'd7, 
+parameter [4:0] restart_pattern_stall = 5'd7  , 
                 exit_pattern_stall    = 5'd13 ;  
 
 
@@ -125,8 +125,8 @@ class configuration ;
    
  
 	constraint CMD_ATTR {	 	 	 	 	// 1 for immediate and 0 for regular
-		//RAND_CMD_ATTR inside { 0 , 1 } ;
-		RAND_CMD_ATTR dist {1:/70 , 0:/30} ;
+		RAND_CMD_ATTR ==  ((RAND_CMD == 8'h00)|(RAND_CMD == 8'h01)|(RAND_CMD == 8'h09)|(RAND_CMD ==8'h0A)|							
+					       (RAND_CMD == 8'h80)|(RAND_CMD == 8'h81)|(RAND_CMD == 8'h89)|(RAND_CMD ==8'h8A)|(RAND_CMD ==8'h1F) )? 1 : 0 ;
 	}
 	
 	constraint TID {
@@ -134,10 +134,10 @@ class configuration ;
 	}
 
 	constraint CMD {
-		RAND_CMD inside {8'h00 , 8'h01 , 8'h09 , 8'h0A , 8'h1F	 	 	 // broadcast 
-					    ,8'h80 , 8'h81 , 8'h89 , 8'h8A  				 // direct set
-					    ,8'h8B , 8'h8C , 8'h90 , 8'h8E , 8'h8F  	 	 // direct get
-					    //,8'h8D	 	  		 		 	 	 	 	 // GETPID	 
+		RAND_CMD inside {8'h00 , 8'h01 , 8'h09 , 8'h0A , 8'h1F 	, 	 // broadcast 
+					     8'h80 , 8'h81 , 8'h89 , 8'h8A , 				 // direct set
+					     8'h8B , 8'h8C , 8'h90 , 8'h8E , 8'h8F , 	 	 // direct get
+					     8'h8D	 	  		 		 	 	 	 	 // GETPID	 
 						 								   		} ;	
 	}
 
@@ -154,7 +154,7 @@ class configuration ;
 	}
 
 	constraint DTT {
-		RAND_DTT inside {0,1,2} ;	
+		RAND_DTT inside {[0:3]} ;	
 	}
 
 	constraint MODE {
@@ -171,7 +171,7 @@ class configuration ;
 	}
 
 	constraint TOC {
-		RAND_TOC inside {[0:1]} ;	
+		RAND_TOC inside {0,1} ;	
 	}
 
 	constraint DEF_BYTE {
@@ -183,7 +183,7 @@ class configuration ;
 	}
 
 	constraint DATA_LENGTH {
-		RAND_DATA_THREE inside {1,2} ;	
+		RAND_DATA_THREE inside {1,2,3,4,6} ;	
 	}
 
 	constraint DATA_FOUR {
