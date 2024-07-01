@@ -83,8 +83,8 @@ localparam [3:0]    SUCCESS 			  	= 'd0,
 
 
 //------------ timing specification ------------//  
-localparam [4:0]  restart_stalling = 'd7,
-                  exit_stalling = 'd13;
+localparam [4:0]  restart_stalling = 'd10,
+                  exit_stalling = 'd16;
 
 
 
@@ -137,27 +137,27 @@ localparam [2:0]     preamble = 'd0,
 
 
 //------------------ fsm states ----------------//
-localparam [4:0]    idle 									  = 'd0,
-                    first_stage_command_Pre = 'd1,
-                    serializing_seven_zeros = 'd2,
-					          address 							  = 'd3,                
-					          parity 								  = 'd4,
+localparam [4:0]              idle = 'd0,
+                              first_stage_command_Pre = 'd1,
+                              serializing_seven_zeros = 'd2,
+					          address = 'd3,                
+					          parity = 'd4,
 					          sec_stage_first_data_pre = 'd5,             // sent by controller
-					          ack_waiting 					  = 'd6,
-					          first_data_byte 			  = 'd7,
-					          second_data_byte 				= 'd8,
+					          ack_waiting = 'd6,
+					          first_data_byte = 'd7,
+					          second_data_byte = 'd8,
 					          third_stage_first_data_pre = 'd9,             // send by target or controller
-					          abort_bit 						     = 'd10,                      //   aborting by controller or target             
+					          abort_bit = 'd10,                      //   aborting by controller or target             
 					          fourth_stage_crc_first_pre = 'd11,
 					          fourth_stage_crc_second_pre = 'd12,
-					          token_crc_bits 	 			 	  	= 'd13,                 // 4 bits
-					          crc_value_bits 	 		 	 	 		= 'd14,                  // 5 bits 
-					          error 											= 'd15,
-					          restart 									  = 'd16,
-					          exit 												= 'd17,
-							  		Read_Write_bit 							= 'd18,
-							  		serializing_zeros 				  = 'd19,
-							  		waiting 									  = 'd20 ;
+					          token_crc_bits = 'd13,                 // 4 bits
+					          crc_value_bits = 'd14,                  // 5 bits 
+					          error = 'd15,
+					          restart = 'd16,
+					          exit = 'd17,
+							  Read_Write_bit = 'd18,
+							  serializing_zeros = 'd19,
+							  waiting = 'd20 ;
 
 
 //------------------ internal signals decleration -----------------//					 
@@ -166,6 +166,7 @@ reg    [4:0]         current_state , next_state ;
 /*wire [3:0] count ;*/
 reg parity_data, Parity_data_seq ,sysclk_done,en_sysclk , first_byte , first_byte_seq;
 reg [11:0] addr ,addr_temp;
+reg [3:0] error_type;
 
 
 localparam specific_address = 'd 999; // for 8 zeros
@@ -179,39 +180,6 @@ assign o_crc_rx_tx_mux_sel_NT = (i_regf_wr_rd_bit)? 1'b1 : 1'b0;
 assign o_crc_data_tx_rx_mux_sel   = (i_regf_wr_rd_bit)? 1'b1 :1'b0;
 
 assign o_crc_last_byte_tx_rx_mux_sel = (i_regf_wr_rd_bit)? 1'b1 :1'b0;*/
-
-
-
-////////////////// BADR 
-// Pulse stretcher 
-reg [1:0] pulse_counter ;  
-reg       i_sclstall_stall_done_strtch ;
-
-always @(posedge i_sys_clk or negedge i_sys_rst) begin
-    if (!i_sys_rst) begin
-        pulse_counter                 <= 2'b00 ;
-        i_sclstall_stall_done_strtch  <= 1'b0 ;
-    end 
-    else begin
-        if (i_staller_done) begin
-            pulse_counter                <= 2'b11 ;
-            i_sclstall_stall_done_strtch <= 1'b1 ;
-        end 
-        else if (pulse_counter > 0) begin
-            pulse_counter                 <= pulse_counter - 1 ;
-            i_sclstall_stall_done_strtch <= 1'b1 ;
-        end 
-        else begin
-            i_sclstall_stall_done_strtch <= 1'b0 ;
-        end
-    end
-end
-
-//////////////////////////
-
-
-
-
 
 //--------------------------- 1: Sequential Always Block ------------------------------//
 always @(posedge i_sys_clk or negedge i_sys_rst)
@@ -270,16 +238,13 @@ always @(posedge i_sys_clk or negedge i_sys_rst)
 
 		      first_stage_command_Pre :  
 		      begin
-		      	 if (i_engine_en) 
-		         begin
+		      	
 		         	if (i_tx_mode_done)
 		        	  next_state = Read_Write_bit ;
 		        	else
 		          	next_state = first_stage_command_Pre ;
-		         end
-		        
-		        else
-		        		next_state = idle ;
+		         	        
+		       
 		      end
 
 
@@ -771,7 +736,7 @@ always @(*)
 	o_bitcnt_en = 'b1; 
 	o_bitcnt_rst = 'b0;
 	o_regf_abort = 'b0;
-	o_regf_error_type = SUCCESS;  // No error
+	error_type = SUCCESS;  // No error
 	en_sysclk=0;
 	o_tx_mode = 'b0;
 	o_rx_mode = 'b0 ;
@@ -881,9 +846,9 @@ always @(*)
           o_rx_mode = Check_Parity_value;         //check the parity correctness
           
 		  if (i_rx_error)
-            o_regf_error_type = Parity_Error;
+            error_type = Parity_Error;
           else
-            o_regf_error_type = SUCCESS; 
+            error_type = SUCCESS; 
          end
 		 end
 
@@ -902,11 +867,7 @@ always @(*)
 
 
   ack_waiting : begin
-	     // new 20/6/2024 by badr 
-               
-            //addr = addr_temp +1 ;
-                
-
+	     
 		// o_sdahand_pp_od = 'b0;   //listening to sda
      
 		first_byte ='b1;
@@ -924,7 +885,7 @@ always @(*)
 		  
 	      if ((!i_rx_pre) && i_rx_mode_done)
 			begin
-			o_regf_error_type = SUCCESS;
+			error_type = SUCCESS;
 			if (!i_regf_wr_rd_bit) begin 
 			o_tx_en = 'b1;
 			o_tx_mode = Serializing_byte; 		    
@@ -934,7 +895,7 @@ always @(*)
         else 
 		begin
          	
-			o_regf_error_type = NACK_Error;
+			error_type = NACK_Error;
 		
 		 end
 		   
@@ -1098,16 +1059,16 @@ always @(*)
 				if (!i_rx_pre)
 				begin
 					 if ((!i_frmcnt_last) && i_regf_short_read ) 
-					o_regf_error_type = I3C_SHORT_READ_Error ;  // target didn't send all requierd data 
+					error_type = I3C_SHORT_READ_Error ;  // target didn't send all requierd data 
 					else 
-					o_regf_error_type = SUCCESS ;
+					error_type = SUCCESS ;
 				end
 				else 
-				o_regf_error_type = SUCCESS ;
+				error_type = SUCCESS ;
 				
 			end 
 			else 
-			o_regf_error_type = SUCCESS ;
+			error_type = SUCCESS ;
 			
          end
 		 
@@ -1131,7 +1092,7 @@ always @(*)
               o_tx_en = 'b1;
               o_tx_mode = zero_preamble;
 			  o_regf_abort = 'b0;
-	          o_regf_error_type = BUS_ABORTED_Error;  // Controller aborts reading
+	          error_type = BUS_ABORTED_Error;  // Controller aborts reading
             end
 
           end
@@ -1144,7 +1105,7 @@ always @(*)
 		  if(!i_rx_pre)  
 		  begin 
 		  o_regf_abort = 'b1;
-		  o_regf_error_type = BUS_ABORTED_Error;   // target aborts writing 
+		  error_type = BUS_ABORTED_Error;   // target aborts writing 
 		  end
 		  
 		  else 
@@ -1211,13 +1172,13 @@ fourth_stage_crc_first_pre     : begin
 		  if ( i_rx_mode_done)		  
 		  begin      		  
 			if (i_rx_pre)
-			o_regf_error_type = SUCCESS ;
+			error_type = SUCCESS ;
 			else 
-			o_regf_error_type = Frame_Error ;          // error due to pre = 00 
+			error_type = Frame_Error ;          // error due to pre = 00 
 		  
          end
 		 else  
-		 o_regf_error_type = SUCCESS ;
+		 error_type = SUCCESS ;
 
              end  
 			end
@@ -1237,9 +1198,9 @@ fourth_stage_crc_first_pre     : begin
           o_rx_mode = Check_token;
 		  
 		  if (i_rx_error)
-            o_regf_error_type = Frame_Error;
+            error_type = Frame_Error;
           else
-            o_regf_error_type = SUCCESS;
+            error_type = SUCCESS;
          end
 
              end 			 
@@ -1271,10 +1232,10 @@ fourth_stage_crc_first_pre     : begin
           
 		 
 		 if (i_rx_error)
-            o_regf_error_type = CRC_Error;
+            error_type = CRC_Error;
           else
 			begin 
-				o_regf_error_type = SUCCESS;
+				error_type = SUCCESS;
 					if((i_bitcnt == 'd12) || (i_bitcnt == 'd11))
 						begin 
 						o_sclstall_en = 0;
@@ -1297,7 +1258,7 @@ fourth_stage_crc_first_pre     : begin
 
 
    error   : begin
-   				o_tx_en = 1'b0 ;
+
           o_rx_en = 'b1;
           o_rx_mode = Error;
 		  o_bitcnt_rst = 'b1 ;
@@ -1312,17 +1273,19 @@ fourth_stage_crc_first_pre     : begin
           o_tx_en = 'b1;
           o_tx_mode = Restart_Pattern;
           o_sclstall_no_of_cycles = restart_stalling;
-
-          // badr 
-          if (i_sclstall_stall_done_strtch) o_sclstall_en = 'b0 ;
-		   		else 	 		 											  o_sclstall_en = 'b1 ;
-		   		//////////
+          o_sclstall_en = 'b1;
+		   
 
 			if(i_tx_mode_done )
+			 	begin
+			 o_engine_done= 'b1;
 			 o_sclstall_en = 'b0;
-		  else
+				end
+		  else begin
 			o_sclstall_en = 'b1;
+			o_engine_done= 'b0;
              end
+			 end
 
 
    exit   : begin
@@ -1330,27 +1293,18 @@ fourth_stage_crc_first_pre     : begin
           o_tx_en = 'b1;
           o_tx_mode = Exit_Pattern;
           o_sclstall_no_of_cycles = exit_stalling;
-          o_sclstall_en = 'b1;
-		 
-
-
-          // badr 
-          if (i_sclstall_stall_done_strtch) o_sclstall_en = 'b0 ;
-		   		else 	 		 											  o_sclstall_en = 'b1 ;
-		   		//////////
-
-
-
+         o_sclstall_en = 'b1;
 		 
 			if(i_tx_mode_done )
 				begin
-					o_engine_done= 'b1;
-			 //o_sclstall_en = 'b0;
+			 o_engine_done= 'b1;
+			 o_sclstall_en = 'b0;
 				end
 				
-		  else 
-		  	o_engine_done= 'b0;
-			//o_sclstall_en = 'b1;
+		  else begin
+			o_sclstall_en = 'b1;
+			o_engine_done= 'b0;
+			end
 
              end 
 
@@ -1464,6 +1418,9 @@ addr_temp <= o_regf_addr + 'd1;
 
 if( current_state == 'd10)
 o_regf_addr <= addr_temp ; 
+
+if (current_state != 'd15 && current_state != 'd16 && current_state != 'd17)
+	o_regf_error_type <= error_type;
 	end
 end
 
